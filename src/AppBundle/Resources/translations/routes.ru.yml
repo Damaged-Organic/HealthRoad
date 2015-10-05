@@ -1,6 +1,9 @@
 # AppBundle/Resources/translations/routes.ru.yml
 employee_dashboard: Офис для сотрудников
 
+setting_update: Редактировать настройки
+setting_read:   Настройки
+
 employee_create: Добавить сотрудника
 employee_update: Редактировать сотрудника
 employee_read:   Сотрудники

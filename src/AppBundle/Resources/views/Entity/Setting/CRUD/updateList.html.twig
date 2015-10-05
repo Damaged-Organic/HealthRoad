@@ -1,0 +1,6 @@
+{# AppBundle/Resources/views/Entity/Setting/CRUD/updateList.html.twig #}
+{% extends 'AppBundle:Entity/Setting:list.html.twig' %}
+
+{% block data %}
+    {% include 'AppBundle:Entity/Setting/Form:form.html.twig' with {'form': form} only %}
+{% endblock %}

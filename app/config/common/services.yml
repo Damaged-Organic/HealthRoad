@@ -11,6 +11,14 @@ services:
 
     # Security voters
 
+    app.voter_setting:
+        class:  AppBundle\Security\Authorization\Voter\SettingVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
     app.voter_employee:
         class:  AppBundle\Security\Authorization\Voter\EmployeeVoter
         public: false
@@ -100,6 +108,11 @@ services:
             - { name: security.voter }
 
     # Security services
+
+    app.security.setting_boundless_access:
+        class: AppBundle\Service\Security\SettingBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.employee_boundless_access:
         class: AppBundle\Service\Security\EmployeeBoundlessAccess

@@ -1,0 +1,17 @@
+{# AppBundle/Resources/views/Entity/Setting/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/Setting:list.html.twig' %}
+
+{% block data %}
+    <h3>Settings Decimal</h3>
+    <ul class="tags">
+        {% for settingDecimal in setting.settingsDecimal %}
+            <li>{{ settingDecimal.name ~ ' : ' ~ settingDecimal.settingValue }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Settings String</h3>
+    <ul class="tags">
+        {% for settingString in setting.settingsString %}
+            <li>{{ settingString.name ~ ' : ' ~ settingString.settingValue }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -6,4 +6,16 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
 class SettingRepository extends ExtendedEntityRepository
 {
+    public function findOne()
+    {
+        $query = $this
+            ->createQueryBuilder('s')
+            ->select('s')
+            ->setMaxResults(1)
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+        ;
+
+        return $query->getSingleResult();
+    }
 }

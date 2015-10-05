@@ -10,7 +10,9 @@ class SettingDecimalType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('settingValue');
+        $builder->add('settingValue', 'number', [
+            'scale' => 2
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
