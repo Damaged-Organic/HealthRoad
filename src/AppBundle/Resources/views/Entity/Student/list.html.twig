@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Student/list.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block action_button %}{% endblock %}
+
+    {% for student in students %}
+        <p>
+            <a href="{{ path('student_update', { 'id': student.id }) }}">{{ student.surname }} {{ student.name }} {{ student.patronymic }}</a>
+            {% block action %}{% endblock %}
+        </p>
+    {% endfor %}
+
+    {% block button %}{% endblock %}
+{% endblock %}

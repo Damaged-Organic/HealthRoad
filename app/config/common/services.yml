@@ -1,0 +1,157 @@
+# app/config/common/services.yml
+services:
+    app.security.role_hierarchy:
+        alias: security.role_hierarchy
+
+    app.twig_extension:
+        class:  AppBundle\Twig\AppExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    # Security voters
+
+    app.voter_employee:
+        class:  AppBundle\Security\Authorization\Voter\EmployeeVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_region:
+        class:  AppBundle\Security\Authorization\Voter\RegionVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_settlement:
+        class:  AppBundle\Security\Authorization\Voter\SettlementVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_school:
+        class:  AppBundle\Security\Authorization\Voter\SchoolVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_vending_machine:
+        class:  AppBundle\Security\Authorization\Voter\VendingMachineVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_nfc_tag:
+        class:  AppBundle\Security\Authorization\Voter\NfcTagVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_supplier:
+        class:  AppBundle\Security\Authorization\Voter\SupplierVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_product:
+        class:  AppBundle\Security\Authorization\Voter\ProductVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_product_vending_group:
+        class:  AppBundle\Security\Authorization\Voter\ProductVendingGroupVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_customer:
+        class:  AppBundle\Security\Authorization\Voter\CustomerVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    app.voter_student:
+        class:  AppBundle\Security\Authorization\Voter\StudentVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
+    # Security services
+
+    app.security.employee_boundless_access:
+        class: AppBundle\Service\Security\EmployeeBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.region_boundless_access:
+        class: AppBundle\Service\Security\RegionBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.settlement_boundless_access:
+        class: AppBundle\Service\Security\SettlementBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.school_boundless_access:
+        class: AppBundle\Service\Security\SchoolBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.vending_machine_boundless_access:
+        class: AppBundle\Service\Security\VendingMachineBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.nfc_tag_boundless_access:
+        class: AppBundle\Service\Security\NfcTagBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.supplier_boundless_access:
+        class: AppBundle\Service\Security\SupplierBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.product_boundless_access:
+        class: AppBundle\Service\Security\ProductBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.product_vending_group_boundless_access:
+        class: AppBundle\Service\Security\ProductVendingGroupBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.customer_boundless_access:
+        class: AppBundle\Service\Security\CustomerBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.student_boundless_access:
+        class: AppBundle\Service\Security\StudentBoundlessAccess
+        calls:
+             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]

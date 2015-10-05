@@ -1,0 +1,7 @@
+{# AppBundle/Resources/views/Entity/Settlement/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/Settlement:item.html.twig' %}
+
+{% block data %}
+    {{ settlement.name }}
+    {{ settlement.region.name }}
+{% endblock %}

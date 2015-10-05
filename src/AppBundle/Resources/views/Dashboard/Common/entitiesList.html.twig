@@ -1,0 +1,64 @@
+{# AppBundle/Resources/views/Dashboard/Common/entitiesList.html.twig #}
+{% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
+    <p>
+        <a href="{{ path('employee_read') }}">
+            {{ 'employee_read'|trans({}, 'routes') }}
+        </a> ({{ entitiesQuantity.employees }})
+    </p>
+{% endif %}
+<p> > Местоположение: </p>
+<p>
+    <a href="{{ path('region_read') }}">
+        {{ 'region_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.regions }})
+</p>
+<p>
+    <a href="{{ path('settlement_read') }}">
+        {{ 'settlement_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.settlement }})
+</p>
+<p>
+    <a href="{{ path('school_read') }}">
+        {{ 'school_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.school }})
+</p>
+<p>Оборудование:</p>
+<p>
+    <a href="{{ path('vending_machine_read') }}">
+        {{ 'vending_machine_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.vendingMachine }})
+</p>
+<p>
+    <a href="{{ path('nfc_tag_read') }}">
+        {{ 'nfc_tag_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.nfcTag}})
+</p>
+<p> > Логистика: </p>
+<p>
+    <a href="{{ path('supplier_read') }}">
+        {{ 'supplier_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.supplier }})
+</p>
+<p> > Продукты: </p>
+<p>
+    <a href="{{ path('product_read') }}">
+        {{ 'product_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.product }})
+</p>
+<p>
+    <a href="{{ path('product_vending_group_read') }}">
+        {{ 'product_vending_group_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.productVendingGroup }})
+</p>
+<p>Клиенты:</p>
+<p>
+    <a href="{{ path('customer_read') }}">
+        {{ 'customer_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.customer }})
+</p>
+<p>
+    <a href="{{ path('student_read') }}">
+        {{ 'student_read'|trans({}, 'routes') }}
+    </a> ({{ entitiesQuantity.student }})
+</p>
+<p>-------------------------------------------------------------------------------------------------</p>

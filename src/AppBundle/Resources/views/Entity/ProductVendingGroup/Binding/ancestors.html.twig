@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/ProductVendingGroup/Binding/ancestors.html.twig #}
+{% if sibling.productVendingGroup is defined and sibling.productVendingGroup is not null %}
+    <p>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), sibling.productVendingGroup) %}
+            <a href="{{ path('product_vending_group_update', { 'id': sibling.productVendingGroup.id }) }}">{{ sibling.productVendingGroup.name }}</a>
+        {% else %}
+            <a href="{{ path('product_vending_group_read', { 'id': sibling.productVendingGroup.id }) }}">{{ sibling.productVendingGroup.name }}</a>
+        {% endif %}
+    </p>
+{% elseif sibling.productVendingGroups is defined %}
+    {% for productVendingGroup in sibling.productVendingGroups %}
+        <p>
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), productVendingGroup) %}
+                <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}">{{ productVendingGroup.name }}</a>
+            {% else %}
+                <a href="{{ path('product_vending_group_read', { 'id': productVendingGroup.id }) }}">{{ productVendingGroup.name }}</a>
+            {% endif %}
+        </p>
+    {% endfor %}
+{% else %}
+    No product vending groups
+{% endif %}

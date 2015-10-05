@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Region/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/Region:list.html.twig' %}
+
+{% block action_button %}
+    {% if region_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\RegionBoundlessAccess::REGION_CREATE')) %}
+        <a href="{{ path('region_create') }}">+ Создать регион<a>
+        <p>-------------------------------------------------------------------------------------------------</p>
+    {% endif %}
+{% endblock %}
+
+{% block action %}
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_DELETE'), region) %}
+        <a href="{{ path('region_delete', { 'id': region.id }) }}">[X]</a>
+    {% endif %}
+{% endblock %}

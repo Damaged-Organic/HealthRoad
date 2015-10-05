@@ -1,0 +1,13 @@
+{# AppBundle/Resources/views/Entity/Customer/list.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block action_button %}{% endblock %}
+
+    {% for customer in customers %}
+        <p>
+            <a href="{{ path('customer_update', { 'id': customer.id }) }}">{{ customer.surname }} {{ customer.name }} {{ customer.patronymic }}</a>
+            {% block action_items %}{% endblock %}
+        </p>
+    {% endfor %}
+{% endblock %}

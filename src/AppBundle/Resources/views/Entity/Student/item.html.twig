@@ -1,0 +1,28 @@
+{# AppBundle/Resources/views/Entity/Student/item.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block data %}{% endblock %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_DELETE'), student) %}
+        <p>
+            <a href="{{ path('student_delete', { 'id': student.id }) }}">Удалить</a>
+        </p>
+    {% endif %}
+
+    <p>-------------------------------------------------------------------------------------------------</p>
+    <p>Родитель:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% include 'AppBundle:Entity/Customer/Binding:ancestors.html.twig' with { 'sibling': student } only %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
+        <p>-------------------------------------------------------------------------------------------------</p>
+        <p>
+            <a href="{{ path('nfc_tag_choose', { 'objectClass': class(student)|lower, 'objectId': student.id }) }}">@ Привязать NFC-метку</a>
+        </p>
+    {% endif %}
+
+    {% if student.nfcTag %}
+        {{ render(controller('AppBundle:Binding/NfcTag:show', { 'objectClass': class(student)|lower, 'objectId': student.id })) }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{# AppBundle/Resources/views/Entity/NfcTag/Binding/show.html.twig #}
+{% for nfcTag in nfcTags %}
+    <p>
+        <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}">{{ nfcTag.number }}</a>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_BIND'), nfcTag) %}
+            <a href="{{ path('nfc_tag_unbind', { 'id': nfcTag.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
+        {% endif %}
+    </p>
+{% endfor %}

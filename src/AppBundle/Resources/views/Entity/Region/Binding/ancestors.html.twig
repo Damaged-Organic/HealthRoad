@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/Region/Binding/ancestors.html.twig #}
+{% if sibling.region is defined and sibling.region is not null %}
+    <p>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_UPDATE'), sibling.region) %}
+            <a href="{{ path('region_update', { 'id': sibling.region.id }) }}">{{ sibling.region.name }}</a>
+        {% else %}
+            <a href="{{ path('region_read', { 'id': sibling.region.id }) }}">{{ sibling.region.name }}</a>
+        {% endif %}
+    </p>
+{% elseif sibling.regions is defined %}
+    {% for region in sibling.regions %}
+        <p>
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_UPDATE'), region) %}
+                <a href="{{ path('region_update', { 'id': region.id }) }}">{{ region.name }}</a>
+            {% else %}
+                <a href="{{ path('region_read', { 'id': region.id }) }}">{{ region.name }}</a>
+            {% endif %}
+        </p>
+    {% endfor %}
+{% else %}
+    No region
+{% endif %}

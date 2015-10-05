@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/Settlement/Binding/ancestors.html.twig #}
+{% if sibling.settlement is defined and sibling.settlement is not null %}
+    <p>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_UPDATE'), sibling.settlement) %}
+            <a href="{{ path('settlement_update', { 'id': sibling.settlement.id }) }}">{{ sibling.settlement.name }}</a>
+        {% else %}
+            <a href="{{ path('settlement_read', { 'id': sibling.settlement.id }) }}">{{ sibling.settlement.name }}</a>
+        {% endif %}
+    </p>
+{% elseif sibling.settlements is defined %}
+    {% for settlement in sibling.settlements %}
+        <p>
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_UPDATE'), settlement) %}
+                <a href="{{ path('settlement_update', { 'id': settlement.id }) }}">{{ settlement.name }}</a>
+            {% else %}
+                <a href="{{ path('settlement_read', { 'id': settlement.id }) }}">{{ settlement.name }}</a>
+            {% endif %}
+        </p>
+    {% endfor %}
+{% else %}
+    No settlement
+{% endif %}

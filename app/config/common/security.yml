@@ -1,0 +1,98 @@
+# app/config/common/security.yml
+security:
+    encoders:
+        AppBundle\Entity\Employee\Employee:
+            algorithm: bcrypt
+            cost:      15
+
+        AppBundle\Entity\Customer\Customer:
+            algorithm: bcrypt
+            cost:      15
+
+    role_hierarchy:
+        ROLE_CUSTOMER: [ROLE_USER]
+        ROLE_EMPLOYEE: [ROLE_USER]
+
+        ROLE_ACCOUNTANT: [ROLE_EMPLOYEE]
+        ROLE_REGISTRAR:  [ROLE_EMPLOYEE]
+        ROLE_MANAGER:    [ROLE_EMPLOYEE]
+        ROLE_ADMIN:      [ROLE_ACCOUNTANT, ROLE_REGISTRAR, ROLE_MANAGER]
+        ROLE_SUPERADMIN: [ROLE_ADMIN]
+
+    providers:
+        employee_provider:
+            entity:
+                class:    AppBundle:Employee\Employee
+                property: username
+
+        customer_provider:
+            entity:
+                class:    AppBundle:Customer\Customer
+                property: phoneNumber
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        employee_dashboard:
+            host: "%domain_dashboard%"
+
+            anonymous:  ~
+            http_basic: ~
+            provider:   employee_provider
+
+            form_login:
+                login_path:          employee_dashboard_login
+                check_path:          employee_dashboard_login_check
+                default_target_path: employee_dashboard
+
+                username_parameter: _username
+                password_parameter: _password
+
+                csrf_parameter: _csrf_token
+                csrf_provider:  security.csrf.token_manager
+
+            logout:
+                path:   employee_dashboard_logout
+                target: employee_dashboard
+
+        customer_office:
+            host: "%domain%"
+
+            anonymous:  ~
+            http_basic: ~
+            provider:   customer_provider
+
+            form_login:
+                login_path:          customer_office_login
+                check_path:          customer_office_login_check
+                default_target_path: customer_office
+
+                username_parameter: _phoneNumber
+                password_parameter: _password
+
+                csrf_parameter: _csrf_token
+                csrf_provider:  security.csrf.token_manager
+
+            logout:
+                path:   customer_office_logout
+                target: customer_office
+
+    access_control:
+        -
+            host:  "%domain_dashboard%"
+            path:  ^/login
+            roles: IS_AUTHENTICATED_ANONYMOUSLY
+        -
+            host:  "%domain_dashboard%"
+            path:  ^/
+            roles: ROLE_EMPLOYEE
+        -
+            host:  "%domain%"
+            path:  ^/customer_office/login
+            roles: IS_AUTHENTICATED_ANONYMOUSLY
+        -
+            host:  "%domain%"
+            path:  ^/customer_office
+            roles: ROLE_CUSTOMER

@@ -1,0 +1,13 @@
+{# AppBundle/Resources/views/Entity/Employee/list.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block action_button %}{% endblock %}
+
+    {% for employee in employees %}
+        <p>
+            <a href="{{ path('employee_update', { 'id': employee.id }) }}">{{ employee.username }} - {{ employee.employeeGroup.name }}</a>
+            {% block action_items %}{% endblock %}
+        </p>
+    {% endfor %}
+{% endblock %}

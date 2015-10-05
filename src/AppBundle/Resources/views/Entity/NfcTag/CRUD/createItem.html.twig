@@ -1,0 +1,6 @@
+{# AppBundle/Resources/views/Entity/NfcTag/CRUD/createItem.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% include 'AppBundle:Entity/NfcTag/Form:form.html.twig' with {'form': form} only %}
+{% endblock %}

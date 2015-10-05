@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Product/item.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block data %}{% endblock %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_DELETE'), product) %}
+        <p>
+            <a href="{{ path('product_delete', { 'id': product.id }) }}">Удалить</a>
+        </p>
+    {% endif %}
+
+    <p>Группы торговых автоматов:</p>
+    {% include 'AppBundle:Entity/ProductVendingGroup/Binding:ancestors.html.twig' with { 'sibling': product } only %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{# AppBundle/Resources/views/Dashboard/layout.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% include 'AppBundle:Dashboard/Employee:userbar.html.twig' %}
+
+    {{ render(controller('AppBundle:Dashboard/CommonDashboard:entitiesList')) }}
+
+    {{ render(controller('AppBundle:Dashboard/CommonDashboard:breadcrumbs', { 'request': app.request })) }}
+
+    {% block content %}
+        Добро пожаловать в Офис для сотрудников!
+    {% endblock %}
+
+{% endblock %}

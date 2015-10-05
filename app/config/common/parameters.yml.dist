@@ -1,0 +1,22 @@
+# app/config/common/parameters.yml
+parameters:
+    # Database
+    database_host:     null
+    database_port:     null
+    database_name:     null
+    database_user:     null
+    database_password: null
+    # Mailer
+    mailer_transport: smtp
+    mailer_host:      null
+    mailer_user:      null
+    mailer_password:  null
+    # Specific
+    domain:           boilerplate.dev
+    domain_dashboard: dashboard.boilerplate.dev
+    domain_sync:      sync-v1.boilerplate.dev
+    # Developers
+    developers_agency: CHEERS! Unlimited
+    developers_link:   http://cheersunlimited.com.ua
+    # Token
+    secret:

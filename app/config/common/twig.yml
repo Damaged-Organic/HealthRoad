@@ -1,0 +1,14 @@
+# app/config/common/twig.yml
+twig:
+    globals:
+        employee_boundless_access:              "@app.security.employee_boundless_access"
+        region_boundless_access:                "@app.security.region_boundless_access"
+        settlement_boundless_access:            "@app.security.settlement_boundless_access"
+        school_boundless_access:                "@app.security.school_boundless_access"
+        vending_machine_boundless_access:       "@app.security.vending_machine_boundless_access"
+        nfc_tag_boundless_access:               "@app.security.nfc_tag_boundless_access"
+        supplier_boundless_access:              "@app.security.supplier_boundless_access"
+        product_boundless_access:               "@app.security.product_boundless_access"
+        product_vending_group_boundless_access: "@app.security.product_vending_group_boundless_access"
+        customer_boundless_access:              "@app.security.customer_boundless_access"
+        student_boundless_access:               "@app.security.student_boundless_access"

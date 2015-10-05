@@ -1,0 +1,8 @@
+{# AppBundle/Resources/views/Entity/School/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/School:item.html.twig' %}
+
+{% block data %}
+    {{ school.name }}
+    {{ school.settlement.name }}
+    {{ school.settlement.region.name }}
+{% endblock %}

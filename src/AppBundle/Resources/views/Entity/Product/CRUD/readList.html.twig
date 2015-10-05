@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Product/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/Product:list.html.twig' %}
+
+{% block action_button %}
+    {% if product_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\ProductBoundlessAccess::PRODUCT_CREATE')) %}
+        <a href="{{ path('product_create') }}">+ Создать продукт<a>
+        <p>-------------------------------------------------------------------------------------------------</p>
+    {% endif %}
+{% endblock %}
+
+{% block action %}
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_DELETE'), product) %}
+        <a href="{{ path('product_delete', { 'id': product.id }) }}">[X]</a>
+    {% endif %}
+{% endblock %}

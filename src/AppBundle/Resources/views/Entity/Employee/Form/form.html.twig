@@ -1,0 +1,13 @@
+{# AppBundle/Resources/views/Entity/Employee/Form/form.html.twig #}
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <p>Системные данные:</p>
+    {{ ( form.username is defined ) ? form_row(form.username) : null }}
+    {{ ( form.password is defined ) ? form_row(form.password) : null }}
+    {{ ( form.isEnabled is defined ) ? form_row(form.isEnabled) : null }}
+
+    {{ ( form.employeeGroup is defined ) ? form_row(form.employeeGroup) : null }}
+
+    <p>Персональные данные:</p>
+{{ form_end(form) }}

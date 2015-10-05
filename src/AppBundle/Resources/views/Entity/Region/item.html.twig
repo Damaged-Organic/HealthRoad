@@ -1,0 +1,30 @@
+{# AppBundle/Resources/views/Entity/Region/item.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block data %}{% endblock %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_DELETE'), region) %}
+        <p>
+            <a href="{{ path('region_delete', { 'id': region.id }) }}">Удалить</a>
+        </p>
+    {% endif %}
+
+    <p>-------------------------------------------------------------------------------------------------</p>
+    <p>Менеджер региона:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': region } only %}
+
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_BIND'), region) %}
+        <p>
+            <a href="{{ path('settlement_choose', { 'objectClass': class(region)|lower, 'objectId': region.id }) }}">@ Привязать населенный пункт</a>
+        </p>
+    {% endif %}
+
+    <p>Населенные пункты:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% if region.settlements %}
+        {{ render(controller('AppBundle:Binding/Settlement:show', { 'objectClass': class(region)|lower, 'objectId': region.id })) }}
+    {% endif %}
+{% endblock %}

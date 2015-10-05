@@ -1,0 +1,8 @@
+{# AppBundle/Resources/views/Entity/Student/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/Student:item.html.twig' %}
+
+{% block data %}
+    {{ student.surname }}
+    {{ student.name }}
+    {{ student.patronymic }}
+{% endblock %}

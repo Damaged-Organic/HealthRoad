@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/ProductVendingGroup/list.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block action_button %}{% endblock %}
+
+    {% for productVendingGroup in productVendingGroups %}
+        <p>
+            <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}">{{ productVendingGroup.name }}</a>
+            {% block action %}{% endblock %}
+        </p>
+    {% endfor %}
+
+    {% block button %}{% endblock %}
+{% endblock %}

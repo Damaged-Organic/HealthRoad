@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Entity/School/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/School:list.html.twig' %}
+
+{% block action %}
+    <input type="submit" name="schoolId" value="{{ school.id }}" form="schoolForm">
+{% endblock %}
+
+{% block button %}
+    <form action="{{ path('school_bind') }}" id="schoolForm" method="POST">
+        <input type="hidden" name="objectClass" value="{{ objectClass }}">
+        <input type="hidden" name="objectId" value="{{ objectId }}">
+    </form>
+    <a href="{{ path('settlement_update', { 'id': objectId }) }}">Done</a>
+{% endblock %}

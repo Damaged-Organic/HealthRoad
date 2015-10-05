@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/School/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/School:list.html.twig' %}
+
+{% block action_button %}
+    {% if school_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\SchoolBoundlessAccess::SCHOOL_CREATE')) %}
+        <a href="{{ path('school_create') }}">+ Создать школу<a>
+        <p>-------------------------------------------------------------------------------------------------</p>
+    {% endif %}
+{% endblock %}
+
+{% block action %}
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_DELETE'), school) %}
+        <a href="{{ path('school_delete', { 'id': school.id }) }}">[X]</a>
+    {% endif %}
+{% endblock %}

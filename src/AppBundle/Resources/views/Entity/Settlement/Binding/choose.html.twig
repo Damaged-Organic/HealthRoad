@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Entity/Settlement/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/Settlement:list.html.twig' %}
+
+{% block action %}
+    <input type="submit" name="settlementId" value="{{ settlement.id }}" form="settlementForm">
+{% endblock %}
+
+{% block button %}
+    <form action="{{ path('settlement_bind') }}" id="settlementForm" method="POST">
+        <input type="hidden" name="objectClass" value="{{ objectClass }}">
+        <input type="hidden" name="objectId" value="{{ objectId }}">
+    </form>
+    <a href="{{ path('region_update', { 'id': objectId }) }}">Done</a>
+{% endblock %}

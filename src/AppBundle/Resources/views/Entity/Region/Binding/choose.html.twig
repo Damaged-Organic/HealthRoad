@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Entity/Region/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/Region:list.html.twig' %}
+
+{% block action %}
+    <input type="submit" name="regionId" value="{{ region.id }}" form="regionForm">
+{% endblock %}
+
+{% block button %}
+    <form action="{{ path('region_bind') }}" id="regionForm" method="POST">
+        <input type="hidden" name="objectClass" value="{{ objectClass }}">
+        <input type="hidden" name="objectId" value="{{ objectId }}">
+    </form>
+    <a href="{{ path('employee_update', { 'id': objectId }) }}">Done</a>
+{% endblock %}

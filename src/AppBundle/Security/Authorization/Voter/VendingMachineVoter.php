@@ -1,0 +1,93 @@
+<?php
+// AppBundle/Security/Authorization/Voter/VendingMachineVoter.php
+namespace AppBundle\Security\Authorization\Voter;
+
+use Symfony\Component\Security\Core\User\UserInterface;
+
+use AppBundle\Security\Authorization\Voter\Utility\Extended\ExtendedAbstractVoter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface;
+
+class VendingMachineVoter extends ExtendedAbstractVoter implements UserRoleListInterface
+{
+    const VENDING_MACHINE_READ   = "vending_machine_read";
+    const VENDING_MACHINE_UPDATE = "vending_machine_update";
+    const VENDING_MACHINE_DELETE = "vending_machine_delete";
+
+    const VENDING_MACHINE_BIND   = "vending_machine_bind";
+
+    protected function getSupportedAttributes()
+    {
+        return [
+            self::VENDING_MACHINE_READ,
+            self::VENDING_MACHINE_UPDATE,
+            self::VENDING_MACHINE_DELETE,
+            self::VENDING_MACHINE_BIND
+        ];
+    }
+
+    protected function getSupportedClasses()
+    {
+        return ['AppBundle\Entity\VendingMachine\VendingMachine'];
+    }
+
+    protected function isGranted($attribute, $school, $user = NULL)
+    {
+        if (!$user instanceof UserInterface)
+            return FALSE;
+
+        switch($attribute)
+        {
+            case self::VENDING_MACHINE_READ:
+                return $this->read($user);
+            break;
+
+            case self::VENDING_MACHINE_UPDATE:
+                return $this->update($user);
+            break;
+
+            case self::VENDING_MACHINE_DELETE:
+                return $this->delete($user);
+            break;
+
+            case self::VENDING_MACHINE_BIND:
+                return $this->bind($user);
+            break;
+
+            default:
+                return FALSE;
+            break;
+        }
+    }
+
+    protected function read($user = NULL)
+    {
+        if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function update($user = NULL)
+    {
+        if( $this->hasRole($user, self::ROLE_ADMIN) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function delete($user = NULL)
+    {
+        if( $this->hasRole($user, self::ROLE_ADMIN) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    protected function bind($user)
+    {
+        if( $this->hasRole($user, self::ROLE_ADMIN) )
+            return TRUE;
+
+        return FALSE;
+    }
+}

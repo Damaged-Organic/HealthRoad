@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/Employee/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/Employee:item.html.twig' %}
+
+{% block data %}
+    {{ employee.username}}
+    {{ employee.surname }}
+    {{ employee.name }}
+    {{ employee.patronymic }}
+    {{ employee.email }}
+    {{ employee.phoneNumber }}
+    {{ employee.skypeName }}
+{% endblock %}

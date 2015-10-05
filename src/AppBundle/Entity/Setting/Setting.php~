@@ -1,0 +1,26 @@
+<?php
+// src/AppBundle/Entity/Setting/Setting.php:2
+namespace AppBundle\Entity\Setting;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+
+/**
+ * @ORM\Table(name="settings")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Setting\Repository\SettingRepository")
+ */
+class Setting
+{
+    use IdMapperTrait;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Setting\SettingDecimal", mappedBy="setting")
+     */
+    protected $settingsDecimal;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Setting\SettingString", mappedBy="setting")
+     */
+    protected $settingsString;
+}

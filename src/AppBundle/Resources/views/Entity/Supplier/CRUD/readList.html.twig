@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Supplier/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/Supplier:list.html.twig' %}
+
+{% block action_button %}
+    {% if supplier_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\SupplierBoundlessAccess::SUPPLIER_CREATE')) %}
+        <a href="{{ path('supplier_create') }}">+ Создать поставщика<a>
+        <p>-------------------------------------------------------------------------------------------------</p>
+    {% endif %}
+{% endblock %}
+
+{% block action %}
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SupplierVoter::SUPPLIER_DELETE'), supplier) %}
+        <a href="{{ path('supplier_delete', { 'id': supplier.id }) }}">[X]</a>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,10 @@
+# app/config/common/routing.yml
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+employee_dashboard_logout:
+    path: /logout
+
+customer_office_logout:
+    path: /customer_office/logout

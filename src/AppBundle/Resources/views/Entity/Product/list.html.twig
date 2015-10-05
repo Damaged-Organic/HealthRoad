@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Product/list.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block action_button %}{% endblock %}
+
+    {% for product in products %}
+        <p>
+            <a href="{{ path('product_update', { 'id': product.id }) }}">{{ product.nameFull }}</a>
+            {% block action %}{% endblock %}
+        </p>
+    {% endfor %}
+
+    {% block button %}{% endblock %}
+{% endblock %}

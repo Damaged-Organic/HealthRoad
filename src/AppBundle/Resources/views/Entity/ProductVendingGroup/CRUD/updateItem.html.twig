@@ -1,0 +1,6 @@
+{# AppBundle/Resources/views/Entity/ProductVendingGroup/CRUD/updateItem.html.twig #}
+{% extends 'AppBundle:Entity/ProductVendingGroup:item.html.twig' %}
+
+{% block data %}
+    {% include 'AppBundle:Entity/ProductVendingGroup/Form:form.html.twig' with {'form': form} only %}
+{% endblock %}

@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/Student/Binding/ancestors.html.twig #}
+{% if sibling.student is defined and sibling.student is not null %}
+    <p>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), sibling.student) %}
+            <a href="{{ path('student_update', { 'id': sibling.student.id }) }}">{{ sibling.student.name }}</a>
+        {% else %}
+            <a href="{{ path('student_read', { 'id': sibling.student.id }) }}">{{ sibling.student.name }}</a>
+        {% endif %}
+    </p>
+{% elseif sibling.students is defined %}
+    {% for student in sibling.students %}
+        <p>
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), student) %}
+                <a href="{{ path('student_update', { 'id': student.id }) }}">{{ student.name }}</a>
+            {% else %}
+                <a href="{{ path('student_read', { 'id': student.id }) }}">{{ student.name }}</a>
+            {% endif %}
+        </p>
+    {% endfor %}
+{% else %}
+    No students
+{% endif %}

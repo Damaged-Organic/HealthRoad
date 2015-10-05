@@ -1,0 +1,29 @@
+{# AppBundle/Resources/views/Entity/School/item.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block data %}{% endblock %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_DELETE'), school) %}
+        <p>
+            <a href="{{ path('school_delete', { 'id': school.id }) }}">Удалить</a>
+        </p>
+    {% endif %}
+    <p>-------------------------------------------------------------------------------------------------</p>
+
+    <p>Регистраторы школы:</p>
+    {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': school } only %}
+
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
+        <p>
+            <a href="{{ path('vending_machine_choose', { 'objectClass': class(school)|lower, 'objectId': school.id }) }}">@ Привязать торговый автомат</a>
+        </p>
+    {% endif %}
+
+    <p>Торговые автоматы:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% if school.vendingMachines %}
+        {{ render(controller('AppBundle:Binding/VendingMachine:show', { 'objectClass': class(school)|lower, 'objectId': school.id })) }}
+    {% endif %}
+{% endblock %}

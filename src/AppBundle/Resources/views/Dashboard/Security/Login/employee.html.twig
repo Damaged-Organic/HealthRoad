@@ -1,0 +1,23 @@
+{# AppBundle/Resources/views/Dashboard/Security/Login/employee.html.twig #}
+{% extends 'AppBundle:Dashboard/Security:login.html.twig' %}
+
+{% block body %}
+    <h1>Employee Dashboard</h1>
+
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form action="{{ path('employee_dashboard_login_check') }}" method="post">
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="_username">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password">
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button type="submit">Login</button>
+    </form>
+{% endblock %}

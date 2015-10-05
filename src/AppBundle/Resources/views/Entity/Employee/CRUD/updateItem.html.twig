@@ -1,0 +1,6 @@
+{# AppBundle/Resources/views/Entity/Employee/CRUD/updateItem.html.twig #}
+{% extends 'AppBundle:Entity/Employee:item.html.twig' %}
+
+{% block data %}
+    {% include 'AppBundle:Entity/Employee/Form:form.html.twig' with {'form': form} only %}
+{% endblock %}

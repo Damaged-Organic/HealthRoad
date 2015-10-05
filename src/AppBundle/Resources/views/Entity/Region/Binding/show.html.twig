@@ -1,0 +1,9 @@
+{# AppBundle/Resources/views/Entity/Region/Binding/show.html.twig #}
+{% for region in regions %}
+    <p>
+        <a href="{{ path('region_update', { 'id': region.id }) }}">{{ region.name }}</a>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_BIND'), region) %}
+            <a href="{{ path('region_unbind', { 'id': region.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
+        {% endif %}
+    </p>
+{% endfor %}

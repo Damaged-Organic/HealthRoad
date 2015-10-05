@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Settlement/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/Settlement:list.html.twig' %}
+
+{% block action_button %}
+    {% if settlement_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\SettlementBoundlessAccess::SETTLEMENT_CREATE')) %}
+        <a href="{{ path('settlement_create') }}">+ Создать населенный пункт<a>
+        <p>-------------------------------------------------------------------------------------------------</p>
+    {% endif %}
+{% endblock %}
+
+{% block action %}
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_DELETE'), settlement) %}
+        <a href="{{ path('settlement_delete', { 'id': settlement.id }) }}">[X]</a>
+    {% endif %}
+{% endblock %}

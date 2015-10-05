@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Entity/Product/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/Product:list.html.twig' %}
+
+{% block action %}
+    <input type="submit" name="productId" value="{{ product.id }}" form="productForm">
+{% endblock %}
+
+{% block button %}
+    <form action="{{ path('product_bind') }}" id="productForm" method="POST">
+        <input type="hidden" name="objectClass" value="{{ objectClass }}">
+        <input type="hidden" name="objectId" value="{{ objectId }}">
+    </form>
+    <a href="{{ path('product_vending_group_update', { 'id': objectId }) }}">Done</a>
+{% endblock %}

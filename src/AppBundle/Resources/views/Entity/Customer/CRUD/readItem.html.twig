@@ -1,0 +1,8 @@
+{# AppBundle/Resources/views/Entity/Customer/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/Customer:item.html.twig' %}
+
+{% block data %}
+    {{ customer.surname }}
+    {{ customer.name }}
+    {{ customer.patronymic }}
+{% endblock %}

@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Entity/NfcTag/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/NfcTag:list.html.twig' %}
+
+{% block action %}
+    <input type="submit" name="nfcTagId" value="{{ nfcTag.id }}" form="nfcTagForm">
+{% endblock %}
+
+{% block button %}
+    <form action="{{ path('nfc_tag_bind') }}" id="nfcTagForm" method="POST">
+        <input type="hidden" name="objectClass" value="{{ objectClass }}">
+        <input type="hidden" name="objectId" value="{{ objectId }}">
+    </form>
+    <a href="{{ path('student_update', { 'id': objectId }) }}">Done</a>
+{% endblock %}

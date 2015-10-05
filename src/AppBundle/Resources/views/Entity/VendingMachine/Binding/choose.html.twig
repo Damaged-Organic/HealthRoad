@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Entity/VendingMachine/Binding/choose.html.twig #}
+{% extends 'AppBundle:Entity/VendingMachine:list.html.twig' %}
+
+{% block action %}
+    <input type="submit" name="vendingMachineId" value="{{ vendingMachine.id }}" form="vendingMachineForm">
+{% endblock %}
+
+{% block button %}
+    <form action="{{ path('vending_machine_bind') }}" id="vendingMachineForm" method="POST">
+        <input type="hidden" name="objectClass" value="{{ objectClass }}">
+        <input type="hidden" name="objectId" value="{{ objectId }}">
+    </form>
+    <a href="{{ path('product_vending_group_update', { 'id': objectId }) }}">Done</a>
+{% endblock %}

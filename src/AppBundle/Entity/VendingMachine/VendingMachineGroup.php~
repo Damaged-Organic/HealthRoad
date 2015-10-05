@@ -1,0 +1,111 @@
+<?php
+// AppBundle/Entity/VendingMachine/VendingMachineGroup.php
+namespace AppBundle\Entity\VendingMachine;
+
+use Symfony\Component\Validator\Constraints as Assert,
+    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
+
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+
+/**
+ * @ORM\Table(name="vending_machines_groups")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\VendingMachine\Repository\VendingMachineGroupRepository")
+ *
+ * @UniqueEntity(fields="name", message="vending_machine_group.name.unique")
+ */
+class VendingMachineGroup
+{
+    use IdMapperTrait;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", mappedBy="vendingMachineGroup")
+     */
+    protected $vendingMachines;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product\Product", inversedBy="vendingMachineGroups")
+     * @ORM\JoinTable(name="vending_machines_groups_products")
+     */
+    protected $products;
+
+    /**
+     * @ORM\Column(type="string", length=250, unique=true)
+     *
+     * @Assert\NotBlank(message="vending_machine_group.name.not_blank")
+     * @Assert\Length(
+     *      min=2,
+     *      max=250,
+     *      minMessage="vending_machine_group.name.length.min",
+     *      maxMessage="vending_machine_group.name.length.max"
+     * )
+     */
+    protected $name;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->vendingMachines = new ArrayCollection;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return VendingMachineGroup
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Add vendingMachines
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine
+     * @return VendingMachineGroup
+     */
+    public function addVendingMachine(\AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine)
+    {
+        $vendingMachine->setVendingMachineGroup($this);
+        $this->vendingMachines[] = $vendingMachine;
+
+        return $this;
+    }
+
+    /**
+     * Remove vendingMachines
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachine $vendingMachines
+     */
+    public function removeVendingMachine(\AppBundle\Entity\VendingMachine\VendingMachine $vendingMachines)
+    {
+        $this->vendingMachines->removeElement($vendingMachines);
+    }
+
+    /**
+     * Get vendingMachines
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVendingMachines()
+    {
+        return $this->vendingMachines;
+    }
+}

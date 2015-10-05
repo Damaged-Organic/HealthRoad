@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Employee/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/Employee:list.html.twig' %}
+
+{% block action_button %}
+    {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_CREATE')) %}
+        <a href="{{ path('employee_create') }}">+ Создать сотрудника<a>
+        <p>-------------------------------------------------------------------------------------------------</p>
+    {% endif %}
+{% endblock %}
+
+{% block action_items %}
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_DELETE'), employee) %}
+        <a href="{{ path('employee_delete', { 'id': employee.id }) }}">[X]</a>
+    {% endif %}
+{% endblock %}

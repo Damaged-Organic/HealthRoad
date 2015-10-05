@@ -1,0 +1,25 @@
+# app/config/common/config_vich.yml
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        supplier_logo:
+            uri_prefix:         /uploads/supplier/logos
+            upload_destination: %kernel.root_dir%/../www/uploads/supplier/logos
+            namer:              vich_uploader.namer_uniqid
+            delete_on_update:   true
+            delete_on_remove:   true
+
+        product_image:
+            uri_prefix:         /uploads/product/images
+            upload_destination: %kernel.root_dir%/../www/uploads/product/images
+            namer:              vich_uploader.namer_uniqid
+            delete_on_update:   true
+            delete_on_remove:   true
+
+        product_certificate:
+            uri_prefix:         /uploads/product/certificates
+            upload_destination: %kernel.root_dir%/../www/uploads/product/certificates
+            namer:              vich_uploader.namer_uniqid
+            delete_on_update:   true
+            delete_on_remove:   true

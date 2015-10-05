@@ -1,0 +1,6 @@
+{# AppBundle/Resources/views/Entity/Region/CRUD/createItem.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% include 'AppBundle:Entity/Region/Form:form.html.twig' with {'form': form} only %}
+{% endblock %}

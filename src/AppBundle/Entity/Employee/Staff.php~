@@ -1,0 +1,106 @@
+<?php
+// AppBundle/Entity/Staff/Staff.php
+namespace AppBundle\Entity\Staff;
+
+use Serializable;
+
+use Symfony\Component\Security\Core\User\UserInterface,
+    Symfony\Component\Validator\Constraints as Assert,
+    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use AppBundle\Entity\Utility\DoctrineMapping\IdMapperTrait;
+
+/**
+ * @ORM\Table(name="staff")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Staff\Repository\StaffRepository")
+ *
+ * @UniqueEntity(fields="phoneNumber", message="phoneNumber already taken")
+ */
+class Staff implements UserInterface
+{
+    use IdMapperTrait;
+
+    /**
+     * @ORM\Column(type="string", length=25, unique=true)
+     */
+    protected $username;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    protected $password;
+
+    /**
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    protected $isActive;
+
+    /**
+     * @ORM\Column(type="string", length=60, nullable=true)
+     */
+    protected $email;
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    protected $phoneNumber;
+
+    /**
+     * @ORM\Column(type="string", length=32, nullable=true)
+     */
+    protected $skypeName;
+
+
+    protected $role;
+
+    public function __construct()
+    {
+        $this->isActive = TRUE;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function getRoles()
+    {
+        //return array('ROLE_USER');
+    }
+
+    public function getSalt()
+    {
+        return NULL;
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->password,
+            $this->username,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            ) = unserialize($serialized);
+    }
+}

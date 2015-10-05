@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/NfcTag/CRUD/readList.html.twig #}
+{% extends 'AppBundle:Entity/NfcTag:list.html.twig' %}
+
+{% block action_button %}
+    {% if nfc_tag_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\NfcTagBoundlessAccess::NFC_TAG_CREATE')) %}
+        <a href="{{ path('nfc_tag_create') }}">+ Создать NFC-метку<a>
+        <p>-------------------------------------------------------------------------------------------------</p>
+    {% endif %}
+{% endblock %}
+
+{% block action %}
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_DELETE'), nfcTag) %}
+        <a href="{{ path('nfc_tag_delete', { 'id': nfcTag.id }) }}">[X]</a>
+    {% endif %}
+{% endblock %}

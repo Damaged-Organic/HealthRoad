@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/NfcTag/list.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block action_button %}{% endblock %}
+
+    {% for nfcTag in nfcTags %}
+        <p>
+            <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}">{{ nfcTag.number }}</a>
+            {% block action %}{% endblock %}
+        </p>
+    {% endfor %}
+
+    {% block button %}{% endblock %}
+{% endblock %}

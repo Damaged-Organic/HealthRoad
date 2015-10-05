@@ -1,0 +1,17 @@
+{# AppBundle/Resources/views/Entity/School/list.html.twig #}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block content %}
+    {% block action_button %}{% endblock %}
+
+    {% for school in schools %}
+        <p>
+            <a href="{{ path('school_update', { 'id': school.id }) }}">{{ school.name }}</a>
+            | {{ ( school.settlement ) ? school.settlement.name : 'No settlement set' }}
+            | {{ ( school.settlement.region ) ? school.settlement.region.name : 'No region set' }}
+            {% block action %}{% endblock %}
+        </p>
+    {% endfor %}
+
+    {% block button %}{% endblock %}
+{% endblock %}

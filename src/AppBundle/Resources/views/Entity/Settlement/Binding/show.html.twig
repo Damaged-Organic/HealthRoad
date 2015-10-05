@@ -1,0 +1,9 @@
+{# AppBundle/Resources/views/Entity/Settlement/Binding/show.html.twig #}
+{% for settlement in settlements %}
+    <p>
+        <a href="{{ path('settlement_update', { 'id': settlement.id }) }}">{{ settlement.name }}</a>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_BIND'), settlement) %}
+            <a href="{{ path('settlement_unbind', { 'id': settlement.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
+        {% endif %}
+    </p>
+{% endfor %}

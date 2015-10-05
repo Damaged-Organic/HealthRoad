@@ -1,0 +1,16 @@
+{# src/AppBundle/Resources/views/Entity/Setting/form.html.twig #}
+{{ form_start(form) }}
+    <h3>Settings Decimal</h3>
+    <ul class="tags">
+        {% for settingDecimal in form.settingsDecimal %}
+            <li>{{ form_row(settingDecimal.settingValue) }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Settings String</h3>
+    <ul class="tags">
+        {% for settingString in form.settingsString %}
+            <li>{{ form_row(settingString.settingValue) }}</li>
+        {% endfor %}
+    </ul>
+    <input type="submit" value="Save">
+{{ form_end(form) }}

@@ -1,0 +1,9 @@
+{# AppBundle/Resources/views/Entity/School/Binding/show.html.twig #}
+{% for school in schools %}
+    <p>
+        <a href="{{ path('school_update', { 'id': school.id }) }}">{{ school.name }}</a>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
+            <a href="{{ path('school_unbind', { 'id': school.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
+        {% endif %}
+    </p>
+{% endfor %}

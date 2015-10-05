@@ -1,0 +1,9 @@
+{# AppBundle/Resources/views/Entity/Product/Binding/show.html.twig #}
+{% for product in products %}
+    <p>
+        <a href="{{ path('product_update', { 'id': product.id }) }}">{{ product.nameFull }}</a>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_BIND'), product) %}
+            <a href="{{ path('product_unbind', { 'id': product.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
+        {% endif %}
+    </p>
+{% endfor %}

@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/Employee/Binding/ancestors.html.twig #}
+{% if sibling.employee is defined and sibling.employee is not null %}
+    <p>
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), sibling.employee) %}
+            <a href="{{ path('employee_update', { 'id': sibling.employee.id }) }}">{{ sibling.employee.username }}</a>
+        {% else %}
+            <a href="{{ path('employee_read', { 'id': sibling.employee.id }) }}">{{ sibling.employee.username }}</a>
+        {% endif %}
+    </p>
+{% elseif sibling.employees is defined %}
+    {% for employee in sibling.employees %}
+        <p>
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), employee) %}
+                <a href="{{ path('employee_update', { 'id': employee.id }) }}">{{ employee.username }}</a>
+            {% else %}
+                <a href="{{ path('employee_read', { 'id': employee.id }) }}">{{ employee.username }}</a>
+            {% endif %}
+        </p>
+    {% endfor %}
+{% else %}
+    No employees
+{% endif %}
