@@ -4,6 +4,8 @@ namespace AppBundle\Entity\Product\Utility\Interfaces;
 
 interface SyncProductPropertiesInterface
 {
+    const PRODUCT_ARRAY = 'products';
+
     const PRODUCT_ID    = 'id';
     const PRODUCT_NAME  = 'name';
     const PRODUCT_PRICE = 'price';

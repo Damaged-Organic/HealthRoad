@@ -14,7 +14,8 @@ use Doctrine\ORM\Mapping as ORM,
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
+    AppBundle\Validator\Constraints as CustomAssert,
+    AppBundle\Entity\Product\Utility\Interfaces\SyncProductPropertiesInterface;
 
 /**
  * @ORM\Table(name="products")
@@ -24,7 +25,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @Vich\Uploadable
  */
-class Product
+class Product implements SyncProductPropertiesInterface
 {
     use IdMapperTrait;
 
@@ -682,5 +683,19 @@ class Product
     public function getProductVendingGroups()
     {
         return $this->productVendingGroups;
+    }
+
+    static public function getSyncArrayName()
+    {
+        return self::PRODUCT_ARRAY;
+    }
+
+    public function getSyncObjectData()
+    {
+        return [
+            self::PRODUCT_ID    => $this->getId(),
+            self::PRODUCT_NAME  => $this->getNameShort(),
+            self::PRODUCT_PRICE => $this->getPrice()
+        ];
     }
 }

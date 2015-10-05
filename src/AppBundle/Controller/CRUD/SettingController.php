@@ -2,14 +2,15 @@
 // src/AppBundle/Controller/CRUD/SettingController.php
 namespace AppBundle\Controller\CRUD;
 
-use AppBundle\Form\Type\SettingType;
-use AppBundle\Security\Authorization\Voter\SettingVoter;
-use AppBundle\Service\Security\SettingBoundlessAccess;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
+
+use AppBundle\Form\Type\SettingType,
+    AppBundle\Security\Authorization\Voter\SettingVoter,
+    AppBundle\Service\Security\SettingBoundlessAccess;
 
 class SettingController extends Controller
 {

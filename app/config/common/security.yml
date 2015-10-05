@@ -7,7 +7,7 @@ security:
 
         AppBundle\Entity\Customer\Customer:
             algorithm: bcrypt
-            cost:      15
+            cost:      12
 
     role_hierarchy:
         ROLE_CUSTOMER: [ROLE_USER]

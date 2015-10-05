@@ -2,7 +2,7 @@
 {% for vendingMachine in vendingMachines %}
     <p>
         <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}">{{ vendingMachine.name }}</a>
-        | {{ vendingMachine.code }}
+        | {{ vendingMachine.serial }}
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_BIND'), vendingMachine) %}
             <a href="{{ path('vending_machine_unbind', { 'id': vendingMachine.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
         {% endif %}

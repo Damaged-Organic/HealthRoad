@@ -14,8 +14,9 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
  * @ORM\Table(name="vending_machines")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\VendingMachine\Repository\VendingMachineRepository")
  *
+ * @UniqueEntity(fields="serial", message="vending_machine.serial.unique")
+ * @UniqueEntity(fields="login", message="vending_machine.login.unique")
  * @UniqueEntity(fields="name", message="vending_machine.name.unique")
- * @UniqueEntity(fields="code", message="vending_machine.code.unique")
  */
 class VendingMachine
 {
@@ -39,6 +40,41 @@ class VendingMachine
     protected $nfcTags;
 
     /**
+     * @ORM\Column(type="string", length=16, unique=true)
+     *
+     * @Assert\NotBlank(message="vending_machine.serial.not_blank")
+     * @Assert\Length(
+     *      min=1,
+     *      max=16,
+     *      minMessage="vending_machine.serial.length.min",
+     *      maxMessage="vending_machine.serial.length.max"
+     * )
+     */
+    protected $serial;
+
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true, unique=true)
+     * @Assert\Length(
+     *      min=4,
+     *      max=64,
+     *      minMessage="vending_machine.login.length.min",
+     *      maxMessage="vending_machine.login.length.max"
+     * )
+     */
+    protected $login;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      min=8,
+     *      max=64,
+     *      minMessage="vending_machine.password.length.min",
+     *      maxMessage="vending_machine.password.length.max"
+     * )
+     */
+    protected $password;
+
+    /**
      * @ORM\Column(type="string", length=250, nullable=true, unique=true)
      *
      * @Assert\Length(
@@ -53,20 +89,6 @@ class VendingMachine
      * )
      */
     protected $name;
-
-    /**
-     * @ORM\Column(type="string", length=100, unique=true)
-     *
-     * @Assert\NotBlank(message="vending_machine.code.not_blank")
-     *
-     * @Assert\Length(
-     *      min=2,
-     *      max=100,
-     *      minMessage="vending_machine.code.length.min",
-     *      maxMessage="vending_machine.code.length.max"
-     * )
-     */
-    protected $code;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
@@ -117,6 +139,77 @@ class VendingMachine
     }
 
     /**
+     * Set serial
+     *
+     * @param string $serial
+     * @return VendingMachine
+     */
+    public function setSerial($serial)
+    {
+        $this->serial = $serial;
+
+        return $this;
+    }
+
+    /**
+     * Get serial
+     *
+     * @return string
+     */
+    public function getSerial()
+    {
+        return $this->serial;
+    }
+
+    /**
+     * Set login
+     *
+     * @param string $login
+     * @return VendingMachine
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+
+        return $this;
+    }
+
+    /**
+     * Get login
+     *
+     * @return string
+     */
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return VendingMachine
+     */
+    public function setPassword($password)
+    {
+        if( !is_null($password) ) {
+            $this->password = $password;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
@@ -137,29 +230,6 @@ class VendingMachine
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set code
-     *
-     * @param string $code
-     * @return VendingMachine
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
     }
 
     /**

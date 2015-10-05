@@ -14,7 +14,7 @@ parameters:
     # Specific
     domain:           boilerplate.dev
     domain_dashboard: dashboard.boilerplate.dev
-    domain_sync:      sync-v1.boilerplate.dev
+    domain_sync_v1:   sync-v1.boilerplate.dev
     # Developers
     developers_agency: CHEERS! Unlimited
     developers_link:   http://cheersunlimited.com.ua

@@ -91,6 +91,13 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         } else {
             $_manager = $this->getDoctrine()->getManager();
 
+            $encodedPassword = $this
+                ->get('app.sync.security.password_encoder')
+                ->encodePassword($vendingMachine->getPassword())
+            ;
+
+            $vendingMachine->setPassword($encodedPassword);
+
             $_manager->persist($vendingMachine);
             $_manager->flush();
 
@@ -139,6 +146,16 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
         if( $form->isValid() )
         {
+            if( $form->has('password') && $form->get('password')->getData() )
+            {
+                $encodedPassword = $this
+                    ->get('app.sync.security.password_encoder')
+                    ->encodePassword($vendingMachine->getPassword())
+                ;
+
+                $vendingMachine->setPassword($encodedPassword);
+            }
+
             $_manager->flush();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {

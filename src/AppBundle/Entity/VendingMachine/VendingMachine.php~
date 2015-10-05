@@ -5,7 +5,8 @@ namespace AppBundle\Entity\VendingMachine;
 use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
 
@@ -38,6 +39,32 @@ class VendingMachine
     protected $nfcTags;
 
     /**
+     * @ORM\Column(type="string", length=250, unique=true)
+     *
+     * @Assert\NotBlank(message="vending_machine.login.not_blank")
+     * @Assert\Length(
+     *      min=1,
+     *      max=250,
+     *      minMessage="vending_machine.login.length.min",
+     *      maxMessage="vending_machine.login.length.max"
+     * )
+     */
+    protected $login;
+
+    /**
+     * @ORM\Column(type="string", length=250, unique=true)
+     *
+     * @Assert\NotBlank(message="vending_machine.password.not_blank")
+     * @Assert\Length(
+     *      min=10,
+     *      max=250,
+     *      minMessage="vending_machine.password.length.min",
+     *      maxMessage="vending_machine.password.length.max"
+     * )
+     */
+    protected $password;
+
+    /**
      * @ORM\Column(type="string", length=250, nullable=true, unique=true)
      *
      * @Assert\Length(
@@ -46,9 +73,8 @@ class VendingMachine
      *      minMessage="vending_machine.name.length.min",
      *      maxMessage="vending_machine.name.length.max"
      * )
-     *
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z0-9\p{L}\s]+$/u",
+     *     pattern="/^[a-zA-Z0-9\p{L}-\s]+$/u",
      *     message="vending_machine.name.regex"
      * )
      */
@@ -57,16 +83,15 @@ class VendingMachine
     /**
      * @ORM\Column(type="string", length=100, unique=true)
      *
-     * @Assert\NotBlank(message="vending_machine.code.not_blank")
-     *
+     * @Assert\NotBlank(message="vending_machine.serial.not_blank")
      * @Assert\Length(
      *      min=2,
      *      max=100,
-     *      minMessage="vending_machine.code.length.min",
-     *      maxMessage="vending_machine.code.length.max"
+     *      minMessage="vending_machine.serial.length.min",
+     *      maxMessage="vending_machine.serial.length.max"
      * )
      */
-    protected $code;
+    protected $serial;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
@@ -77,9 +102,8 @@ class VendingMachine
      *      minMessage="vending_machine.name_technician.length.min",
      *      maxMessage="vending_machine.name_technician.length.max"
      * )
-     *
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}\s]+$/u",
+     *     pattern="/^[a-zA-Z\p{L}-\s]+$/u",
      *     message="common.human_name.regex"
      * )
      */
@@ -110,6 +134,14 @@ class VendingMachine
     protected $numberSprings;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->nfcTags = new ArrayCollection;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
@@ -125,7 +157,7 @@ class VendingMachine
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -133,26 +165,26 @@ class VendingMachine
     }
 
     /**
-     * Set code
+     * Set serial
      *
-     * @param string $code
+     * @param string $serial
      * @return VendingMachine
      */
-    public function setCode($code)
+    public function setSerial($serial)
     {
-        $this->code = $code;
+        $this->serial = $serial;
 
         return $this;
     }
 
     /**
-     * Get code
+     * Get serial
      *
-     * @return string 
+     * @return string
      */
-    public function getCode()
+    public function getSerial()
     {
-        return $this->code;
+        return $this->serial;
     }
 
     /**
@@ -171,7 +203,7 @@ class VendingMachine
     /**
      * Get nameTechnician
      *
-     * @return string 
+     * @return string
      */
     public function getNameTechnician()
     {
@@ -194,7 +226,7 @@ class VendingMachine
     /**
      * Get numberShelves
      *
-     * @return integer 
+     * @return integer
      */
     public function getNumberShelves()
     {
@@ -217,7 +249,7 @@ class VendingMachine
     /**
      * Get numberSprings
      *
-     * @return integer 
+     * @return integer
      */
     public function getNumberSprings()
     {
@@ -240,7 +272,7 @@ class VendingMachine
     /**
      * Get school
      *
-     * @return \AppBundle\Entity\School\School 
+     * @return \AppBundle\Entity\School\School
      */
     public function getSchool()
     {
@@ -268,5 +300,39 @@ class VendingMachine
     public function getProductVendingGroup()
     {
         return $this->productVendingGroup;
+    }
+
+    /**
+     * Add nfcTag
+     *
+     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
+     * @return VendingMachine
+     */
+    public function addNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag)
+    {
+        $nfcTag->setVendingMachine($this);
+        $this->nfcTags[] = $nfcTag;
+
+        return $this;
+    }
+
+    /**
+     * Remove nfcTags
+     *
+     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTags
+     */
+    public function removeNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTags)
+    {
+        $this->nfcTags->removeElement($nfcTags);
+    }
+
+    /**
+     * Get nfcTags
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNfcTags()
+    {
+        return $this->nfcTags;
     }
 }

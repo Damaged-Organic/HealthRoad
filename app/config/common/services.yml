@@ -168,3 +168,12 @@ services:
         class: AppBundle\Service\Security\StudentBoundlessAccess
         calls:
              - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    # Sync
+
+    app.sync.security.password_encoder:
+        class: AppBundle\Service\Sync\Security\PasswordEncoder
+
+    app.sync.security.authentication:
+        class:     AppBundle\Service\Sync\Security\Authentication
+        arguments: ["@app.sync.security.password_encoder"]

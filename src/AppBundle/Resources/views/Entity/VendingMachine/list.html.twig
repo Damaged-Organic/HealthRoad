@@ -7,7 +7,7 @@
     {% for vendingMachine in vendingMachines %}
         <p>
             <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}">{{ vendingMachine.name }}</a>
-            | {{ vendingMachine.code }}
+            | {{ vendingMachine.serial }}
             | {{ ( vendingMachine.school ) ? vendingMachine.school.name : 'No school set' }}
             | {{ ( vendingMachine.school and vendingMachine.school.settlement ) ? vendingMachine.school.settlement.name : 'No settlement set' }}
             | {{ ( vendingMachine.school and vendingMachine.school.settlement and vendingMachine.school.settlement.region ) ? vendingMachine.school.settlement.region.name : 'No region set' }}

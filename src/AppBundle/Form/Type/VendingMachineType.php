@@ -23,8 +23,14 @@ class VendingMachineType extends AbstractType
             ->add('name', 'text', [
                 'label' => "Name"
             ])
-            ->add('code', 'text', [
-                'label' => "Code"
+            ->add('serial', 'text', [
+                'label' => "Serial"
+            ])
+            ->add('login', 'text', [
+                'label' => "Login"
+            ])
+            ->add('password', 'password', [
+                'label' => "Password"
             ])
             ->add('school', 'entity', [
                 'required'     => FALSE,
