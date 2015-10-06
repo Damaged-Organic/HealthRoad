@@ -11,13 +11,11 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use AppBundle\Entity\NfcTag\Utility\Interfaces\SyncNfcTagPropertiesInterface,
-    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface,
+use AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineEventPropertiesInterface,
     AppBundle\Entity\Purchase\Utility\Interfaces\SyncPurchasePropertiesInterface;
 
 class SyncController extends Controller implements
-    SyncNfcTagPropertiesInterface,
     SyncVendingMachinePropertiesInterface,
     SyncVendingMachineEventPropertiesInterface,
     SyncPurchasePropertiesInterface
@@ -64,16 +62,40 @@ class SyncController extends Controller implements
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/vending_machines/{v_m_id}/nfc_tags",
+     *      "/vending_machines/{serial}/nfc_tags",
      *      name = "sync_get_vending_machines_nfc_tags",
      *      host = "{domain_sync_v1}",
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
-     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%", "v_m_id" = "\d+" }
+     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
      */
-    public function getVendingMachinesNfcTagsAction(Request $request, $v_m_id)
+    public function getVendingMachinesNfcTagsAction(Request $request, $serial)
     {
+        $_manager = $this->getDoctrine()->getManager();
 
+        $_authentication = $this->get('app.sync.security.authentication');
+
+        $_syncDataBuilder = $this->get('app.sync.sync_data_builder');
+
+        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
+
+        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
+
+        if( !$vendingMachine )
+            throw new NotFoundHttpException("Vending Machine identified by `id` {$serial} not found");
+
+        if( !$_authentication->authenticate($request, $vendingMachine) )
+            throw new AccessDeniedHttpException('Access denied');
+
+        // exception on non-object!!!
+
+        $nfcTags = $vendingMachine->getNfcTags();
+
+        $syncResponse = $_syncDataBuilder->buildNfcTagData($nfcTags);
+
+        $_syncDataRecorder->recordNfcTagData($vendingMachine, $syncResponse);
+
+        return new JsonResponse($syncResponse, 200);
     }
 
     /**

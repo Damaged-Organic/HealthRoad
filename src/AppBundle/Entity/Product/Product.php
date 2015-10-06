@@ -47,6 +47,11 @@ class Product implements SyncProductPropertiesInterface
     protected $productVendingGroups;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Student\Student", mappedBy="products")
+     */
+    protected $students;
+
+    /**
      * @ORM\Column(type="string", length=250)
      *
      * @Assert\NotBlank(message="product.name_full.not_blank")
@@ -229,6 +234,7 @@ class Product implements SyncProductPropertiesInterface
     public function __construct()
     {
         $this->productVendingGroups = new ArrayCollection;
+        $this->students             = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -685,6 +691,39 @@ class Product implements SyncProductPropertiesInterface
         return $this->productVendingGroups;
     }
 
+    /**
+     * Add students
+     *
+     * @param \AppBundle\Entity\Student\Student $students
+     * @return Product
+     */
+    public function addStudent(\AppBundle\Entity\Student\Student $students)
+    {
+        $this->students[] = $students;
+
+        return $this;
+    }
+
+    /**
+     * Remove students
+     *
+     * @param \AppBundle\Entity\Student\Student $students
+     */
+    public function removeStudent(\AppBundle\Entity\Student\Student $students)
+    {
+        $this->students->removeElement($students);
+    }
+
+    /**
+     * Get students
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStudents()
+    {
+        return $this->students;
+    }
+
     static public function getSyncArrayName()
     {
         return self::PRODUCT_ARRAY;
@@ -696,6 +735,19 @@ class Product implements SyncProductPropertiesInterface
             self::PRODUCT_ID    => $this->getId(),
             self::PRODUCT_NAME  => $this->getNameShort(),
             self::PRODUCT_PRICE => $this->getPrice()
+        ];
+    }
+
+    static public function getSyncArrayNameRestricted()
+    {
+        return self::PRODUCT_RESTRICTED_ARRAY;
+    }
+
+    public function getSyncObjectDataRestricted()
+    {
+        return [
+            self::PRODUCT_RESTRICTED_ID     => $this->getId(),
+            self::PRODUCT_RESTRICTED_AMOUNT => 0
         ];
     }
 }

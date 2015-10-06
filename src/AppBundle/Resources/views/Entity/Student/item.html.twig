@@ -22,7 +22,24 @@
         </p>
     {% endif %}
 
+    <p>-------------------------------------------------------------------------------------------------</p>
+    <p>NFC-метка:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
     {% if student.nfcTag %}
         {{ render(controller('AppBundle:Binding/NfcTag:show', { 'objectClass': class(student)|lower, 'objectId': student.id })) }}
+    {% endif %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
+        <p>-------------------------------------------------------------------------------------------------</p>
+        <p>
+            <a href="{{ path('product_choose', { 'objectClass': class(student)|lower, 'objectId': student.id }) }}">@ Запретить продукт</a>
+        </p>
+    {% endif %}
+
+    <p>-------------------------------------------------------------------------------------------------</p>
+    <p>Запрещенные продукты:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% if student.products %}
+        {{ render(controller('AppBundle:Binding/Product:show', { 'objectClass': class(student)|lower, 'objectId': student.id })) }}
     {% endif %}
 {% endblock %}

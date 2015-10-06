@@ -10,7 +10,8 @@ use Doctrine\ORM\EntityManager,
 use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
     AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Entity\VendingMachine\VendingMachineSync,
-    AppBundle\Entity\Product\Product;
+    AppBundle\Entity\Product\Product,
+    AppBundle\Entity\NfcTag\NfcTag;
 
 class SyncDataBuilder implements SyncDataInterface
 {
@@ -29,6 +30,30 @@ class SyncDataBuilder implements SyncDataInterface
 
         $data = [
             Product::getSyncArrayName() => $data
+        ];
+
+        $syncResponse = [
+            self::SYNC_CHECKSUM => $this->getRecordChecksum($data),
+            self::SYNC_DATA     => $data
+        ];
+
+        return $syncResponse;
+    }
+
+    public function buildNfcTagData(PersistentCollection $nfcTags)
+    {
+        $data = [];
+
+        foreach($nfcTags as $key => $nfcTag) {
+            $data[$key] = $nfcTag->getSyncObjectData();
+
+            foreach($nfcTag->getStudent()->getProducts() as $product) {
+                $data[$key][Product::getSyncArrayNameRestricted()][] = $product->getSyncObjectDataRestricted();
+            }
+        }
+
+        $data = [
+            NfcTag::getSyncArrayName() => $data
         ];
 
         $syncResponse = [

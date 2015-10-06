@@ -38,4 +38,22 @@ class SyncDataRecorder implements SyncDataInterface
         $this->_manager->persist($vendingMachineSync);
         $this->_manager->flush();
     }
+
+    public function recordNfcTagData(VendingMachine $vendingMachine, $syncResponse)
+    {
+        if( !$syncResponse[self::SYNC_CHECKSUM] || !$syncResponse[self::SYNC_DATA] )
+            throw new BadCredentialsException('Sync response array is missing required data');
+
+        $vendingMachineSync = (new VendingMachineSync)
+            ->setVendingMachine($vendingMachine)
+            ->setVendingMachineSyncId(NULL)
+            ->setSyncedType(self::SYNC_TYPE_NFC_TAGS)
+            ->setSyncedAt(new DateTime)
+            ->setChecksum($syncResponse[self::SYNC_CHECKSUM])
+            ->setData(json_encode($syncResponse[self::SYNC_DATA]))
+        ;
+
+        $this->_manager->persist($vendingMachineSync);
+        $this->_manager->flush();
+    }
 }

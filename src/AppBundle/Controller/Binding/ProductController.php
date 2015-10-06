@@ -14,7 +14,8 @@ use AppBundle\Controller\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\ProductBoundlessAccess,
     AppBundle\Security\Authorization\Voter\ProductVoter,
     AppBundle\Entity\Supplier\Supplier,
-    AppBundle\Entity\Product\ProductVendingGroup;
+    AppBundle\Entity\Product\ProductVendingGroup,
+    AppBundle\Entity\Student\Student;
 
 class ProductController extends Controller implements UserRoleListInterface
 {
@@ -47,6 +48,15 @@ class ProductController extends Controller implements UserRoleListInterface
                     throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
 
                 $products = $supplier->getProducts();
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$student )
+                    throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
+
+                $products = $student->getProducts();
             break;
 
             default:
@@ -92,6 +102,8 @@ class ProductController extends Controller implements UserRoleListInterface
                     'class' => $this->getObjectClassName($productVendingGroup),
                     'id'    => $productVendingGroup->getId()
                 ];
+
+                $products = $_manager->getRepository('AppBundle:Product\Product')->findAll();
             break;
 
             case $this->compareObjectClassNameToString(new Supplier, $objectClass):
@@ -104,14 +116,28 @@ class ProductController extends Controller implements UserRoleListInterface
                     'class' => $this->getObjectClassName($supplier),
                     'id'    => $supplier->getId()
                 ];
+
+                $products = $_manager->getRepository('AppBundle:Product\Product')->findAll();
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$student )
+                    throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
+
+                $object = [
+                    'class' => $this->getObjectClassName($student),
+                    'id'    => $student->getId()
+                ];
+
+                $products = $student->getNfcTag()->getVendingMachine()->getVandingMachineGroup()->getProducts();
             break;
 
             default:
                 throw new NotAcceptableHttpException("Object not supported");
             break;
         }
-
-        $products = $_manager->getRepository('AppBundle:Product\Product')->findAll();
 
         return $this->render('AppBundle:Entity/Product/Binding:choose.html.twig', [
             'products'    => $products,
@@ -181,6 +207,22 @@ class ProductController extends Controller implements UserRoleListInterface
                 ];
             break;
 
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$student )
+                    throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
+
+                $student->addProduct($product);
+
+                $_manager->persist($student);
+
+                $redirect = [
+                    'route' => "student_update",
+                    'id'    => $student->getId()
+                ];
+            break;
+
             default:
                 throw $this->createNotFoundException("Object not supported");
             break;
@@ -242,6 +284,22 @@ class ProductController extends Controller implements UserRoleListInterface
                 $redirect = [
                     'route' => "supplier_update",
                     'id'    => $supplierId
+                ];
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$student )
+                    throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
+
+                $student->removeProduct($product);
+
+                $_manager->persist($student);
+
+                $redirect = [
+                    'route' => "student_update",
+                    'id'    => $student->getId()
                 ];
             break;
 

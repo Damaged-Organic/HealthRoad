@@ -43,6 +43,12 @@ class Student
     protected $nfcTag;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product\Product", inversedBy="students")
+     * @ORM\JoinTable(name="students_products")
+     */
+    protected $products;
+
+    /**
      * @ORM\Column(type="string", length=100)
      *
      * @Assert\Length(
@@ -282,5 +288,97 @@ class Student
     public function getDailyLimit()
     {
         return $this->dailyLimit;
+    }
+
+    /**
+     * Set employee
+     *
+     * @param \AppBundle\Entity\Employee\Employee $employee
+     * @return Student
+     */
+    public function setEmployee(\AppBundle\Entity\Employee\Employee $employee)
+    {
+        $this->employee = $employee;
+
+        return $this;
+    }
+
+    /**
+     * Get employee
+     *
+     * @return \AppBundle\Entity\Employee\Employee 
+     */
+    public function getEmployee()
+    {
+        return $this->employee;
+    }
+
+    /**
+     * Set school
+     *
+     * @param \AppBundle\Entity\School\School $school
+     * @return Student
+     */
+    public function setSchool(\AppBundle\Entity\School\School $school = null)
+    {
+        $this->school = $school;
+
+        return $this;
+    }
+
+    /**
+     * Get school
+     *
+     * @return \AppBundle\Entity\School\School 
+     */
+    public function getSchool()
+    {
+        return $this->school;
+    }
+
+    /**
+     * Set customer
+     *
+     * @param \AppBundle\Entity\Customer\Customer $customer
+     * @return Student
+     */
+    public function setCustomer(\AppBundle\Entity\Customer\Customer $customer = null)
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * Get customer
+     *
+     * @return \AppBundle\Entity\Customer\Customer 
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
+     * Set nfcTag
+     *
+     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
+     * @return Student
+     */
+    public function setNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag = null)
+    {
+        $this->nfcTag = $nfcTag;
+
+        return $this;
+    }
+
+    /**
+     * Get nfcTag
+     *
+     * @return \AppBundle\Entity\NfcTag\NfcTag 
+     */
+    public function getNfcTag()
+    {
+        return $this->nfcTag;
     }
 }

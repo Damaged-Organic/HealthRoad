@@ -8,12 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity,
     Symfony\Component\HttpFoundation\File\File;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
+    AppBundle\Validator\Constraints as CustomAssert,
+    AppBundle\Entity\Product\Utility\Interfaces\SyncProductPropertiesInterface;
 
 /**
  * @ORM\Table(name="products")
@@ -23,7 +25,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @Vich\Uploadable
  */
-class Product
+class Product implements SyncProductPropertiesInterface
 {
     use IdMapperTrait;
 
@@ -40,9 +42,14 @@ class Product
     protected $supplier;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineGroup", mappedBy="products")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product\ProductVendingGroup", mappedBy="products")
      */
-    protected $vendingMachineGroups;
+    protected $productVendingGroups;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Student\Student", mappedBy="products")
+     */
+    protected $students;
 
     /**
      * @ORM\Column(type="string", length=250)
@@ -91,6 +98,11 @@ class Product
     protected $price;
 
     /**
+     * @Assert\File(
+     *     maxSize="2M",
+     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
+     * )
+     *
      * @Vich\UploadableField(mapping="product_image", fileNameProperty="imageProductName")
      */
     protected $imageProductFile;
@@ -101,6 +113,11 @@ class Product
     protected $imageProductName;
 
     /**
+     * @Assert\File(
+     *     maxSize="2M",
+     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
+     * )
+     *
      * @Vich\UploadableField(mapping="product_certificate", fileNameProperty="imageCertificateName")
      */
     protected $imageCertificateFile;
@@ -138,7 +155,7 @@ class Product
      * @ORM\Column(type="string", length=200, nullable=true)
      *
      * @Assert\Length(
-     *      min=2,
+     *      min=1,
      *      max=200,
      *      minMessage="product.shelf_life.length.min",
      *      maxMessage="product.shelf_life.length.max"
@@ -156,7 +173,19 @@ class Product
      *      maxMessage="product.storage_temperature.length.max"
      * )
      */
-    protected $storageTemperature;
+    protected $storageTemperatureMin;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @Assert\Range(
+     *      min=-100,
+     *      max=100,
+     *      minMessage="product.storage_temperature.length.min",
+     *      maxMessage="product.storage_temperature.length.max"
+     * )
+     */
+    protected $storageTemperatureMax;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -199,6 +228,15 @@ class Product
      */
     protected $updatedAt;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->productVendingGroups = new ArrayCollection;
+        $this->students             = new ArrayCollection;
+    }
+
     /* Vich Uploadable Methods */
 
     public function setImageProductFile(File $imageProduct = NULL)
@@ -228,4 +266,442 @@ class Product
     }
 
     /* End \ Vich Uploadable Methods */
+
+    /**
+     * Set nameFull
+     *
+     * @param string $nameFull
+     * @return Product
+     */
+    public function setNameFull($nameFull)
+    {
+        $this->nameFull = $nameFull;
+
+        return $this;
+    }
+
+    /**
+     * Get nameFull
+     *
+     * @return string 
+     */
+    public function getNameFull()
+    {
+        return $this->nameFull;
+    }
+
+    /**
+     * Set nameShort
+     *
+     * @param string $nameShort
+     * @return Product
+     */
+    public function setNameShort($nameShort)
+    {
+        $this->nameShort = $nameShort;
+
+        return $this;
+    }
+
+    /**
+     * Get nameShort
+     *
+     * @return string 
+     */
+    public function getNameShort()
+    {
+        return $this->nameShort;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     * @return Product
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string 
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set price
+     *
+     * @param string $price
+     * @return Product
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return string 
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set imageProductName
+     *
+     * @param string $imageProductName
+     * @return Product
+     */
+    public function setImageProductName($imageProductName)
+    {
+        $this->imageProductName = $imageProductName;
+
+        return $this;
+    }
+
+    /**
+     * Get imageProductName
+     *
+     * @return string 
+     */
+    public function getImageProductName()
+    {
+        return $this->imageProductName;
+    }
+
+    /**
+     * Set imageCertificateName
+     *
+     * @param string $imageCertificateName
+     * @return Product
+     */
+    public function setImageCertificateName($imageCertificateName)
+    {
+        $this->imageCertificateName = $imageCertificateName;
+
+        return $this;
+    }
+
+    /**
+     * Get imageCertificateName
+     *
+     * @return string 
+     */
+    public function getImageCertificateName()
+    {
+        return $this->imageCertificateName;
+    }
+
+    /**
+     * Set manufacturer
+     *
+     * @param string $manufacturer
+     * @return Product
+     */
+    public function setManufacturer($manufacturer)
+    {
+        $this->manufacturer = $manufacturer;
+
+        return $this;
+    }
+
+    /**
+     * Get manufacturer
+     *
+     * @return string 
+     */
+    public function getManufacturer()
+    {
+        return $this->manufacturer;
+    }
+
+    /**
+     * Set calories
+     *
+     * @param integer $calories
+     * @return Product
+     */
+    public function setCalories($calories)
+    {
+        $this->calories = $calories;
+
+        return $this;
+    }
+
+    /**
+     * Get calories
+     *
+     * @return integer 
+     */
+    public function getCalories()
+    {
+        return $this->calories;
+    }
+
+    /**
+     * Set shelfLife
+     *
+     * @param string $shelfLife
+     * @return Product
+     */
+    public function setShelfLife($shelfLife)
+    {
+        $this->shelfLife = $shelfLife;
+
+        return $this;
+    }
+
+    /**
+     * Get shelfLife
+     *
+     * @return string 
+     */
+    public function getShelfLife()
+    {
+        return $this->shelfLife;
+    }
+
+    /**
+     * Set storageTemperatureMin
+     *
+     * @param integer $storageTemperatureMin
+     * @return Product
+     */
+    public function setStorageTemperatureMin($storageTemperatureMin)
+    {
+        $this->storageTemperatureMin = $storageTemperatureMin;
+
+        return $this;
+    }
+
+    /**
+     * Get storageTemperatureMin
+     *
+     * @return integer 
+     */
+    public function getStorageTemperatureMin()
+    {
+        return $this->storageTemperatureMin;
+    }
+
+    /**
+     * Set storageTemperatureMax
+     *
+     * @param integer $storageTemperatureMax
+     * @return Product
+     */
+    public function setStorageTemperatureMax($storageTemperatureMax)
+    {
+        $this->storageTemperatureMax = $storageTemperatureMax;
+
+        return $this;
+    }
+
+    /**
+     * Get storageTemperatureMax
+     *
+     * @return integer
+     */
+    public function getStorageTemperatureMax()
+    {
+        return $this->storageTemperatureMax;
+    }
+
+    /**
+     * Set weigth
+     *
+     * @param integer $weigth
+     * @return Product
+     */
+    public function setWeigth($weigth)
+    {
+        $this->weigth = $weigth;
+
+        return $this;
+    }
+
+    /**
+     * Get weigth
+     *
+     * @return integer 
+     */
+    public function getWeigth()
+    {
+        return $this->weigth;
+    }
+
+    /**
+     * Set measurementUnit
+     *
+     * @param string $measurementUnit
+     * @return Product
+     */
+    public function setMeasurementUnit($measurementUnit)
+    {
+        $this->measurementUnit = $measurementUnit;
+
+        return $this;
+    }
+
+    /**
+     * Get measurementUnit
+     *
+     * @return string 
+     */
+    public function getMeasurementUnit()
+    {
+        return $this->measurementUnit;
+    }
+
+    /**
+     * Set amountInBox
+     *
+     * @param integer $amountInBox
+     * @return Product
+     */
+    public function setAmountInBox($amountInBox)
+    {
+        $this->amountInBox = $amountInBox;
+
+        return $this;
+    }
+
+    /**
+     * Get amountInBox
+     *
+     * @return integer 
+     */
+    public function getAmountInBox()
+    {
+        return $this->amountInBox;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return Product
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set productCategory
+     *
+     * @param \AppBundle\Entity\Product\ProductCategory $productCategory
+     * @return Product
+     */
+    public function setProductCategory(\AppBundle\Entity\Product\ProductCategory $productCategory = null)
+    {
+        $this->productCategory = $productCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get productCategory
+     *
+     * @return \AppBundle\Entity\Product\ProductCategory 
+     */
+    public function getProductCategory()
+    {
+        return $this->productCategory;
+    }
+
+    /**
+     * Set supplier
+     *
+     * @param \AppBundle\Entity\Supplier\Supplier $supplier
+     * @return Product
+     */
+    public function setSupplier(\AppBundle\Entity\Supplier\Supplier $supplier = null)
+    {
+        $this->supplier = $supplier;
+
+        return $this;
+    }
+
+    /**
+     * Get supplier
+     *
+     * @return \AppBundle\Entity\Supplier\Supplier 
+     */
+    public function getSupplier()
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * Add productVendingGroups
+     *
+     * @param \AppBundle\Entity\Product\ProductVendingGroup $productVendingGroups
+     * @return Product
+     */
+    public function addProductVendingGroup(\AppBundle\Entity\Product\ProductVendingGroup $productVendingGroups)
+    {
+        $this->productVendingGroups[] = $productVendingGroups;
+
+        return $this;
+    }
+
+    /**
+     * Remove productVendingGroups
+     *
+     * @param \AppBundle\Entity\Product\ProductVendingGroup $productVendingGroups
+     */
+    public function removeProductVendingGroup(\AppBundle\Entity\Product\ProductVendingGroup $productVendingGroups)
+    {
+        $this->productVendingGroups->removeElement($productVendingGroups);
+    }
+
+    /**
+     * Get productVendingGroups
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProductVendingGroups()
+    {
+        return $this->productVendingGroups;
+    }
+
+    static public function getSyncArrayName()
+    {
+        return self::PRODUCT_ARRAY;
+    }
+
+    public function getSyncObjectData()
+    {
+        return [
+            self::PRODUCT_ID    => $this->getId(),
+            self::PRODUCT_NAME  => $this->getNameShort(),
+            self::PRODUCT_PRICE => $this->getPrice()
+        ];
+    }
 }

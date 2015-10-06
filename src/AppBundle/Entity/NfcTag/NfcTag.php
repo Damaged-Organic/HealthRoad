@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
+    AppBundle\Validator\Constraints as CustomAssert,
+    AppBundle\Entity\NfcTag\Utility\Interfaces\SyncNfcTagPropertiesInterface;
 
 /**
  * @ORM\Table(name="nfc_tags")
@@ -17,7 +18,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="number", message="nfc_tag.number.unique")
  */
-class NfcTag
+class NfcTag implements SyncNfcTagPropertiesInterface
 {
     use IdMapperTrait;
 
@@ -146,5 +147,19 @@ class NfcTag
     public function getStudent()
     {
         return $this->student;
+    }
+
+    static public function getSyncArrayName()
+    {
+        return self::NFC_TAG_ARRAY;
+    }
+
+    public function getSyncObjectData()
+    {
+        return [
+            self::NFC_TAG_CODE        => $this->getCode(),
+            self::NFC_TAG_DAILY_LIMIT => $this->getStudent()->getDailyLimit(),
+            self::NFC_TAG_TOTAL_LIMIT => $this->getStudent()->getTotalLimit()
+        ];
     }
 }
