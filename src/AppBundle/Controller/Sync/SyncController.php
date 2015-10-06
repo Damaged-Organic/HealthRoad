@@ -50,6 +50,8 @@ class SyncController extends Controller implements
         if( !$_authentication->authenticate($request, $vendingMachine) )
             throw new AccessDeniedHttpException('Access denied');
 
+        // exception on non-object!!!
+
         $products = $vendingMachine->getProductVendingGroup()->getProducts();
 
         $syncResponse = $_syncDataBuilder->buildProductData($products);
