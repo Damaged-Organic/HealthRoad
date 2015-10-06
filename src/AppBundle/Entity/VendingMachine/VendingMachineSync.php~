@@ -70,29 +70,6 @@ class VendingMachineSync
     }
 
     /**
-     * Set syncedType
-     *
-     * @param string $syncedType
-     * @return VendingMachineSync
-     */
-    public function setSyncedType($syncedType)
-    {
-        $this->syncedType = $syncedType;
-
-        return $this;
-    }
-
-    /**
-     * Get syncedType
-     *
-     * @return string
-     */
-    public function getSyncedType()
-    {
-        return $this->syncedType;
-    }
-
-    /**
      * Set syncedAt
      *
      * @param \DateTime $syncedAt

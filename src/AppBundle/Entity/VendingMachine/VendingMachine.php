@@ -40,6 +40,11 @@ class VendingMachine
     protected $nfcTags;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineSync", mappedBy="vendingMachine")
+     */
+    protected $vendingMachineSyncs;
+
+    /**
      * @ORM\Column(type="string", length=16, unique=true)
      *
      * @Assert\NotBlank(message="vending_machine.serial.not_blank")
@@ -135,7 +140,8 @@ class VendingMachine
      */
     public function __construct()
     {
-        $this->nfcTags = new ArrayCollection;
+        $this->nfcTags             = new ArrayCollection;
+        $this->vendingMachineSyncs = new ArrayCollection;
     }
 
     /**
@@ -379,5 +385,39 @@ class VendingMachine
     public function getNfcTags()
     {
         return $this->nfcTags;
+    }
+
+    /**
+     * Add vendingMachineSync
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineSync $vendingMachineSync
+     * @return VendingMachine
+     */
+    public function addVendingMachineSync(\AppBundle\Entity\VendingMachine\VendingMachineSync $vendingMachineSync)
+    {
+        $vendingMachineSync->setVendingMachine($this);
+        $this->vendingMachineSyncs[] = $vendingMachineSync;
+
+        return $this;
+    }
+
+    /**
+     * Remove vendingMachineSyncs
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineSync $vendingMachineSyncs
+     */
+    public function removeVendingMachineSync(\AppBundle\Entity\VendingMachine\VendingMachineSync $vendingMachineSyncs)
+    {
+        $this->vendingMachineSyncs->removeElement($vendingMachineSyncs);
+    }
+
+    /**
+     * Get vendingMachineSyncs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVendingMachineSyncs()
+    {
+        return $this->vendingMachineSyncs;
     }
 }

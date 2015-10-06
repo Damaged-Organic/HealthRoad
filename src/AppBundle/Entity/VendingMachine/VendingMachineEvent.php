@@ -4,5 +4,4 @@ namespace AppBundle\Entity\VendingMachine;
 
 class VendingMachineEvent
 {
-
 }

@@ -171,6 +171,13 @@ services:
 
     # Sync
 
+    app.sync.sync_data_builder:
+        class: AppBundle\Service\Sync\SyncDataBuilder
+
+    app.sync.sync_data_recorder:
+        class:     AppBundle\Service\Sync\SyncDataRecorder
+        arguments: ["@doctrine.orm.entity_manager"]
+
     app.sync.security.password_encoder:
         class: AppBundle\Service\Sync\Security\PasswordEncoder
 

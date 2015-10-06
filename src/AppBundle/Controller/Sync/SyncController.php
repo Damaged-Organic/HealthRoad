@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use AppBundle\Entity\Product\Product;
-
 use AppBundle\Entity\NfcTag\Utility\Interfaces\SyncNfcTagPropertiesInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineEventPropertiesInterface,
@@ -24,9 +22,6 @@ class SyncController extends Controller implements
     SyncVendingMachineEventPropertiesInterface,
     SyncPurchasePropertiesInterface
 {
-    const SYNC_DATA     = 'data';
-    const SYNC_CHECKSUM = 'checksum';
-
     /**
      * @Method({"GET"})
      * @Route(
@@ -39,18 +34,13 @@ class SyncController extends Controller implements
      */
     public function getProductsAction(Request $request, $serial)
     {
-        /*file_put_contents(
-            'test.txt',
-            print_r([
-                'login'    => $request->query->get('login'),
-                'password' => $request->query->get('password')
-            ], TRUE),
-            FILE_APPEND
-        );*/
-
         $_manager = $this->getDoctrine()->getManager();
 
         $_authentication = $this->get('app.sync.security.authentication');
+
+        $_syncDataBuilder = $this->get('app.sync.sync_data_builder');
+
+        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
 
         $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
 
@@ -62,21 +52,11 @@ class SyncController extends Controller implements
 
         $products = $vendingMachine->getProductVendingGroup()->getProducts();
 
-        $productsData = [];
-        foreach($products as $product) {
-            $productsData[] = $product->getSyncObjectData();
-        }
+        $syncResponse = $_syncDataBuilder->buildProductData($products);
 
-        $data = [
-            Product::getSyncArrayName() => $productsData
-        ];
+        $_syncDataRecorder->recordProductData($vendingMachine, $syncResponse);
 
-        $response = [
-            self::SYNC_CHECKSUM => hash('sha256', json_encode($data)),
-            self::SYNC_DATA     => $data
-        ];
-
-        return new JsonResponse($response, 200);
+        return new JsonResponse($syncResponse, 200);
     }
 
     /**

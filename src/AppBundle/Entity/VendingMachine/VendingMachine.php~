@@ -14,8 +14,9 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
  * @ORM\Table(name="vending_machines")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\VendingMachine\Repository\VendingMachineRepository")
  *
+ * @UniqueEntity(fields="serial", message="vending_machine.serial.unique")
+ * @UniqueEntity(fields="login", message="vending_machine.login.unique")
  * @UniqueEntity(fields="name", message="vending_machine.name.unique")
- * @UniqueEntity(fields="code", message="vending_machine.code.unique")
  */
 class VendingMachine
 {
@@ -39,12 +40,28 @@ class VendingMachine
     protected $nfcTags;
 
     /**
-     * @ORM\Column(type="string", length=250, unique=true)
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineSync", mappedBy="vendingMachine")
+     */
+    protected $vendingMachineSyncs;
+
+    /**
+     * @ORM\Column(type="string", length=16, unique=true)
      *
-     * @Assert\NotBlank(message="vending_machine.login.not_blank")
+     * @Assert\NotBlank(message="vending_machine.serial.not_blank")
      * @Assert\Length(
      *      min=1,
-     *      max=250,
+     *      max=16,
+     *      minMessage="vending_machine.serial.length.min",
+     *      maxMessage="vending_machine.serial.length.max"
+     * )
+     */
+    protected $serial;
+
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true, unique=true)
+     * @Assert\Length(
+     *      min=4,
+     *      max=64,
      *      minMessage="vending_machine.login.length.min",
      *      maxMessage="vending_machine.login.length.max"
      * )
@@ -52,12 +69,10 @@ class VendingMachine
     protected $login;
 
     /**
-     * @ORM\Column(type="string", length=250, unique=true)
-     *
-     * @Assert\NotBlank(message="vending_machine.password.not_blank")
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(
-     *      min=10,
-     *      max=250,
+     *      min=8,
+     *      max=64,
      *      minMessage="vending_machine.password.length.min",
      *      maxMessage="vending_machine.password.length.max"
      * )
@@ -79,19 +94,6 @@ class VendingMachine
      * )
      */
     protected $name;
-
-    /**
-     * @ORM\Column(type="string", length=100, unique=true)
-     *
-     * @Assert\NotBlank(message="vending_machine.serial.not_blank")
-     * @Assert\Length(
-     *      min=2,
-     *      max=100,
-     *      minMessage="vending_machine.serial.length.min",
-     *      maxMessage="vending_machine.serial.length.max"
-     * )
-     */
-    protected $serial;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
@@ -142,29 +144,6 @@ class VendingMachine
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return VendingMachine
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Set serial
      *
      * @param string $serial
@@ -185,6 +164,77 @@ class VendingMachine
     public function getSerial()
     {
         return $this->serial;
+    }
+
+    /**
+     * Set login
+     *
+     * @param string $login
+     * @return VendingMachine
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+
+        return $this;
+    }
+
+    /**
+     * Get login
+     *
+     * @return string
+     */
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return VendingMachine
+     */
+    public function setPassword($password)
+    {
+        if( !is_null($password) ) {
+            $this->password = $password;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return VendingMachine
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
