@@ -38,7 +38,7 @@ class ProductType extends AbstractType
                 'label' => "Code"
             ])
             ->add('price', 'number', [
-                'label' => "Code",
+                'label' => "Price",
                 'scale' => 2
             ])
             ->add('manufacturer', 'text', [

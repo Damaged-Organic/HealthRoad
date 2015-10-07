@@ -2,6 +2,8 @@
 // AppBundle/Controller/Sync/SyncController.php
 namespace AppBundle\Controller\Sync;
 
+use DateTime;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request,
 use AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineEventPropertiesInterface,
     AppBundle\Entity\Purchase\Utility\Interfaces\SyncPurchasePropertiesInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class SyncController extends Controller implements
     SyncVendingMachinePropertiesInterface,
@@ -99,18 +102,101 @@ class SyncController extends Controller implements
     }
 
     /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/vending_machines/{serial}/sync",
+     *      name = "sync_get_vending_machines_sync",
+     *      host = "{domain_sync_v1}",
+     *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
+     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
+     * )
+     */
+    public function getVendingMachinesSync(Request $request, $serial)
+    {
+        $_manager = $this->getDoctrine()->getManager();
+
+        $_authentication = $this->get('app.sync.security.authentication');
+
+        $_syncDataBuilder = $this->get('app.sync.sync_data_builder');
+
+        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
+
+        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
+
+        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
+
+        if( !$vendingMachine )
+            throw new NotFoundHttpException("Vending Machine identified by `id` {$serial} not found");
+
+        if( !$_authentication->authenticate($request, $vendingMachine) )
+            throw new AccessDeniedHttpException('Access denied');
+
+        // Validator of request?
+
+        if( !$_syncDataValidator->validateVendingMachineSyncData($request) )
+            return new Response(NULL, 400);
+
+
+        $vendingMachineSync = $_manager->getRepository('AppBundle:VendingMachine\VendingMachineSync')->findLatestByVendingMachineSyncId($request->query->get('type'));
+
+        $syncResponse = $_syncDataBuilder->buildSyncData($vendingMachineSync);
+
+        $_syncDataRecorder->recordSyncData($vendingMachine, $syncResponse);
+
+        return new JsonResponse($syncResponse, 200);
+    }
+
+    /**
      * @Method({"PUT"})
      * @Route(
-     *      "/vending_machines/{v_m_id}",
+     *      "/vending_machines/{serial}",
      *      name = "sync_put_vending_machines",
      *      host = "{domain_sync_v1}",
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
-     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%", "v_m_id" = "\d+" }
+     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
      */
-    public function putVendingMachines(Request $request, $v_m_id)
+    public function putVendingMachines(Request $request, $serial)
     {
-        $data = $request->request->get('request');
+        $_manager = $this->getDoctrine()->getManager();
+
+        $_authentication = $this->get('app.sync.security.authentication');
+
+        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
+
+        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
+
+        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
+
+        if( !$vendingMachine )
+            throw new NotFoundHttpException("Vending Machine identified by `id` {$serial} not found");
+
+        if( !$_authentication->authenticate($request, $vendingMachine) )
+            throw new AccessDeniedHttpException('Access denied');
+
+        // Validator of request?
+
+        if( !$_syncDataValidator->validateVendingMachineData($request) )
+            return new Response(NULL, 400);
+
+        $requestContent = json_decode($request->getContent(), TRUE);
+
+        // check if exists
+
+        $vendingMachineSync = $_manager->getRepository('AppBundle:VendingMachine\VendingMachineSync')->findOneBy([
+            'vendingMachine'       => $vendingMachine,
+            'vendingMachineSyncId' => $requestContent['data']['sync']['sync-id'],
+            'syncedType'           => "..."
+        ]);
+
+        if( $vendingMachineSync )
+            return new Response(NULL, 200);
+
+        $vendingMachine->setVendingMachineLoadedAt(new DateTime($requestContent['data']['vending-machine']['load-datetime']));
+
+        $_syncDataRecorder->recordVendingMachineData($vendingMachine, $requestContent);
+
+        return new JsonResponse(NULL, 200);
     }
 
     /**

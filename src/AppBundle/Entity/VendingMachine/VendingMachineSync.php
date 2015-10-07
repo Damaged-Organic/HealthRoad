@@ -5,13 +5,14 @@ namespace AppBundle\Entity\VendingMachine;
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface;
 
 /**
  * @ORM\Table(name="vending_machines_sync")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\VendingMachine\Repository\VendingMachineSyncRepository")
  */
-class VendingMachineSync
+class VendingMachineSync implements SyncVendingMachineSyncPropertiesInterface
 {
     use IdMapperTrait;
 
@@ -182,5 +183,17 @@ class VendingMachineSync
     public function getVendingMachine()
     {
         return $this->vendingMachine;
+    }
+
+    static public function getSyncArrayName()
+    {
+        return self::VENDING_MACHINE_SYNC_ARRAY;
+    }
+
+    public function getSyncObjectData()
+    {
+        return [
+            self::VENDING_MACHINE_SYNC_ID => $this->getVendingMachineSyncId()
+        ];
     }
 }

@@ -136,6 +136,11 @@ class VendingMachine
     protected $numberSprings;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $vendingMachineLoadedAt;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -305,6 +310,29 @@ class VendingMachine
     public function getNumberSprings()
     {
         return $this->numberSprings;
+    }
+
+    /**
+     * Set vendingMachineLoadedAt
+     *
+     * @param \DateTime $vendingMachineLoadedAt
+     * @return VendingMachine
+     */
+    public function setVendingMachineLoadedAt($vendingMachineLoadedAt)
+    {
+        $this->vendingMachineLoadedAt = $vendingMachineLoadedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get vendingMachineLoadedAt
+     *
+     * @return \DateTime
+     */
+    public function getVendingMachineLoadedAt()
+    {
+        return $this->vendingMachineLoadedAt;
     }
 
     /**

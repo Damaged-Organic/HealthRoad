@@ -131,7 +131,7 @@ class ProductController extends Controller implements UserRoleListInterface
                     'id'    => $student->getId()
                 ];
 
-                $products = $student->getNfcTag()->getVendingMachine()->getVandingMachineGroup()->getProducts();
+                $products = $student->getNfcTag()->getVendingMachine()->getProductVendingGroup()->getProducts();
             break;
 
             default:

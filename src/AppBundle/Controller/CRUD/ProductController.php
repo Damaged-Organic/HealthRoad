@@ -95,9 +95,9 @@ class ProductController extends Controller implements UserRoleListInterface
             $_manager->flush();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
-                return $this->redirectToRoute('product_vending_group_read');
+                return $this->redirectToRoute('product_read');
             } else {
-                return $this->redirectToRoute('product_vending_group_update', [
+                return $this->redirectToRoute('product_update', [
                     'id' => $product->getId()
                 ]);
             }
