@@ -13,7 +13,9 @@ class SyncDataValidator implements SyncVendingMachineSyncPropertiesInterface
         if( !$request->query->has(self::VENDING_MACHINE_SYNC_TYPE) )
             return FALSE;
 
-        return TRUE;
+        return [
+            self::VENDING_MACHINE_SYNC_TYPE => $request->query->get(self::VENDING_MACHINE_SYNC_TYPE)
+        ];
     }
 
     public function validateVendingMachineData(Request $request)

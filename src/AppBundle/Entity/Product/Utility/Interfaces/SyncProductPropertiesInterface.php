@@ -12,6 +12,5 @@ interface SyncProductPropertiesInterface
 
     const PRODUCT_RESTRICTED_ARRAY = 'restricted-products';
 
-    const PRODUCT_RESTRICTED_ID     = 'id';
-    const PRODUCT_RESTRICTED_AMOUNT = 'amount';
+    const PRODUCT_RESTRICTED_ID = 'id';
 }

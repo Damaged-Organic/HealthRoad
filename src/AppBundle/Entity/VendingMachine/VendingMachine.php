@@ -448,4 +448,16 @@ class VendingMachine
     {
         return $this->vendingMachineSyncs;
     }
+
+    /**
+     * Shortcut to get products if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getProducts()
+    {
+        return ( $this->getProductVendingGroup() )
+            ? $this->getProductVendingGroup()->getProducts()
+            : NULL;
+    }
 }

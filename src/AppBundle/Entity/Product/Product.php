@@ -746,8 +746,7 @@ class Product implements SyncProductPropertiesInterface
     public function getSyncObjectDataRestricted()
     {
         return [
-            self::PRODUCT_RESTRICTED_ID     => $this->getId(),
-            self::PRODUCT_RESTRICTED_AMOUNT => 0
+            self::PRODUCT_RESTRICTED_ID     => $this->getId()
         ];
     }
 }

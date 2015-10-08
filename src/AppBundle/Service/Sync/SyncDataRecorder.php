@@ -17,7 +17,7 @@ class SyncDataRecorder implements SyncDataInterface, SyncVendingMachineSyncPrope
 {
     protected $_manager;
 
-    public function __construct(EntityManager $manager)
+    public function setManager(EntityManager $manager)
     {
         $this->_manager = $manager;
     }
@@ -66,7 +66,7 @@ class SyncDataRecorder implements SyncDataInterface, SyncVendingMachineSyncPrope
         $vendingMachineSync = (new VendingMachineSync)
             ->setVendingMachine($vendingMachine)
             ->setVendingMachineSyncId(NULL)
-            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_SYNC)
+            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_VENDING_MACHINE_SYNC)
             ->setSyncedAt(new DateTime)
             ->setChecksum($syncResponse[self::SYNC_CHECKSUM])
             ->setData(json_encode($syncResponse[self::SYNC_DATA]))

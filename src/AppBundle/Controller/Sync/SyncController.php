@@ -8,18 +8,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\JsonResponse,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException,
-    Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
+    Symfony\Component\HttpKernel\Exception\BadRequestHttpException,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface,
-    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineEventPropertiesInterface,
+use AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineEventPropertiesInterface,
     AppBundle\Entity\Purchase\Utility\Interfaces\SyncPurchasePropertiesInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 class SyncController extends Controller implements
-    SyncVendingMachinePropertiesInterface,
     SyncVendingMachineEventPropertiesInterface,
     SyncPurchasePropertiesInterface
 {
@@ -35,31 +34,22 @@ class SyncController extends Controller implements
      */
     public function getProductsAction(Request $request, $serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
+        // Log request here!
 
-        $_authentication = $this->get('app.sync.security.authentication');
-
-        $_syncDataBuilder = $this->get('app.sync.sync_data_builder');
-
-        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
-
-        if( !$vendingMachine )
-            throw new NotFoundHttpException("Vending Machine identified by `id` {$serial} not found");
-
-        if( !$_authentication->authenticate($request, $vendingMachine) )
+        if( !($vendingMachine = $this->getVendingMachineIfRequestIsValid($request, $serial)) )
             throw new AccessDeniedHttpException('Access denied');
 
-        // exception on non-object!!!
+        $_syncDataBuilder  = $this->get('app.sync.sync_data_builder');
+        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
 
-        $products = $vendingMachine->getProductVendingGroup()->getProducts();
+        if( !($products = $vendingMachine->getProducts()) )
+            throw new NotFoundHttpException('Vending Machine entity is missing required data');
 
         $syncResponse = $_syncDataBuilder->buildProductData($products);
 
         $_syncDataRecorder->recordProductData($vendingMachine, $syncResponse);
 
-        return new JsonResponse($syncResponse, 200);
+        return new JsonResponse($syncResponse);
     }
 
     /**
@@ -74,25 +64,16 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesNfcTagsAction(Request $request, $serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
+        // Log request here!
 
-        $_authentication = $this->get('app.sync.security.authentication');
-
-        $_syncDataBuilder = $this->get('app.sync.sync_data_builder');
-
-        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
-
-        if( !$vendingMachine )
-            throw new NotFoundHttpException("Vending Machine identified by `id` {$serial} not found");
-
-        if( !$_authentication->authenticate($request, $vendingMachine) )
+        if( !($vendingMachine = $this->getVendingMachineIfRequestIsValid($request, $serial)) )
             throw new AccessDeniedHttpException('Access denied');
 
-        // exception on non-object!!!
+        $_syncDataBuilder  = $this->get('app.sync.sync_data_builder');
+        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
 
-        $nfcTags = $vendingMachine->getNfcTags();
+        if( !($nfcTags = $vendingMachine->getNfcTags()) )
+            throw new NotFoundHttpException('Vending Machine entity is missing required data');
 
         $syncResponse = $_syncDataBuilder->buildNfcTagData($nfcTags);
 
@@ -113,33 +94,22 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesSync(Request $request, $serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_authentication = $this->get('app.sync.security.authentication');
-
-        $_syncDataBuilder = $this->get('app.sync.sync_data_builder');
-
-        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
-
-        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
-
-        if( !$vendingMachine )
-            throw new NotFoundHttpException("Vending Machine identified by `id` {$serial} not found");
-
-        if( !$_authentication->authenticate($request, $vendingMachine) )
+        if( !($vendingMachine = $this->getVendingMachineIfRequestIsValid($request, $serial)) )
             throw new AccessDeniedHttpException('Access denied');
 
-        // Validator of request?
+        $_manager = $this->getDoctrine()->getManager();
 
-        if( !$_syncDataValidator->validateVendingMachineSyncData($request) )
-            return new Response(NULL, 400);
+        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
+        $_syncDataHandler   = $this->get('app.sync.sync_data_handler');
+        $_syncDataBuilder   = $this->get('app.sync.sync_data_builder');
+        $_syncDataRecorder  = $this->get('app.sync.sync_data_recorder');
 
+        if( !$validSyncData = $_syncDataValidator->validateVendingMachineSyncData($request) )
+            throw new BadRequestHttpException('Request contains invalid data');
 
-        $vendingMachineSync = $_manager->getRepository('AppBundle:VendingMachine\VendingMachineSync')->findLatestByVendingMachineSyncId($request->query->get('type'));
+        $vendingMachineSyncData = $_syncDataHandler->handleVendingMachineSyncData($validSyncData);
 
-        $syncResponse = $_syncDataBuilder->buildSyncData($vendingMachineSync);
+        $syncResponse = $_syncDataBuilder->buildSyncData($vendingMachineSyncData);
 
         $_syncDataRecorder->recordSyncData($vendingMachine, $syncResponse);
 
@@ -158,30 +128,21 @@ class SyncController extends Controller implements
      */
     public function putVendingMachines(Request $request, $serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
+        if( !($vendingMachine = $this->getVendingMachineIfRequestIsValid($request, $serial)) )
+            throw new AccessDeniedHttpException('Access denied');
 
-        $_authentication = $this->get('app.sync.security.authentication');
+        $_manager = $this->getDoctrine()->getManager();
 
         $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
 
         $_syncDataValidator = $this->get('app.sync.sync_data_validator');
 
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
-
-        if( !$vendingMachine )
-            throw new NotFoundHttpException("Vending Machine identified by `id` {$serial} not found");
-
-        if( !$_authentication->authenticate($request, $vendingMachine) )
-            throw new AccessDeniedHttpException('Access denied');
-
-        // Validator of request?
-
         if( !$_syncDataValidator->validateVendingMachineData($request) )
-            return new Response(NULL, 400);
+            throw new BadRequestHttpException('Request contains invalid data');
+
+        // Problem
 
         $requestContent = json_decode($request->getContent(), TRUE);
-
-        // check if exists
 
         $vendingMachineSync = $_manager->getRepository('AppBundle:VendingMachine\VendingMachineSync')->findOneBy([
             'vendingMachine'       => $vendingMachine,
@@ -193,6 +154,8 @@ class SyncController extends Controller implements
             return new Response(NULL, 200);
 
         $vendingMachine->setVendingMachineLoadedAt(new DateTime($requestContent['data']['vending-machine']['load-datetime']));
+
+        // End
 
         $_syncDataRecorder->recordVendingMachineData($vendingMachine, $requestContent);
 
@@ -227,5 +190,22 @@ class SyncController extends Controller implements
     public function postVendingMachinesEvents(Request $request, $v_m_id)
     {
         $data = $request->request->get('request');
+    }
+
+    private function getVendingMachineIfRequestIsValid(Request $request, $serial)
+    {
+        $_manager = $this->getDoctrine()->getManager();
+
+        $_authentication = $this->get('app.sync.security.authentication');
+
+        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
+
+        if( !$vendingMachine )
+            return FALSE;
+
+        if( !$_authentication->authenticate($request, $vendingMachine) )
+            return FALSE;
+
+        return $vendingMachine;
     }
 }

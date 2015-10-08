@@ -112,78 +112,85 @@ services:
     app.security.setting_boundless_access:
         class: AppBundle\Service\Security\SettingBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.employee_boundless_access:
         class: AppBundle\Service\Security\EmployeeBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.region_boundless_access:
         class: AppBundle\Service\Security\RegionBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.settlement_boundless_access:
         class: AppBundle\Service\Security\SettlementBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.school_boundless_access:
         class: AppBundle\Service\Security\SchoolBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.vending_machine_boundless_access:
         class: AppBundle\Service\Security\VendingMachineBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.nfc_tag_boundless_access:
         class: AppBundle\Service\Security\NfcTagBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.supplier_boundless_access:
         class: AppBundle\Service\Security\SupplierBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.product_boundless_access:
         class: AppBundle\Service\Security\ProductBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.product_vending_group_boundless_access:
         class: AppBundle\Service\Security\ProductVendingGroupBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.customer_boundless_access:
         class: AppBundle\Service\Security\CustomerBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.student_boundless_access:
         class: AppBundle\Service\Security\StudentBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     # Sync
+
+    app.sync.sync_data_validator:
+        class: AppBundle\Service\Sync\SyncDataValidator
+
+    app.sync.sync_data_handler:
+        class: AppBundle\Service\Sync\SyncDataHandler
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
 
     app.sync.sync_data_builder:
         class: AppBundle\Service\Sync\SyncDataBuilder
 
     app.sync.sync_data_recorder:
-        class:     AppBundle\Service\Sync\SyncDataRecorder
-        arguments: ["@doctrine.orm.entity_manager"]
-
-    app.sync.sync_data_validator:
-        class: AppBundle\Service\Sync\SyncDataValidator
+        class: AppBundle\Service\Sync\SyncDataRecorder
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
 
     app.sync.security.password_encoder:
         class: AppBundle\Service\Sync\Security\PasswordEncoder
 
     app.sync.security.authentication:
-        class:     AppBundle\Service\Sync\Security\Authentication
-        arguments: ["@app.sync.security.password_encoder"]
+        class: AppBundle\Service\Sync\Security\Authentication
+        calls:
+            - [setPasswordEncoder, [ "@app.sync.security.password_encoder" ]]

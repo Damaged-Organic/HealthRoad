@@ -6,7 +6,7 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
 class VendingMachineSyncRepository extends ExtendedEntityRepository
 {
-    public function findLatestByVendingMachineSyncId($syncedType)
+    public function findLatestByVendingMachineSyncType($syncedType)
     {
         $query = $this->createQueryBuilder('vms')
             ->select('vms')
