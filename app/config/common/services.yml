@@ -171,8 +171,14 @@ services:
 
     # Sync
 
+    app.sync.utility.checksum:
+        class: AppBundle\Service\Sync\Utility\Checksum
+
     app.sync.sync_data_validator:
         class: AppBundle\Service\Sync\SyncDataValidator
+        calls:
+            - [setChecksum, [ "@app.sync.utility.checksum" ]]
+            - [setValidator, [ "@validator" ]]
 
     app.sync.sync_data_handler:
         class: AppBundle\Service\Sync\SyncDataHandler
@@ -181,6 +187,8 @@ services:
 
     app.sync.sync_data_builder:
         class: AppBundle\Service\Sync\SyncDataBuilder
+        calls:
+            - [setChecksum, [ "@app.sync.utility.checksum" ]]
 
     app.sync.sync_data_recorder:
         class: AppBundle\Service\Sync\SyncDataRecorder

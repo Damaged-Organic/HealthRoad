@@ -15,10 +15,10 @@ class SyncDataHandler implements
         $this->_manager = $manager;
     }
 
-    public function handleVendingMachineSyncData($data)
+    public function handleVendingMachineSyncData($vendingMachine, $data)
     {
         $vendingMachineSync = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachineSync')
-            ->findLatestByVendingMachineSyncType($data[self::VENDING_MACHINE_SYNC_TYPE]);
+            ->findLatestByVendingMachineSyncType($vendingMachine, $data[self::VENDING_MACHINE_SYNC_TYPE]);
 
         return $vendingMachineSync;
     }

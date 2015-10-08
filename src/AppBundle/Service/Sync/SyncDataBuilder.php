@@ -2,12 +2,10 @@
 // AppBundle/Service/Sync/SyncDataBuilder.php
 namespace AppBundle\Service\Sync;
 
-use DateTime;
-
-use Doctrine\ORM\EntityManager,
-    Doctrine\ORM\PersistentCollection;
+use Doctrine\ORM\PersistentCollection;
 
 use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
+    AppBundle\Service\Sync\Utility\Checksum,
     AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Entity\VendingMachine\VendingMachineSync,
     AppBundle\Entity\Product\Product,
@@ -15,9 +13,11 @@ use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
 
 class SyncDataBuilder implements SyncDataInterface
 {
-    public function getRecordChecksum($data)
+    public $_checksum;
+
+    public function setChecksum(Checksum $checksum)
     {
-        return hash('sha256', json_encode($data));
+        $this->_checksum = $checksum;
     }
 
     public function buildProductData(PersistentCollection $products)
@@ -33,7 +33,7 @@ class SyncDataBuilder implements SyncDataInterface
         ];
 
         $syncResponse = [
-            self::SYNC_CHECKSUM => $this->getRecordChecksum($data),
+            self::SYNC_CHECKSUM => $this->_checksum->getDataChecksum($data),
             self::SYNC_DATA     => $data
         ];
 
@@ -59,7 +59,7 @@ class SyncDataBuilder implements SyncDataInterface
         ];
 
         $syncResponse = [
-            self::SYNC_CHECKSUM => $this->getRecordChecksum($data),
+            self::SYNC_CHECKSUM => $this->_checksum->getDataChecksum($data),
             self::SYNC_DATA     => $data
         ];
 
@@ -79,7 +79,7 @@ class SyncDataBuilder implements SyncDataInterface
         ];
 
         $syncResponse = [
-            self::SYNC_CHECKSUM => $this->getRecordChecksum($data),
+            self::SYNC_CHECKSUM => $this->_checksum->getDataChecksum($data),
             self::SYNC_DATA     => $data
         ];
 

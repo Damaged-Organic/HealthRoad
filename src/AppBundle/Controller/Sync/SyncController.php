@@ -94,20 +94,20 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesSync(Request $request, $serial)
     {
+        // Log request here!
+
         if( !($vendingMachine = $this->getVendingMachineIfRequestIsValid($request, $serial)) )
             throw new AccessDeniedHttpException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
 
         $_syncDataValidator = $this->get('app.sync.sync_data_validator');
         $_syncDataHandler   = $this->get('app.sync.sync_data_handler');
         $_syncDataBuilder   = $this->get('app.sync.sync_data_builder');
         $_syncDataRecorder  = $this->get('app.sync.sync_data_recorder');
 
-        if( !$validSyncData = $_syncDataValidator->validateVendingMachineSyncData($request) )
+        if( !($validSyncData = $_syncDataValidator->validateVendingMachineSyncData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
 
-        $vendingMachineSyncData = $_syncDataHandler->handleVendingMachineSyncData($validSyncData);
+        $vendingMachineSyncData = $_syncDataHandler->handleVendingMachineSyncData($vendingMachine, $validSyncData);
 
         $syncResponse = $_syncDataBuilder->buildSyncData($vendingMachineSyncData);
 
@@ -137,7 +137,7 @@ class SyncController extends Controller implements
 
         $_syncDataValidator = $this->get('app.sync.sync_data_validator');
 
-        if( !$_syncDataValidator->validateVendingMachineData($request) )
+        if( !($validSyncData = $_syncDataValidator->validateVendingMachineData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
 
         // Problem
@@ -152,6 +152,8 @@ class SyncController extends Controller implements
 
         if( $vendingMachineSync )
             return new Response(NULL, 200);
+
+        // middleblem
 
         $vendingMachine->setVendingMachineLoadedAt(new DateTime($requestContent['data']['vending-machine']['load-datetime']));
 
