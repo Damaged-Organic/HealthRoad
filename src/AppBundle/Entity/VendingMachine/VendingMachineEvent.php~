@@ -4,14 +4,13 @@ namespace AppBundle\Entity\VendingMachine;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineEventPropertiesInterface;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
 
 /**
  * @ORM\Table(name="vending_machines_events")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\VendingMachine\Repository\VendingMachineEventRepository")
  */
-class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
+class VendingMachineEvent
 {
     use IdMapperTrait;
 
@@ -159,33 +158,5 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
     public function getMessage()
     {
         return $this->message;
-    }
-
-    /**
-     * Set vendingMachine
-     *
-     * @param \AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine
-     * @return VendingMachineEvent
-     */
-    public function setVendingMachine(\AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine = null)
-    {
-        $this->vendingMachine = $vendingMachine;
-
-        return $this;
-    }
-
-    /**
-     * Get vendingMachine
-     *
-     * @return \AppBundle\Entity\VendingMachine\VendingMachine 
-     */
-    public function getVendingMachine()
-    {
-        return $this->vendingMachine;
-    }
-
-    static public function getSyncArrayName()
-    {
-        return self::VENDING_MACHINE_EVENT_ARRAY;
     }
 }

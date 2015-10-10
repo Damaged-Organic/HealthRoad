@@ -45,6 +45,11 @@ class VendingMachine
     protected $vendingMachineSyncs;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineEvent", mappedBy="vendingMachine")
+     */
+    protected $vendingMachineEvents;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="vendingMachine")
      */
     protected $purchases;
@@ -487,6 +492,40 @@ class VendingMachine
     public function getPurchases()
     {
         return $this->purchases;
+    }
+
+    /**
+     * Add vendingMachineEvent
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvent
+     * @return VendingMachine
+     */
+    public function addVendingMachineEvent(\AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvent)
+    {
+        $vendingMachineEvent->setVendingMachine($this);
+        $this->vendingMachineEvents[] = $vendingMachineEvent;
+
+        return $this;
+    }
+
+    /**
+     * Remove vendingMachineEvents
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvents
+     */
+    public function removeVendingMachineEvent(\AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvents)
+    {
+        $this->vendingMachineEvents->removeElement($vendingMachineEvents);
+    }
+
+    /**
+     * Get vendingMachineEvents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVendingMachineEvents()
+    {
+        return $this->vendingMachineEvents;
     }
 
     /**

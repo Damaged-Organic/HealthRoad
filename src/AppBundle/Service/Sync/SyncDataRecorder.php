@@ -83,7 +83,7 @@ class SyncDataRecorder implements SyncDataInterface, SyncVendingMachineSyncPrope
 
         $vendingMachineSync = (new VendingMachineSync)
             ->setVendingMachine($vendingMachine)
-            ->setVendingMachineSyncId($syncRequest[self::SYNC_DATA][self::VENDING_MACHINE_SYNC_ARRAY][0][self::VENDING_MACHINE_SYNC_ID])
+            ->setVendingMachineSyncId(NULL)
             ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_VENDING_MACHINE)
             ->setSyncedAt(new DateTime)
             ->setChecksum($syncRequest[self::SYNC_CHECKSUM])
@@ -103,6 +103,23 @@ class SyncDataRecorder implements SyncDataInterface, SyncVendingMachineSyncPrope
             ->setVendingMachine($vendingMachine)
             ->setVendingMachineSyncId($syncRequest[self::SYNC_DATA][self::VENDING_MACHINE_SYNC_ARRAY][0][self::VENDING_MACHINE_SYNC_ID])
             ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_PURCHASES)
+            ->setSyncedAt(new DateTime)
+            ->setChecksum($syncRequest[self::SYNC_CHECKSUM])
+            ->setData(json_encode($syncRequest[self::SYNC_DATA]))
+        ;
+
+        $this->_manager->persist($vendingMachineSync);
+    }
+
+    public function recordVendingMachineEventData($vendingMachine, $syncRequest)
+    {
+        if( !$syncRequest[self::SYNC_CHECKSUM] || !$syncRequest[self::SYNC_DATA] )
+            throw new BadCredentialsException('Sync response array is missing required data');
+
+        $vendingMachineSync = (new VendingMachineSync)
+            ->setVendingMachine($vendingMachine)
+            ->setVendingMachineSyncId(NULL)
+            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_VENDING_MACHINE_EVENTS)
             ->setSyncedAt(new DateTime)
             ->setChecksum($syncRequest[self::SYNC_CHECKSUM])
             ->setData(json_encode($syncRequest[self::SYNC_DATA]))

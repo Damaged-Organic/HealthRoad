@@ -142,8 +142,8 @@ class SyncController extends Controller implements
         if( !($validSyncData = $_syncDataValidator->validateVendingMachineData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
 
-        if( $_syncDataHandler->validateSyncSequence($vendingMachine, self::VENDING_MACHINE_SYNC_TYPE_VENDING_MACHINE, $validSyncData) )
-            return new Response('Already in sync', 200);
+        /*if( $_syncDataHandler->validateSyncSequence($vendingMachine, self::VENDING_MACHINE_SYNC_TYPE_VENDING_MACHINE, $validSyncData) )
+            return new Response('Already in sync', 200);*/
 
         $_syncDataHandler->handleVendingMachineData($vendingMachine, $validSyncData);
 
@@ -177,10 +177,10 @@ class SyncController extends Controller implements
         if( $_syncDataHandler->validateSyncSequence($vendingMachine, self::VENDING_MACHINE_SYNC_TYPE_PURCHASES, $validSyncData) )
             return new Response('Already in sync', 200);
 
-        $doctrine = $this->getDoctrine();
+        /*$doctrine = $this->getDoctrine();
         $em = $doctrine->getConnection();
         $stack = new \Doctrine\DBAL\Logging\DebugStack();
-        $em->getConfiguration()->setSQLLogger($stack);
+        $em->getConfiguration()->setSQLLogger($stack);*/
 
         $this->getDoctrine()->getManager()->getConnection()->beginTransaction();
 
@@ -193,13 +193,13 @@ class SyncController extends Controller implements
 
             $this->getDoctrine()->getManager()->commit();
         } catch (\Exception $e) {
-            $em->getConnection()->rollback();
+            $this->getDoctrine()->getManager()->getConnection()->rollback();
             throw $e;
         }
 
-        echo "<pre>";
+        /*echo "<pre>";
         var_dump($stack->queries);
-        echo "</pre>";
+        echo "</pre>";*/
 
         return new JsonResponse(NULL, 200);
     }
@@ -207,16 +207,41 @@ class SyncController extends Controller implements
     /**
      * @Method({"POST"})
      * @Route(
-     *      "/vending_machines/{v_m_id}/events",
+     *      "/vending_machines/{serial}/events",
      *      name = "sync_post_vending_machines_events",
      *      host = "{domain_sync_v1}",
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
-     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%", "v_m_id" = "\d+" }
+     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
      */
-    public function postVendingMachinesEvents(Request $request, $v_m_id)
+    public function postVendingMachinesEvents(Request $request, $serial)
     {
-        $data = $request->request->get('request');
+        if( !($vendingMachine = $this->getVendingMachineIfRequestIsValid($request, $serial)) )
+            throw new AccessDeniedHttpException('Access denied');
+
+        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
+        $_syncDataHandler   = $this->get('app.sync.sync_data_handler');
+        $_syncDataRecorder  = $this->get('app.sync.sync_data_recorder');
+
+        if( !($validSyncData = $_syncDataValidator->validateEventData($request)) )
+            throw new BadRequestHttpException('Request contains invalid data');
+
+        $this->getDoctrine()->getManager()->getConnection()->beginTransaction();
+
+        try {
+            $_syncDataHandler->handleVendingMachineEventData($vendingMachine, $validSyncData);
+
+            $_syncDataRecorder->recordVendingMachineEventData($vendingMachine, $validSyncData);
+
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->getDoctrine()->getManager()->commit();
+        } catch (\Exception $e) {
+            $this->getDoctrine()->getManager()->getConnection()->rollback();
+            throw $e;
+        }
+
+        return new JsonResponse(NULL, 200);
     }
 
     private function getVendingMachineIfRequestIsValid(Request $request, $serial)
@@ -234,86 +259,5 @@ class SyncController extends Controller implements
             return FALSE;
 
         return $vendingMachine;
-    }
-
-    /**
-     * @Method({"GET"})
-     * @Route(
-     *      "/test/{serial}",
-     *      name = "sync_test",
-     *      host = "{domain_sync_v1}",
-     *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
-     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
-     * )
-     */
-    public function testAction($serial)
-    {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy(['serial' => $serial]);
-
-        /*$products = $vendingMachine->getProducts();
-
-        var_dump(
-            $products->get(1)->getId(),
-            $products->get(2)->getId()
-        );
-
-        //$nfcTags = $vendingMachine->getNfcTags()->initialize();
-
-        $nfcTags = new ArrayCollection($_manager->getRepository('AppBundle:NfcTag\NfcTag')->findByVendingMachine($vendingMachine));
-
-        var_dump(
-            $nfcTags->get('q1w2e3r4t5y6u71')->getStudent()->getId(),
-            $nfcTags->get('q1w2e3r4t5y6u72')->getStudent()->getId(),
-            $nfcTags->get('q1w2e3r4t5y6u73')->getStudent()->getId()
-        );*/
-
-        for( $i = 0; $i < 5000; $i++ )
-        {
-            $purchase = (new Purchase)
-                ->setSyncPurchaseId("12345")
-                ->setSyncProductPrice("10.99")
-                ->setSyncPurchasedAt(new DateTime('now'))
-            ;
-
-            $purchase
-                ->setVendingMachine($vendingMachine)
-                ->setVendingMachineSerial($vendingMachine->getSerial())
-                ->setVendingMachineSyncId("q1w2e3r4")
-            ;
-
-            $purchase
-                ->setSyncProductId(1)
-                /*->setProduct(
-                    ( $products->get($value[Purchase::PURCHASE_PRODUCT_ID]) ) ? $products->get($value[Purchase::PURCHASE_PRODUCT_ID]) : NULL
-                )*/
-            ;
-
-            $purchase
-                ->setSyncNfcTagCode(1)
-                /*->setNfcTag(
-                    ( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]) ) ? $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]) : NULL
-                )*/
-            ;
-
-            /*$totalLimit = $purchase->getNfcTag()->getStudent()->getTotalLimit();
-
-            $totalLimit = $totalLimit - $purchase->getProduct()->getPrice();
-
-            $purchase->getNfcTag()->getStudent()->setTotalLimit($totalLimit);
-
-            $totalLimit = $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE])->getStudent()->getTotalLimit();
-
-            $totalLimit = $totalLimit - $products->get($value[Purchase::PURCHASE_PRODUCT_ID])->getPrice();
-
-            $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE])->getStudent()->setTotalLimit($totalLimit);*/
-
-            $_manager->persist($purchase);
-        }
-
-        $_manager->flush();
-
-        return $this->render('::base.html.twig');
     }
 }

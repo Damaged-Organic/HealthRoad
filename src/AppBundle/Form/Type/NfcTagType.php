@@ -29,7 +29,7 @@ class NfcTagType extends AbstractType
             ->add('vendingMachine', 'entity', [
                 'required'     => FALSE,
                 'class'        => "AppBundle\\Entity\\VendingMachine\\VendingMachine",
-                'choice_label' => "code",
+                'choice_label' => "serial",
                 'placeholder'  => "Choose vending machine"
             ])
         ;

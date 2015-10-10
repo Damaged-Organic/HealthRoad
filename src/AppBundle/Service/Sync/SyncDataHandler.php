@@ -4,6 +4,7 @@ namespace AppBundle\Service\Sync;
 
 use AppBundle\Entity\Purchase\Purchase;
 use AppBundle\Entity\VendingMachine\VendingMachine;
+use AppBundle\Entity\VendingMachine\VendingMachineEvent;
 use AppBundle\Entity\VendingMachine\VendingMachineSync;
 use DateTime;
 
@@ -144,6 +145,44 @@ class SyncDataHandler implements
         $id = substr($id, 0, -1);
 
         $sql = "UPDATE students SET total_limit = (CASE id " . $when . " END) WHERE id IN (" . $id . ")";
+        $stmt = $this->_manager->getConnection()->prepare($sql);
+        $result = $stmt->execute();
+    }
+
+    public function handleVendingMachineEventData(VendingMachine $vendingMachine, $data)
+    {
+        $eventsArray = [];
+
+        foreach( $data[self::SYNC_DATA][Purchase::getSyncArrayName()] as $value )
+        {
+            $vendingMachineEvent = (new VendingMachineEvent)
+                ->setSyncEventId($value[VendingMachineEvent::VENDING_MACHINE_EVENT_ID])
+                ->setOccurredAt($value[VendingMachineEvent::VENDING_MACHINE_EVENT_DATETIME])
+                ->setType($value[VendingMachineEvent::VENDING_MACHINE_EVENT_TYPE])
+                ->setCode($value[VendingMachineEvent::VENDING_MACHINE_EVENT_CODE])
+                ->setMessage($value[VendingMachineEvent::VENDING_MACHINE_EVENT_MESSAGE])
+            ;
+
+            $vendingMachineEvent
+                ->setVendingMachine($vendingMachine)
+            ;
+
+            $eventsArray[] = $vendingMachineEvent;
+        }
+
+        // INSERT
+
+        $values = '';
+
+        foreach( $eventsArray as $event )
+        {
+            $values .= " ('{$event->getVendingMachine()->getId()}',
+                '{$event->getSyncEventId()}', '{$event->getOccurredAt()}', '{$event->getType()}', '{$event->getCode()}', '{$event->getMessage()}'),";
+        }
+
+        $values = substr($values, 0, -1);
+
+        $sql = "INSERT INTO purchases (vending_machine_id, sync_event_id, occurred_at, type, code, message) VALUES " . $values;
         $stmt = $this->_manager->getConnection()->prepare($sql);
         $result = $stmt->execute();
     }

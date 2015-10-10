@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Sync;
 
 use AppBundle\Entity\Purchase\Purchase;
+use AppBundle\Entity\VendingMachine\VendingMachineEvent;
 use AppBundle\Entity\VendingMachine\VendingMachineSync;
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\Validator\Constraints as Assert;
@@ -52,10 +53,10 @@ class SyncDataValidator implements
         if( !$this->_checksum->verifyDataChecksum($requestContent[self::SYNC_CHECKSUM], $requestContent[self::SYNC_DATA]) )
             return FALSE;
 
-        foreach( $requestContent[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()] as $value ) {
+        /*foreach( $requestContent[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()] as $value ) {
             if( !$value[self::VENDING_MACHINE_SYNC_ID] )
                 return FALSE;
-        }
+        }*/
 
         // specific validation
 
@@ -113,6 +114,49 @@ class SyncDataValidator implements
                 return FALSE;
 
             if( empty($value[Purchase::PURCHASE_NFC_CODE]) )
+                return FALSE;
+        }
+
+        return $requestContent;
+    }
+
+    public function validateEventData(Request $request)
+    {
+        $requestContent = json_decode($request->getContent(), TRUE);
+
+        if( empty($requestContent[self::SYNC_CHECKSUM]) || empty($requestContent[self::SYNC_DATA]) )
+            return FALSE;
+
+        if( !$this->_checksum->verifyDataChecksum($requestContent[self::SYNC_CHECKSUM], $requestContent[self::SYNC_DATA]) )
+            return FALSE;
+
+        foreach( $requestContent[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()] as $value ) {
+            if( !$value[self::VENDING_MACHINE_SYNC_ID] )
+                return FALSE;
+        }
+
+        // specific validation
+
+        $assertDateTime = new Assert\DateTime;
+
+        foreach( $requestContent[self::SYNC_DATA][VendingMachineEvent::getSyncArrayName()] as $value )
+        {
+            if( empty($value[VendingMachineEvent::VENDING_MACHINE_EVENT_ID]) )
+                return FALSE;
+
+            if( empty($value[VendingMachineEvent::VENDING_MACHINE_EVENT_DATETIME]) )
+                return FALSE;
+            $datetimeErrors = count($this->_validator->validate($value[VendingMachineEvent::VENDING_MACHINE_EVENT_DATETIME], $assertDateTime));
+            if( $datetimeErrors !== 0 )
+                return FALSE;
+
+            if( empty($value[VendingMachineEvent::VENDING_MACHINE_EVENT_TYPE]) )
+                return FALSE;
+
+            if( empty($value[VendingMachineEvent::VENDING_MACHINE_EVENT_CODE]) )
+                return FALSE;
+
+            if( empty($value[VendingMachineEvent::VENDING_MACHINE_EVENT_MESSAGE]) )
                 return FALSE;
         }
 
