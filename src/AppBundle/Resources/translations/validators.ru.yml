@@ -172,13 +172,14 @@ vending_machine:
 
 nfc_tag:
     number:
-        unique: NFC-метка с таким кодом уже существует
+        unique: NFC-метка с таким номером уже существует
 
     code:
         not_blank: Должен быть указан код NFC-метки
         length:
             min: Код NFC-метки не может быть короче 1 символа
             max: Код NFC-метки не может быть длиннее 32 символов
+        unique: NFC-метка с таким кодом уже существует
 
 supplier:
     name:

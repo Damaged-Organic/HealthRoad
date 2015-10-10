@@ -35,7 +35,7 @@ class VendingMachine
     protected $productVendingGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="vendingMachine")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="vendingMachine", indexBy="code")
      */
     protected $nfcTags;
 
@@ -43,6 +43,11 @@ class VendingMachine
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineSync", mappedBy="vendingMachine")
      */
     protected $vendingMachineSyncs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="vendingMachine")
+     */
+    protected $purchases;
 
     /**
      * @ORM\Column(type="string", length=16, unique=true)
@@ -147,6 +152,7 @@ class VendingMachine
     {
         $this->nfcTags             = new ArrayCollection;
         $this->vendingMachineSyncs = new ArrayCollection;
+        $this->purchases           = new ArrayCollection;
     }
 
     /**
@@ -447,6 +453,40 @@ class VendingMachine
     public function getVendingMachineSyncs()
     {
         return $this->vendingMachineSyncs;
+    }
+
+    /**
+     * Add purchase
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchase
+     * @return VendingMachine
+     */
+    public function addPurchase(\AppBundle\Entity\Purchase\Purchase $purchase)
+    {
+        $purchase->setVendingMachine($this);
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchases
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchases
+     */
+    public function removePurchase(\AppBundle\Entity\Purchase\Purchase $purchases)
+    {
+        $this->purchases->removeElement($purchases);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
     }
 
     /**

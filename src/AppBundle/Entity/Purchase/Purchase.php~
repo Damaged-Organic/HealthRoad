@@ -1,0 +1,70 @@
+<?php
+// src/AppBundle/Entity/Purchase/Purchase.php
+namespace AppBundle\Entity\Purchase;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Purchase\Utility\Interfaces\SyncPurchasePropertiesInterface;
+
+/**
+ * @ORM\Table(name="purchases")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Purchase\Repository\PurchaseRepository")
+ */
+class Purchase implements SyncPurchasePropertiesInterface
+{
+    use IdMapperTrait;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", inversedBy="purchases")
+     * @ORM\JoinColumn(name="vending_machine_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    protected $vendingMachine;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product\Product", inversedBy="purchases")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    protected $product;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\NfcTag\NfcTag", inversedBy="purchases")
+     * @ORM\JoinColumn(name="nfc_tag_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    protected $nfcTag;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $syncPurchaseId;
+
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    protected $syncNfcTagCode;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $syncProductId;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     */
+    protected $syncProductPrice;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $syncPurchasedAt;
+
+    /**
+     * @ORM\Column(type="string", length=16)
+     */
+    protected $VendingMachineSerial;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    protected $VendingMachinesyncId;
+}

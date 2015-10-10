@@ -45,6 +45,11 @@ class VendingMachine
     protected $vendingMachineSyncs;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="vendingMachine")
+     */
+    protected $purchases;
+
+    /**
      * @ORM\Column(type="string", length=16, unique=true)
      *
      * @Assert\NotBlank(message="vending_machine.serial.not_blank")
@@ -313,6 +318,29 @@ class VendingMachine
     }
 
     /**
+     * Set vendingMachineLoadedAt
+     *
+     * @param \DateTime $vendingMachineLoadedAt
+     * @return VendingMachine
+     */
+    public function setVendingMachineLoadedAt($vendingMachineLoadedAt)
+    {
+        $this->vendingMachineLoadedAt = $vendingMachineLoadedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get vendingMachineLoadedAt
+     *
+     * @return \DateTime
+     */
+    public function getVendingMachineLoadedAt()
+    {
+        return $this->vendingMachineLoadedAt;
+    }
+
+    /**
      * Set school
      *
      * @param \AppBundle\Entity\School\School $school
@@ -424,5 +452,17 @@ class VendingMachine
     public function getVendingMachineSyncs()
     {
         return $this->vendingMachineSyncs;
+    }
+
+    /**
+     * Shortcut to get products if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getProducts()
+    {
+        return ( $this->getProductVendingGroup() )
+            ? $this->getProductVendingGroup()->getProducts()
+            : NULL;
     }
 }

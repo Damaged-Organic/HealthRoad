@@ -52,6 +52,11 @@ class Product implements SyncProductPropertiesInterface
     protected $students;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="product")
+     */
+    protected $purchases;
+
+    /**
      * @ORM\Column(type="string", length=250)
      *
      * @Assert\NotBlank(message="product.name_full.not_blank")
@@ -235,6 +240,7 @@ class Product implements SyncProductPropertiesInterface
     {
         $this->productVendingGroups = new ArrayCollection;
         $this->students             = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -724,6 +730,40 @@ class Product implements SyncProductPropertiesInterface
         return $this->students;
     }
 
+    /**
+     * Add purchase
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchase
+     * @return Product
+     */
+    public function addPurchase(\AppBundle\Entity\Purchase\Purchase $purchase)
+    {
+        $purchase->setProduct($this);
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchases
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchases
+     */
+    public function removePurchase(\AppBundle\Entity\Purchase\Purchase $purchases)
+    {
+        $this->purchases->removeElement($purchases);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
+
     static public function getSyncArrayName()
     {
         return self::PRODUCT_ARRAY;
@@ -746,7 +786,7 @@ class Product implements SyncProductPropertiesInterface
     public function getSyncObjectDataRestricted()
     {
         return [
-            self::PRODUCT_RESTRICTED_ID     => $this->getId()
+            self::PRODUCT_RESTRICTED_ID => $this->getId()
         ];
     }
 }

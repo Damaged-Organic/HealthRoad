@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
+    AppBundle\Validator\Constraints as CustomAssert,
+    AppBundle\Entity\NfcTag\Utility\Interfaces\SyncNfcTagPropertiesInterface;
 
 /**
  * @ORM\Table(name="nfc_tags")
@@ -17,7 +18,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="number", message="nfc_tag.number.unique")
  */
-class NfcTag
+class NfcTag implements SyncNfcTagPropertiesInterface
 {
     use IdMapperTrait;
 
@@ -32,6 +33,11 @@ class NfcTag
      * @ORM\JoinColumn(name="student_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $student;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="nfcTag")
+     */
+    protected $purchases;
 
     /**
      * @ORM\Column(type="string", length=8, unique=true)
@@ -123,5 +129,42 @@ class NfcTag
     public function getVendingMachine()
     {
         return $this->vendingMachine;
+    }
+
+    /**
+     * Set student
+     *
+     * @param \AppBundle\Entity\Student\Student $student
+     * @return NfcTag
+     */
+    public function setStudent(\AppBundle\Entity\Student\Student $student = null)
+    {
+        $this->student = $student;
+
+        return $this;
+    }
+
+    /**
+     * Get student
+     *
+     * @return \AppBundle\Entity\Student\Student 
+     */
+    public function getStudent()
+    {
+        return $this->student;
+    }
+
+    static public function getSyncArrayName()
+    {
+        return self::NFC_TAG_ARRAY;
+    }
+
+    public function getSyncObjectData()
+    {
+        return [
+            self::NFC_TAG_CODE        => $this->getCode(),
+            self::NFC_TAG_DAILY_LIMIT => $this->getStudent()->getDailyLimit(),
+            self::NFC_TAG_TOTAL_LIMIT => $this->getStudent()->getTotalLimit()
+        ];
     }
 }

@@ -17,6 +17,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @ORM\Entity(repositoryClass="AppBundle\Entity\NfcTag\Repository\NfcTagRepository")
  *
  * @UniqueEntity(fields="number", message="nfc_tag.number.unique")
+ * @UniqueEntity(fields="code", message="nfc_tag.code.unique")
  */
 class NfcTag implements SyncNfcTagPropertiesInterface
 {
@@ -35,6 +36,11 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     protected $student;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="nfcTag")
+     */
+    protected $purchases;
+
+    /**
      * @ORM\Column(type="string", length=8, unique=true)
      *
      * @Assert\Regex(
@@ -45,7 +51,7 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     protected $number;
 
     /**
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="string", length=32, unique=true)
      *
      * @Assert\NotBlank(message="nfc_tag.code.not_blank")
      * @Assert\Length(
@@ -56,6 +62,14 @@ class NfcTag implements SyncNfcTagPropertiesInterface
      * )
      */
     protected $code;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->purchases = new ArrayCollection;
+    }
 
     /**
      * Set number
@@ -73,7 +87,7 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     /**
      * Get number
      *
-     * @return string 
+     * @return string
      */
     public function getNumber()
     {
@@ -96,7 +110,7 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -119,7 +133,7 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     /**
      * Get vendingMachine
      *
-     * @return \AppBundle\Entity\VendingMachine\VendingMachine 
+     * @return \AppBundle\Entity\VendingMachine\VendingMachine
      */
     public function getVendingMachine()
     {
@@ -140,9 +154,43 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     }
 
     /**
+     * Add purchase
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchase
+     * @return NfcTag
+     */
+    public function addPurchase(\AppBundle\Entity\Purchase\Purchase $purchase)
+    {
+        $purchase->setNfcTag($this);
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchases
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchases
+     */
+    public function removePurchase(\AppBundle\Entity\Purchase\Purchase $purchases)
+    {
+        $this->purchases->removeElement($purchases);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
+
+    /**
      * Get student
      *
-     * @return \AppBundle\Entity\Student\Student 
+     * @return \AppBundle\Entity\Student\Student
      */
     public function getStudent()
     {
