@@ -1,6 +1,6 @@
 <?php
 // AppBundle/Controller/Traits/ClassOperationsTrait.php
-namespace AppBundle\Controller\Traits;
+namespace AppBundle\Controller\Utility\Traits;
 
 use ReflectionClass;
 

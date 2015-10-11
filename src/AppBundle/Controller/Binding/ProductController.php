@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
-use AppBundle\Controller\Traits\ClassOperationsTrait,
+use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Service\Security\ProductBoundlessAccess,
     AppBundle\Security\Authorization\Voter\ProductVoter,

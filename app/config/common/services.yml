@@ -9,6 +9,14 @@ services:
         tags:
             - { name: twig.extension }
 
+    app.listener.sync.authentication:
+        class: AppBundle\EventListener\Sync\SyncAuthenticationListener
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setAuthentication, [ "@app.sync.security.authentication" ]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
     # Security voters
 
     app.voter_setting:

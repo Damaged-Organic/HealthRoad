@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Controller\Traits\ClassOperationsTrait,
+    AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\Settlement\Settlement,
     AppBundle\Service\Security\SchoolBoundlessAccess,

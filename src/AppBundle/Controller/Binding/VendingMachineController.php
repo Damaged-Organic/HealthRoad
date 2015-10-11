@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Controller\Traits\ClassOperationsTrait,
+    AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\School\School,
     AppBundle\Entity\Product\ProductVendingGroup,
     AppBundle\Security\Authorization\Voter\VendingMachineVoter,
