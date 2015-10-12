@@ -26,11 +26,13 @@ class EmployeeController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction($id)
+    public function readAction($id = NULL)
     {
         $_manager = $this->getDoctrine()->getManager();
 
         $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
         {
@@ -58,6 +60,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
             ];
         }
 
+        $_breadcrumbs->add('employee_read');
+
         return $this->render($response['view'], $response['data']);
     }
 
@@ -75,6 +79,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
     {
         $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( !$_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
@@ -87,6 +93,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('employee_read')->add('employee_create');
+
             return $this->render('AppBundle:Entity/Employee/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -132,6 +140,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
 
         $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($id);
 
         if( !$employee )
@@ -175,6 +185,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Employee/CRUD:updateItem.html.twig', [
             'form'     => $form->createView(),

@@ -146,7 +146,7 @@ class VendingMachine
     protected $numberSprings;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $vendingMachineLoadedAt;
 

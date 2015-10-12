@@ -1,23 +1,27 @@
 {# AppBundle/Resources/views/Dashboard/Security/Login/employee.html.twig #}
 {% extends 'AppBundle:Dashboard/Security:login.html.twig' %}
 
-{% block body %}
-    <h1>Employee Dashboard</h1>
-
+{% block form %}
     {% if error %}
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    <form action="{{ path('employee_dashboard_login_check') }}" method="post">
-
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="_username">
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password">
-
+    <form action="{{ path('employee_dashboard_login_check') }}" method="POST" id="auth-form">
+        <div class="field-holder">
+            <input type="text" name="_username" value="" id="auth-user-email"
+                   placeholder="Введите ваш логин"
+                   data-rule-required="true" data-msg-required="{{ 'employee.authentification.username.not_blank'|trans({}, 'validators') }}">
+            <label for="auth-user-email"><span class="icon hrd-email"></span></label>
+        </div>
+        <div class="field-holder">
+            <input type="password" name="_password" value="" id="auth-user-password"
+                   placeholder="Введите ваш пароль"
+                   data-rule-required="true" data-msg-required="{{ 'employee.authentification.password.not_blank'|trans({}, 'validators') }}">
+            <label for="auth-user-password"><span class="icon hrd-lock"></span></label>
+        </div>
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-        <button type="submit">Login</button>
+        <button type="submit">
+            <span>Войти</span>
+        </button>
     </form>
 {% endblock %}

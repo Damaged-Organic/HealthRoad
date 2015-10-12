@@ -1,13 +1,14 @@
 # app/config/common/services.yml
 services:
-    app.security.role_hierarchy:
-        alias: security.role_hierarchy
+    # Twig
 
     app.twig_extension:
         class:  AppBundle\Twig\AppExtension
         public: false
         tags:
             - { name: twig.extension }
+
+    # Event listeners
 
     app.listener.sync.authentication:
         class: AppBundle\EventListener\Sync\SyncAuthenticationListener
@@ -17,7 +18,25 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
+    # Database
+
+    app.repository.global:
+        class: AppBundle\Service\Repository\GlobalRepository
+        calls:
+            - [setConnection, [ "@database_connection" ]]
+
+    # Common
+
+    app.common.breadcrumbs:
+        class: AppBundle\Service\Common\Breadcrumbs
+        calls:
+            - [setRouter, [ "@router" ]]
+            - [setTranslator, [ "@translator" ]]
+
     # Security voters
+
+    app.security.role_hierarchy:
+        alias: security.role_hierarchy
 
     app.voter_setting:
         class:  AppBundle\Security\Authorization\Voter\SettingVoter

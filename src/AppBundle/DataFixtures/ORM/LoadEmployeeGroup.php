@@ -13,31 +13,31 @@ class LoadEmployeeGroup extends AbstractFixture implements OrderedFixtureInterfa
     public function load(ObjectManager $manager)
     {
         $employeeGroup_1 = (new EmployeeGroup)
-            ->setName("Superadministrator")
+            ->setName("Суперадминистратор")
             ->setRole("ROLE_SUPERADMIN")
         ;
         $manager->persist($employeeGroup_1);
 
         $employeeGroup_2 = (new EmployeeGroup)
-            ->setName("Administrator")
+            ->setName("Администратор")
             ->setRole("ROLE_ADMIN")
         ;
         $manager->persist($employeeGroup_2);
 
         $employeeGroup_3 = (new EmployeeGroup)
-            ->setName("Manager")
+            ->setName("Менеджер")
             ->setRole("ROLE_MANAGER")
         ;
         $manager->persist($employeeGroup_3);
 
         $employeeGroup_4 = (new EmployeeGroup)
-            ->setName("Registrar")
+            ->setName("Регистратор")
             ->setRole("ROLE_REGISTRAR")
         ;
         $manager->persist($employeeGroup_4);
 
         $employeeGroup_5 = (new EmployeeGroup)
-            ->setName("Accountant")
+            ->setName("Бухгалтер")
             ->setRole("ROLE_ACCOUNTANT")
         ;
         $manager->persist($employeeGroup_5);

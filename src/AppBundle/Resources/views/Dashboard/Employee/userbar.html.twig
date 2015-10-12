@@ -1,7 +1,0 @@
-{# AppBundle/Resources/views/Dashboard/Employee/userbar.html.twig #}
-<p>
-    <a href="{{ path('employee_update', { 'id': app.user.id }) }}">{{ app.user.username }}</a>, {{ app.user.employeeGroup.name }}
-    [<a href="{{ path('setting_update') }}">Settings</a>]
-    [<a href="{{ path('employee_dashboard_logout') }}">Logout ></a>]
-</p>
-<p>-------------------------------------------------------------------------------------------------</p>

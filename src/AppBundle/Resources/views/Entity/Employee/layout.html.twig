@@ -1,0 +1,10 @@
+{# AppBundle/Resources/views/Entity/Employee/layout.html.twig #}
+{% extends 'AppBundle:Dashboard/State:index.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/employees.bundle.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/employees.bundle.min.js') }}"></script>
+{% endblock %}

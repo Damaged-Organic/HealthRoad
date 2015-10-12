@@ -1,0 +1,497 @@
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	forms start								 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+form{
+	width: 100%;
+	max-width: 1520px;
+	padding-right: 20px;
+	box-sizing: border-box;
+	margin: 0 auto;
+	overflow: hidden;
+	& > .message-holder{
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		p{ padding: 10px; }
+		ul{
+			display: block;
+			width: 100%;
+			overflow: hidden;
+		}
+		li{
+			display: block;
+			p{
+				padding: 10px;
+				span{
+					font-weight: bold;
+					margin-right: 10px;
+				}
+			}
+		}
+		&.error-active{
+			background: @errorRedLight;
+			border: 1px solid @errorRedLight;
+			p{
+				color: @errorRedDark;
+				span{ color: @errorRedDark; }
+			}
+			li{ color: @errorRedDark; }
+		}
+		&.info-active{
+			background: @infoBlueLight;
+			border: 1px solid @infoBlueLight;
+			p{
+				color: @infoBlueDark;
+				span{ color: @infoBlueDark; }
+			}
+			li{ color: @infoBlueDark; }
+		}
+	}
+}
+
+::-webkit-input-placeholder { color: @grey; }
+:-moz-placeholder { color: @grey; }
+::-moz-placeholder { color: @grey; }
+:-ms-input-placeholder { color: @grey; }
+
+.field-holder{
+	width: 100%;
+	margin: 0 auto 20px;
+	position: relative;
+	overflow: hidden;
+	.field{
+		width: 100%;
+		height: auto;
+		position: relative;
+		overflow: hidden;
+	}
+	&.dbl-field .field{
+		width: ~"calc(50% - 10px)";
+		margin-right: 20px;
+		float: left;
+		&:last-child{
+			margin-right: 0;
+		}
+	}
+	&.trpl-field .field{
+		width: 33%;
+		float: left;
+		padding-right: 20px;
+		box-sizing: border-box;
+	}
+	& > p{
+		padding-bottom: 10px;
+	}
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+input[type="password"]{
+	display: block;
+	width: ~"calc(100% - 240px)";
+	font-family: "Ubuntu", sans-serif;
+	color: @black;
+	text-indent: 10px;
+	line-height: 60px;
+	margin-left: 240px;
+	font-size: .875em;
+	border: 1px solid darken(@black, 100%);
+	transition: all .5s @easing;
+	box-sizing: border-box;
+	overflow: hidden;
+	& + label,
+	& + label.error + label{
+		display: block;
+		width: 240px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		padding: 0 20px;
+		line-height: 60px;
+		background: @black;
+		border: 1px solid darken(@black, 100%);
+		border-right: none;
+		box-sizing: border-box;
+		font-family: "Ubuntu", sans-serif;
+		font-size: .875em;
+		color: @white;
+		text-align: left;
+		transition: all .5s @easing;
+		overflow: hidden;
+	}
+	& + label.error{
+		display: block;
+		width: 100%;
+		height: auto;
+		position: static;
+		line-height: 30px;
+		padding: 0 10px;
+		font-size: .875em;
+		background: transparent;
+		border: none;
+		box-sizing: border-box;
+		color: @errorRedDark;
+		overflow: hidden;
+	}
+	&:hover,
+	&:focus{
+		border: 1px solid @green;
+		& + label,
+		& + label.error + label{
+			background: @green;
+			color: @white;
+			border: 1px solid @green;
+			border-right: none;
+		}
+		& + label.error{
+			color: @errorRedDark;
+			background: transparent;
+			border: none;
+		}
+	}
+}
+
+input[type="file"]{ display: none; }
+
+input[type="checkbox"],
+input[type="radio"]{
+	display: none;
+	& + label{
+		display: block;
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		& > .radio{
+			display: block;
+			width: 60px;
+			height: 60px;
+			float: left;
+			position: relative;
+			background: @black;
+			border: 1px solid darken(@black, 100%);
+			cursor: pointer;
+			transition: all .5s @easing;
+			box-sizing: border-box;
+			&:before{
+				display: block;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				content: "";
+				background: @white;
+				border: 1px solid darken(@black, 100%);
+				box-sizing: border-box;
+				transform: translateX(-50%) translateY(-50%) scale(.2);
+				transition: all .5s @easing;
+				overflow: hidden;
+			}
+		}
+		span.text{
+			display: block;
+			width: ~"calc(100% - 60px)";
+			height: 60px;
+			float: left;
+			padding-left: 10px;
+			line-height: 60px;
+			font-size: .875em;
+			box-sizing: border-box;
+		}
+		&:hover > .radio{
+			border: 1px solid @green;
+			&:before{
+				transform: translateX(-50%) translateY(-50%) scale(1);
+				border: 1px solid @green;
+			}
+		}
+	}
+	&:checked + label{
+		& > .radio{
+			border: 1px solid darken(@black, 100%);
+			&:before{
+				transform: translateX(-50%) translateY(-50%) scale(.2);
+				background: @green;
+			}
+		}
+	}
+}
+
+button[type="submit"]{
+	display: block;
+	width: 200px;
+	height: 60px;
+	border: none;
+	padding: 0;
+	background: transparent;
+	margin: 20px auto;
+	overflow: hidden;
+	& > span{
+		display: block;
+		width: 100%;
+		height: 100%;
+		background: @black;
+		color: @white;
+		line-height: 58px;
+		font-size: .875em;
+		border: 1px solid darken(@black, 100%);
+		box-sizing: border-box;
+		transition: all .5s @easing;
+		overflow: hidden;
+	}
+	&:hover{
+		span{
+			background: @green;
+		}
+	}
+
+	&.btn-save{
+		float: right;
+		margin: 0;
+		border-left: 1px solid darken(@black, 100%);
+		border-right: 1px solid darken(@black, 100%);
+		&:last-child{ border-right: 0; }
+		span{
+			border: none;
+			line-height: 60px;
+		}
+	}
+	&.save-back{ width: 300px; }
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	forms end								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	forms select start						 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.select-holder{
+	width: 100%;
+	height: auto;
+	position: relative;
+	margin-bottom: 20px;
+	& > .btn-select{
+		width: 100%;
+		height: 60px;
+		a{
+			display: block;
+			width: 100%;
+			height: 60px;
+			.title-holder{
+				display: block;
+				width: 240px;
+				height: 60px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				padding: 0 20px;
+				text-align: left;
+				background: @black;
+				border: 1px solid darken(@black, 100%);
+				box-sizing: border-box;
+				transition: all .5s @easing;
+				span{
+					display: inline-block;
+					vertical-align: top;
+					line-height: 58px;
+					color: @white;
+					font-size: 1em;
+					transition: all .5s @easing;
+					&.icon{
+						float: right;
+						margin: 0;
+						font-size: 1.125em;
+					}
+				}
+			}
+			span.text{
+				display: block;
+				width: ~"calc(100% - 240px)";
+				height: 60px;
+				font-size: 1em;
+				text-align: left;
+				margin-left: 240px;
+				padding-left: 10px;
+				border: 1px solid darken(@black, 100%);
+				border-left: none;
+				background: @white;
+				box-sizing: border-box;
+			}
+		}
+		&:hover{
+			.title-holder{
+				border: 1px solid @green;
+				background: @green;
+				span{
+					color: @white;
+				}
+			}
+			span.text{
+				border: 1px solid @green;
+				border-left: none;
+			}
+		}
+		& + .error-holder{
+			display: block;
+			width: 100%;
+			padding: 5px 10px;
+			font-size: .875em;
+			color: @errorRedDark;
+			box-sizing: border-box;
+		}		
+	}
+	& > .select-list{
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0%;
+		left: 0%;
+		z-index: 20;
+		background: fade(@black, 80%);
+		cursor: url(../images/close-cursor.png), auto;
+		visibility: hidden;
+		overflow: hidden;
+		.outer{
+			width: 40%;
+			height: 320px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			background: @white;
+			border: 1px solid darken(@black, 100%);
+			box-shadow: 0 0 10px @black;
+			transition: all .15s @easing;
+			transform: translateX(-50%) translateY(-50%) scaleY(0);
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+		.inner{
+			width: 100%;
+			height: 100%;
+			min-height: 100%;
+			padding-right: 20px;
+			overflow: auto;
+		}
+		ul{
+			display: block;
+			width: ~"calc(100% + 18px)";
+			height: auto;
+		}
+		li.option-item{
+			display: block;
+			width: 100%;
+			span.option-name{
+				display: block;
+				width: 100%;
+				line-height: 60px;
+				font-size: .875em;
+				text-align: left;
+				padding: 0 20px;
+				cursor: pointer;
+				border-bottom: 1px solid @black;
+				box-sizing: border-box;
+				background: transparent;
+				transition: all .5s @easing;
+				overflow: hidden;
+			}
+			&:hover span{
+				border-bottom: 1px solid @green;
+				color: @green;
+			}
+			&.active span{
+				background: @black;
+				color: @white;
+			}
+		}
+		&.active{
+			visibility: visible;
+			.outer{
+				transform: translateX(-50%) translateY(-50%) scaleY(1);
+				transition: all .5s @easing;
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	forms select end						  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	forms files start						 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.file-holder{
+	width: 100%;
+	margin-bottom: 20px;
+	overflow: hidden;
+	input[type="file"] + label{
+		display: block;
+		width: 240px;
+		height: 140px;
+		float: left;
+		background: @black;
+		border: 1px solid darken(@black, 100%);
+		box-sizing: border-box;
+		overflow: hidden;
+		&:hover{
+			.btn-file{
+				span{
+					color: @green;
+				}
+			}
+		}
+	}
+	& > .photo-holder{
+		width: auto;
+		height: 140px;
+		float: left;
+		position: relative;
+		margin-left: 20px;
+		border: 1px solid darken(@black, 100%);
+		box-sizing: border-box;
+		opacity: 0;
+		transition: all .5s @easing;
+		overflow: hidden;
+		img{
+			width: auto;
+			height: 100%;
+			overflow: hidden;
+		}
+		& > .size{
+			display: inline-block;
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			padding: 5px;
+			color: @white;
+			font-size: .875em;
+			background: @black;
+			border-top: 1px solid darken(@black, 100%);
+			border-left: 1px solid darken(@black, 100%);
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+	}
+	&.active{
+		& > .photo-holder{
+			opacity: 1;
+		}
+	}
+	.error-holder{
+		display: block;
+		width: 100%;
+		height: auto;
+		clear: both;
+		font-size: .875em;
+		padding: 0 10px;
+		line-height: 30px;
+		color: @errorRedDark;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	forms files end							 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+

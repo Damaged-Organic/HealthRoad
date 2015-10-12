@@ -38,6 +38,13 @@ settings:
                max: Значение параметра не должно быть длиннее 250 символов
 
 employee:
+    authentification:
+        username:
+            not_blank: Вы не ввели логин
+
+        password:
+            not_blank: Вы не ввели пароль
+
     username:
         not_blank: Должен быть указан логин сотрудника
         length:

@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class EmployeeDashboardController extends Controller
 {
@@ -19,8 +20,12 @@ class EmployeeDashboardController extends Controller
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"}
      * )
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        return $this->render('AppBundle:Dashboard:layout.html.twig');
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ) {
+            return $this->redirectToRoute('employee_read');
+        } else {
+            return $this->redirectToRoute('customer_read');
+        }
     }
 }

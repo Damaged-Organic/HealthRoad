@@ -1,10 +1,9 @@
-{# AppBundle/Resources/views/Entity/Employee/item.html.twig #}
-{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+{# AppBundle/Resources/views/Entity/Employee/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/Employee:layout.html.twig' %}
 
 {% block content %}
-    {% block data %}{% endblock %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_DELETE'), employee) %}
+    {#{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_DELETE'), employee) %}
         <p>
             <a href="{{ path('employee_delete', { 'id': employee.id }) }}">Удалить</a>
         </p>
@@ -30,5 +29,25 @@
 
     {% if employee.schools %}
         {{ render(controller('AppBundle:Binding/School:show', { 'objectClass': class(employee)|lower, 'objectId': employee.id })) }}
-    {% endif %}
+    {% endif %}#}
+
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+        <div class="outer scrollable-holder">
+            <div class="inner scrollable">
+
+                {% block data %}{% endblock %}
+
+            </div>
+        </div>
+        <div class="bottom-info-panel">
+
+            {% block action_bottom %}{% endblock %}
+
+        </div>
+    </section>
 {% endblock %}

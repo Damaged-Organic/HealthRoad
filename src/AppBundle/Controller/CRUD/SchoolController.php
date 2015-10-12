@@ -26,7 +26,7 @@ class SchoolController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction($id)
+    public function readAction($id = NULL)
     {
         $_manager = $this->getDoctrine()->getManager();
 

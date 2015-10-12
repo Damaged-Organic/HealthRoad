@@ -583,4 +583,12 @@ class Employee implements AdvancedUserInterface, Serializable
     {
         return ($this->password !== $this->username);
     }
+
+    public function getFullName()
+    {
+        if( !$this->patronymic && !$this->name && !$this->surname )
+            return NULL;
+
+        return "{$this->surname} {$this->name} {$this->patronymic}";
+    }
 }
