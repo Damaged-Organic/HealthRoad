@@ -32,6 +32,8 @@ class RegionController extends Controller implements UserRoleListInterface
 
         $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( $id )
         {
             $region = $_manager->getRepository('AppBundle:Region\Region')->find($id);
@@ -58,6 +60,8 @@ class RegionController extends Controller implements UserRoleListInterface
             ];
         }
 
+        $_breadcrumbs->add('region_read');
+
         return $this->render($response['view'], $response['data']);
     }
 
@@ -75,6 +79,8 @@ class RegionController extends Controller implements UserRoleListInterface
     {
         $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( !$_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
@@ -85,6 +91,8 @@ class RegionController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('region_read')->add('region_create');
+
             return $this->render('AppBundle:Entity/Region/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -120,6 +128,8 @@ class RegionController extends Controller implements UserRoleListInterface
 
         $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $region = $_manager->getRepository('AppBundle:Region\Region')->find($id);
 
         if( !$region )
@@ -149,6 +159,8 @@ class RegionController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('region_read')->add('region_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Region/CRUD:updateItem.html.twig', [
             'form'   => $form->createView(),

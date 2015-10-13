@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/School/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/School/Base:item.html.twig' %}
+
+{% if objectClass is same as('vendingmachine') %}
+    {% block active_school_update_bounded_vending_machine %}{{ 'class="active"' }}{% endblock %}
+{% endif %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

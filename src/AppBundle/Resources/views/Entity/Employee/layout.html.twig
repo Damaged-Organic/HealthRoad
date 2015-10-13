@@ -5,6 +5,59 @@
     <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/employees.bundle.min.css') }}">
 {% endblock %}
 
+{% block content %}
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+
+        {% block variable %}
+            <div class="outer scrollable-holder">
+                <div class="inner scrollable">
+
+                    {% block data %}{% endblock %}
+
+                </div>
+            </div>
+            <div class="bottom-info-panel">
+
+                {% block action_bottom %}{% endblock %}
+
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+
 {% block javascripts %}
     <script src="{{ asset('bundles/app/dashboard/js/employees.bundle.min.js') }}"></script>
 {% endblock %}
+
+{#{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_DELETE'), employee) %}
+    <p>
+        <a href="{{ path('employee_delete', { 'id': employee.id }) }}">Удалить</a>
+    </p>
+{% endif %}
+
+{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_REGION'), employee) %}
+    <p>-------------------------------------------------------------------------------------------------</p>
+    <p>
+        <a href="{{ path('region_choose', { 'objectClass': class(employee)|lower, 'objectId': employee.id }) }}">@ Привязать регион</a>
+    </p>
+{% endif %}
+
+{% if employee.regions %}
+    {{ render(controller('AppBundle:Binding/Region:show', { 'objectClass': class(employee)|lower, 'objectId': employee.id })) }}
+{% endif %}
+
+{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_SCHOOL'), employee) %}
+    <p>-------------------------------------------------------------------------------------------------</p>
+    <p>
+        <a href="{{ path('school_choose', { 'objectClass': class(employee)|lower, 'objectId': employee.id }) }}">@ Привязать школу</a>
+    </p>
+{% endif %}
+
+{% if employee.schools %}
+    {{ render(controller('AppBundle:Binding/School:show', { 'objectClass': class(employee)|lower, 'objectId': employee.id })) }}
+{% endif %}#}

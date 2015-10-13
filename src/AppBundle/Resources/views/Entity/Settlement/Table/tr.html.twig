@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/Settlement/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ settlement.id }}</span></td>
+<td>
+    <span>
+        {{ settlement.name }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( settlement.region ) ? settlement.region.name : '-' }}
+    </span>
+</td>

@@ -1,6 +1,28 @@
 {# AppBundle/Resources/views/Entity/School/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/School:item.html.twig' %}
+{% extends 'AppBundle:Entity/School/Base:item.html.twig' %}
+
+{% block active_school_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/School/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/School/Form:form.html.twig' with { 'form': form } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_DELETE'), school) %}
+            <div class="btn-delete black">
+                <a href="{{ path('school_delete', { 'id': school.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        <button type="submit" form="add-staff-form" class="btn-save back">
+            <span>Сохранить и вернуться</span>
+        </button>
+        <button type="submit" form="add-staff-form" class="btn-save">
+            <span>Сохранить</span>
+        </button>
+    </div>
 {% endblock %}

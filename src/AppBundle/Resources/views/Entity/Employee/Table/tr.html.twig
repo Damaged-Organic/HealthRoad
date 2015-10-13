@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/Employee/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ employee.id }}</span></td>
+<td>
+    <span>
+        {{ employee.username }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ employee.employeeGroup.name }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( employee.fullName ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( employee.isEnabled ) ? 'Y' : 'N'  }}
+    </span>
+</td>

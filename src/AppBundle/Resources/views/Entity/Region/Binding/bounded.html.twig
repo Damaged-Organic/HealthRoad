@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/Region/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Region/Base:item.html.twig' %}
+
+{% if objectClass is same as('settlement') %}
+    {% block active_region_update_bounded_settlement %}{{ 'class="active"' }}{% endblock %}
+{% endif %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

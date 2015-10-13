@@ -1,99 +1,15 @@
 {# AppBundle/Resources/views/Entity/Employee/Base/list.html.twig #}
 {% extends 'AppBundle:Entity/Employee:layout.html.twig' %}
 
-{% block content %}
-    <section class="outer" id="info-holder">
-        <div class="top-info-panel">
-            <div class="inner categories-list-holder">
-                <ul>
-                    <li class="active"><a href="#">Все</a></li>
-                    <li><a href="#">Топ менеджеры</a></li>
-                    <li><a href="#">Менеджеры</a></li>
-                    <li><a href="#">Аккаунтеры</a></li>
-                    <li><a href="#">Регистраторы</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="outer scrollable-holder">
-            <div class="inner scrollable">
-                <table>
-                    <tr>
-                        <th class="small-fixed">
-                            <a href="#">ID</a>
-                        </th>
-                        <th>
-                            <a href="#">логин</a>
-                        </th>
-                        <th>
-                            <a href="#">роль</a>
-                        </th>
-                        <th>
-                            <a href="#">ФИО</a>
-                        </th>
-                        <th>
-                            <a href="#">активен</a>
-                        </th>
-
-                        {% block action_items_th %}{% endblock %}
-
-                    </tr>
-
-                    {% for employee in employees %}
-                        <tr>
-                            <td class="small-fixed"><span>{{ employee.id }}</span></td>
-                            <td><span>{{ employee.username }}</span></td>
-                            <td><span>{{ employee.employeeGroup.name }}</span></td>
-                            <td>
-                                <span>
-                                    {{ ( employee.fullName ) ?: '-' }}
-                                </span>
-                            </td>
-                            <td>
-                                <span>
-                                    {{ ( employee.isEnabled ) ? 'Y' : 'N'  }}
-                                </span>
-                            </td>
-
-                            {% block action_items_tr %}{% endblock %}
-
-                        </tr>
-                    {% endfor %}
-
-                </table>
-            </div>
-        </div>
-        <div class="bottom-info-panel">
-
-            {% block action_button %}{% endblock %}
-
-            <div id="pagination-holder">
-                <ul>
-                    <li class="active">
-                        <a href="#">1</a>
-                    </li>
-                    <li class="dots">
-                        <span></span>
-                    </li>
-                    <li>
-                        <a href="#">2</a>
-                    </li>
-                    <li>
-                        <a href="#">3</a>
-                    </li>
-                    <li>
-                        <a href="#">4</a>
-                    </li>
-                    <li>
-                        <a href="#">5</a>
-                    </li>
-                    <li class="dots">
-                        <span></span>
-                    </li>
-                    <li>
-                        <a href="#">21</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active"><a href="{{ path('employee_read') }}">Все</a></li>
+            <li><a href="#">Суперадминистраторы</a></li>
+            <li><a href="#">Администраторы</a></li>
+            <li><a href="#">Менеджеры</a></li>
+            <li><a href="#">Регистраторы</a></li>
+            <li><a href="#">Бухгалтеры</a></li>
+        </ul>
+    </div>
 {% endblock %}

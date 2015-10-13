@@ -11,11 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
-    AppBundle\Entity\Employee\Employee,
-    AppBundle\Entity\Settlement\Settlement,
-    AppBundle\Service\Security\SchoolBoundlessAccess,
     AppBundle\Security\Authorization\Voter\EmployeeVoter,
-    AppBundle\Security\Authorization\Voter\SchoolVoter;
+    AppBundle\Security\Authorization\Voter\SchoolVoter,
+    AppBundle\Security\Authorization\Voter\SettlementVoter,
+    AppBundle\Service\Security\SchoolBoundlessAccess,
+    AppBundle\Entity\Employee\Employee,
+    AppBundle\Entity\Settlement\Settlement;
 
 class SchoolController extends Controller implements UserRoleListInterface
 {
@@ -33,16 +34,31 @@ class SchoolController extends Controller implements UserRoleListInterface
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+                $object = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
-                if( !$employee )
+                if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $schools = $employee->getSchools();
+                $schools = $object->getSchools();
+
+                $action = [
+                    'path'  => 'school_choose',
+                    'voter' => EmployeeVoter::EMPLOYEE_BIND_SCHOOL
+                ];
             break;
 
             case $this->compareObjectClassNameToString(new Settlement, $objectClass):
-                $schools = $_manager->getRepository('AppBundle:School\School')->findBy(['settlement' => $objectId]);
+                $object = $_manager->getRepository('AppBundle:Settlement\Settlement')->find($objectId);
+
+                if( !$object )
+                    throw $this->createNotFoundException("Settlement identified by `id` {$objectId} not found");
+
+                $schools = $_manager->getRepository('AppBundle:School\School')->findBy(['settlement' => $object]);
+
+                $action = [
+                    'path'  => 'school_choose',
+                    'voter' => SettlementVoter::SETTLEMENT_BIND
+                ];
             break;
 
             default:
@@ -51,9 +67,67 @@ class SchoolController extends Controller implements UserRoleListInterface
         }
 
         return $this->render('AppBundle:Entity/School/Binding:show.html.twig', [
-            'schools'     => $schools,
-            'objectId'    => $objectId,
-            'objectClass' => $objectClass
+            'standalone' => TRUE,
+            'schools'    => $schools,
+            'object'     => $object,
+            'action'     => $action
+        ]);
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/school/update/{objectId}/bounded/{objectClass}",
+     *      name="school_update_bounded",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "objectId" = "\d+", "objectClass" = "[a-z]+"}
+     * )
+     */
+    public function boundedAction($objectId, $objectClass)
+    {
+        $_manager = $this->getDoctrine()->getManager();
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
+        $_translator = $this->get('translator');
+
+        $school = $_manager->getRepository('AppBundle:School\School')->find($objectId);
+
+        if( !$school )
+            throw $this->createNotFoundException("School identified by `id` {$objectId} not found");
+
+        if( !$this->isGranted(SchoolVoter::SCHOOL_READ, $school) )
+            throw $this->createAccessDeniedException('Access denied');
+
+        $_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId]);
+
+        switch(TRUE)
+        {
+            case $this->compareObjectClassNameToString(new Settlement, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Settlement:show', [
+                    'objectClass' => $this->getObjectClassName($school),
+                    'objectId'    => $objectId
+                ]);
+
+                $_breadcrumbs->add('school_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $_translator->trans('settlement_read', [], 'routes')
+                );
+            break;
+
+            default:
+                throw new NotAcceptableHttpException("Object not supported");
+            break;
+        }
+
+        return $this->render('AppBundle:Entity/School/Binding:bounded.html.twig', [
+            'objectClass' => $objectClass,
+            'bounded'     => $bounded->getContent(),
+            'school'      => $school
         ]);
     }
 

@@ -1,0 +1,17 @@
+{# AppBundle/Resources/views/Entity/Region/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ region.id }}</span></td>
+<td>
+    <span>
+        {{ region.name }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( region.administrativeCenter ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( region.phoneCode ) ?: '-' }}
+    </span>
+</td>

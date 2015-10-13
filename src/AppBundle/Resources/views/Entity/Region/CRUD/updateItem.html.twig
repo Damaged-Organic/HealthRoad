@@ -1,6 +1,26 @@
 {# AppBundle/Resources/views/Entity/Region/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/Region:item.html.twig' %}
+{% extends 'AppBundle:Entity/Region/Base:item.html.twig' %}
+
+{% block active_region_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/Region/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/Region/Form:form.html.twig' with { 'form': form } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_DELETE'), region) %}
+            <div class="btn-delete black">
+                <a href="{{ path('region_delete', { 'id': region.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+        <button type="submit" form="add-staff-form" class="btn-save back">
+            <span>Сохранить и вернуться</span>
+        </button>
+        <button type="submit" form="add-staff-form" class="btn-save">
+            <span>Сохранить</span>
+        </button>
+    </div>
 {% endblock %}

@@ -1,15 +1,36 @@
 {# AppBundle/Resources/views/Entity/Settlement/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/Settlement:list.html.twig' %}
+{% extends 'AppBundle:Entity/Settlement/Base:table.html.twig' %}
 
-{% block action_button %}
-    {% if settlement_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\SettlementBoundlessAccess::SETTLEMENT_CREATE')) %}
-        <a href="{{ path('settlement_create') }}">+ Создать населенный пункт<a>
-        <p>-------------------------------------------------------------------------------------------------</p>
+{% block action_items_th %}
+    <th colspan="2" class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+    <td class="small-fixed edit-holder">
+        <div class="btn-edit">
+            <a href="{{ path('settlement_update', { 'id': settlement.id }) }}" class="icon hrd-edit"></a>
+        </div>
+    </td>
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_DELETE'), settlement) %}
+        <td class="small-fixed delete-holder">
+            <div class="btn-delete">
+                <a href="{{ path('settlement_delete', { 'id': settlement.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        </td>
     {% endif %}
 {% endblock %}
 
-{% block action %}
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_DELETE'), settlement) %}
-        <a href="{{ path('settlement_delete', { 'id': settlement.id }) }}">[X]</a>
+{% block action_button %}
+    {% if settlement_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\SettlementBoundlessAccess::SETTLEMENT_CREATE')) %}
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('settlement_create') }}">
+                    <span class="icon hrd-add"></span>Добавить
+                </a>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

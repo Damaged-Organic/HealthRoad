@@ -29,8 +29,11 @@ class CommonDashboardController extends Controller
 
         $route = $request->attributes->get('_route');
 
+        $controller = $request->attributes->get('_controller');
+
         return $this->render('AppBundle:Dashboard/Common:entities.html.twig', [
             'route'      => $route,
+            'controller' => $controller,
             'quantities' => $quantities
         ]);
     }

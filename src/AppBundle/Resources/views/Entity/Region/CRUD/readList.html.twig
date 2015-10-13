@@ -1,15 +1,36 @@
 {# AppBundle/Resources/views/Entity/Region/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/Region:list.html.twig' %}
+{% extends 'AppBundle:Entity/Region/Base:table.html.twig' %}
 
-{% block action_button %}
-    {% if region_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\RegionBoundlessAccess::REGION_CREATE')) %}
-        <a href="{{ path('region_create') }}">+ Создать регион<a>
-        <p>-------------------------------------------------------------------------------------------------</p>
+{% block action_items_th %}
+    <th colspan="2" class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+    <td class="small-fixed edit-holder">
+        <div class="btn-edit">
+            <a href="{{ path('region_update', { 'id': region.id }) }}" class="icon hrd-edit"></a>
+        </div>
+    </td>
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_DELETE'), region) %}
+        <td class="small-fixed delete-holder">
+            <div class="btn-delete">
+                <a href="{{ path('region_delete', { 'id': region.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        </td>
     {% endif %}
 {% endblock %}
 
-{% block action %}
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_DELETE'), region) %}
-        <a href="{{ path('region_delete', { 'id': region.id }) }}">[X]</a>
+{% block action_button %}
+    {% if region_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\RegionBoundlessAccess::REGION_CREATE')) %}
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('region_create') }}">
+                    <span class="icon hrd-add"></span>Добавить
+                </a>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

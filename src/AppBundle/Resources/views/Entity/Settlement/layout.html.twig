@@ -1,0 +1,58 @@
+{# AppBundle/Resources/views/Entity/Settlement/layout.html.twig #}
+{% extends 'AppBundle:Dashboard/State:index.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/settlements.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+
+        {% block variable %}
+            <div class="outer scrollable-holder">
+                <div class="inner scrollable">
+
+                    {% block data %}{% endblock %}
+
+                </div>
+            </div>
+            <div class="bottom-info-panel">
+
+                {% block action_bottom %}{% endblock %}
+
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/settlements.bundle.min.js') }}"></script>
+{% endblock %}
+
+{#{% block content %}
+    {% block data %}{% endblock %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_DELETE'), settlement) %}
+        <p>
+            <a href="{{ path('settlement_delete', { 'id': settlement.id }) }}">Удалить</a>
+        </p>
+    {% endif %}
+
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_BIND'), settlement) %}
+        <p>
+            <a href="{{ path('school_choose', { 'objectClass': class(settlement)|lower, 'objectId': settlement.id }) }}">@ Привязать школу</a>
+        </p>
+    {% endif %}
+
+    <p>Школы:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% if settlement.schools %}
+        {{ render(controller('AppBundle:Binding/School:show', { 'objectClass': class(settlement)|lower, 'objectId': settlement.id })) }}
+    {% endif %}
+{% endblock %}#}

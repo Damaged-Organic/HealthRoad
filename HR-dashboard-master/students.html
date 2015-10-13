@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Health Road | Back office</title>
+	<meta charset="UTF-8">
+	<!--meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="format-detection" content="address=no">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-title" content="">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"
+	<meta http-equiv="cleartype" content="on">-->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+	<meta name="Description" content="Описание необходимых мета-тегов." />
+	<!--meta name="msapplication-TileImage" content="assets/images/favicons/ms/144x144.png">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/57x57.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/60x60.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/72x72.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/76x76.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/76x76.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/114x114.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/120x120.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/144x144.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/152x152.png">
+	<link rel="apple-touch-icon" href="assets/images/favicons/apple/180x180.png">
+	<link rel="icon" type="image/png" href="assets/images/favicons/16x16.png">
+	<link rel="icon" type="image/png" href="assets/images/favicons/32x32.png">
+	<link rel="icon" type="image/png" href="assets/images/favicons/96x96.png">
+	<link rel="icon" type="image/png" href="assets/images/favicons/160x160.png">
+	<link rel="icon" type="image/png" href="assets/images/favicons/192x192.png"-->
+	<link rel="stylesheet" href="build/css/students.bundle.min.css">
+</head>
+<body>
+	<div id="page">
+		<header id="header">
+			<div id="toggle-menu-loader">
+				<div class="inner loader">
+					<span class="circle"></span>
+					<span class="circle"></span>
+					<span class="circle"></span>
+					<span class="circle"></span>
+					<span class="circle"></span>
+				</div>
+				<div class="inner menu-button">
+					<a href="#" class="hrd-squares"></a>
+				</div>
+			</div>
+			<div class="entitled"><h1>Дорога Здоровья</h1></div>
+			<div id="status-panel-holder">
+				<div class="inner default-holder">
+					<div id="breadcrumbs-holder">
+						<ul>
+							<li><a href="#">Панель управление</a></li>
+							<li><a href="#">Ученики</a></li>
+						</ul>
+					</div>
+					<div id="office-widget">
+						<div class="inner logout">
+							<a href="#" class="hrd-logout"></a>
+						</div>
+						<div class="inner settings">
+							<a href="#" class="hrd-gear"></a>
+						</div>
+						<div class="inner entrance">
+							<a href="#">
+								<span class="text name">Имя пользователя</span>
+								<span class="text role">администратор</span>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="inner success-holder">
+					<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
+				</div>
+				<div class="inner warning-holder">
+					<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
+				</div>
+				<div class="inner error-holder">
+					<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
+				</div>
+				<div class="inner info-holder">
+					<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
+				</div>
+			</div>
+		</header>
+		<main id="content">
+			<aside id="navigation-holder">
+				<div class="inner">
+					<nav id="menu-holder">
+						<ul>
+							<li>
+								<a href="#" data-count="15">
+									<span class="icon hrd-staff"></span>
+									<span class="text">Сотрудники</span>
+								</a>
+							</li>
+							<li>
+								<a href="#" data-count="492">
+									<span class="icon hrd-user"></span>
+									<span class="text">Клиенты</span>
+								</a>
+							</li>
+							<li class="active">
+								<a href="#" data-count="492">
+									<span class="icon hrd-bag"></span>
+									<span class="text">Ученики</span>
+								</a>
+							</li>
+							<li>
+								<a href="#" data-count="492">
+									<span class="icon hrd-nfc"></span>
+									<span class="text">NFC-метки</span>
+								</a>
+							</li>
+							<li>
+								<a href="#" data-count="7">
+									<span class="icon hrd-pin"></span>
+									<span class="text">Регионы</span>
+								</a>
+							</li>
+							<li>
+								<a href="#" data-count="23">
+									<span class="icon hrd-education"></span>
+									<span class="text">Школы</span>
+								</a>
+							</li>
+							<li>
+								<a href="#" data-count="14">
+									<span class="icon hrd-tables"></span>
+									<span class="text">Группы терминалов</span>
+								</a>
+							</li>
+							<li>
+								<a href="#" data-count="278">
+									<span class="icon hrd-table"></span>
+									<span class="text">Терминалы</span>
+								</a>
+							</li>
+							<li>
+								<a href="#" data-count="687">
+									<span class="icon hrd-cart"></span>
+									<span class="text">Продукты</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</aside>
+			<section class="outer" id="info-holder">
+				<div class="top-info-panel">
+					<div class="inner categories-list-holder">
+						<ul>
+							<li class="active"><a href="#">Все</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="outer scrollable-holder">
+					<div class="inner scrollable">
+						<table>
+							<tr>
+								<th class="small-fixed">
+									<a href="#">ID</a>
+								</th>
+								<th>
+									<a href="#">Фамилия</a>
+								</th>
+								<th>
+									<a href="#">Имя</a>
+								</th>
+								<th>
+									<a href="#">Отчество</a>
+								</th>
+								<th colspan="2" class="double-small-fixed">
+									<span>управление</span>
+								</th>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="small-fixed"><span>1</span></td>
+								<td><span>Фамилия ребенка</span></td>
+								<td><span>Имя ребенка</span></td>
+								<td><span>Отчество ребенка</span></td>
+								<td class="small-fixed edit-holder">
+									<div class="btn-edit">
+										<a href="#" class="icon hrd-edit"></a>
+									</div>
+								</td>
+								<td class="small-fixed delete-holder">
+									<div class="btn-delete">
+										<a href="#" class="icon hrd-delete"></a>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="bottom-info-panel">
+					<div id="action-holder">
+						<div class="btn-add">
+							<a href="#">
+								<span class="icon hrd-add"></span>
+								Добавить
+							</a>
+						</div>
+					</div>
+					<div id="pagination-holder">
+						<ul>
+							<li class="active">
+								<a href="#">1</a>
+							</li>
+							<li class="dots">
+								<span></span>
+							</li>
+							<li>
+								<a href="#">2</a>
+							</li>
+							<li>
+								<a href="#">3</a>
+							</li>
+							<li>
+								<a href="#">4</a>
+							</li>
+							<li>
+								<a href="#">5</a>
+							</li>
+							<li class="dots">
+								<span></span>
+							</li>
+							<li>
+								<a href="#">21</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+			<div id="confirm-holder">
+				<div class="inner">
+					<div class="buttons-holder">
+						<span class="confirm-button accept hrd-accept" data-confirm="true"></span>
+						<span class="confirm-button cancel hrd-cancel" data-confirm="false"></span>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+	<script src="jspm_packages/system.js"></script>
+	<script src="jspm.config.js"></script>
+	<script>
+		System.import("assets/js/app/students");
+	</script>
+</body>
+</html>

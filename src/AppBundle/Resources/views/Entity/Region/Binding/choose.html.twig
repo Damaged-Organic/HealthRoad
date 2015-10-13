@@ -1,14 +1,34 @@
 {# AppBundle/Resources/views/Entity/Region/Binding/choose.html.twig #}
-{% extends 'AppBundle:Entity/Region:list.html.twig' %}
+{% extends 'AppBundle:Entity/Region/Base:table.html.twig' %}
 
-{% block action %}
-    <input type="submit" name="regionId" value="{{ region.id }}" form="regionForm">
+{% block action_items_th %}
+    <th colspan="2" class="double-small-fixed">
+        <span>управление</span>
+    </th>
 {% endblock %}
 
-{% block button %}
-    <form action="{{ path('region_bind') }}" id="regionForm" method="POST">
-        <input type="hidden" name="objectClass" value="{{ objectClass }}">
-        <input type="hidden" name="objectId" value="{{ objectId }}">
-    </form>
-    <a href="{{ path('employee_update', { 'id': objectId }) }}">Done</a>
+{% block action_items_tr %}
+    <td class="small-fixed edit-holder">
+        <div class="btn-edit">
+            <a href="{{ path('region_update', { 'id': region.id }) }}" class="icon hrd-edit"></a>
+        </div>
+    </td>
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_BIND'), region) %}
+        <td class="small-fixed bind-holder">
+            <div class="btn-bind" data-path="{{ path('region_bind', { 'id': region.id, 'objectClass': objectClass, 'objectId': objectId }) }}">
+                <a href="#" class="icon hrd-bind"></a>
+            </div>
+        </td>
+    {% endif %}
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path('employee_update_bounded', { 'objectId': objectId, 'objectClass': 'region' }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

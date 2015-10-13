@@ -1,14 +1,34 @@
 {# AppBundle/Resources/views/Entity/School/Binding/choose.html.twig #}
-{% extends 'AppBundle:Entity/School:list.html.twig' %}
+{% extends 'AppBundle:Entity/School/Base:table.html.twig' %}
 
-{% block action %}
-    <input type="submit" name="schoolId" value="{{ school.id }}" form="schoolForm">
+{% block action_items_th %}
+    <th colspan="2" class="double-small-fixed">
+        <span>управление</span>
+    </th>
 {% endblock %}
 
-{% block button %}
-    <form action="{{ path('school_bind') }}" id="schoolForm" method="POST">
-        <input type="hidden" name="objectClass" value="{{ objectClass }}">
-        <input type="hidden" name="objectId" value="{{ objectId }}">
-    </form>
-    <a href="{{ path('settlement_update', { 'id': objectId }) }}">Done</a>
+{% block action_items_tr %}
+    <td class="small-fixed edit-holder">
+        <div class="btn-edit">
+            <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
+        </div>
+    </td>
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
+        <td class="small-fixed bind-holder">
+            <div class="btn-bind" data-path="{{ path('school_bind', { 'id': school.id, 'objectClass': objectClass, 'objectId': objectId }) }}">
+                <a href="#" class="icon hrd-bind"></a>
+            </div>
+        </td>
+    {% endif %}
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path('settlement_update_bounded', { 'objectId': objectId, 'objectClass': 'school' }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

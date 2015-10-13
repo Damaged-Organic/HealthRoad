@@ -1,37 +1,23 @@
 {# AppBundle/Resources/views/Entity/Employee/CRUD/updateItem.html.twig #}
 {% extends 'AppBundle:Entity/Employee/Base:item.html.twig' %}
 
-{% block action_top %}
-    <div class="inner categories-list-holder">
-        <ul>
-            <li class="active">
-                <a href="#">Данные</a>
-            </li>
-            {% if employee.regions %}
-                <li>
-                    <a href="#">Регионы</a>
-                </li>
-            {% endif %}
-            {% if employee.schools %}
-                <li>
-                    <a href="#">Школы</a>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
-{% endblock %}
+{% block active_employee_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
 
-    {% include 'AppBundle:Entity/Employee/Form:form.html.twig' with {'form': form} only %}
+    {% include 'AppBundle:Entity/Employee/Form:form.html.twig' with { 'form': form } only %}
 
 {% endblock %}
 
 {% block action_bottom %}
     <div id="action-holder" class="manage-holder">
-        <div class="btn-delete black">
-            <a href="#" class="icon hrd-delete"></a>
-        </div>
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_DELETE'), employee) %}
+            <div class="btn-delete black">
+                <a href="{{ path('employee_delete', { 'id': employee.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
         <button type="submit" form="add-staff-form" class="btn-save back">
             <span>Сохранить и вернуться</span>
         </button>

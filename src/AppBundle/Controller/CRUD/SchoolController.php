@@ -9,10 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Entity\School\School,
     AppBundle\Form\Type\SchoolType,
     AppBundle\Security\Authorization\Voter\SchoolVoter,
-    AppBundle\Service\Security\SchoolBoundlessAccess;
+    AppBundle\Service\Security\SchoolBoundlessAccess,
+    AppBundle\Entity\School\School;
 
 class SchoolController extends Controller implements UserRoleListInterface
 {

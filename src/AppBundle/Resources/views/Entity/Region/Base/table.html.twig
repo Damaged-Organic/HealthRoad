@@ -1,0 +1,34 @@
+{# AppBundle/Resources/views/Entity/Region/Base/table.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/Region/Base:list.html.twig' %}
+
+{% block variable %}
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+            <table>
+                <tr>
+
+                    {% include 'AppBundle:Entity/Region/Table:th.html.twig' %}
+
+                    {% block action_items_th %}{% endblock %}
+
+                </tr>
+
+                {% for region in regions %}
+                    <tr>
+
+                        {% include 'AppBundle:Entity/Region/Table:tr.html.twig' with { 'region': region } only %}
+
+                        {% block action_items_tr %}{% endblock %}
+
+                    </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+
+        {% include 'AppBundle:Dashboard/Common:pagination.html.twig' only %}
+    </div>
+{% endblock %}

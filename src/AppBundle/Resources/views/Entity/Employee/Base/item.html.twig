@@ -1,53 +1,28 @@
 {# AppBundle/Resources/views/Entity/Employee/Base/item.html.twig #}
 {% extends 'AppBundle:Entity/Employee:layout.html.twig' %}
 
-{% block content %}
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_employee_update %}{% endblock %}>
+                <a href="{{ path('employee_update', { 'id': employee.id }) }}">Данные</a>
+            </li>
 
-    {#{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_DELETE'), employee) %}
-        <p>
-            <a href="{{ path('employee_delete', { 'id': employee.id }) }}">Удалить</a>
-        </p>
-    {% endif %}
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_REGION'), employee) %}
+                <li {% block active_employee_update_bounded_region %}{% endblock %}>
+                    <a href="{{ path('employee_update_bounded', { 'objectId': employee.id, 'objectClass': 'region' }) }}">
+                        {{ 'region_read'|trans({}, 'routes') }}
+                    </a>
+                </li>
+            {% endif %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_REGION'), employee) %}
-        <p>-------------------------------------------------------------------------------------------------</p>
-        <p>
-            <a href="{{ path('region_choose', { 'objectClass': class(employee)|lower, 'objectId': employee.id }) }}">@ Привязать регион</a>
-        </p>
-    {% endif %}
-
-    {% if employee.regions %}
-        {{ render(controller('AppBundle:Binding/Region:show', { 'objectClass': class(employee)|lower, 'objectId': employee.id })) }}
-    {% endif %}
-
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_SCHOOL'), employee) %}
-        <p>-------------------------------------------------------------------------------------------------</p>
-        <p>
-            <a href="{{ path('school_choose', { 'objectClass': class(employee)|lower, 'objectId': employee.id }) }}">@ Привязать школу</a>
-        </p>
-    {% endif %}
-
-    {% if employee.schools %}
-        {{ render(controller('AppBundle:Binding/School:show', { 'objectClass': class(employee)|lower, 'objectId': employee.id })) }}
-    {% endif %}#}
-
-    <section class="outer" id="info-holder">
-        <div class="top-info-panel">
-
-            {% block action_top %}{% endblock %}
-
-        </div>
-        <div class="outer scrollable-holder">
-            <div class="inner scrollable">
-
-                {% block data %}{% endblock %}
-
-            </div>
-        </div>
-        <div class="bottom-info-panel">
-
-            {% block action_bottom %}{% endblock %}
-
-        </div>
-    </section>
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_BIND_SCHOOL'), employee) %}
+                <li {% block active_employee_update_bounded_school %}{% endblock %}>
+                    <a href="{{ path('employee_update_bounded', { 'objectId': employee.id, 'objectClass': 'school' }) }}">
+                        {{ 'school_read'|trans({}, 'routes') }}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 {% endblock %}
