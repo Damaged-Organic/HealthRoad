@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/VendingMachine/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/VendingMachine:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_vending_machine_update %}{% endblock %}>
+                <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}">Данные</a>
+            </li>
+            <li {% block active_vending_machine_update_bounded_nfc_tag %}{% endblock %}>
+                <a href="{{ path('vending_machine_update_bounded', { 'objectId': vendingMachine.id, 'objectClass': 'nfctag' }) }}">NFC-метки</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

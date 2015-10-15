@@ -16,8 +16,14 @@
 
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
         <td class="small-fixed bind-holder">
-            <div class="btn-bind" data-path="{{ path('school_bind', { 'id': school.id, 'objectClass': objectClass, 'objectId': objectId }) }}">
-                <a href="#" class="icon hrd-bind"></a>
+
+            {% set isBinded = object.schools.contains(school) %}
+
+            <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+
+                {% set path = ( isBinded ) ? 'school_unbind' : 'school_bind' %}
+
+                <a href="{{ path(path, { 'targetId': school.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
             </div>
         </td>
     {% endif %}
@@ -27,7 +33,7 @@
     <div id="action-holder">
         <div id="action-holder" class="manage-holder">
             <div class="btn-connect">
-                <a href="{{ path('settlement_update_bounded', { 'objectId': objectId, 'objectClass': 'school' }) }}">Готово</a>
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(schools.0)|lower }) }}">Готово</a>
             </div>
         </div>
     </div>

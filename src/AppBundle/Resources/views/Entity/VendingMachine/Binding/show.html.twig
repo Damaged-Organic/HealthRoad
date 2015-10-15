@@ -1,10 +1,38 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/Binding/show.html.twig #}
-{% for vendingMachine in vendingMachines %}
-    <p>
-        <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}">{{ vendingMachine.name }}</a>
-        | {{ vendingMachine.serial }}
-        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_BIND'), vendingMachine) %}
-            <a href="{{ path('vending_machine_unbind', { 'id': vendingMachine.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
-        {% endif %}
-    </p>
-{% endfor %}
+{% extends 'AppBundle:Entity/VendingMachine/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th colspan="2" class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+    <td class="small-fixed edit-holder">
+        <div class="btn-edit">
+            <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}" class="icon hrd-edit"></a>
+        </div>
+    </td>
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_BIND'), vendingMachine) %}
+        <td class="small-fixed delete-holder">
+            <div class="btn-bind binded">
+                <a href="{{ path('vending_machine_unbind', { 'targetId': vendingMachine.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+            </div>
+        </td>
+    {% endif %}
+{% endblock %}
+
+{% block action_button %}
+
+    {% if is_granted(action.voter, object) %}
+        <div id="action-holder">
+            <div id="action-holder" class="manage-holder">
+                <div class="btn-connect">
+                    <a href="{{ path(action.path, { 'objectClass': class(object)|lower, 'objectId': object.id }) }}"><span class="icon hrd-bind"></span>Привязать</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

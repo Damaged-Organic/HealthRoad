@@ -423,4 +423,12 @@ class Student
     {
         return $this->products;
     }
+
+    public function getFullName()
+    {
+        if( !$this->patronymic && !$this->name && !$this->surname )
+            return NULL;
+
+        return "{$this->surname} {$this->name} {$this->patronymic}";
+    }
 }

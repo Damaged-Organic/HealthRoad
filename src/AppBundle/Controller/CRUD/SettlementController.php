@@ -32,6 +32,8 @@ class SettlementController extends Controller implements UserRoleListInterface
 
         $_settlementBoundlessAccess = $this->get('app.security.settlement_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( $id )
         {
             $settlement = $_manager->getRepository('AppBundle:Settlement\Settlement')->find($id);
@@ -58,6 +60,8 @@ class SettlementController extends Controller implements UserRoleListInterface
             ];
         }
 
+        $_breadcrumbs->add('settlement_read');
+
         return $this->render($response['view'], $response['data']);
     }
 
@@ -78,13 +82,19 @@ class SettlementController extends Controller implements UserRoleListInterface
         if( !$_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $settlementType = new SettlementType($_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_CREATE));
 
-        $form = $this->createForm($settlementType, $settlement = new Settlement);
+        $form = $this->createForm($settlementType, $settlement = new Settlement, [
+            'action' => $this->generateUrl('settlement_create')
+        ]);
 
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('settlement_read')->add('settlement_create');
+
             return $this->render('AppBundle:Entity/Settlement/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -120,6 +130,8 @@ class SettlementController extends Controller implements UserRoleListInterface
 
         $_settlementBoundlessAccess = $this->get('app.security.settlement_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $settlement = $_manager->getRepository('AppBundle:Settlement\Settlement')->find($id);
 
         if( !$settlement )
@@ -133,7 +145,9 @@ class SettlementController extends Controller implements UserRoleListInterface
 
         $settlementType = new SettlementType($_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_CREATE));
 
-        $form = $this->createForm($settlementType, $settlement);
+        $form = $this->createForm($settlementType, $settlement, [
+            'action' => $this->generateUrl('settlement_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 
@@ -149,6 +163,8 @@ class SettlementController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('settlement_read')->add('settlement_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Settlement/CRUD:updateItem.html.twig', [
             'form'       => $form->createView(),

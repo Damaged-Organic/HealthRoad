@@ -1,2 +1,56 @@
 {# AppBundle/Resources/views/Entity/Settlement/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="add-staff-form">
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "settlement-username",
+            'attr': {
+                'placeholder': "Введите название",
+                'data-rule-required': "true", 'data-msg-required': 'settlement.name.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'settlement.name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'settlement.name.length.max'|trans({}, "validators"),
+                'value': ( settlement is defined ) ? settlement.name
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    {% do form.region.setRendered %}
+
+    <div class="select-holder">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">Регион</span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.region.vars.data ) ? form.region.vars.data.name : 'Выбрать...' }}</span>
+            </a>
+        </div>
+
+        {% for error in form.region.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        {% for region in form.region.vars.choices %}
+                            <li class="option-item {{ ( form.region.vars.data ) ? ( form.region.vars.data.id != region.value ) ?: 'active' : null }}" data-option="{{ region.value }}">
+                                <span class="option-name">{{ region.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="{{ form.region.vars.full_name }}" value="{{ ( form.region.vars.data ) ? form.region.vars.data.id : null }}">
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

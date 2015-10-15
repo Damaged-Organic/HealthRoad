@@ -53,8 +53,8 @@ class CustomerType extends AbstractType
                     $form
                         ->add('password', 'repeated', [
                             'required'    => FALSE,
-                            'first_name'  => "Password",
-                            'second_name' => "Password_confirm",
+                            'first_name'  => "password",
+                            'second_name' => "password_confirm",
                             'type'        => "password",
                         ])
                     ;
@@ -76,8 +76,8 @@ class CustomerType extends AbstractType
                     $form
                         ->add('password', 'repeated', [
                             'required'    => TRUE,
-                            'first_name'  => "Password",
-                            'second_name' => "Password_confirm",
+                            'first_name'  => "password",
+                            'second_name' => "password_confirm",
                             'type'        => "password",
                         ])
                         ->add('create', 'submit', [

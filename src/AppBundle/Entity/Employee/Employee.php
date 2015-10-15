@@ -54,7 +54,7 @@ class Employee implements AdvancedUserInterface, Serializable
     protected $students;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=200, unique=true)
      *
      * @Assert\NotBlank(message="employee.username.not_blank")
      * @Assert\Length(

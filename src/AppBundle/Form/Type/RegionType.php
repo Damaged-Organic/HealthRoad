@@ -21,7 +21,7 @@ class RegionType extends AbstractType
     {
         $builder
             ->add('name', 'text', [
-                'label' => "Name"
+                'label' => "Name *"
             ])
             ->add('administrativeCenter', 'text', [
                 'required' => FALSE,

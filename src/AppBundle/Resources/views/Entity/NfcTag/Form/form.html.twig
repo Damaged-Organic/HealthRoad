@@ -1,2 +1,20 @@
 {# AppBundle/Resources/views/Entity/NfcTag/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="add-staff-form">
+    <div class="field-holder">
+        {{ form_widget(form.number, {
+            'id': "nfc-tag-number",
+            'attr': {
+                'placeholder': "Введите номер",
+                'value': ( nfcTag is defined ) ? nfcTag.number
+            }
+        }) }}
+
+        {{ form_label(form.number) }}
+
+        {{ form_errors(form.number) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

@@ -1,12 +1,13 @@
+/*
 "use strict";
 
 class BindService{
 	
 	_send(...args){
 		var data = {
-				entity: args[0],
-				parentID: args[1],
-				childID: args[2],
+				objectClass: args[0],
+				objectId: args[1],
+				targetId: args[2],
 				isBinded: args[3]
 			},
 			url = args[4];
@@ -19,4 +20,4 @@ class BindService{
 	}
 }
 
-export default new BindService();
+export default new BindService();*/

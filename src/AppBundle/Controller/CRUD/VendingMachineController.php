@@ -32,6 +32,8 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
         $_vendingMachineBoundlessAccess = $this->get('app.security.vending_machine_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( $id )
         {
             $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
@@ -58,6 +60,8 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             ];
         }
 
+        $_breadcrumbs->add('vending_machine_read');
+
         return $this->render($response['view'], $response['data']);
     }
 
@@ -78,13 +82,19 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         if( !$_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $vendingMachineType = new VendingMachineType($_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE));
 
-        $form = $this->createForm($vendingMachineType, $vendingMachine = new VendingMachine);
+        $form = $this->createForm($vendingMachineType, $vendingMachine = new VendingMachine, [
+            'action' => $this->generateUrl('vending_machine_create')
+        ]);
 
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('vending_machine_read')->add('vending_machine_create');
+
             return $this->render('AppBundle:Entity/VendingMachine/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -127,6 +137,8 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
         $_vendingMachineBoundlessAccess = $this->get('app.security.vending_machine_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
 
         if( !$vendingMachine )
@@ -140,7 +152,9 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
         $vendingMachineType = new VendingMachineType($_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE));
 
-        $form = $this->createForm($vendingMachineType, $vendingMachine);
+        $form = $this->createForm($vendingMachineType, $vendingMachine, [
+            'action' => $this->generateUrl('vending_machine_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 
@@ -166,6 +180,8 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 ]);
             }
         }
+
+        $_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/VendingMachine/CRUD:updateItem.html.twig', [
             'form'           => $form->createView(),

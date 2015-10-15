@@ -1,6 +1,26 @@
 {# AppBundle/Resources/views/Entity/NfcTag/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/NfcTag:item.html.twig' %}
+{% extends 'AppBundle:Entity/NfcTag/Base:item.html.twig' %}
+
+{% block active_nfc_tag_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/NfcTag/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/NfcTag/Form:form.html.twig' with { 'form': form, 'nfc_tag': nfcTag } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_DELETE'), nfcTag) %}
+            <div class="btn-delete black">
+                <a href="{{ path('nfc_tag_delete', { 'id': nfcTag.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+        <button type="submit" form="add-staff-form" class="btn-save back">
+            <span>Сохранить и вернуться</span>
+        </button>
+        <button type="submit" form="add-staff-form" class="btn-save">
+            <span>Сохранить</span>
+        </button>
+    </div>
 {% endblock %}

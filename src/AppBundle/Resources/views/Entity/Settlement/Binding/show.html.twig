@@ -16,8 +16,8 @@
 
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_BIND'), settlement) %}
         <td class="small-fixed delete-holder">
-            <div class="btn-delete">
-                <a href="{{ path('settlement_unbind', { 'id': settlement.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-delete"></a>
+            <div class="btn-bind binded">
+                <a href="{{ path('settlement_unbind', { 'targetId': settlement.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
             </div>
         </td>
     {% endif %}
@@ -29,7 +29,7 @@
         <div id="action-holder">
             <div id="action-holder" class="manage-holder">
                 <div class="btn-connect">
-                    <a href="{{ path(action.path, { 'objectClass': class(object)|lower, 'objectId': object.id }) }}">Привязать</a>
+                    <a href="{{ path(action.path, { 'objectClass': class(object)|lower, 'objectId': object.id }) }}"><span class="icon hrd-bind"></span>Привязать</a>
                 </div>
             </div>
         </div>

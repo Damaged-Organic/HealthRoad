@@ -1,0 +1,27 @@
+{# AppBundle/Resources/views/Entity/VendingMachine/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ vendingMachine.id }}</span></td>
+<td>
+    <span>
+        {{ vendingMachine.serial }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ vendingMachine.name }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( vendingMachine.school ) ? vendingMachine.school.name : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( vendingMachine.school ) ? (( vendingMachine.school.settlement ) ? vendingMachine.school.settlement.name : '-') : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( vendingMachine.school ) ? (( vendingMachine.school.settlement ) ? ((vendingMachine.school.settlement.region) ? vendingMachine.school.settlement.region.name : '-') : '-') : '-' }}
+    </span>
+</td>

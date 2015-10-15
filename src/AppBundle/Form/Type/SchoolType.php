@@ -21,7 +21,7 @@ class SchoolType extends AbstractType
     {
         $builder
             ->add('name', 'text', [
-                'label' => "School name"
+                'label' => "Name *"
             ])
             ->add('settlement', 'entity', [
                 'class'        => "AppBundle\\Entity\\Settlement\\Settlement",
@@ -29,7 +29,7 @@ class SchoolType extends AbstractType
                 'placeholder'  => "Choose settlement"
             ])
             ->add('address', 'text', [
-                'label' => "Address"
+                'label' => "Address *"
             ])
             ->add('studentsQuantity', 'number', [
                 'required' => FALSE,

@@ -1,10 +1,6 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/VendingMachine:item.html.twig' %}
+{% extends 'AppBundle:Entity/VendingMachine/Base:item.html.twig' %}
 
 {% block data %}
     {{ vendingMachine.name }}
-    {{ vendingMachine.code }}
-    {{ vendingMachine.school.name }}
-    {{ vendingMachine.school.settlement.name }}
-    {{ vendingMachine.school.settlement.region.name }}
 {% endblock %}

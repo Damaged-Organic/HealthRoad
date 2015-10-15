@@ -1,6 +1,6 @@
 {# AppBundle/Resources/views/Entity/NfcTag/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/NfcTag:item.html.twig' %}
+{% extends 'AppBundle:Entity/NfcTag/Base:item.html.twig' %}
 
 {% block data %}
-    {{ nfcTag.number }}
+    {{ nfcTag.name }}
 {% endblock %}

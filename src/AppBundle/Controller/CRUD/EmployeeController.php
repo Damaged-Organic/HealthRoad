@@ -79,15 +79,18 @@ class EmployeeController extends Controller implements UserRoleListInterface
     {
         $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
 
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( !$_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $employeeType = new EmployeeType($_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE));
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
+        $employeeType = new EmployeeType($_translator, $_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE));
 
         $form = $this->createForm($employeeType, $employee = new Employee, [
-            'validation_groups' => ['Employee', 'Strict', 'Create']
+            'validation_groups' => ['Employee', 'Strict', 'Create'],
+            'action'            => $this->generateUrl('employee_create')
         ]);
 
         $form->handleRequest($request);
@@ -140,6 +143,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
 
         $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($id);
@@ -154,12 +159,14 @@ class EmployeeController extends Controller implements UserRoleListInterface
         }
 
         $employeeType = new EmployeeType(
+            $_translator,
             $_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE),
             $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_SYSTEM, $employee)
         );
 
         $form = $this->createForm($employeeType, $employee, [
-            'validation_groups' => ['Employee', 'Strict', 'Update']
+            'validation_groups' => ['Employee', 'Strict', 'Update'],
+            'action'            => $this->generateUrl('employee_update', ['id' => $id])
         ]);
 
         $form->handleRequest($request);

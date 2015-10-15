@@ -4,26 +4,32 @@
 {% block variable %}
     <div class="outer scrollable-holder">
         <div class="inner scrollable">
-            <table>
-                <tr>
 
-                    {% include 'AppBundle:Entity/School/Table:th.html.twig' %}
-
-                    {% block action_items_th %}{% endblock %}
-
-                </tr>
-
-                {% for school in schools %}
+            {% if schools|length %}
+                <table>
                     <tr>
 
-                        {% include 'AppBundle:Entity/School/Table:tr.html.twig' with { 'school': school } only %}
+                        {% include 'AppBundle:Entity/School/Table:th.html.twig' %}
 
-                        {% block action_items_tr %}{% endblock %}
+                        {% block action_items_th %}{% endblock %}
 
                     </tr>
-                {% endfor %}
 
-            </table>
+                    {% for school in schools %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/School/Table:tr.html.twig' with { 'school': school } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                Список пуст
+            {% endif %}
+
         </div>
     </div>
     <div class="bottom-info-panel">

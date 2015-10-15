@@ -2,6 +2,8 @@
 // AppBundle/Controller/Binding/NfcTagController.php
 namespace AppBundle\Controller\Binding;
 
+use AppBundle\Security\Authorization\Voter\StudentVoter;
+use AppBundle\Security\Authorization\Voter\VendingMachineVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -15,6 +17,7 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Security\Authorization\Voter\NfcTagVoter,
     AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Entity\Student\Student;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class NfcTagController extends Controller implements UserRoleListInterface
 {
@@ -32,24 +35,34 @@ class NfcTagController extends Controller implements UserRoleListInterface
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Student, $objectClass):
-                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+                $object = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
 
-                if( !$student )
+                if( !$object )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
                 /*
                  * TRICKY: single nfcTag object pushed into array in order to be valid for template
                  */
-                $nfcTags = [$student->getNfcTag()];
+                $nfcTags = [$object->getNfcTag()];
+
+                $action = [
+                    'path'  => 'nfc_tag_choose',
+                    'voter' => StudentVoter::STUDENT_BIND
+                ];
             break;
 
             case $this->compareObjectClassNameToString(new VendingMachine, $objectClass):
-                $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
+                $object = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
 
-                if( !$vendingMachine )
+                if( !$object )
                     throw $this->createNotFoundException("Vending Machine identified by `id` {$objectId} not found");
 
-                $nfcTags = $vendingMachine->getNfcTags();
+                $nfcTags = $object->getNfcTags();
+
+                $action = [
+                    'path'  => 'nfc_tag_choose',
+                    'voter' => VendingMachineVoter::VENDING_MACHINE_BIND
+                ];
             break;
 
             default:
@@ -58,9 +71,10 @@ class NfcTagController extends Controller implements UserRoleListInterface
         }
 
         return $this->render('AppBundle:Entity/NfcTag/Binding:show.html.twig', [
-            'nfcTags'     => $nfcTags,
-            'objectId'    => $objectId,
-            'objectClass' => $objectClass
+            'standalone' => TRUE,
+            'nfcTags'    => $nfcTags,
+            'object'     => $object,
+            'action'     => $action
         ]);
     }
 
@@ -83,30 +97,44 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
         $_manager = $this->getDoctrine()->getManager();
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Student, $objectClass):
-                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+                $student = $object = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
 
                 if( !$student )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
-                $object = [
-                    'class' => $this->getObjectClassName($student),
-                    'id'    => $student->getId()
-                ];
+                $path = 'student_update_bounded';
+
+                $_breadcrumbs->add('student_read')->add('student_update', ['id' => $objectId])->add('student_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'nfctag'
+                    ],
+                    $_translator->trans('nfc_tag_read', [], 'routes')
+                );
             break;
 
             case $this->compareObjectClassNameToString(new VendingMachine, $objectClass):
-                $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
+                $vendingMachine = $object = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
 
                 if( !$vendingMachine )
                     throw $this->createNotFoundException("Vending Machine identified by `id` {$objectId} not found");
 
-                $object = [
-                    'class' => $this->getObjectClassName($vendingMachine),
-                    'id'    => $vendingMachine->getId()
-                ];
+                $path = 'vending_machine_update_bounded';
+
+                $_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $objectId])->add('vending_machine_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'nfctag'
+                    ],
+                    $_translator->trans('nfc_tag_read', [], 'routes')
+                );
             break;
 
             default:
@@ -116,39 +144,41 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
         $nfcTags = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll();
 
+        $_breadcrumbs->add('nfc_tag_choose', [
+            'objectId'    => $objectId,
+            'objectClass' => $objectClass
+        ]);
+
         return $this->render('AppBundle:Entity/NfcTag/Binding:choose.html.twig', [
-            'nfcTags'     => $nfcTags,
-            'objectClass' => $object['class'],
-            'objectId'    => $object['id']
+            'path'    => $path,
+            'nfcTags' => $nfcTags,
+            'object'  => $object
         ]);
     }
 
     /**
-     * @Method({"POST"})
+     * @Method({"GET"})
      * @Route(
-     *      "/nfc_tag/bind",
+     *      "/nfc_tag/bind/{targetId}/{objectClass}/{objectId}",
      *      name="nfc_tag_bind",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"}
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
      * )
      */
-    public function bindToAction(Request $request)
+    public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $nfcTagId = ( $request->request->has('nfcTagId') ) ? $request->request->get('nfcTagId') : NULL;
-
         $_manager = $this->getDoctrine()->getManager();
 
-        $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($nfcTagId);
+        $_translator = $this->get('translator');
+
+        $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($targetId);
 
         if( !$nfcTag )
-            throw $this->createNotFoundException("Nfc Tag identified by `id` {$nfcTagId} not found");
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(NfcTagVoter::NFC_TAG_BIND, $nfcTag) )
-            throw $this->createAccessDeniedException('Access denied');
-
-        $objectClass = ( $request->request->get('objectClass') ) ? $request->request->get('objectClass') : NULL;
-        $objectId    = ( $request->request->get('objectId') ) ? $request->request->get('objectId') : NULL;
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
@@ -156,7 +186,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
 
                 if( !$student )
-                    throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
                 /*
                  * TRICKY: had to set NfcTag as the owning side of the oneToOne relationship
@@ -179,98 +209,70 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
                     $_manager->persist($nfcTag);
                 });
-
-                $redirect = [
-                    'route' => "student_update",
-                    'id'    => $student->getId()
-                ];
             break;
 
             case $this->compareObjectClassNameToString(new VendingMachine, $objectClass):
                 $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
 
                 if( !$vendingMachine )
-                    throw $this->createNotFoundException("Vending Machine identified by `id` {$objectId} not found");
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
                 $vendingMachine->addNfcTag($nfcTag);
 
                 $_manager->persist($vendingMachine);
-
-                $redirect = [
-                    'route' => "vending_machine_update",
-                    'id'    => $vendingMachine->getId()
-                ];
             break;
 
             default:
-                throw $this->createNotFoundException("Object not supported");
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
         $_manager->flush();
 
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
-        ]);
+        return new RedirectResponse($request->headers->get('referer'));
     }
 
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/nfc_tag/unbind/{id}/{objectClass}/{objectId}",
+     *      "/nfc_tag/unbind/{targetId}/{objectClass}/{objectId}",
      *      name="nfc_tag_unbind",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
      * )
      */
-    public function unbindFromAction($id, $objectClass, $objectId)
+    public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
     {
         $_manager = $this->getDoctrine()->getManager();
 
-        $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
+        $_translator = $this->get('translator');
+
+        $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($targetId);
 
         if( !$nfcTag )
-            throw $this->createNotFoundException("Nfc Tag identified by `id` {$id} not found");
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(NfcTagVoter::NFC_TAG_BIND, $nfcTag) )
-            throw $this->createAccessDeniedException('Access denied');
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Student, $objectClass):
-                //this should be gone in AJAX version
-                $studentId = $nfcTag->getStudent()->getId();
-
                 $nfcTag->setStudent(NULL);
-
-                $redirect = [
-                    'route' => "student_update",
-                    'id'    => $studentId
-                ];
             break;
 
             case $this->compareObjectClassNameToString(new VendingMachine, $objectClass):
-                //this should be gone in AJAX version
-                $vendingMachineId = $nfcTag->getVendingMachine()->getId();
-
                 $nfcTag->setVendingMachine(NULL);
-
-                $redirect = [
-                    'route' => "vending_machine_update",
-                    'id'    => $vendingMachineId
-                ];
             break;
 
             default:
-                throw $this->createNotFoundException("Object not supported");
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
             break;
         }
 
         $_manager->flush();
 
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
-        ]);
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

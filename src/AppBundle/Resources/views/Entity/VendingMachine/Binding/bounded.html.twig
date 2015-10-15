@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/VendingMachine/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/VendingMachine/Base:item.html.twig' %}
+
+{% if objectClass is same as('nfctag') %}
+    {% block active_vending_machine_update_bounded_nfc_tag %}{{ 'class="active"' }}{% endblock %}
+{% endif %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

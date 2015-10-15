@@ -79,7 +79,7 @@ class VendingMachine
     protected $login;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=64, nullable=true)
      * @Assert\Length(
      *      min=8,
      *      max=64,

@@ -80,7 +80,9 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         $supplierType = new SupplierType($_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE));
 
-        $form = $this->createForm($supplierType, $supplier = new Supplier);
+        $form = $this->createForm($supplierType, $supplier = new Supplier, [
+            'action' => $this->generateUrl('supplier_create')
+        ]);
 
         $form->handleRequest($request);
 
@@ -133,7 +135,9 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         $supplierType = new SupplierType($_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE));
 
-        $form = $this->createForm($supplierType, $supplier);
+        $form = $this->createForm($supplierType, $supplier, [
+            'action' => $this->generateUrl('supplier_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 

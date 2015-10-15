@@ -65,7 +65,9 @@ class SettingController extends Controller
         if( !$this->isGranted(SettingVoter::SETTING_UPDATE, $setting) )
             return $this->redirectToRoute('setting_read');
 
-        $form = $this->createForm(new SettingType, $setting);
+        $form = $this->createForm(new SettingType, $setting, [
+            'action' => $this->generateUrl('setting_update')
+        ]);
 
         $form->handleRequest($request);
 

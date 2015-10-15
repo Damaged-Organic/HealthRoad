@@ -80,7 +80,9 @@ class StudentController extends Controller implements UserRoleListInterface
 
         $studentType = new StudentType($_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE));
 
-        $form = $this->createForm($studentType, $student = new Student);
+        $form = $this->createForm($studentType, $student = new Student, [
+            'action' => $this->generateUrl('settlement_create')
+        ]);
 
         $form->handleRequest($request);
 
@@ -136,7 +138,9 @@ class StudentController extends Controller implements UserRoleListInterface
 
         $studentType = new StudentType($_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE));
 
-        $form = $this->createForm($studentType, $student);
+        $form = $this->createForm($studentType, $student, [
+            'action' => $this->generateUrl('student_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 

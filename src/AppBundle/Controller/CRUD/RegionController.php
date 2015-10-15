@@ -79,14 +79,16 @@ class RegionController extends Controller implements UserRoleListInterface
     {
         $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
 
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( !$_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $regionType = new RegionType($_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_CREATE));
 
-        $form = $this->createForm($regionType, $region = new Region);
+        $form = $this->createForm($regionType, $region = new Region, [
+            'action' => $this->generateUrl('region_create')
+        ]);
 
         $form->handleRequest($request);
 
@@ -143,7 +145,9 @@ class RegionController extends Controller implements UserRoleListInterface
 
         $regionType = new RegionType($_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_CREATE));
 
-        $form = $this->createForm($regionType, $region);
+        $form = $this->createForm($regionType, $region, [
+            'action' => $this->generateUrl('region_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 

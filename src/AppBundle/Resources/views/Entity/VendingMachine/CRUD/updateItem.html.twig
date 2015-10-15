@@ -1,6 +1,26 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/VendingMachine:item.html.twig' %}
+{% extends 'AppBundle:Entity/VendingMachine/Base:item.html.twig' %}
+
+{% block active_vending_machine_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/VendingMachine/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/VendingMachine/Form:form.html.twig' with { 'form': form, 'vendingMachine': vendingMachine } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_DELETE'), vendingMachine) %}
+            <div class="btn-delete black">
+                <a href="{{ path('vending_machine_delete', { 'id': vendingMachine.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+        <button type="submit" form="add-staff-form" class="btn-save back">
+            <span>Сохранить и вернуться</span>
+        </button>
+        <button type="submit" form="add-staff-form" class="btn-save">
+            <span>Сохранить</span>
+        </button>
+    </div>
 {% endblock %}

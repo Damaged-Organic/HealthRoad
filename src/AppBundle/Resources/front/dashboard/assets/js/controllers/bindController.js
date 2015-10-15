@@ -1,3 +1,4 @@
+/*
 "use strict";
 
 import BindService from "../services/bindService";
@@ -21,9 +22,9 @@ class BindController{
 		var self = this,
 			target = $(e.target).closest(".btn-bind"),
 			isBinded = this.checkBind(target),
-			entity = target.data("entity"),
-			parentID = target.data("parentId"),
-			childID = target.data("childId"),
+			entity = target.data("object-class"),
+			parentID = target.data("object-id"),
+			childID = target.data("target-id"),
 			path = target.data("path");
 
 		this.loader.addClass("loading");
@@ -56,3 +57,4 @@ class BindController{
 }
 
 export default BindController;
+*/

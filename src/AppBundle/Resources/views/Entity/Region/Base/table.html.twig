@@ -4,26 +4,32 @@
 {% block variable %}
     <div class="outer scrollable-holder">
         <div class="inner scrollable">
-            <table>
-                <tr>
 
-                    {% include 'AppBundle:Entity/Region/Table:th.html.twig' %}
-
-                    {% block action_items_th %}{% endblock %}
-
-                </tr>
-
-                {% for region in regions %}
+            {% if regions|length %}
+                <table>
                     <tr>
 
-                        {% include 'AppBundle:Entity/Region/Table:tr.html.twig' with { 'region': region } only %}
+                        {% include 'AppBundle:Entity/Region/Table:th.html.twig' %}
 
-                        {% block action_items_tr %}{% endblock %}
+                        {% block action_items_th %}{% endblock %}
 
                     </tr>
-                {% endfor %}
 
-            </table>
+                    {% for region in regions %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/Region/Table:tr.html.twig' with { 'region': region } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                Список пуст
+            {% endif %}
+
         </div>
     </div>
     <div class="bottom-info-panel">

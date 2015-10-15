@@ -4,26 +4,32 @@
 {% block variable %}
     <div class="outer scrollable-holder">
         <div class="inner scrollable">
-            <table>
-                <tr>
 
-                    {% include 'AppBundle:Entity/Settlement/Table:th.html.twig' %}
-
-                    {% block action_items_th %}{% endblock %}
-
-                </tr>
-
-                {% for settlement in settlements %}
+            {% if settlements|length %}
+                <table>
                     <tr>
 
-                        {% include 'AppBundle:Entity/Settlement/Table:tr.html.twig' with { 'settlement': settlement } only %}
+                        {% include 'AppBundle:Entity/Settlement/Table:th.html.twig' %}
 
-                        {% block action_items_tr %}{% endblock %}
+                        {% block action_items_th %}{% endblock %}
 
                     </tr>
-                {% endfor %}
 
-            </table>
+                    {% for settlement in settlements %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/Settlement/Table:tr.html.twig' with { 'settlement': settlement } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                Список пуст
+            {% endif %}
+
         </div>
     </div>
     <div class="bottom-info-panel">

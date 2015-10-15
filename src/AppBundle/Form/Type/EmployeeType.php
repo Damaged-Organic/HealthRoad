@@ -6,7 +6,8 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilderInterface,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormEvents,
-    Symfony\Component\OptionsResolver\OptionsResolver;
+    Symfony\Component\OptionsResolver\OptionsResolver,
+    Symfony\Component\Translation\TranslatorInterface;
 
 use AppBundle\Entity\Employee\Repository\EmployeeGroupRepository;
 
@@ -15,7 +16,9 @@ class EmployeeType extends AbstractType
     private $boundlessAccess;
     private $boundedAccess;
 
-    public function __construct($boundlessAccess, $boundedAccess = NULL)
+    private $_translator;
+
+    public function __construct(TranslatorInterface $translator, $boundlessAccess, $boundedAccess = NULL)
     {
         /*
          * TRICKY: $this->boundlessAccess is a string containing exact user role,
@@ -23,6 +26,8 @@ class EmployeeType extends AbstractType
          */
         $this->boundlessAccess = $boundlessAccess;
         $this->boundedAccess   = $boundedAccess;
+
+        $this->_translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -38,7 +43,7 @@ class EmployeeType extends AbstractType
                     ($employee && $employee->getId() !== NULL && $this->boundedAccess)) {
                         $form
                             ->add('username', 'text', [
-                                'label' => "Username"
+                                'label' => "Username *"
                             ])
                             ->add('employeeGroup', 'entity', [
                                 'class' => "AppBundle\\Entity\\Employee\\EmployeeGroup",
@@ -90,10 +95,16 @@ class EmployeeType extends AbstractType
                 {
                     $form
                         ->add('password', 'repeated', [
-                            'required'    => FALSE,
-                            'first_name'  => "Password",
-                            'second_name' => "Password_confirm",
-                            'type'        => "password",
+                            'required'       => FALSE,
+                            'first_name'     => "password",
+                            'second_name'    => "password_confirm",
+                            'type'           => "password",
+                            'first_options'  => [
+                                'label' => 'Password'
+                            ],
+                            'second_options' => [
+                                'label' => 'Repeat Password'
+                            ]
                         ])
                     ;
 
@@ -122,10 +133,24 @@ class EmployeeType extends AbstractType
                 } else {
                     $form
                         ->add('password', 'repeated', [
-                            'required'    => TRUE,
-                            'first_name'  => "Password",
-                            'second_name' => "Password_confirm",
-                            'type'        => "password",
+                            'required'      => TRUE,
+                            'first_name'    => "password",
+                            'second_name'   => "password_confirm",
+                            'type'          => "password",
+                            'first_options' => [
+                                'label' => 'Password *',
+                                'attr'  => [
+                                    'data-rule-required' => "true",
+                                    'data-msg-required'  => $this->_translator->trans('employee.password.not_blank', [], 'validators')
+                                ]
+                            ],
+                            'second_options' => [
+                                'label' => 'Repeat Password *',
+                                'attr'  => [
+                                    'data-rule-required' => "true",
+                                    'data-msg-required'  => $this->_translator->trans('employee.password_confirm.not_blank', [], 'validators')
+                                ]
+                            ]
                         ])
                         ->add('create', 'submit', [
                             'label' => "Создать"

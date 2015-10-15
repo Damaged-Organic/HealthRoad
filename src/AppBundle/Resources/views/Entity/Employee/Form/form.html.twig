@@ -1,77 +1,197 @@
 {# AppBundle/Resources/views/Entity/Employee/Form/form.html.twig #}
-{#{{ form_start(form) }}
-    {{ form_errors(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
 
-    <p>Системные данные:</p>
-    {{ ( form.username is defined ) ? form_row(form.username) : null }}
-    {{ ( form.password is defined ) ? form_row(form.password) : null }}
-    {{ ( form.isEnabled is defined ) ? form_row(form.isEnabled) : null }}
+<form action="{{ form.vars.action }}" method="POST" id="add-staff-form">
+    {% if form.username is defined %}
+        <div class="field-holder">
+            {{ form_widget(form.username, {
+                'id': "employee-username",
+                'attr': {
+                    'placeholder': "Введите логин",
+                    'data-rule-required': "true", 'data-msg-required': 'employee.username.not_blank'|trans({}, "validators"),
+                    'data-rule-minlength': "3", 'data-msg-minlength': 'employee.username.length.min'|trans({}, "validators"),
+                    'data-rule-maxlength': "200", 'data-msg-maxlength': 'employee.username.length.max'|trans({}, "validators"),
+                    'value': ( employee is defined ) ? employee.username
+                }
+            }) }}
 
-    {{ ( form.employeeGroup is defined ) ? form_row(form.employeeGroup) : null }}
+            {{ form_label(form.username) }}
 
-    <p>Персональные данные:</p>
-{{ form_end(form) }}#}
-
-<form action="#" method="POST" id="add-staff-form">
-    <div class="field-holder">
-        <input type="text" name="staff[username]" value="" placeholder="Введите предпочитаемое имя пользователя" id="staff-username" data-rule-required="true" data-msg-required="Вы не ввели имя пользователя">
-        <label for="staff-username">Имя пользователя</label>
-    </div>
-    <div class="field-holder">
-        <input type="password" name="staff[password]" value="" placeholder="Введите ваш пароль" id="staff-password" data-rule-required="true" data-msg-required="Вы не ввели пароль">
-        <label for="staff-password">Пароль</label>
-    </div>
-    <div class="field-holder">
-        <input type="password" name="staff[confirm-password]" value="" placeholder="Подтвердите ваш пароль" id="staff-confirm-password" data-rule-required="true" data-msg-required="Вы не подтвердили ваш пароль">
-        <label for="staff-confirm-password">Подтвердите пароль</label>
-    </div>
-    <div class="select-holder">
-        <div class="btn-select">
-            <a href="#">
-                <div class="title-holder">
-                    <span class="title">Должность</span>
-                    <span class="icon hrd-list"></span>
-                </div>
-                <span class="text">Выберите должность сотрудника</span>
-            </a>
+            {{ form_errors(form.username) }}
         </div>
-        <!--span class="error-holder">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span-->
-        <div class="select-list">
-            <div class="outer">
-                <div class="inner">
-                    <ul>
-                        <li class="option-item" data-option="1"><span class="option-name">Администратор</span></li>
-                        <li class="option-item" data-option="2"><span class="option-name">Менеджер</span></li>
-                        <li class="option-item" data-option="3"><span class="option-name">Регистратор</span></li>
-                        <li class="option-item" data-option="4"><span class="option-name">Аккаунтер</span></li>
-                    </ul>
+    {% endif %}
+
+    {% if form.password is defined %}
+        <div class="field-holder">
+            {{ form_widget(form.password.password, {
+                'id': "employee-password",
+                'attr': {
+                    'placeholder': "Введите пароль",
+                    'value': null
+                }
+            }) }}
+
+            {{ form_label(form.password.password) }}
+
+            {{ form_errors(form.password.password) }}
+        </div>
+        <div class="field-holder">
+            {{ form_widget(form.password.password_confirm, {
+                'id': "employee-password-confirm",
+                'attr': {
+                    'placeholder': "Введите пароль повторно",
+                    'value': null
+                }
+            }) }}
+
+            {{ form_label(form.password.password_confirm) }}
+
+            {{ form_errors(form.password.password_confirm) }}
+        </div>
+    {% endif %}
+
+    {% if form.employeeGroup is defined %}
+
+        {% do form.employeeGroup.setRendered %}
+
+        <div class="select-holder">
+            <div class="btn-select">
+                <a href="#">
+                    <div class="title-holder">
+                        <span class="title">Должность *</span>
+                        <span class="icon hrd-list"></span>
+                    </div>
+                    <span class="text">{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.name : 'Выбрать...' }}</span>
+                </a>
+            </div>
+
+            {% for error in form.employeeGroup.vars.errors %}
+                <span class="error-holder">{{ error.message }}</span>
+            {% endfor %}
+
+            <div class="select-list">
+                <div class="outer">
+                    <div class="inner">
+                        <ul>
+                            {% for employeeGroup in form.employeeGroup.vars.choices %}
+                                <li class="option-item {{ ( form.employeeGroup.vars.data ) ? ( form.employeeGroup.vars.data.id != employeeGroup.value ) ?: 'active' : null }}" data-option="{{ employeeGroup.value }}">
+                                    <span class="option-name">{{ employeeGroup.label }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
+            <input type="hidden" name="{{ form.employeeGroup.vars.full_name }}" value="{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.id : null }}">
         </div>
-        <input type="hidden" name="staff[role]" value="">
-    </div>
+    {% endif %}
+
+    {% if form.isEnabled is defined %}
+        <div class="field-holder trpl-field">
+            <div class="field">
+                {{ form_widget(form.isEnabled, {
+                    'id': "employee-is-enabled"
+                }) }}
+
+                <label for="employee-is-enabled">
+                    <span class="radio"></span>
+                    <span class="text">Включен</span>
+                </label>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="field-holder">
-        <input type="text" name="staff[name]" value="" placeholder="Введите имя сотрудника" id="staff-name" data-rule-required="true" data-msg-required="Вы не ввели имя сотрудника">
-        <label for="staff-name">Имя сотрудника</label>
+        {{ form_widget(form.name, {
+            'id': "employee-name",
+            'attr': {
+                'placeholder': "Введите имя",
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
+                'value': ( employee is defined ) ? employee.name
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
     </div>
+
     <div class="field-holder">
-        <input type="text" name="staff[surname]" value="" placeholder="Введите фамилию сотрудника" id="staff-surname" data-rule-required="true" data-msg-required="Вы не ввели фамилию сотрудника">
-        <label for="staff-surname">Фамилия сотрудника</label>
+        {{ form_widget(form.surname, {
+            'id': "employee-surname",
+            'attr': {
+                'placeholder': "Введите фамилию",
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
+                'value': ( employee is defined ) ? employee.surname
+            }
+        }) }}
+
+        {{ form_label(form.surname) }}
+
+        {{ form_errors(form.surname) }}
     </div>
+
     <div class="field-holder">
-        <input type="text" name="staff[patronymic]" value="" placeholder="Введите отчество сотрудника" id="staff-patronymic" data-rule-required="true" data-msg-required="Вы не ввели отчество сотрудника">
-        <label for="staff-patronymic">Отчество сотрудника</label>
+        {{ form_widget(form.patronymic, {
+            'id': "employee-patronymic",
+            'attr': {
+                'placeholder': "Введите отчество",
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
+                'value': ( employee is defined ) ? employee.patronymic
+            }
+        }) }}
+
+        {{ form_label(form.patronymic) }}
+
+        {{ form_errors(form.patronymic) }}
     </div>
+
     <div class="field-holder">
-        <input type="email" name="staff[email]" value="" placeholder="Введите электронный адрес сотрудника" id="staff-email" data-rule-required="true" data-msg-required="Вы не ввели электронный адрес сотрудника" data-rule-email="true" data-msg-email="Вы не правильно ввели электронный адрес">
-        <label for="staff-email">Электронный адрес</label>
+        {{ form_widget(form.email, {
+            'id': "employee-email",
+            'attr': {
+                'placeholder': "Введите e-mail",
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators"),
+                'value': ( employee is defined ) ? employee.email
+            }
+        }) }}
+
+        {{ form_label(form.email) }}
+
+        {{ form_errors(form.email) }}
     </div>
+
     <div class="field-holder">
-        <input type="tel" name="staff[phone]" value="" placeholder="+38 (999) 999-9999" id="staff-phone" data-rule-required="true" data-msg-required="Вы не ввели телефонный номер сотрудника" data-mask="+38 (999) 999-9999">
-        <label for="staff-phone">Телефонный номер</label>
+        {{ form_widget(form.phoneNumber, {
+            'id': "employee-phone-number",
+            'attr': {
+                'placeholder': "Введите номер телефона",
+                'data-mask': "+38 (099) 999-99-99",
+                'value': ( employee is defined ) ? employee.phoneNumber
+            }
+        }) }}
+
+        {{ form_label(form.phoneNumber) }}
+
+        {{ form_errors(form.phoneNumber) }}
     </div>
+
     <div class="field-holder">
-        <input type="text" name="staff[skype]" value="" placeholder="Введите skype сотрудника" id="staff-skype" data-rule-required="true" data-msg-required="Вы не ввели skype сотрудника">
-        <label for="staff-skype">Skype сотрудника</label>
+        {{ form_widget(form.skypeName, {
+            'id': "employee-skype-name",
+            'attr': {
+                'placeholder': "Введите имя сотрудника в Skype",
+                'value': ( employee is defined ) ? employee.skypeName
+            }
+        }) }}
+
+        {{ form_label(form.skypeName) }}
+
+        {{ form_errors(form.skypeName) }}
     </div>
+
+    {{ form_widget(form._token) }}
 </form>

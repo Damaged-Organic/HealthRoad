@@ -21,7 +21,7 @@ class SettlementType extends AbstractType
     {
         $builder
             ->add('name', 'text', [
-                'label' => "Name"
+                'label' => "Name *"
             ])
             ->add('region', 'entity', [
                 'class'        => "AppBundle\\Entity\\Region\\Region",

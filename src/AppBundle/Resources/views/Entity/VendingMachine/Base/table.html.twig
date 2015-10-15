@@ -1,0 +1,40 @@
+{# AppBundle/Resources/views/Entity/VendingMachine/Base/table.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/VendingMachine/Base:list.html.twig' %}
+
+{% block variable %}
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+
+            {% if vendingMachines|length %}
+                <table>
+                    <tr>
+
+                        {% include 'AppBundle:Entity/VendingMachine/Table:th.html.twig' %}
+
+                        {% block action_items_th %}{% endblock %}
+
+                    </tr>
+
+                    {% for vendingMachine in vendingMachines %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/VendingMachine/Table:tr.html.twig' with { 'vendingMachine': vendingMachine } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                Список пуст
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+
+        {% include 'AppBundle:Dashboard/Common:pagination.html.twig' only %}
+    </div>
+{% endblock %}

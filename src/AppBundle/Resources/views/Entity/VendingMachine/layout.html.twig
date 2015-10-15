@@ -1,0 +1,58 @@
+{# AppBundle/Resources/views/Entity/VendingMachine/layout.html.twig #}
+{% extends 'AppBundle:Dashboard/State:index.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/vendingMachines.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+
+        {% block variable %}
+            <div class="outer scrollable-holder">
+                <div class="inner scrollable">
+
+                    {% block data %}{% endblock %}
+
+                </div>
+            </div>
+            <div class="bottom-info-panel">
+
+                {% block action_bottom %}{% endblock %}
+
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/vendingMachines.bundle.min.js') }}"></script>
+{% endblock %}
+
+{#{% block content %}
+    {% block data %}{% endblock %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_DELETE'), vendingMachine) %}
+        <p>
+            <a href="{{ path('vending_machine_delete', { 'id': vendingMachine.id }) }}">Удалить</a>
+        </p>
+    {% endif %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_BIND'), vendingMachine) %}
+        <p>-------------------------------------------------------------------------------------------------</p>
+        <p>
+            <a href="{{ path('nfc_tag_choose', { 'objectClass': class(vendingMachine)|lower, 'objectId': vendingMachine.id }) }}">@ Привязать NFC-метку</a>
+        </p>
+    {% endif %}
+
+    <p>NFC-метки:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% if vendingMachine.nfcTags %}
+        {{ render(controller('AppBundle:Binding/NfcTag:show', { 'objectClass': class(vendingMachine)|lower, 'objectId': vendingMachine.id })) }}
+    {% endif %}
+{% endblock %}#}

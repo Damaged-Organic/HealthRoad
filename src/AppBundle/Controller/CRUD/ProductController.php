@@ -80,7 +80,9 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $productType = new ProductType($_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
 
-        $form = $this->createForm($productType, $product = new Product);
+        $form = $this->createForm($productType, $product = new Product, [
+            'action' => $this->generateUrl('product_create')
+        ]);
 
         $form->handleRequest($request);
 
@@ -133,7 +135,9 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $productType = new ProductType($_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
 
-        $form = $this->createForm($productType, $product);
+        $form = $this->createForm($productType, $product, [
+            'action' => $this->generateUrl('product_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 

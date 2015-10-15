@@ -1,6 +1,29 @@
 {# AppBundle/Resources/views/Entity/NfcTag/CRUD/createItem.html.twig #}
-{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+{% extends 'AppBundle:Entity/NfcTag/Base:item.html.twig' %}
 
-{% block content %}
-    {% include 'AppBundle:Entity/NfcTag/Form:form.html.twig' with {'form': form} only %}
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active">
+                <a href="{{ path('nfc_tag_create') }}">Ввод данных</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block data %}
+
+    {% include 'AppBundle:Entity/NfcTag/Form:form.html.twig' with { 'form': form } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+        <button type="submit" form="add-staff-form" class="btn-save back">
+            <span>Добавить и вернуться</span>
+        </button>
+        <button type="submit" form="add-staff-form" class="btn-save">
+            <span>Добавить</span>
+        </button>
+    </div>
 {% endblock %}

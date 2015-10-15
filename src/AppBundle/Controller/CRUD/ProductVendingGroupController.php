@@ -80,7 +80,9 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
 
         $productVendingGroupType = new ProductVendingGroupType($_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
 
-        $form = $this->createForm($productVendingGroupType, $productVendingGroup = new ProductVendingGroup);
+        $form = $this->createForm($productVendingGroupType, $productVendingGroup = new ProductVendingGroup, [
+            'action' => $this->generateUrl('product_vending_group_create')
+        ]);
 
         $form->handleRequest($request);
 
@@ -133,7 +135,9 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
 
         $productVendingGroupType = new ProductVendingGroupType($_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
 
-        $form = $this->createForm($productVendingGroupType, $productVendingGroup);
+        $form = $this->createForm($productVendingGroupType, $productVendingGroup, [
+            'action' => $this->generateUrl('product_vending_group_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 

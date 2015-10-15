@@ -80,7 +80,9 @@ class CustomerController extends Controller implements UserRoleListInterface
 
         $customerType = new CustomerType($_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE));
 
-        $form = $this->createForm($customerType, $customer = new Customer);
+        $form = $this->createForm($customerType, $customer = new Customer, [
+            'action' => $this->generateUrl('customer_create')
+        ]);
 
         $form->handleRequest($request);
 
@@ -144,7 +146,9 @@ class CustomerController extends Controller implements UserRoleListInterface
 
         $customerType = new CustomerType($_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE));
 
-        $form = $this->createForm($customerType, $customer);
+        $form = $this->createForm($customerType, $customer, [
+            'action' => $this->generateUrl('customer_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 

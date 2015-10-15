@@ -20,17 +20,16 @@ class VendingMachineType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', [
-                'label' => "Name"
-            ])
             ->add('serial', 'text', [
-                'label' => "Serial"
+                'label' => "Serial *"
             ])
             ->add('login', 'text', [
-                'label' => "Login"
+                'label'    => "API Login",
+                'required' => FALSE,
             ])
-            ->add('password', 'password', [
-                'label' => "Password"
+            ->add('password', 'text', [
+                'label'    => "API Password",
+                'required' => FALSE,
             ])
             ->add('school', 'entity', [
                 'required'     => FALSE,
@@ -44,14 +43,21 @@ class VendingMachineType extends AbstractType
                 'choice_label' => "name",
                 'placeholder'  => "Choose product vending group"
             ])
+            ->add('name', 'text', [
+                'label'    => "Name",
+                'required' => FALSE
+            ])
             ->add('nameTechnician', 'text', [
-                'label' => "Technician name"
+                'label'    => "Technician name",
+                'required' => FALSE
             ])
             ->add('numberShelves', 'number', [
-                'label' => "Shelves number"
+                'label'    => "Shelves number",
+                'required' => FALSE
             ])
             ->add('numberSprings', 'text', [
-                'label' => "Springs number"
+                'label'    => "Springs number",
+                'required' => FALSE
             ])
         ;
 

@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/NfcTag/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/NfcTag:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_nfc_tag_update %}{% endblock %}>
+                <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}">Данные</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

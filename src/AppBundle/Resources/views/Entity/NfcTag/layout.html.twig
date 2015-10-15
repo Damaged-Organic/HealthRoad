@@ -1,0 +1,50 @@
+{# AppBundle/Resources/views/Entity/NfcTag/layout.html.twig #}
+{% extends 'AppBundle:Dashboard/State:index.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/nfcTags.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+
+        {% block variable %}
+            <div class="outer scrollable-holder">
+                <div class="inner scrollable">
+
+                    {% block data %}{% endblock %}
+
+                </div>
+            </div>
+            <div class="bottom-info-panel">
+
+                {% block action_bottom %}{% endblock %}
+
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/nfcTags.bundle.min.js') }}"></script>
+{% endblock %}
+
+{#{% block content %}
+    {% block data %}{% endblock %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_DELETE'), nfcTag) %}
+        <p>
+            <a href="{{ path('nfc_tag_delete', { 'id': nfcTag.id }) }}">Удалить</a>
+        </p>
+    {% endif %}
+
+    <p>-------------------------------------------------------------------------------------------------</p>
+    <p>Ученик:</p>
+    <p>-------------------------------------------------------------------------------------------------</p>
+    {% include 'AppBundle:Entity/Student/Binding:ancestors.html.twig' with { 'sibling': nfcTag } only %}
+{% endblock %}#}

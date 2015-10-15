@@ -6,16 +6,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
+    AppBundle\Entity\Employee\Employee,
+    AppBundle\Entity\Settlement\Settlement,
     AppBundle\Security\Authorization\Voter\EmployeeVoter,
     AppBundle\Security\Authorization\Voter\RegionVoter,
-    AppBundle\Service\Security\RegionBoundlessAccess,
-    AppBundle\Entity\Employee\Employee,
-    AppBundle\Entity\Settlement\Settlement;
+    AppBundle\Service\Security\RegionBoundlessAccess;
 
 class RegionController extends Controller implements UserRoleListInterface
 {
@@ -73,9 +74,9 @@ class RegionController extends Controller implements UserRoleListInterface
     {
         $_manager = $this->getDoctrine()->getManager();
 
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         $region = $_manager->getRepository('AppBundle:Region\Region')->find($objectId);
 
@@ -97,7 +98,7 @@ class RegionController extends Controller implements UserRoleListInterface
 
                 $_breadcrumbs->add('region_update_bounded',
                     [
-                        'objectId' => $objectId,
+                        'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
                     $_translator->trans('settlement_read', [], 'routes')
@@ -135,142 +136,138 @@ class RegionController extends Controller implements UserRoleListInterface
 
         $_manager = $this->getDoctrine()->getManager();
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
+        switch(TRUE)
+        {
+            case $this->compareObjectClassNameToString(new Employee, $objectClass):
+                $employee = $object = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+
+                if( !$employee )
+                    throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
+
+                if( !$this->isGranted(EmployeeVoter::EMPLOYEE_BIND_REGION, $employee) )
+                    throw $this->createAccessDeniedException('Access denied: Regions can be bound to manager only');
+
+                $path = 'employee_update_bounded';
+
+                $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId])->add('employee_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'region'
+                    ],
+                    $_translator->trans('region_read', [], 'routes')
+                );
+            break;
+
+            default:
+                throw new NotAcceptableHttpException("Object not supported");
+            break;
+        }
+
         $regions = $_manager->getRepository('AppBundle:Region\Region')->findAll();
 
-        switch(TRUE)
-        {
-            case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
-
-                if( !$employee )
-                    throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
-
-                if( !$this->isGranted(EmployeeVoter::EMPLOYEE_BIND_REGION, $employee) )
-                    throw $this->createAccessDeniedException('Access denied: Regions can be bound to manager only');
-
-                $object = [
-                    'class' => $this->getObjectClassName($employee),
-                    'id'    => $employee->getId()
-                ];
-            break;
-
-            default:
-                throw new NotAcceptableHttpException("Object not supported");
-            break;
-        }
+        $_breadcrumbs->add('region_choose', [
+            'objectId'    => $objectId,
+            'objectClass' => $objectClass
+        ]);
 
         return $this->render('AppBundle:Entity/Region/Binding:choose.html.twig', [
-            'regions'     => $regions,
-            'objectClass' => $object['class'],
-            'objectId'    => $object['id']
-        ]);
-    }
-
-    /**
-     * @Method({"POST"})
-     * @Route(
-     *      "/region/bind",
-     *      name="region_bind",
-     *      host="{domain_dashboard}",
-     *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"}
-     * )
-     */
-    public function bindToAction(Request $request)
-    {
-        $regionId = ( $request->request->has('regionId') ) ? $request->request->get('regionId') : NULL;
-
-        $_manager = $this->getDoctrine()->getManager();
-
-        $region = $_manager->getRepository('AppBundle:Region\Region')->find($regionId);
-
-        if( !$region )
-            throw $this->createNotFoundException("Region identified by `id` {$regionId} not found");
-
-        if( !$this->isGranted(RegionVoter::REGION_BIND, $region) )
-            throw $this->createAccessDeniedException('Access denied');
-
-        $objectClass = ( $request->request->has('objectClass') ) ? $request->request->get('objectClass') : NULL;
-        $objectId    = ( $request->request->has('objectId') ) ? $request->request->get('objectId') : NULL;
-
-        switch(TRUE)
-        {
-            case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
-
-                if( !$employee )
-                    throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
-
-                if( !$this->isGranted(EmployeeVoter::EMPLOYEE_BIND_REGION, $employee) )
-                    throw $this->createAccessDeniedException('Access denied: Regions can be bound to manager only');
-
-                $employee->addRegion($region);
-
-                $_manager->persist($employee);
-
-                $redirect = [
-                    'route' => "employee_update",
-                    'id'    => $employee->getId()
-                ];
-            break;
-
-            default:
-                throw new NotAcceptableHttpException("Object not supported");
-            break;
-        }
-
-        $_manager->flush();
-
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
+            'path'    => $path,
+            'regions' => $regions,
+            'object'  => $object
         ]);
     }
 
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/region/unbind/{id}/{objectClass}/{objectId}",
-     *      name="region_unbind",
+     *      "/region/bind/{targetId}/{objectClass}/{objectId}",
+     *      name="region_bind",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
      * )
      */
-    public function unbindFromAction($id, $objectClass, $objectId)
+    public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
         $_manager = $this->getDoctrine()->getManager();
 
-        $region = $_manager->getRepository('AppBundle:Region\Region')->find($id);
+        $_translator = $this->get('translator');
+
+        $region = $_manager->getRepository('AppBundle:Region\Region')->find($targetId);
 
         if( !$region )
-            throw $this->createNotFoundException("Region identified by `id` {$id} not found");
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(RegionVoter::REGION_BIND, $region) )
-            throw $this->createAccessDeniedException('Access denied');
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                //this should be gone in AJAX version
-                $employeeId = $region->getEmployee()->getId();
+                $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
-                $region->setEmployee(NULL);
+                if( !$employee )
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
-                $redirect = [
-                    'route' => "employee_update",
-                    'id'    => $employeeId
-                ];
+                if( !$this->isGranted(EmployeeVoter::EMPLOYEE_BIND_REGION, $employee) )
+                    throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+
+                $employee->addRegion($region);
+
+                $_manager->persist($employee);
             break;
 
             default:
-                throw $this->createNotFoundException("Object not supported");
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
         $_manager->flush();
 
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
-        ]);
+        return new RedirectResponse($request->headers->get('referer'));
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/region/unbind/{targetId}/{objectClass}/{objectId}",
+     *      name="region_unbind",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
+     * )
+     */
+    public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
+    {
+        $_manager = $this->getDoctrine()->getManager();
+
+        $_translator = $this->get('translator');
+
+        $region = $_manager->getRepository('AppBundle:Region\Region')->find($targetId);
+
+        if( !$region )
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+
+        if( !$this->isGranted(RegionVoter::REGION_BIND, $region) )
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+
+        switch(TRUE)
+        {
+            case $this->compareObjectClassNameToString(new Employee, $objectClass):
+                $region->setEmployee(NULL);
+            break;
+
+            default:
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+            break;
+        }
+
+        $_manager->flush();
+
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

@@ -10,9 +10,9 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
 
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Security\Authorization\Voter\EmployeeVoter,
     AppBundle\Entity\Region\Region,
-    AppBundle\Entity\School\School;
+    AppBundle\Entity\School\School,
+    AppBundle\Security\Authorization\Voter\EmployeeVoter;
 
 class EmployeeController extends Controller implements UserRoleListInterface
 {
@@ -32,9 +32,9 @@ class EmployeeController extends Controller implements UserRoleListInterface
     {
         $_manager = $this->getDoctrine()->getManager();
 
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
