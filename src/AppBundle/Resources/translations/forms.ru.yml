@@ -164,3 +164,15 @@ vending_machine:
     number_springs:
         label:       Количество пружин
         placeholder: Введите количество пружин
+
+nfc_tag:
+    number:
+        label:       Номер
+        placeholder: Введите номер
+
+    code:
+        label:       Код
+        placeholder: Введите код
+
+    vending_machine:
+        label: Торговый автомат

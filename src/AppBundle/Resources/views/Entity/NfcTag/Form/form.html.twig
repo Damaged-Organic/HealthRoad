@@ -6,7 +6,6 @@
         {{ form_widget(form.number, {
             'id': "nfc-tag-number",
             'attr': {
-                'placeholder': "Введите номер",
                 'data-rule-required': "true", 'data-msg-required': 'nfc_tag.number.not_blank'|trans({}, "validators"),
                 'value': ( nfcTag is defined ) ? nfcTag.number
             }
@@ -21,7 +20,6 @@
         {{ form_widget(form.code, {
             'id': "nfc-tag-code",
             'attr': {
-                'placeholder': "Введите код",
                 'data-rule-required': "true", 'data-msg-required': 'nfc_tag.code.not_blank'|trans({}, "validators"),
                 'value': ( nfcTag is defined ) ? nfcTag.code
             }

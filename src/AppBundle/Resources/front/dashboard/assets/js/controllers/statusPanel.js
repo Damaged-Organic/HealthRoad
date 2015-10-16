@@ -13,5 +13,6 @@ export default class StatusPanel{
 	}
 	closePanel(e){
 		this.el.removeClass("success-active warning-active error-active info-active");
+		return false;
 	}
 }

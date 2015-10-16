@@ -21,16 +21,23 @@ class NfcTagType extends AbstractType
     {
         $builder
             ->add('number', 'text', [
-                'label' => "Number *"
+                'label' => 'nfc_tag.number.label',
+                'attr'  => [
+                    'placeholder' => 'nfc_tag.number.placeholder'
+                ]
             ])
             ->add('code', 'text', [
-                'label' => "Code *"
+                'label' => 'nfc_tag.code.label',
+                'attr'  => [
+                    'placeholder' => 'nfc_tag.code.placeholder'
+                ]
             ])
             ->add('vendingMachine', 'entity', [
                 'required'     => FALSE,
                 'class'        => "AppBundle\\Entity\\VendingMachine\\VendingMachine",
                 'choice_label' => "choiceLabel",
-                'placeholder'  => "Choose vending machine"
+                'label'        => 'nfc_tag.vending_machine.label',
+                'empty_value'  => 'common.choice.placeholder'
             ])
         ;
 

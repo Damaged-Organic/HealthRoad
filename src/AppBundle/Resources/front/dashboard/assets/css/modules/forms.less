@@ -59,6 +59,28 @@ form{
 	margin: 0 auto 20px;
 	position: relative;
 	overflow: hidden;
+	&.required-field{
+		&:before{
+			display: block;
+			width: 20px;
+			height: 20px;
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 10;
+			background: transparent;
+			content: "*";
+			text-align: center;
+			padding: 1px 0;
+			color: @errorRedDark;
+			font-size: 1.25em;
+			background: @black;
+			border-left: 1px solid darken(@black, 100%);
+			border-bottom: 1px solid darken(@black, 100%);
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+	}
 	.field{
 		width: 100%;
 		height: auto;
@@ -81,11 +103,6 @@ form{
 	}
 	& > p{
 		padding-bottom: 10px;
-	}
-  	&.read-only{
-	  	input, label{
-		  	pointer-events: none;
-		}
 	}
 }
 
@@ -265,13 +282,12 @@ button[type="submit"]{
 	}
 	&.save-back{ width: 300px; }
 }
-
 .server-error{
-  	display: block;
-  	color: @errorRedDark;
+	display: block;
+	color: @errorRedDark;
 	line-height: 30px;
 	padding: 0 10px;
-  	font-size: .875em;
+	font-size: .875em;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	forms end								  				*/
@@ -292,6 +308,7 @@ button[type="submit"]{
 			display: block;
 			width: 100%;
 			height: 60px;
+			background: transparent;
 			.title-holder{
 				display: block;
 				width: 240px;
@@ -323,6 +340,7 @@ button[type="submit"]{
 				display: block;
 				width: ~"calc(100% - 240px)";
 				height: 60px;
+				float: left;
 				font-size: 1em;
 				text-align: left;
 				margin-left: 240px;
@@ -345,15 +363,16 @@ button[type="submit"]{
 				border: 1px solid @green;
 				border-left: none;
 			}
-		}
-		& + .error-holder{
-			display: block;
-			width: 100%;
-			padding: 5px 10px;
-			font-size: .875em;
-			color: @errorRedDark;
-			box-sizing: border-box;
 		}		
+	}
+	& > .error-holder{
+		display: block;
+		width: 100%;
+		padding: 0 10px;
+		line-height: 30px;
+		font-size: .875em;
+		color: @errorRedDark;
+		box-sizing: border-box;
 	}
 	& > .select-list{
 		width: 100%;
@@ -385,6 +404,7 @@ button[type="submit"]{
 			height: 100%;
 			min-height: 100%;
 			padding-right: 20px;
+			cursor: pointer;
 			overflow: auto;
 		}
 		ul{
@@ -423,6 +443,56 @@ button[type="submit"]{
 			.outer{
 				transform: translateX(-50%) translateY(-50%) scaleY(1);
 				transition: all .5s @easing;
+			}
+		}
+	}
+	&.required-field{
+		&:before{
+			display: block;
+			width: 20px;
+			height: 20px;
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 10;
+			background: transparent;
+			content: "*";
+			text-align: center;
+			padding: 1px 0;
+			color: @errorRedDark;
+			font-size: 1.25em;
+			background: @black;
+			border-left: 1px solid darken(@black, 100%);
+			border-bottom: 1px solid darken(@black, 100%);
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+		&.watch-parent{
+			&:before{
+				right: 60px;
+			}
+		}
+	}
+	&.watch-parent{
+		& > .btn-select{
+			width: ~"calc(100% - 60px)";
+			float: left;
+		}
+		& > .btn-view{
+			a{
+				width: 60px;
+				height: 60px;
+				float: left;
+				background: @black;
+				color: @white;
+				border: 1px solid darken(@black, 100%);
+				border-left: none;
+				box-sizing: border-box;
+				&:hover{
+					background: @white;
+					color: @green;
+					border: 1px solid @green;
+				}
 			}
 		}
 	}

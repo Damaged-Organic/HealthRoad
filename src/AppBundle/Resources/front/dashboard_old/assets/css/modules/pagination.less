@@ -1,0 +1,54 @@
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	pagination start						  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#pagination-holder{
+	width: 480px;
+	height: 60px;
+	float: right;
+	overflow: hidden;
+	ul{
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+	li{
+		display: block;
+		width: 60px;
+		height: 60px;
+		float: left;
+		overflow: hidden;
+		& > a{
+			display: block;
+			width: 100%;
+			height: 100%;
+			line-height: 60px;
+			text-align: center;
+			color: @white;
+			border-right: 1px solid darken(@black, 100%);
+			box-sizing: border-box;
+			transition: all .5s @easing;
+			overflow: hidden;
+		}
+		&:first-child a{
+			border-left: 1px solid darken(@black, 100%);
+		}
+		&.dots > span{
+			display: block;
+			width: 100%;
+			height: 100%;
+			background: @grey;
+			border-right: 1px solid darken(@black, 100%);
+			box-sizing: border-box;
+		}
+		&:hover,
+		&.active{
+			a{
+				background: @green;
+			}
+		}
+	}	
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	pagination end							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

@@ -12,6 +12,8 @@
 
 /src/AppBundle/Resources/front/dashboard/node_modules/*
 /src/AppBundle/Resources/front/dashboard/jspm_packages/*
+/src/AppBundle/Resources/front/dashboard_old/node_modules/*
+/src/AppBundle/Resources/front/dashboard_old/jspm_packages/*
 /src/AppBundle/Resources/public/*
 
 /vendor/
