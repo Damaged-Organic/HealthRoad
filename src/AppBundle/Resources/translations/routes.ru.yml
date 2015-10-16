@@ -43,10 +43,10 @@ product_update: Редактировать продукт
 product_read:   Продукты
 product_choose: Привязать продукт
 
-product_vending_group_create: Добавить группу торговых автоматов
-product_vending_group_update: Редактировать группу торговых автоматов
-product_vending_group_read:   Группы торговых автоматов
-product_vending_group_choose: Привязать группу торговых автоматов
+product_vending_group_create: Добавить группу автоматов
+product_vending_group_update: Редактировать группу автоматов
+product_vending_group_read:   Группы автоматов
+product_vending_group_choose: Привязать группу автоматов
 
 customer_create: Добавить клиента
 customer_update: Редактировать клиента

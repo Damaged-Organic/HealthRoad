@@ -43,44 +43,57 @@ class EmployeeType extends AbstractType
                     ($employee && $employee->getId() !== NULL && $this->boundedAccess)) {
                         $form
                             ->add('username', 'text', [
-                                'label' => "Username *"
+                                'label' => 'employee.username.label',
+                                'attr' => [
+                                    'placeholder' => 'employee.username.placeholder'
+                                ]
                             ])
-                            ->add('employeeGroup', 'entity', [
-                                'class' => "AppBundle\\Entity\\Employee\\EmployeeGroup",
-                                'query_builder' => function (EmployeeGroupRepository $repository) {
-                                    return $repository->getSubordinateRolesQuery($this->boundlessAccess);
-                                },
-                                'choice_label' => "name",
-                                'label' => "Role",
-                                'empty_value' => "Choose a role"
-                            ]);
+                        ;
                 }
             });
 
         $builder
             ->add('name', 'text', [
                 'required' => FALSE,
-                'label'    => "Name"
+                'label'    => 'employee.name.label',
+                'attr'     => [
+                    'placeholder' => 'employee.name.placeholder'
+                ]
             ])
             ->add('surname', 'text', [
                 'required' => FALSE,
-                'label'    => "Surname"
+                'label'    => 'employee.surname.label',
+                'attr'     => [
+                    'placeholder' => 'employee.surname.placeholder'
+                ]
             ])
             ->add('patronymic', 'text', [
                 'required' => FALSE,
-                'label'    => "Patronymic"
+                'label'    => 'employee.patronymic.label',
+                'attr'     => [
+                    'placeholder' => 'employee.patronymic.placeholder'
+                ]
             ])
             ->add('email', 'email', [
                 'required' => FALSE,
-                'label'    => "Email"
+                'label'    => 'employee.email.label',
+                'attr'     => [
+                    'placeholder' => 'employee.email.placeholder'
+                ]
             ])
             ->add('phoneNumber', 'text', [
                 'required' => FALSE,
-                'label'    => "Phone number"
+                'label'    => 'employee.phone_number.label',
+                'attr'     => [
+                    'placeholder' => 'employee.phone_number.placeholder'
+                ]
             ])
             ->add('skypeName', 'text', [
                 'required' => FALSE,
-                'label'    => "Skype"
+                'label'    => 'employee.skype_name.label',
+                'attr'     => [
+                    'placeholder' => 'employee.skype_name.placeholder'
+                ]
             ])
         ;
 
@@ -94,16 +107,28 @@ class EmployeeType extends AbstractType
                 if( $employee && $employee->getId() !== NULL )
                 {
                     $form
+                        ->add('employeeGroup', 'text', [
+                            'read_only'  => TRUE,
+                            'disabled'   => TRUE,
+                            'data_class' => 'AppBundle\Entity\Employee\EmployeeGroup',
+                            'label'      => 'employee.employee_group.label'
+                        ])
                         ->add('password', 'repeated', [
                             'required'       => FALSE,
                             'first_name'     => "password",
                             'second_name'    => "password_confirm",
                             'type'           => "password",
                             'first_options'  => [
-                                'label' => 'Password'
+                                'label' => 'employee.password.label',
+                                'attr'  => [
+                                    'placeholder' => 'employee.password.placeholder'
+                                ]
                             ],
                             'second_options' => [
-                                'label' => 'Repeat Password'
+                                'label' => 'employee.password_confirm.label',
+                                'attr'  => [
+                                    'placeholder' => 'employee.password_confirm.placeholder'
+                                ]
                             ]
                         ])
                     ;
@@ -112,58 +137,54 @@ class EmployeeType extends AbstractType
                         $form
                             ->add('isEnabled', 'checkbox', [
                                 'required' => FALSE,
-                                'label' => "Is enabled"
+                                'label' => "Включен"
                             ])
                         ;
                     }
 
-                    $form
-                        ->add('update', 'submit', [
-                            'label' => "Сохранить"
-                        ])
-                    ;
+                    $form->add('update', 'submit', ['label' => 'common.update.label']);
 
-                    if( $this->boundlessAccess ) {
-                        $form
-                            ->add('update_and_return', 'submit', [
-                                'label' => "Сохранить и вернуться к списку"
-                            ])
-                        ;
-                    }
+                    if( $this->boundlessAccess )
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
                     $form
+                        ->add('employeeGroup', 'entity', [
+                            'class'         => "AppBundle\\Entity\\Employee\\EmployeeGroup",
+                            'empty_data'    => 0,
+                            'choice_label'  => "name",
+                            'label'         => 'employee.employee_group.label',
+                            'empty_value'   => 'common.choice.placeholder',
+                            'query_builder' => function (EmployeeGroupRepository $repository) {
+                                return $repository->getSubordinateRolesQuery($this->boundlessAccess);
+                            }
+                        ])
                         ->add('password', 'repeated', [
                             'required'      => TRUE,
                             'first_name'    => "password",
                             'second_name'   => "password_confirm",
                             'type'          => "password",
                             'first_options' => [
-                                'label' => 'Password *',
+                                'label' => 'employee.password.label',
                                 'attr'  => [
                                     'data-rule-required' => "true",
-                                    'data-msg-required'  => $this->_translator->trans('employee.password.not_blank', [], 'validators')
+                                    'data-msg-required'  => $this->_translator->trans('employee.password.not_blank', [], 'validators'),
+                                    'placeholder'        => 'employee.password.placeholder'
                                 ]
                             ],
                             'second_options' => [
-                                'label' => 'Repeat Password *',
+                                'label' => 'employee.password_confirm.label',
                                 'attr'  => [
                                     'data-rule-required' => "true",
-                                    'data-msg-required'  => $this->_translator->trans('employee.password_confirm.not_blank', [], 'validators')
+                                    'data-msg-required'  => $this->_translator->trans('employee.password_confirm.not_blank', [], 'validators'),
+                                    'placeholder'        => 'employee.password_confirm.placeholder'
                                 ]
                             ]
                         ])
-                        ->add('create', 'submit', [
-                            'label' => "Создать"
-                        ])
+                        ->add('create', 'submit', ['label' => 'common.create.label'])
                     ;
 
-                    if( $this->boundlessAccess ) {
-                        $form
-                            ->add('create_and_return', 'submit', [
-                                'label' => "Создать и вернуться к списку"
-                            ])
-                        ;
-                    }
+                    if( $this->boundlessAccess )
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;

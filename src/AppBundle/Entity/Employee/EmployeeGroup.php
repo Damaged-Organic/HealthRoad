@@ -52,6 +52,11 @@ class EmployeeGroup implements RoleInterface, Serializable
      */
     private $role;
 
+    public function __toString()
+    {
+        return ( $this->name ) ? $this->name : "";
+    }
+
     /**
      * Set name
      *
@@ -151,6 +156,6 @@ class EmployeeGroup implements RoleInterface, Serializable
         list(
             $this->id,
             $this->role
-        ) = \unserialize($serialized);
+            ) = \unserialize($serialized);
     }
 }

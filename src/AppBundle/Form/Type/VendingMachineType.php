@@ -21,43 +21,63 @@ class VendingMachineType extends AbstractType
     {
         $builder
             ->add('serial', 'text', [
-                'label' => "Serial *"
+                'label' => 'vending_machine.serial.label',
+                'attr'  => [
+                    'placeholder' => 'vending_machine.serial.placeholder'
+                ]
             ])
             ->add('login', 'text', [
-                'label'    => "API Login",
                 'required' => FALSE,
+                'label'    => 'vending_machine.login.label',
+                'attr'     => [
+                    'placeholder' => 'vending_machine.login.placeholder'
+                ]
             ])
             ->add('password', 'text', [
-                'label'    => "API Password",
                 'required' => FALSE,
+                'label'    => 'vending_machine.password.label',
             ])
             ->add('school', 'entity', [
                 'required'     => FALSE,
                 'class'        => "AppBundle\\Entity\\School\\School",
                 'choice_label' => "name",
-                'placeholder'  => "Choose school"
+                'label'        => 'vending_machine.school.label',
+                'empty_value'  => 'common.choice.placeholder'
             ])
             ->add('productVendingGroup', 'entity', [
                 'required'     => FALSE,
                 'class'        => "AppBundle\\Entity\\Product\\ProductVendingGroup",
                 'choice_label' => "name",
-                'placeholder'  => "Choose product vending group"
+                'label'        => 'vending_machine.product_vending_group.label',
+                'empty_value'  => 'common.choice.placeholder'
             ])
             ->add('name', 'text', [
-                'label'    => "Name",
-                'required' => FALSE
+                'required' => FALSE,
+                'label'    => 'vending_machine.name.label',
+                'attr'     => [
+                    'placeholder' => 'vending_machine.name.placeholder'
+                ]
             ])
             ->add('nameTechnician', 'text', [
-                'label'    => "Technician name",
-                'required' => FALSE
+                'required' => FALSE,
+                'label'    => 'vending_machine.name_technician.label',
+                'attr'     => [
+                    'placeholder' => 'vending_machine.name_technician.placeholder'
+                ]
             ])
             ->add('numberShelves', 'number', [
-                'label'    => "Shelves number",
-                'required' => FALSE
+                'required' => FALSE,
+                'label'    => 'vending_machine.number_shelves.label',
+                'attr'     => [
+                    'placeholder' => 'vending_machine.number_shelves.placeholder'
+                ]
             ])
             ->add('numberSprings', 'text', [
-                'label'    => "Springs number",
-                'required' => FALSE
+                'required' => FALSE,
+                'label'    => 'vending_machine.number_springs.label',
+                'attr'     => [
+                    'placeholder' => 'vending_machine.number_springs.placeholder'
+                ]
             ])
         ;
 
@@ -70,15 +90,15 @@ class VendingMachineType extends AbstractType
 
                 if( $vendingMachine && $vendingMachine->getId() !== NULL )
                 {
-                    $form->add('update', 'submit', ['label' => "Сохранить"]);
+                    $form->add('update', 'submit', ['label' => 'common.update.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('update_and_return', 'submit', ['label' => "Сохранить и вернуться к списку"]);
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', 'submit', ['label' => "Создать"]);
+                    $form->add('create', 'submit', ['label' => 'common.create.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('create_and_return', 'submit', ['label' => "Создать и вернуться к списку"]);
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;

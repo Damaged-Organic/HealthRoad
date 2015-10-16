@@ -106,11 +106,11 @@ class VendingMachine
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @Assert\Length(
      *      min=2,
-     *      max=250,
+     *      max=500,
      *      minMessage="vending_machine.name_technician.length.min",
      *      maxMessage="vending_machine.name_technician.length.max"
      * )
@@ -538,5 +538,10 @@ class VendingMachine
         return ( $this->getProductVendingGroup() )
             ? $this->getProductVendingGroup()->getProducts()
             : NULL;
+    }
+
+    public function getChoiceLabel()
+    {
+        return "{$this->serial}" . (( $this->name ) ? " ({$this->name})" : NULL);
     }
 }

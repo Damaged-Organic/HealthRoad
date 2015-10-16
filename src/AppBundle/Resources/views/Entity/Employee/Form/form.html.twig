@@ -1,13 +1,12 @@
 {# AppBundle/Resources/views/Entity/Employee/Form/form.html.twig #}
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
 
-<form action="{{ form.vars.action }}" method="POST" id="add-staff-form">
+<form action="{{ form.vars.action }}" method="POST" id="employee-form">
     {% if form.username is defined %}
         <div class="field-holder">
             {{ form_widget(form.username, {
                 'id': "employee-username",
                 'attr': {
-                    'placeholder': "Введите логин",
                     'data-rule-required': "true", 'data-msg-required': 'employee.username.not_blank'|trans({}, "validators"),
                     'data-rule-minlength': "3", 'data-msg-minlength': 'employee.username.length.min'|trans({}, "validators"),
                     'data-rule-maxlength': "200", 'data-msg-maxlength': 'employee.username.length.max'|trans({}, "validators"),
@@ -26,7 +25,7 @@
             {{ form_widget(form.password.password, {
                 'id': "employee-password",
                 'attr': {
-                    'placeholder': "Введите пароль",
+                    'data-rule-minlength': "6", 'data-msg-minlength': 'employee.password.length.min'|trans({}, "validators"),
                     'value': null
                 }
             }) }}
@@ -39,7 +38,6 @@
             {{ form_widget(form.password.password_confirm, {
                 'id': "employee-password-confirm",
                 'attr': {
-                    'placeholder': "Введите пароль повторно",
                     'value': null
                 }
             }) }}
@@ -54,36 +52,47 @@
 
         {% do form.employeeGroup.setRendered %}
 
-        <div class="select-holder">
-            <div class="btn-select">
-                <a href="#">
-                    <div class="title-holder">
-                        <span class="title">Должность *</span>
-                        <span class="icon hrd-list"></span>
-                    </div>
-                    <span class="text">{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.name : 'Выбрать...' }}</span>
-                </a>
-            </div>
+        {% if( form.employeeGroup.vars.block_prefixes.2 == 'entity' ) %}
+            <div class="select-holder">
+                <div class="btn-select">
+                    <a href="#">
+                        <div class="title-holder">
+                            <span class="title">{{ form.employeeGroup.vars.label|trans({}, 'forms') }}</span>
+                            <span class="icon hrd-list"></span>
+                        </div>
+                        <span class="text">{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.name : form.employeeGroup.vars.placeholder|trans({}, 'forms') }}</span>
+                    </a>
+                </div>
 
-            {% for error in form.employeeGroup.vars.errors %}
-                <span class="error-holder">{{ error.message }}</span>
-            {% endfor %}
+                {% for error in form.employeeGroup.vars.errors %}
+                    <span class="error-holder">{{ error.message }}</span>
+                {% endfor %}
 
-            <div class="select-list">
-                <div class="outer">
-                    <div class="inner">
-                        <ul>
-                            {% for employeeGroup in form.employeeGroup.vars.choices %}
-                                <li class="option-item {{ ( form.employeeGroup.vars.data ) ? ( form.employeeGroup.vars.data.id != employeeGroup.value ) ?: 'active' : null }}" data-option="{{ employeeGroup.value }}">
-                                    <span class="option-name">{{ employeeGroup.label }}</span>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                <div class="select-list">
+                    <div class="outer">
+                        <div class="inner">
+                            <ul>
+                                {% for employeeGroup in form.employeeGroup.vars.choices %}
+                                    <li class="option-item {{ ( form.employeeGroup.vars.data ) ? ( form.employeeGroup.vars.data.id != employeeGroup.value ) ?: 'active' : null }}" data-option="{{ employeeGroup.value }}">
+                                        <span class="option-name">{{ employeeGroup.label }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
+                <input type="hidden" name="{{ form.employeeGroup.vars.full_name }}" value="{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.id : null }}">
             </div>
-            <input type="hidden" name="{{ form.employeeGroup.vars.full_name }}" value="{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.id : null }}">
-        </div>
+        {% endif %}
+
+        {% if( form.employeeGroup.vars.block_prefixes.1 == 'text' ) %}
+            <div class="field-holder read-only">
+                <input type="text" id="employee-employee-group" name="{{ form.employeeGroup.vars.full_name }}" value="{{ form.employeeGroup.vars.data.name }}" readonly>
+
+                {{ form_label(form.employeeGroup) }}
+            </div>
+        {% endif %}
+
     {% endif %}
 
     {% if form.isEnabled is defined %}
@@ -95,33 +104,16 @@
 
                 <label for="employee-is-enabled">
                     <span class="radio"></span>
-                    <span class="text">Включен</span>
+                    <span class="text">{{ form.isEnabled.vars.label }}</span>
                 </label>
             </div>
         </div>
     {% endif %}
 
     <div class="field-holder">
-        {{ form_widget(form.name, {
-            'id': "employee-name",
-            'attr': {
-                'placeholder': "Введите имя",
-                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( employee is defined ) ? employee.name
-            }
-        }) }}
-
-        {{ form_label(form.name) }}
-
-        {{ form_errors(form.name) }}
-    </div>
-
-    <div class="field-holder">
         {{ form_widget(form.surname, {
             'id': "employee-surname",
             'attr': {
-                'placeholder': "Введите фамилию",
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
                 'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
                 'value': ( employee is defined ) ? employee.surname
@@ -134,10 +126,24 @@
     </div>
 
     <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "employee-name",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
+                'value': ( employee is defined ) ? employee.name
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
         {{ form_widget(form.patronymic, {
             'id': "employee-patronymic",
             'attr': {
-                'placeholder': "Введите отчество",
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
                 'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
                 'value': ( employee is defined ) ? employee.patronymic
@@ -153,7 +159,6 @@
         {{ form_widget(form.email, {
             'id': "employee-email",
             'attr': {
-                'placeholder': "Введите e-mail",
                 'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators"),
                 'value': ( employee is defined ) ? employee.email
             }
@@ -168,7 +173,6 @@
         {{ form_widget(form.phoneNumber, {
             'id': "employee-phone-number",
             'attr': {
-                'placeholder': "Введите номер телефона",
                 'data-mask': "+38 (099) 999-99-99",
                 'value': ( employee is defined ) ? employee.phoneNumber
             }
@@ -183,7 +187,6 @@
         {{ form_widget(form.skypeName, {
             'id': "employee-skype-name",
             'attr': {
-                'placeholder': "Введите имя сотрудника в Skype",
                 'value': ( employee is defined ) ? employee.skypeName
             }
         }) }}

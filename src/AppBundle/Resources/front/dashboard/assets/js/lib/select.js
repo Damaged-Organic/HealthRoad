@@ -31,7 +31,7 @@
 		var	btnSelect = this.el.find(".btn-select"),
 			hdnInput = this.el.find("input[type=hidden]"),
 			target = $(e.target).closest(".option-item"),
-			optionID = parseInt(target.data("option")),
+			optionID = target.data("option"),
 			optionName = target.find(".option-name").text();
 
 		if(isNaN(optionID)) return;

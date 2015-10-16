@@ -19,11 +19,11 @@
 
 {% block action_bottom %}
     <div id="action-holder" class="manage-holder">
-        <button type="submit" form="add-staff-form" class="btn-save back">
-            <span>Добавить и вернуться</span>
+        <button type="submit" form="region-form" name="{{ form.create_and_return.vars.full_name }}" class="btn-save back">
+            <span>{{ form.create_and_return.vars.label|trans({}, 'forms') }}</span>
         </button>
-        <button type="submit" form="add-staff-form" class="btn-save">
-            <span>Добавить</span>
+        <button type="submit" form="region-form" name="{{ form.create.vars.full_name }}" class="btn-save">
+            <span>{{ form.create.vars.label|trans({}, 'forms') }}</span>
         </button>
     </div>
 {% endblock %}

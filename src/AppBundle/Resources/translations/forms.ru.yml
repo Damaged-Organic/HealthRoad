@@ -1,1 +1,166 @@
 # AppBundle/Resources/translations/forms.ru.yml
+common:
+    choice:
+        placeholder: Выбрать...
+        empty_value: Оставить пустым
+
+    create:
+        label: Добавить
+
+    create_and_return:
+        label: Добавить и вернуться
+
+    update:
+        label: Сохранить
+
+    update_and_return:
+        label: Сохранить и вернуться
+
+employee:
+    username:
+        label:       Логин
+        placeholder: Введите логин
+
+    employee_group:
+        label: Должность
+
+    name:
+        label:       Имя
+        placeholder: Введите имя
+
+    surname:
+        label:       Фамилия
+        placeholder: Введите фамилию
+
+    patronymic:
+        label:       Отчество
+        placeholder: Введите отчество
+
+    email:
+        label:       E-mail
+        placeholder: Введите e-mail
+
+    phone_number:
+        label:       Номер телефона
+        placeholder: Введите номер телефона
+
+    skype_name:
+        label:       Skype
+        placeholder: Введите имя сотрудника в Skype
+
+    password:
+        label:       Пароль
+        placeholder: Введите пароль
+
+    password_confirm:
+        label:       Подтверждение пароля
+        placeholder: Введите пароль для подтверждения
+
+    is_enabled:
+        label: Включен
+
+region:
+    name:
+        label:       Название
+        placeholder: Введите название
+
+    administrative_center:
+        label:       Административный центр
+        placeholder: Введите название административного центра
+
+    phone_code:
+        label:       Телефонный код
+        placeholder: Введите телефонный код
+
+settlement:
+    name:
+        label:       Название
+        placeholder: Введите название
+
+    region:
+        label: Регион
+
+school:
+    name:
+        label:       Название
+        placeholder: Введите название
+
+    settlement:
+        label: Населенный пункт
+
+    address:
+        label:       Адрес
+        placeholder: Введите адрес
+
+    students_quantity:
+        label:       Количество учеников
+        placeholder: Введите количество учеников
+
+    phone_number_school:
+        label:       Номер телефона школы
+        placeholder: Введите номер телефона школы
+
+    email_school:
+        label:       E-mail школы
+        placeholder: Введите e-mail школы
+
+    name_headmaster:
+        label:       ФИО директора
+        placeholder: Введите ФИО директора
+
+    phone_number_headmaster:
+        label:       Номер телефона директора
+        placeholder: Введите номер телефона директора
+
+    email_headmaster:
+        label:       E-mail директора
+        placeholder: Введите e-mail директора
+
+    name_contact:
+        label:       ФИО контакта
+        placeholder: Введите ФИО контактного лица
+
+    phone_number_contact:
+        label:       Номер телефона контакта
+        placeholder: Введите номер телефона контактного лица
+
+    email_contact:
+        label:       E-mail контакта
+        placeholder: Введите e-mail контактного лица
+
+vending_machine:
+    serial:
+        label:       Серийный номер
+        placeholder: Введите серийный номер
+
+    login:
+        label:       API - Логин для доступа
+        placeholder: Введите логин для API-доступа
+
+    password:
+        label: API - Пароль для доступа
+        placeholder:
+            empty:  Введите пароль для API-доступа
+            filled: Пароль для API-доступа установлен. Введите новый пароль, чтобы изменить его
+
+    name:
+        label:       Имя торгового автомата
+        placeholder: Введите имя торгового автомата : )
+
+    school:
+        label: Школа
+
+    product_vending_group:
+        label: Группа автоматов
+
+    name_technician:
+        label:       Имя техника
+        placeholder: Введите имя техника
+
+    number_shelves:
+        label:       Количество полок
+        placeholder: Введите количество полок
+
+    number_springs:
+        label:       Количество пружин
+        placeholder: Введите количество пружин

@@ -76,15 +76,15 @@ class SupplierType extends AbstractType
 
                 if( $supplier && $supplier->getId() !== NULL )
                 {
-                    $form->add('update', 'submit', ['label' => "Сохранить"]);
+                    $form->add('update', 'submit', ['label' => 'common.update.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('update_and_return', 'submit', ['label' => "Сохранить и вернуться к списку"]);
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', 'submit', ['label' => "Создать"]);
+                    $form->add('create', 'submit', ['label' => 'common.create.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('create_and_return', 'submit', ['label' => "Создать и вернуться к списку"]);
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;

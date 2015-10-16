@@ -18,11 +18,11 @@
             </div>
         {% endif %}
 
-        <button type="submit" form="add-staff-form" class="btn-save back">
-            <span>Сохранить и вернуться</span>
+        <button type="submit" form="employee-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+            <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
         </button>
-        <button type="submit" form="add-staff-form" class="btn-save">
-            <span>Сохранить</span>
+        <button type="submit" form="employee-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
         </button>
     </div>
 {% endblock %}

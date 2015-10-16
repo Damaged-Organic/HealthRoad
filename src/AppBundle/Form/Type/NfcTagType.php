@@ -21,15 +21,15 @@ class NfcTagType extends AbstractType
     {
         $builder
             ->add('number', 'text', [
-                'label' => "Number"
+                'label' => "Number *"
             ])
             ->add('code', 'text', [
-                'label' => "Code"
+                'label' => "Code *"
             ])
             ->add('vendingMachine', 'entity', [
                 'required'     => FALSE,
                 'class'        => "AppBundle\\Entity\\VendingMachine\\VendingMachine",
-                'choice_label' => "serial",
+                'choice_label' => "choiceLabel",
                 'placeholder'  => "Choose vending machine"
             ])
         ;
@@ -43,15 +43,15 @@ class NfcTagType extends AbstractType
 
                 if( $nfcTag && $nfcTag->getId() !== NULL )
                 {
-                    $form->add('update', 'submit', ['label' => "Сохранить"]);
+                    $form->add('update', 'submit', ['label' => 'common.update.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('update_and_return', 'submit', ['label' => "Сохранить и вернуться к списку"]);
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', 'submit', ['label' => "Создать"]);
+                    $form->add('create', 'submit', ['label' => 'common.create.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('create_and_return', 'submit', ['label' => "Создать и вернуться к списку"]);
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;

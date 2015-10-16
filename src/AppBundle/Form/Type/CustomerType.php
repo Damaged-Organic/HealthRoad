@@ -59,19 +59,10 @@ class CustomerType extends AbstractType
                         ])
                     ;
 
-                    $form
-                        ->add('update', 'submit', [
-                            'label' => "Сохранить"
-                        ])
-                    ;
+                    $form->add('update', 'submit', ['label' => 'common.update.label']);
 
-                    if( $this->boundlessAccess ) {
-                        $form
-                            ->add('update_and_return', 'submit', [
-                                'label' => "Сохранить и вернуться к списку"
-                            ])
-                        ;
-                    }
+                    if( $this->boundlessAccess )
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
                     $form
                         ->add('password', 'repeated', [
@@ -80,18 +71,10 @@ class CustomerType extends AbstractType
                             'second_name' => "password_confirm",
                             'type'        => "password",
                         ])
-                        ->add('create', 'submit', [
-                            'label' => "Создать"
-                        ])
-                    ;
+                        ->add('create', 'submit', ['label' => 'common.create.label']);
 
-                    if( $this->boundlessAccess ) {
-                        $form
-                            ->add('create_and_return', 'submit', [
-                                'label' => "Создать и вернуться к списку"
-                            ])
-                        ;
-                    }
+                    if( $this->boundlessAccess )
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;

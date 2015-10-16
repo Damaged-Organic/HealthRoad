@@ -1,12 +1,11 @@
 {# AppBundle/Resources/views/Entity/Region/Form/form.html.twig #}
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
 
-<form action="{{ form.vars.action }}" method="POST" id="add-staff-form">
+<form action="{{ form.vars.action }}" method="POST" id="region-form">
     <div class="field-holder">
         {{ form_widget(form.name, {
             'id': "region-name",
             'attr': {
-                'placeholder': "Введите название",
                 'data-rule-required': "true", 'data-msg-required': 'region.name.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'region.name.length.min'|trans({}, "validators"),
                 'data-rule-maxlength': "250", 'data-msg-maxlength': 'region.name.length.max'|trans({}, "validators"),
@@ -23,7 +22,6 @@
         {{ form_widget(form.administrativeCenter, {
             'id': "region-administrative-center",
             'attr': {
-                'placeholder': "Введите административный центр",
                 'data-rule-minlength': "2", 'data-msg-minlength': 'region.administrative_center.length.min'|trans({}, "validators"),
                 'data-rule-maxlength': "250", 'data-msg-maxlength': 'region.administrative_center.length.max'|trans({}, "validators"),
                 'value': ( region is defined ) ? region.administrativeCenter
@@ -39,7 +37,6 @@
         {{ form_widget(form.phoneCode, {
             'id': "region-phone-code",
             'attr': {
-                'placeholder': "Введите телефонный код",
                 'data-mask': "99",
                 'value': ( region is defined ) ? region.phoneCode
             }

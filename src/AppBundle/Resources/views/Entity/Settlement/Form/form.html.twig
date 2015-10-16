@@ -1,7 +1,7 @@
 {# AppBundle/Resources/views/Entity/Settlement/Form/form.html.twig #}
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
 
-<form action="{{ form.vars.action }}" method="POST" id="add-staff-form">
+<form action="{{ form.vars.action }}" method="POST" id="settlement-form">
     <div class="field-holder">
         {{ form_widget(form.name, {
             'id': "settlement-username",
@@ -25,10 +25,10 @@
         <div class="btn-select">
             <a href="#">
                 <div class="title-holder">
-                    <span class="title">Регион</span>
+                    <span class="title">{{ form.region.vars.label|trans({}, 'forms') }}</span>
                     <span class="icon hrd-list"></span>
                 </div>
-                <span class="text">{{ ( form.region.vars.data ) ? form.region.vars.data.name : 'Выбрать...' }}</span>
+                <span class="text">{{ ( form.region.vars.data ) ? form.region.vars.data.name : form.region.vars.placeholder|trans({}, 'forms') }}</span>
             </a>
         </div>
 
@@ -40,6 +40,9 @@
             <div class="outer">
                 <div class="inner">
                     <ul>
+                        <li class="option-item {{ ( form.region.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
                         {% for region in form.region.vars.choices %}
                             <li class="option-item {{ ( form.region.vars.data ) ? ( form.region.vars.data.id != region.value ) ?: 'active' : null }}" data-option="{{ region.value }}">
                                 <span class="option-name">{{ region.label }}</span>

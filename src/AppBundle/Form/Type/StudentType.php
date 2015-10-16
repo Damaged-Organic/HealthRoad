@@ -59,9 +59,6 @@ class StudentType extends AbstractType
                 if( $student && $student->getId() !== NULL )
                 {
                     $form
-                        ->add('update', 'submit', [
-                            'label' => "Сохранить"
-                        ])
                         ->add('totalLimit', 'number', [
                             'label' => "Total limit",
                             'scale' => 2
@@ -70,15 +67,16 @@ class StudentType extends AbstractType
                             'label' => "Daily limit",
                             'scale' => 2
                         ])
+                        ->add('update', 'submit', ['label' => 'common.update.label'])
                     ;
 
                     if( $this->boundlessAccess )
-                        $form->add('update_and_return', 'submit', ['label' => "Сохранить и вернуться к списку"]);
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', 'submit', ['label' => "Создать"]);
+                    $form->add('create', 'submit', ['label' => 'common.create.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('create_and_return', 'submit', ['label' => "Создать и вернуться к списку"]);
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;
