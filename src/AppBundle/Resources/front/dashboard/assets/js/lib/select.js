@@ -12,11 +12,11 @@
 		this.initialize.apply(this, arguments);
 	}
 	Plugin.prototype = {
-		initialize,
-		_events,
-		handleOption,
-		openList,
-		closeList
+		initialize: initialize,
+		_events: _events,
+		handleOption: handleOption,
+		openList: openList,
+		closeList: closeList
 	}
 	function initialize(){
 		this._events();

@@ -1,34 +1,31 @@
 {
   "name": "hr-dashboard",
   "version": "1.0.0",
-  "description": "Health road dashboard",
+  "description": "back office for HealthRoad",
+  "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Smile0ff/HR-dashboard.git"
+    "url": "git+https://github.com/Smile0ff/HR-dashboard.git"
   },
-  "keywords": [
-    "back-office",
-    "health-road",
-    "dashboard"
-  ],
-  "author": "CHEERS! Unlimited",
+  "author": "",
   "license": "ISC",
+  "homepage": "https://github.com/Smile0ff/HR-dashboard#readme",
   "devDependencies": {
     "glob": "^5.0.15",
     "gulp": "^3.9.0",
-    "gulp-autoprefixer": "^3.0.2",
+    "gulp-autoprefixer": "^3.1.0",
     "gulp-concat-css": "^2.2.0",
+    "gulp-exec": "^2.1.2",
     "gulp-imagemin": "^2.3.0",
     "gulp-less": "^3.0.3",
     "gulp-minify-css": "^1.2.1",
     "gulp-notify": "^2.2.0",
     "gulp-rename": "^1.2.2",
     "imagemin-pngquant": "^4.2.0",
-    "jspm": "^0.16.11",
-    "gulp-exec": "~2.1.2"
+    "jspm": "^0.16.13"
   },
   "jspm": {
     "configFile": "jspm.config.js",
@@ -40,12 +37,7 @@
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4",
-      "traceur": "github:jmcriffey/bower-traceur@0.0.91",
-      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91"
+      "core-js": "npm:core-js@^1.1.4"
     }
-  },
-  "dependencies": {
-    "imagemin-pngquant": "~4.2.0"
   }
 }

@@ -15,14 +15,14 @@ var gulp = require("gulp"),
 	imagemin = require("gulp-imagemin"),
 	pngquant = require("imagemin-pngquant");
 
+
 gulp.task("js", function(){
 	var files = glob.sync("assets/js/app/*.js"),
-		fileName;
+		fileName, bundled;
 
 	files.map(function(entryFile){
-
 		fileName = entryFile.match(/\w+(?=\.js)/gi);
-		exec("jspm bundle-sfx "+ entryFile +" "+ cfg.buildPath + "js/" + fileName + ".bundle.min.js --skip-source-maps");
+		bundled = exec("jspm bundle-sfx "+ entryFile +" "+ cfg.buildPath + "js/" + fileName +".bundle.min.js --minify --skip-source-maps");
 	});
 });
 
@@ -80,4 +80,4 @@ gulp.task("watcher", function(){
 	gulp.watch(cfg.imagePath + "**/*.*", ["images"]);
 });
 
-gulp.task("default", ["fonts", "css", "images", "js"]);
+gulp.task("default", ["fonts", "css", "images", "watcher"]);
