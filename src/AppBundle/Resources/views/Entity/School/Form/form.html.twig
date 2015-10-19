@@ -1,5 +1,5 @@
 {# AppBundle/Resources/views/Entity/School/Form/form.html.twig #}
-{% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="school-form">
     <div class="field-holder">
@@ -36,7 +36,9 @@
 
     {% do form.settlement.setRendered %}
 
-    <div class="select-holder">
+    {% set settlement_set = ( form.settlement.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( settlement_set ) ? 'watch-parent' : null }}">
         <div class="btn-select">
             <a href="#">
                 <div class="title-holder">
@@ -46,6 +48,12 @@
                 <span class="text">{{ ( form.settlement.vars.data ) ? form.settlement.vars.data.name : form.settlement.vars.placeholder|trans({}, 'forms') }}</span>
             </a>
         </div>
+
+        {% if settlement_set %}
+            <div class="btn-view">
+                <a href="{{ path('settlement_update', { 'id': form.settlement.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
 
         {% for error in form.settlement.vars.errors %}
             <span class="error-holder">{{ error.message }}</span>

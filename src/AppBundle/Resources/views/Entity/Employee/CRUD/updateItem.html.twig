@@ -18,9 +18,12 @@
             </div>
         {% endif %}
 
-        <button type="submit" form="employee-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
-            <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
-        </button>
+        {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
+            <button type="submit" form="employee-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
         <button type="submit" form="employee-form" name="{{ form.update.vars.full_name }}" class="btn-save">
             <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
         </button>

@@ -8,19 +8,36 @@
 {% endblock %}
 
 {% block action_items_tr %}
-    <td class="small-fixed edit-holder">
-        <div class="btn-edit">
-            <a href="{{ path('settlement_update', { 'id': settlement.id }) }}" class="icon hrd-edit"></a>
-        </div>
-    </td>
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_BIND'), settlement) %}
-        <td class="small-fixed delete-holder">
-            <div class="btn-bind binded">
-                <a href="{{ path('settlement_unbind', { 'targetId': settlement.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_UPDATE'), settlement) %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_BIND'), settlement) %}
+            <td class="small-fixed edit-holder">
+                <div class="btn-edit">
+                    <a href="{{ path('settlement_update', { 'id': settlement.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+            <td class="small-fixed delete-holder">
+                <div class="btn-bind binded">
+                    <a href="{{ path('settlement_unbind', { 'targetId': settlement.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder" colspan="2">
+                <div class="btn-edit">
+                    <a href="{{ path('settlement_update', { 'id': settlement.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder">
+            <div class="btn-view">
+                <a href="{{ path('settlement_read', { 'id': settlement.id }) }}" class="icon hrd-view"></a>
             </div>
         </td>
     {% endif %}
+
 {% endblock %}
 
 {% block action_button %}

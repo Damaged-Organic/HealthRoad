@@ -1,6 +1,10 @@
 {# AppBundle/Resources/views/Entity/Settlement/layout.html.twig #}
 {% extends 'AppBundle:Dashboard/State:index.html.twig' %}
 
+{% block title %}
+    {{ 'settlement_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/settlements.bundle.min.css') }}">
 {% endblock %}

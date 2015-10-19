@@ -1,5 +1,5 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/Form/form.html.twig #}
-{% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="vending-machine-form">
     <div class="field-holder">
@@ -18,7 +18,11 @@
         {{ form_errors(form.serial) }}
     </div>
 
-    <div class="select-holder">
+    {% do form.school.setRendered %}
+
+    {% set school_set = ( form.school.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( school_set ) ? 'watch-parent' : null }}">
         <div class="btn-select">
             <a href="#">
                 <div class="title-holder">
@@ -28,6 +32,12 @@
                 <span class="text">{{ ( form.school.vars.data ) ? form.school.vars.data.name : form.school.vars.placeholder|trans({}, 'forms') }}</span>
             </a>
         </div>
+
+        {% if school_set %}
+            <div class="btn-view">
+                <a href="{{ path('school_update', { 'id': form.school.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
 
         {% for error in form.school.vars.errors %}
             <span class="error-holder">{{ error.message }}</span>
@@ -52,7 +62,11 @@
         <input type="hidden" name="{{ form.school.vars.full_name }}" value="{{ ( form.school.vars.data ) ? form.school.vars.data.id : null }}">
     </div>
 
-    <div class="select-holder">
+    {% do form.productVendingGroup.setRendered %}
+
+    {% set product_vending_group_set = ( form.productVendingGroup.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( product_vending_group_set ) ? 'watch-parent' : null }}">
         <div class="btn-select">
             <a href="#">
                 <div class="title-holder">
@@ -62,6 +76,12 @@
                 <span class="text">{{ ( form.productVendingGroup.vars.data ) ? form.productVendingGroup.vars.data.name : form.productVendingGroup.vars.placeholder|trans({}, 'forms') }}</span>
             </a>
         </div>
+
+        {% if product_vending_group_set %}
+            <div class="btn-view">
+                <a href="{{ path('product_vending_group_update', { 'id': form.productVendingGroup.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
 
         {% for error in form.productVendingGroup.vars.errors %}
             <span class="error-holder">{{ error.message }}</span>

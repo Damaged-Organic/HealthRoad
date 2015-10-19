@@ -102,7 +102,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_READ, $vendingMachine) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $objectId]);
+        $_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $objectId], $_translator->trans('vending_machine_bounded', [], 'routes'));
 
         switch(TRUE)
         {

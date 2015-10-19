@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/Customer/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Customer/Base:item.html.twig' %}
+
+{% if objectClass is same as('student') %}
+    {% block active_customer_update_bounded_student %}{{ 'class="active"' }}{% endblock %}
+{% endif %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

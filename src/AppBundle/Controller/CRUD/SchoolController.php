@@ -32,6 +32,8 @@ class SchoolController extends Controller implements UserRoleListInterface
 
         $_schoolBoundlessAccess = $this->get('app.security.school_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
@@ -48,6 +50,8 @@ class SchoolController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/School/CRUD:readItem.html.twig',
                 'data' => ['school' => $school]
             ];
+
+            $_breadcrumbs->add('school_read')->add('school_read', ['id' => $id], $_translator->trans('school_view', [], 'routes'));
         } else {
             if( !$_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -58,9 +62,9 @@ class SchoolController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/School/CRUD:readList.html.twig',
                 'data' => ['schools' => $schools]
             ];
-        }
 
-        $_breadcrumbs->add('school_read');
+            $_breadcrumbs->add('school_read');
+        }
 
         return $this->render($response['view'], $response['data']);
     }

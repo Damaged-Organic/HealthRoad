@@ -1,6 +1,6 @@
 "use strict";
 
-import BindService from "../services/BindService";
+import BindService from "../services/bindService";
 
 class BindController{
 	constructor(){

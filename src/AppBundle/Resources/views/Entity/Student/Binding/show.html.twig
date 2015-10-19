@@ -1,9 +1,55 @@
 {# AppBundle/Resources/views/Entity/Student/Binding/show.html.twig #}
-{% for student in students %}
-    <p>
-        <a href="{{ path('student_update', { 'id': student.id }) }}">{{ student.name }}</a>
+{% extends 'AppBundle:Entity/Student/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th colspan="2" class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), student) %}
+
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
-            <a href="{{ path('student_unbind', { 'id': student.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
+            <td class="small-fixed edit-holder">
+                <div class="btn-edit">
+                    <a href="{{ path('student_update', { 'id': student.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+            <td class="small-fixed delete-holder">
+                <div class="btn-bind binded">
+                    <a href="{{ path('student_unbind', { 'targetId': student.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder" colspan="2">
+                <div class="btn-edit">
+                    <a href="{{ path('student_update', { 'id': student.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
         {% endif %}
-    </p>
-{% endfor %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder" colspan="2">
+            <div class="btn-view">
+                <a href="{{ path('student_read', { 'id': student.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+
+    {% if is_granted(action.voter, object) %}
+        <div id="action-holder">
+            <div id="action-holder" class="manage-holder">
+                <div class="btn-connect">
+                    <a href="{{ path(action.path, { 'objectClass': class(object)|lower, 'objectId': object.id }) }}"><span class="icon hrd-bind"></span>Привязать</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

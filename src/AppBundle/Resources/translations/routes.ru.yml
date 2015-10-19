@@ -4,56 +4,81 @@ employee_dashboard: Офис для сотрудников
 setting_update: Редактировать настройки
 setting_read:   Настройки
 
-employee_create: Добавить сотрудника
-employee_update: Редактировать сотрудника
-employee_read:   Сотрудники
+employee_create:  Добавить сотрудника
+employee_update:  Редактировать сотрудника
+employee_bounded: Связи сотрудника
+employee_read:    Сотрудники
+employee_view:    Просмотр сотрудника
 
-region_create: Добавить регион
-region_update: Редактировать регион
-region_read:   Регионы
-region_choose: Привязать регион
+region_create:  Добавить регион
+region_update:  Редактировать регион
+region_bounded: Связи региона
+region_read:    Регионы
+region_view:    Просмотр региона
+region_choose:  Привязать регион
 
-settlement_create: Добавить населенный пункт
-settlement_update: Редактировать населенный пункт
-settlement_read:   Населенные пункты
-settlement_choose: Привязать населенный пункт
+settlement_create:  Добавить населенный пункт
+settlement_update:  Редактировать населенный пункт
+settlement_bounded: Связи населенного пункта
+settlement_read:    Населенные пункты
+settlement_view:    Просмотр населенного пункта
+settlement_choose:  Привязать населенный пункт
 
-school_create: Добавить школу
-school_update: Редактировать школу
-school_read:   Школы
-school_choose: Привязать школу
+school_create:  Добавить школу
+school_update:  Редактировать школу
+school_bounded: Связи школы
+school_read:    Школы
+school_view:    Просмотр школы
+school_choose:  Привязать школу
 
-vending_machine_create: Добавить троговый автомат
-vending_machine_update: Редактировать торговый автомат
-vending_machine_read:   Торговые автоматы
-vending_machine_choose: Привязать торговый автомат
+vending_machine_create:  Добавить троговый автомат
+vending_machine_update:  Редактировать торговый автомат
+vending_machine_bounded: Связи торгового автомата
+vending_machine_read:    Торговые автоматы
+vending_machine_view:    Просмотр торгового автомата
+vending_machine_choose:  Привязать торговый автомат
 
-nfc_tag_create: Добавить NFC-метку
-nfc_tag_update: редактировать NFC-метку
-nfc_tag_read:   NFC-метки
-nfc_tag_choose: Привязать NFC-метку
+nfc_tag_create:  Добавить NFC-метку
+nfc_tag_update:  Редактировать NFC-метку
+nfc_tag_bounded: Связи NFC-метки
+nfc_tag_read:    NFC-метки
+nfc_tag_view:    Просмотр NFC-метки
+nfc_tag_choose:  Привязать NFC-метку
 
-supplier_create: Добавить поставщика
-supplier_update: Редактировать поставщика
-supplier_read:   Поставщики
-supplier_choose: Привязать поставщика
+supplier_create:  Добавить поставщика
+supplier_update:  Редактировать поставщика
+supplier_bounded: Связи поставщика
+supplier_read:    Поставщики
+supplier_view:    Просмотр поставщика
+supplier_choose:  Привязать поставщика
 
-product_create: Добавить продукт
-product_update: Редактировать продукт
-product_read:   Продукты
-product_choose: Привязать продукт
+product_create:  Добавить продукт
+product_update:  Редактировать продукт
+product_bounded: Связи продукта
+product_read:    Продукты
+product_view:    Просмотр продукта
+product_choose:  Привязать продукт
 
-product_vending_group_create: Добавить группу автоматов
-product_vending_group_update: Редактировать группу автоматов
-product_vending_group_read:   Группы автоматов
-product_vending_group_choose: Привязать группу автоматов
+product_read_restricted:   Запрещенные продукты
+product_choose_restricted: Запретить продукт
 
-customer_create: Добавить клиента
-customer_update: Редактировать клиента
-customer_read:   Клиенты
-customer_choose: Привязать клиента
+product_vending_group_create:  Добавить группу автоматов
+product_vending_group_update:  Редактировать группу автоматов
+product_vending_group_bounded: Связи группы автоматов
+product_vending_group_read:    Группы автоматов
+product_vending_group_view:    Просмотр группы автоматов
+product_vending_group_choose:  Привязать группу автоматов
 
-student_create: Добавить ученика
-student_update: Редактировать ученика
-student_read:   Ученики
-student_choose: Привязать ученика
+customer_create:  Добавить клиента
+customer_update:  Редактировать клиента
+customer_bounded: Связи клиента
+customer_read:    Клиенты
+customer_view:    Просмотр клиента
+customer_choose:  Привязать клиента
+
+student_create:  Добавить ученика
+student_update:  Редактировать ученика
+student_bounded: Связи ученика
+student_read:    Ученики
+student_view:    Просмотр ученика
+student_choose:  Привязать ученика

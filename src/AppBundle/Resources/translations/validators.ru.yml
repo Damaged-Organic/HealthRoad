@@ -88,8 +88,20 @@ customer:
         length:
             min: Пароль клиента не может быть короче 6 символов
 
+    password_confirm:
+        not_blank: Необходимо подтвердить пароль
+
     is_enabled:
         type: Не совпадает тип поля активности пользователя
+
+    name:
+        not_blank: Должно быть указано имя клиента
+
+    surname:
+        not_blank: Должна быть указана фамилия клиента
+
+    patronymic:
+        not_blank: Должно быть указано отчество клиента
 
 region:
     name:
@@ -292,5 +304,23 @@ product_vending_group:
         unique: Группа торговых автоматов с таким названием уже существует
 
 student:
+    name:
+        not_blank: Должно быть указано имя ученика
+
+    surname:
+        not_blank: Должна быть указана фамилия ученика
+
+    patronymic:
+        not_blank: Должно быть указано отчество ученика
+
     gender:
         choice: Неверно указано значение пола
+
+    date_of_birth:
+        not_blank: Должно быть указана дата рождения
+
+    total_limit:
+        not_blank: Должен быть указан общий лимит средств
+
+    daily_limit:
+        not_blank: Должен быть указан суточный лимит средств

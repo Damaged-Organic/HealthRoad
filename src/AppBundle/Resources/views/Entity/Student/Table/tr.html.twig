@@ -1,0 +1,27 @@
+{# AppBundle/Resources/views/Entity/Student/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ student.id }}</span></td>
+<td>
+    <span>
+        {{ student.fullName }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ('student.gender.choice.' ~ student.gender)|trans({}, 'forms') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( student.dateOfBirth ) ? student.dateOfBirth|date('d-m-Y') : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( student.customer ) ? student.customer.fullName  : '-'  }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( student.school ) ? student.school.name  : '-'  }}
+    </span>
+</td>

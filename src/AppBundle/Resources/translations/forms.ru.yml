@@ -59,6 +59,38 @@ employee:
     is_enabled:
         label: Включен
 
+customer:
+    phone_number:
+        label:       Номер телефона
+        placeholder: Введите номер телефона
+
+    name:
+        label:       Имя
+        placeholder: Введите имя
+
+    surname:
+        label:       Фамилия
+        placeholder: Введите фамилию
+
+    patronymic:
+        label:       Отчество
+        placeholder: Введите отчество
+
+    email:
+        label:       E-mail
+        placeholder: Введите e-mail
+
+    is_enabled:
+        label: Включен
+
+    password:
+        label:       Пароль
+        placeholder: Введите пароль
+
+    password_confirm:
+        label:       Подтверждение пароля
+        placeholder: Введите пароль для подтверждения
+
 region:
     name:
         label:       Название
@@ -176,3 +208,37 @@ nfc_tag:
 
     vending_machine:
         label: Торговый автомат
+
+student:
+    name:
+        label:       Имя
+        placeholder: Введите имя
+
+    surname:
+        label:       Фамилия
+        placeholder: Введите фамилию
+
+    patronymic:
+        label:       Отчество
+        placeholder: Введите отчество
+
+    gender:
+        label: Пол
+        choice:
+            male:   Мужской
+            female: Женский
+
+    date_of_birth:
+        label:       Дата рождения
+        placeholder: Введите дату рождения
+
+    school:
+        label: Школа
+
+    total_limit:
+        label:       Общий лимит средств
+        placeholder: Введите общий лимит средств
+
+    daily_limit:
+        label:       Дневной лимит средств
+        placeholder: Введите дневной лимит средств

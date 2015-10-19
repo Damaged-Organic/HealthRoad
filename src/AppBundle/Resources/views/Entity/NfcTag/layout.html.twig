@@ -1,6 +1,10 @@
 {# AppBundle/Resources/views/Entity/NfcTag/layout.html.twig #}
 {% extends 'AppBundle:Dashboard/State:index.html.twig' %}
 
+{% block title %}
+    {{ 'nfc_tag_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/nfcTags.bundle.min.css') }}">
 {% endblock %}

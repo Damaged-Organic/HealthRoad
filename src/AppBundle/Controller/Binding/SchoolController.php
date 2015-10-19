@@ -102,7 +102,7 @@ class SchoolController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(SchoolVoter::SCHOOL_READ, $school) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId]);
+        $_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId], $_translator->trans('school_bounded', [], 'routes'));
 
         switch(TRUE)
         {

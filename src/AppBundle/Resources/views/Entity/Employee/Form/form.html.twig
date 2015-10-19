@@ -1,5 +1,5 @@
 {# AppBundle/Resources/views/Entity/Employee/Form/form.html.twig #}
-{% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="employee-form">
     {% if form.username is defined %}
@@ -104,7 +104,7 @@
 
                 <label for="employee-is-enabled">
                     <span class="radio"></span>
-                    <span class="text">{{ form.isEnabled.vars.label }}</span>
+                    <span class="text">{{ form.isEnabled.vars.label|trans({}, 'forms') }}</span>
                 </label>
             </div>
         </div>

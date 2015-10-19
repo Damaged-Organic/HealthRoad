@@ -6,14 +6,19 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilderInterface,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormEvents,
-    Symfony\Component\OptionsResolver\OptionsResolver;
+    Symfony\Component\OptionsResolver\OptionsResolver,
+    Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerType extends AbstractType
 {
+    private $_translator;
+
     private $boundlessAccess;
 
-    public function __construct($boundlessAccess)
+    public function __construct(TranslatorInterface $translator, $boundlessAccess)
     {
+        $this->_translator = $translator;
+
         $this->boundlessAccess = $boundlessAccess;
     }
 
@@ -21,23 +26,35 @@ class CustomerType extends AbstractType
     {
         $builder
             ->add('phoneNumber', 'text', [
-                'label' => "Phone number"
+                'label' => 'customer.phone_number.label',
+                'attr'  => [
+                    'placeholder' => 'customer.phone_number.placeholder'
+                ]
             ])
             ->add('name', 'text', [
-                'label' => "Name"
+                'label' => 'customer.name.label',
+                'attr'  => [
+                    'placeholder' => 'customer.name.placeholder'
+                ]
             ])
             ->add('surname', 'text', [
-                'label' => "Surname"
+                'label' => 'customer.surname.label',
+                'attr'  => [
+                    'placeholder' => 'customer.surname.placeholder'
+                ]
             ])
             ->add('patronymic', 'text', [
-                'label' => "Patronymic"
+                'label' => 'customer.patronymic.label',
+                'attr'  => [
+                    'placeholder' => 'customer.patronymic.placeholder'
+                ]
             ])
             ->add('email', 'email', [
-                'label' => "Email"
-            ])
-            ->add('isEnabled', 'checkbox', [
                 'required' => FALSE,
-                'label' => "Is enabled"
+                'label'    => 'customer.email.label',
+                'attr'     => [
+                    'placeholder' => 'customer.email.placeholder'
+                ]
             ])
         ;
 
@@ -52,10 +69,26 @@ class CustomerType extends AbstractType
                 {
                     $form
                         ->add('password', 'repeated', [
-                            'required'    => FALSE,
-                            'first_name'  => "password",
-                            'second_name' => "password_confirm",
-                            'type'        => "password",
+                            'required'       => FALSE,
+                            'first_name'     => "password",
+                            'second_name'    => "password_confirm",
+                            'type'           => "password",
+                            'first_options'  => [
+                                'label' => 'customer.password.label',
+                                'attr'  => [
+                                    'placeholder' => 'customer.password.placeholder'
+                                ]
+                            ],
+                            'second_options' => [
+                                'label' => 'customer.password_confirm.label',
+                                'attr'  => [
+                                    'placeholder' => 'customer.password_confirm.placeholder'
+                                ]
+                            ]
+                        ])
+                        ->add('isEnabled', 'checkbox', [
+                            'required' => FALSE,
+                            'label'    => 'customer.is_enabled.label'
                         ])
                     ;
 
@@ -70,8 +103,25 @@ class CustomerType extends AbstractType
                             'first_name'  => "password",
                             'second_name' => "password_confirm",
                             'type'        => "password",
+                            'first_options' => [
+                                'label' => 'customer.password.label',
+                                'attr'  => [
+                                    'data-rule-required' => "true",
+                                    'data-msg-required'  => $this->_translator->trans('customer.password.not_blank', [], 'validators'),
+                                    'placeholder'        => 'customer.password.placeholder'
+                                ]
+                            ],
+                            'second_options' => [
+                                'label' => 'customer.password_confirm.label',
+                                'attr'  => [
+                                    'data-rule-required' => "true",
+                                    'data-msg-required'  => $this->_translator->trans('customer.password_confirm.not_blank', [], 'validators'),
+                                    'placeholder'        => 'customer.password_confirm.placeholder'
+                                ]
+                            ]
                         ])
-                        ->add('create', 'submit', ['label' => 'common.create.label']);
+                        ->add('create', 'submit', ['label' => 'common.create.label'])
+                    ;
 
                     if( $this->boundlessAccess )
                         $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);

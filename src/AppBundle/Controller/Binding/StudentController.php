@@ -7,13 +7,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Service\Security\StudentBoundlessAccess,
+    AppBundle\Entity\Customer\Customer,
+    AppBundle\Entity\NfcTag\NfcTag,
+    AppBundle\Entity\Product\Product,
     AppBundle\Security\Authorization\Voter\StudentVoter,
-    AppBundle\Entity\Customer\Customer;
+    AppBundle\Security\Authorization\Voter\CustomerVoter,
+    AppBundle\Service\Security\StudentBoundlessAccess;
 
 class StudentController extends Controller implements UserRoleListInterface
 {
@@ -31,12 +35,17 @@ class StudentController extends Controller implements UserRoleListInterface
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Customer, $objectClass):
-                $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
+                $object = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
 
-                if( !$customer )
+                if( !$object )
                     throw $this->createNotFoundException("Customer identified by `id` {$objectId} not found");
 
-                $students = $customer->getStudents();
+                $students = $object->getStudents();
+
+                $action = [
+                    'path'  => 'student_choose',
+                    'voter' => CustomerVoter::CUSTOMER_BIND
+                ];
             break;
 
             default:
@@ -45,9 +54,82 @@ class StudentController extends Controller implements UserRoleListInterface
         }
 
         return $this->render('AppBundle:Entity/Student/Binding:show.html.twig', [
-            'students'    => $students,
-            'objectId'    => $objectId,
-            'objectClass' => $objectClass
+            'standalone' => TRUE,
+            'students'   => $students,
+            'object'     => $object,
+            'action'     => $action
+        ]);
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/student/update/{objectId}/bounded/{objectClass}",
+     *      name="student_update_bounded",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "objectId" = "\d+", "objectClass" = "[a-z]+"}
+     * )
+     */
+    public function boundedAction($objectId, $objectClass)
+    {
+        $_manager = $this->getDoctrine()->getManager();
+
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
+        $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+        if( !$student )
+            throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
+
+        if( !$this->isGranted(StudentVoter::STUDENT_READ, $student) )
+            throw $this->createAccessDeniedException('Access denied');
+
+        $_breadcrumbs->add('student_read')->add('student_update', ['id' => $objectId], $_translator->trans('student_bounded', [], 'routes'));
+
+        switch(TRUE)
+        {
+            case $this->compareObjectClassNameToString(new NfcTag, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\NfcTag:show', [
+                    'objectClass' => $this->getObjectClassName($student),
+                    'objectId'    => $objectId
+                ]);
+
+                $_breadcrumbs->add('student_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $_translator->trans('nfc_tag_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new Product, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Product:show', [
+                    'objectClass' => $this->getObjectClassName($student),
+                    'objectId'    => $objectId
+                ]);
+
+                $_breadcrumbs->add('student_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $_translator->trans('product_read_restricted', [], 'routes')
+                );
+            break;
+
+            default:
+                throw new NotAcceptableHttpException("Object not supported");
+            break;
+        }
+
+        return $this->render('AppBundle:Entity/Student/Binding:bounded.html.twig', [
+            'objectClass' => $objectClass,
+            'bounded'     => $bounded->getContent(),
+            'student'     => $student
         ]);
     }
 
@@ -70,18 +152,27 @@ class StudentController extends Controller implements UserRoleListInterface
 
         $_manager = $this->getDoctrine()->getManager();
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Customer, $objectClass):
-                $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
+                $customer = $object = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
 
                 if( !$customer )
                     throw $this->createNotFoundException("Customer identified by `id` {$objectId} not found");
 
-                $object = [
-                    'class' => $this->getObjectClassName($customer),
-                    'id'    => $customer->getId()
-                ];
+                $path = 'customer_update_bounded';
+
+                $_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $objectId])->add('customer_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'region'
+                    ],
+                    $_translator->trans('student_read', [], 'routes')
+                );
             break;
 
             default:
@@ -91,39 +182,41 @@ class StudentController extends Controller implements UserRoleListInterface
 
         $students = $_manager->getRepository('AppBundle:Student\Student')->findAll();
 
+        $_breadcrumbs->add('student_choose', [
+            'objectId'    => $objectId,
+            'objectClass' => $objectClass
+        ]);
+
         return $this->render('AppBundle:Entity/Student/Binding:choose.html.twig', [
-            'students'    => $students,
-            'objectClass' => $object['class'],
-            'objectId'    => $object['id']
+            'path'     => $path,
+            'students' => $students,
+            'object'   => $object
         ]);
     }
 
     /**
-     * @Method({"POST"})
+     * @Method({"GET"})
      * @Route(
-     *      "/student/bind",
+     *      "/student/bind/{targetId}/{objectClass}/{objectId}",
      *      name="student_bind",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"}
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
      * )
      */
-    public function bindToAction(Request $request)
+    public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $studentId = ( $request->request->has('studentId') ) ? $request->request->get('studentId') : NULL;
-
         $_manager = $this->getDoctrine()->getManager();
 
-        $student = $_manager->getRepository('AppBundle:Student\Student')->find($studentId);
+        $_translator = $this->get('translator');
+
+        $student = $_manager->getRepository('AppBundle:Student\Student')->find($targetId);
 
         if( !$student )
-            throw $this->createNotFoundException("Student identified by `id` {$studentId} not found");
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(StudentVoter::STUDENT_BIND, $student) )
-            throw $this->createAccessDeniedException('Access denied');
-
-        $objectClass = ( $request->request->get('objectClass') ) ? $request->request->get('objectClass') : NULL;
-        $objectId    = ( $request->request->get('objectId') ) ? $request->request->get('objectId') : NULL;
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
@@ -131,89 +224,60 @@ class StudentController extends Controller implements UserRoleListInterface
                 $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
 
                 if( !$customer )
-                    throw $this->createNotFoundException("Customer identified by `id` {$objectId} not found");
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
                 $customer->addStudent($student);
 
                 $_manager->persist($customer);
-
-                $redirect = [
-                    'route' => "customer_update",
-                    'id'    => $customer->getId()
-                ];
             break;
 
             default:
-                throw $this->createNotFoundException("Object not supported");
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
         $_manager->flush();
 
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
-        ]);
+        return new RedirectResponse($request->headers->get('referer'));
     }
 
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/student/unbind/{id}/{objectClass}/{objectId}",
+     *      "/student/unbind/{targetId}/{objectClass}/{objectId}",
      *      name="student_unbind",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
      * )
      */
-    public function unbindFromAction($id, $objectClass, $objectId)
+    public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
     {
         $_manager = $this->getDoctrine()->getManager();
 
-        $student = $_manager->getRepository('AppBundle:Student\Student')->find($id);
+        $_translator = $this->get('translator');
+
+        $student = $_manager->getRepository('AppBundle:Student\Student')->find($targetId);
 
         if( !$student )
-            throw $this->createNotFoundException("Student identified by `id` {$id} not found");
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(StudentVoter::STUDENT_BIND, $student) )
-            throw $this->createAccessDeniedException('Access denied');
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Customer, $objectClass):
-                /*$customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
-
-                if( !$customer )
-                    throw $this->createNotFoundException("Customer identified by `id` {$objectId} not found");
-
-                $customer->removeStudent($student);
-
-                $_manager->persist($customer);
-
-                $redirect = [
-                    'route' => "customer_update",
-                    'id'    => $customer->getId()
-                ];*/
-
-                //this should be gone in AJAX version
-                $customerId = $student->getCustomer()->getId();
-
                 $student->setCustomer(NULL);
-
-                $redirect = [
-                    'route' => "customer_update",
-                    'id'    => $customerId
-                ];
             break;
 
             default:
-                throw $this->createNotFoundException("Object not supported");
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
             break;
         }
 
         $_manager->flush();
 
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
-        ]);
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

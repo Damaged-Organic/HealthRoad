@@ -1,8 +1,75 @@
 {# AppBundle/Resources/views/Entity/Student/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Student:item.html.twig' %}
+{% extends 'AppBundle:Entity/Student/Base:item.html.twig' %}
+
+{% block active_student_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ student.surname }}
-    {{ student.name }}
-    {{ student.patronymic }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'student.surname.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ student.surname }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'student.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ student.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'student.patronymic.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ student.patronymic }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'student.gender.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ student.gender }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'student.dateOfBirth.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ student.dateOfBirth }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'student.school.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( student.school ) ? student.school.name : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'student.total_limit.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( student.totalLimit ) ? student.totalLimit : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'student.daily_limit.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( student.dailyLimit ) ? student.dailyLimit : '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

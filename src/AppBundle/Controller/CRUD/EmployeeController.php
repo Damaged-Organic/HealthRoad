@@ -32,6 +32,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
 
         $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
@@ -48,6 +50,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Employee/CRUD:readItem.html.twig',
                 'data' => ['employee' => $employee]
             ];
+
+            $_breadcrumbs->add('employee_read')->add('employee_read', ['id' => $id], $_translator->trans('employee_view', [], 'routes'));
         } else {
             if( !$_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -58,9 +62,9 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Employee/CRUD:readList.html.twig',
                 'data' => ['employees' => $employees]
             ];
-        }
 
-        $_breadcrumbs->add('employee_read');
+            $_breadcrumbs->add('employee_read');
+        }
 
         return $this->render($response['view'], $response['data']);
     }
@@ -112,6 +116,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 ->encodePassword($employee, $employee->getPassword())
             ;
 
+            // Set employee's password
             $employee->setPassword($encodedPassword);
 
             $_manager->persist($employee);

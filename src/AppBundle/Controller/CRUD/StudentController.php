@@ -32,6 +32,10 @@ class StudentController extends Controller implements UserRoleListInterface
 
         $_studentBoundlessAccess = $this->get('app.security.student_boundless_access');
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( $id )
         {
             $student = $_manager->getRepository('AppBundle:Student\Student')->find($id);
@@ -46,6 +50,8 @@ class StudentController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Student/CRUD:readItem.html.twig',
                 'data' => ['student' => $student]
             ];
+
+            $_breadcrumbs->add('student_read')->add('student_read', ['id' => $id], $_translator->trans('student_view', [], 'routes'));
         } else {
             if( !$_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -56,6 +62,8 @@ class StudentController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Student/CRUD:readList.html.twig',
                 'data' => ['students' => $students]
             ];
+
+            $_breadcrumbs->add('student_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -78,7 +86,14 @@ class StudentController extends Controller implements UserRoleListInterface
         if( !$_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $studentType = new StudentType($_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE));
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
+        $studentType = new StudentType(
+            $_translator,
+            $_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE)
+        );
 
         $form = $this->createForm($studentType, $student = new Student, [
             'action' => $this->generateUrl('settlement_create')
@@ -87,6 +102,8 @@ class StudentController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('student_read')->add('student_create');
+
             return $this->render('AppBundle:Entity/Student/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -125,6 +142,10 @@ class StudentController extends Controller implements UserRoleListInterface
 
         $_studentBoundlessAccess = $this->get('app.security.student_boundless_access');
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $student = $_manager->getRepository('AppBundle:Student\Student')->find($id);
 
         if( !$student )
@@ -136,7 +157,10 @@ class StudentController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $studentType = new StudentType($_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE));
+        $studentType = new StudentType(
+            $_translator,
+            $_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE)
+        );
 
         $form = $this->createForm($studentType, $student, [
             'action' => $this->generateUrl('student_update', ['id' => $id])
@@ -156,6 +180,8 @@ class StudentController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('student_read')->add('student_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Student/CRUD:updateItem.html.twig', [
             'form'    => $form->createView(),

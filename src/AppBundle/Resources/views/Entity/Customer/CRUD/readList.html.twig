@@ -1,15 +1,53 @@
 {# AppBundle/Resources/views/Entity/Customer/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/Customer:list.html.twig' %}
+{% extends 'AppBundle:Entity/Customer/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th colspan="2" class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_UPDATE'), customer) %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_DELETE'), customer) %}
+            <td class="small-fixed edit-holder">
+                <div class="btn-edit">
+                    <a href="{{ path('customer_update', { 'id': customer.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+            <td class="small-fixed delete-holder">
+                <div class="btn-delete">
+                    <a href="{{ path('customer_delete', { 'id': customer.id }) }}" class="icon hrd-delete"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder" colspan="2">
+                <div class="btn-edit">
+                    <a href="{{ path('customer_update', { 'id': customer.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder" colspan="2">
+            <div class="btn-view">
+                <a href="{{ path('customer_read', { 'id': customer.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
 
 {% block action_button %}
     {% if customer_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\CustomerBoundlessAccess::CUSTOMER_CREATE')) %}
-        <a href="{{ path('customer_create') }}">+ Создать родителя<a>
-        <p>-------------------------------------------------------------------------------------------------</p>
-    {% endif %}
-{% endblock %}
-
-{% block action_items %}
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_DELETE'), customer) %}
-        <a href="{{ path('customer_delete', { 'id': customer.id }) }}">[X]</a>
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('customer_create') }}">
+                    <span class="icon hrd-add"></span>Добавить
+                </a>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

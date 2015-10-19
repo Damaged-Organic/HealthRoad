@@ -32,6 +32,10 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $_productBoundlessAccess = $this->get('app.security.product_boundless_access');
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( $id )
         {
             $product = $_manager->getRepository('AppBundle:Product\Product')->find($id);
@@ -46,6 +50,8 @@ class ProductController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Product/CRUD:readItem.html.twig',
                 'data' => ['product' => $product]
             ];
+
+            $_breadcrumbs->add('product_read')->add('product_read', ['id' => $id], $_translator->trans('product_view', [], 'routes'));
         } else {
             if( !$_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -56,6 +62,8 @@ class ProductController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Product/CRUD:readList.html.twig',
                 'data' => ['products' => $product]
             ];
+
+            $_breadcrumbs->add('product_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -78,6 +86,8 @@ class ProductController extends Controller implements UserRoleListInterface
         if( !$_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $productType = new ProductType($_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
 
         $form = $this->createForm($productType, $product = new Product, [
@@ -87,6 +97,8 @@ class ProductController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('product_read')->add('product_create');
+
             return $this->render('AppBundle:Entity/Product/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -122,6 +134,8 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $_productBoundlessAccess = $this->get('app.security.product_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $product = $_manager->getRepository('AppBundle:Product\Product')->find($id);
 
         if( !$product )
@@ -153,6 +167,8 @@ class ProductController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('product_read')->add('product_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Product/CRUD:updateItem.html.twig', [
             'form'    => $form->createView(),

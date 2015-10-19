@@ -32,6 +32,8 @@ class RegionController extends Controller implements UserRoleListInterface
 
         $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
@@ -48,6 +50,8 @@ class RegionController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Region/CRUD:readItem.html.twig',
                 'data' => ['region' => $region]
             ];
+
+            $_breadcrumbs->add('region_read')->add('region_read', ['id' => $id], $_translator->trans('region_view', [], 'routes'));
         } else {
             if( !$_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -58,9 +62,9 @@ class RegionController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Region/CRUD:readList.html.twig',
                 'data' => ['regions' => $regions]
             ];
-        }
 
-        $_breadcrumbs->add('region_read');
+            $_breadcrumbs->add('region_read');
+        }
 
         return $this->render($response['view'], $response['data']);
     }

@@ -1,6 +1,31 @@
 {# AppBundle/Resources/views/Entity/Customer/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/Customer:item.html.twig' %}
+{% extends 'AppBundle:Entity/Customer/Base:item.html.twig' %}
+
+{% block active_customer_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/Customer/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/Customer/Form:form.html.twig' with { 'form': form, 'customer': customer } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_DELETE'), customer) %}
+            <div class="btn-delete black">
+                <a href="{{ path('customer_delete', { 'id': customer.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if customer_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\CustomerBoundlessAccess::CUSTOMER_READ')) %}
+            <button type="submit" form="customer-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="customer-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

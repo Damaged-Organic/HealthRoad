@@ -44,7 +44,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(EmployeeVoter::EMPLOYEE_READ, $employee) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId]);
+        $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId], $_translator->trans('employee_bounded', [], 'routes'));
 
         switch(TRUE)
         {

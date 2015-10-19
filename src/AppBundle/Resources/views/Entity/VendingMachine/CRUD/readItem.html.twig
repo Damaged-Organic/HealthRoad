@@ -1,6 +1,67 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/CRUD/readItem.html.twig #}
 {% extends 'AppBundle:Entity/VendingMachine/Base:item.html.twig' %}
 
+{% block active_vending_machine_update %}{{ 'class="active"' }}{% endblock %}
+
 {% block data %}
-    {{ vendingMachine.name }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.serial.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ vendingMachine.serial }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.school.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.school ) ? vendingMachine.school.name : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.product_vending_group.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.productVendingGroup ) ? vendingMachine.productVendingGroup.name : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.name ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.name_technician.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.nameTechnician ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.number_shelves.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.numberShelves ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.number_springs.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.numberSprings ) ?: '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

@@ -32,6 +32,8 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
         $_vendingMachineBoundlessAccess = $this->get('app.security.vending_machine_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
@@ -48,6 +50,8 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 'view' => 'AppBundle:Entity/VendingMachine/CRUD:readItem.html.twig',
                 'data' => ['vendingMachine' => $vendingMachine]
             ];
+
+            $_breadcrumbs->add('vending_machine_read')->add('vending_machine_read', ['id' => $id], $_translator->trans('vending_machine_view', [], 'routes'));
         } else {
             if( !$_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -58,9 +62,9 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 'view' => 'AppBundle:Entity/VendingMachine/CRUD:readList.html.twig',
                 'data' => ['vendingMachines' => $vendingMachines]
             ];
-        }
 
-        $_breadcrumbs->add('vending_machine_read');
+            $_breadcrumbs->add('vending_machine_read');
+        }
 
         return $this->render($response['view'], $response['data']);
     }

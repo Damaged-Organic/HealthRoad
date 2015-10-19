@@ -1,6 +1,35 @@
 {# AppBundle/Resources/views/Entity/NfcTag/CRUD/readItem.html.twig #}
 {% extends 'AppBundle:Entity/NfcTag/Base:item.html.twig' %}
 
+{% block active_nfc_tag_update %}{{ 'class="active"' }}{% endblock %}
+
 {% block data %}
-    {{ nfcTag.name }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'nfc_tag.number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ nfcTag.number }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'nfc_tag.code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ nfcTag.code }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'nfc_tag.vending_machine.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( nfcTag.vendingMachine ) ? nfcTag.vendingMachine.choiceLabel : '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

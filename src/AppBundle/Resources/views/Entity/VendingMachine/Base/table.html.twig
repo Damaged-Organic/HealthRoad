@@ -27,7 +27,10 @@
 
                 </table>
             {% else %}
-                Список пуст
+                <div class="empty-holder">
+                    <h2>{{ 'dashboard.table.empty.title'|trans }}</h2>
+                    <p>{{ 'dashboard.table.empty.text'|trans }}</p>
+                </div>
             {% endif %}
 
         </div>

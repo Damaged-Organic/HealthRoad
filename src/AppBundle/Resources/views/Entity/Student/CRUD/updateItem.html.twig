@@ -1,6 +1,31 @@
 {# AppBundle/Resources/views/Entity/Student/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/Student:item.html.twig' %}
+{% extends 'AppBundle:Entity/Student/Base:item.html.twig' %}
+
+{% block active_student_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/Student/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/Student/Form:form.html.twig' with { 'form': form, 'student': student } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_DELETE'), student) %}
+            <div class="btn-delete black">
+                <a href="{{ path('student_delete', { 'id': student.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\StudentBoundlessAccess::STUDENT_READ')) %}
+            <button type="submit" form="student-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="student-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

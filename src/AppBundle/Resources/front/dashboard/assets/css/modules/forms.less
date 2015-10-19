@@ -59,28 +59,6 @@ form{
 	margin: 0 auto 20px;
 	position: relative;
 	overflow: hidden;
-	&.required-field{
-		&:before{
-			display: block;
-			width: 20px;
-			height: 20px;
-			position: absolute;
-			top: 0;
-			right: 0;
-			z-index: 10;
-			background: transparent;
-			content: "*";
-			text-align: center;
-			padding: 1px 0;
-			color: @errorRedDark;
-			font-size: 1.25em;
-			background: @black;
-			border-left: 1px solid darken(@black, 100%);
-			border-bottom: 1px solid darken(@black, 100%);
-			box-sizing: border-box;
-			overflow: hidden;
-		}
-	}
 	.field{
 		width: 100%;
 		height: auto;
@@ -104,13 +82,19 @@ form{
 	& > p{
 		padding-bottom: 10px;
 	}
+	&.read-only{
+		input, label {
+			  pointer-events: none;
+		}
+	}
 }
 
 input[type="text"],
 input[type="tel"],
 input[type="email"],
 input[type="number"],
-input[type="password"]{
+input[type="password"],
+input[type="date"]{
 	display: block;
 	width: ~"calc(100% - 240px)";
 	font-family: "Ubuntu", sans-serif;
@@ -142,6 +126,12 @@ input[type="password"]{
 		text-align: left;
 		transition: all .5s @easing;
 		overflow: hidden;
+		& > .required-field{
+			display: inline-block;
+			vertical-align: top;
+			color: @errorRedDark;
+			padding: 0 5px;
+		}
 	}
 	& + label.error{
 		display: block;
@@ -176,7 +166,12 @@ input[type="password"]{
 }
 
 input[type="file"]{ display: none; }
-
+span.required-field{
+	display: inline-block;
+	vertical-align: top;
+	color: @errorRedDark;
+	padding: 0 5px;
+}
 input[type="checkbox"],
 input[type="radio"]{
 	display: none;
@@ -335,6 +330,12 @@ button[type="submit"]{
 						font-size: 1.125em;
 					}
 				}
+				span.required-field{
+					display: inline-block;
+					vertical-align: top;
+					padding: 0 5px;
+					color: @errorRedDark;
+				}
 			}
 			span.text{
 				display: block;
@@ -443,33 +444,6 @@ button[type="submit"]{
 			.outer{
 				transform: translateX(-50%) translateY(-50%) scaleY(1);
 				transition: all .5s @easing;
-			}
-		}
-	}
-	&.required-field{
-		&:before{
-			display: block;
-			width: 20px;
-			height: 20px;
-			position: absolute;
-			top: 0;
-			right: 0;
-			z-index: 10;
-			background: transparent;
-			content: "*";
-			text-align: center;
-			padding: 1px 0;
-			color: @errorRedDark;
-			font-size: 1.25em;
-			background: @black;
-			border-left: 1px solid darken(@black, 100%);
-			border-bottom: 1px solid darken(@black, 100%);
-			box-sizing: border-box;
-			overflow: hidden;
-		}
-		&.watch-parent{
-			&:before{
-				right: 60px;
 			}
 		}
 	}

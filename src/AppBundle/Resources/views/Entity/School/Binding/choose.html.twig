@@ -8,11 +8,20 @@
 {% endblock %}
 
 {% block action_items_tr %}
-    <td class="small-fixed edit-holder">
-        <div class="btn-edit">
-            <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
-        </div>
-    </td>
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_UPDATE'), school) %}
+        <td class="small-fixed edit-holder">
+            <div class="btn-edit">
+                <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
+            </div>
+        </td>
+    {% else %}
+        <td class="small-fixed view-holder">
+            <div class="btn-view">
+                <a href="{{ path('school_read', { 'id': school.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
 
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
         <td class="small-fixed bind-holder">
@@ -27,6 +36,7 @@
             </div>
         </td>
     {% endif %}
+
 {% endblock %}
 
 {% block action_button %}

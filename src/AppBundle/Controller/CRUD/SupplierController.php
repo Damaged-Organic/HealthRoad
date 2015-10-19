@@ -32,6 +32,10 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         $_supplierBoundlessAccess = $this->get('app.security.supplier_boundless_access');
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( $id )
         {
             $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
@@ -46,6 +50,8 @@ class SupplierController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Supplier/CRUD:readItem.html.twig',
                 'data' => ['supplier' => $supplier]
             ];
+
+            $_breadcrumbs->add('supplier_read')->add('supplier_read', ['id' => $id], $_translator->trans('supplier_view', [], 'routes'));
         } else {
             if( !$_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -56,6 +62,8 @@ class SupplierController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Supplier/CRUD:readList.html.twig',
                 'data' => ['suppliers' => $suppliers]
             ];
+
+            $_breadcrumbs->add('supplier_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -78,6 +86,8 @@ class SupplierController extends Controller implements UserRoleListInterface
         if( !$_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $supplierType = new SupplierType($_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE));
 
         $form = $this->createForm($supplierType, $supplier = new Supplier, [
@@ -87,6 +97,8 @@ class SupplierController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('supplier_read')->add('supplier_create');
+
             return $this->render('AppBundle:Entity/Supplier/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -122,6 +134,8 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         $_supplierBoundlessAccess = $this->get('app.security.supplier_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
 
         if( !$supplier )
@@ -153,6 +167,8 @@ class SupplierController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('supplier_read')->add('supplier_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Supplier/CRUD:updateItem.html.twig', [
             'form'     => $form->createView(),

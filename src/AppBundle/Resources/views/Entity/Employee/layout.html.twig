@@ -1,6 +1,10 @@
 {# AppBundle/Resources/views/Entity/Employee/layout.html.twig #}
 {% extends 'AppBundle:Dashboard/State:index.html.twig' %}
 
+{% block title %}
+    {{ 'employee_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/employees.bundle.min.css') }}">
 {% endblock %}

@@ -32,6 +32,10 @@ class CustomerController extends Controller implements UserRoleListInterface
 
         $_customerBoundlessAccess = $this->get('app.security.customer_boundless_access');
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( $id )
         {
             $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($id);
@@ -46,6 +50,8 @@ class CustomerController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Customer/CRUD:readItem.html.twig',
                 'data' => ['customer' => $customer]
             ];
+
+            $_breadcrumbs->add('customer_read')->add('customer_read', ['id' => $id], $_translator->trans('customer_view', [], 'routes'));
         } else {
             if( !$_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -56,6 +62,8 @@ class CustomerController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Customer/CRUD:readList.html.twig',
                 'data' => ['customers' => $customers]
             ];
+
+            $_breadcrumbs->add('customer_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -78,15 +86,24 @@ class CustomerController extends Controller implements UserRoleListInterface
         if( !$_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $customerType = new CustomerType($_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE));
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
+        $customerType = new CustomerType(
+            $_translator,
+            $_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE));
 
         $form = $this->createForm($customerType, $customer = new Customer, [
-            'action' => $this->generateUrl('customer_create')
+            'validation_groups' => ['Customer', 'Strict', 'Create'],
+            'action'            => $this->generateUrl('customer_create')
         ]);
 
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('customer_read')->add('customer_create');
+
             return $this->render('AppBundle:Entity/Customer/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -133,6 +150,10 @@ class CustomerController extends Controller implements UserRoleListInterface
 
         $_customerBoundlessAccess = $this->get('app.security.customer_boundless_access');
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($id);
 
         if( !$customer )
@@ -144,10 +165,14 @@ class CustomerController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $customerType = new CustomerType($_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE));
+        $customerType = new CustomerType(
+            $_translator,
+            $_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE)
+        );
 
         $form = $this->createForm($customerType, $customer, [
-            'action' => $this->generateUrl('customer_update', ['id' => $id])
+            'validation_groups' => ['Customer', 'Strict', 'Update'],
+            'action'            => $this->generateUrl('customer_update', ['id' => $id])
         ]);
 
         $form->handleRequest($request);
@@ -173,6 +198,8 @@ class CustomerController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Customer/CRUD:updateItem.html.twig', [
             'form'     => $form->createView(),

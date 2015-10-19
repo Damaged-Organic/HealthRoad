@@ -73,6 +73,10 @@ class Employee implements AdvancedUserInterface, Serializable
      *      message="employee.password.not_blank",
      *      groups={"Create"}
      * )
+     * @Assert\Length(
+     *      min=6,
+     *      minMessage="employee.password.length.min",
+     * )
      */
     protected $password;
 

@@ -32,6 +32,8 @@ class SettlementController extends Controller implements UserRoleListInterface
 
         $_settlementBoundlessAccess = $this->get('app.security.settlement_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
@@ -48,6 +50,8 @@ class SettlementController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Settlement/CRUD:readItem.html.twig',
                 'data' => ['settlement' => $settlement]
             ];
+
+            $_breadcrumbs->add('settlement_read')->add('settlement_read', ['id' => $id], $_translator->trans('settlement_view', [], 'routes'));
         } else {
             if( !$_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -58,9 +62,9 @@ class SettlementController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Settlement/CRUD:readList.html.twig',
                 'data' => ['settlements' => $settlements]
             ];
-        }
 
-        $_breadcrumbs->add('settlement_read');
+            $_breadcrumbs->add('settlement_read');
+        }
 
         return $this->render($response['view'], $response['data']);
     }

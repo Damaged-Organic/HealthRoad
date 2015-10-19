@@ -44,14 +44,22 @@ class SyncDataBuilder implements SyncDataInterface
     {
         $data = [];
 
-        foreach($nfcTags as $key => $nfcTag) {
-            $data[$key] = $nfcTag->getSyncObjectData();
+        $build = function($nfcTag)
+        {
+            $data = $nfcTag->getSyncObjectData();
 
-            $data[$key][Product::getSyncArrayNameRestricted()] = NULL;
+            $data[Product::getSyncArrayNameRestricted()] = NULL;
 
             foreach($nfcTag->getStudent()->getProducts() as $product) {
-                $data[$key][Product::getSyncArrayNameRestricted()][] = $product->getSyncObjectDataRestricted();
+                $data[Product::getSyncArrayNameRestricted()][] = $product->getSyncObjectDataRestricted();
             }
+
+            return $data;
+        };
+
+        foreach($nfcTags as $nfcTag)
+        {
+            $data[] = $build($nfcTag);
         }
 
         $data = [

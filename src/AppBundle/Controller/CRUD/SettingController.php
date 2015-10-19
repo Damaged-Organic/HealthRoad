@@ -30,6 +30,8 @@ class SettingController extends Controller
 
         $_settingBoundlessAccess = $this->get('app.security.setting_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( !$_settingBoundlessAccess->isGranted(SettingBoundlessAccess::SETTING_READ) )
             throw $this->createAccessDeniedException('Access denied');
 
@@ -39,6 +41,8 @@ class SettingController extends Controller
             'view' => 'AppBundle:Entity/Setting/CRUD:readList.html.twig',
             'data' => ['setting' => $setting]
         ];
+
+        $_breadcrumbs->add('setting_read');
 
         return $this->render($response['view'], $response['data']);
     }
@@ -56,6 +60,8 @@ class SettingController extends Controller
     public function updateAction(Request $request)
     {
         $_manager = $this->getDoctrine()->getManager();
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         $setting = $_manager->getRepository('AppBundle:Setting\Setting')->findOne();
 
@@ -77,6 +83,8 @@ class SettingController extends Controller
 
             return $this->redirectToRoute('setting_update');
         }
+
+        $_breadcrumbs->add('setting_read')->add('setting_update');
 
         return $this->render('AppBundle:Entity/Setting/CRUD:updateList.html.twig', [
             'form' => $form->createView()

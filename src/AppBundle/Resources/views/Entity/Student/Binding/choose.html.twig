@@ -1,14 +1,50 @@
 {# AppBundle/Resources/views/Entity/Student/Binding/choose.html.twig #}
-{% extends 'AppBundle:Entity/Student:list.html.twig' %}
+{% extends 'AppBundle:Entity/Student/Base:table.html.twig' %}
 
-{% block action %}
-    <input type="submit" name="studentId" value="{{ student.id }}" form="studentForm">
+{% block action_items_th %}
+    <th colspan="2" class="double-small-fixed">
+        <span>управление</span>
+    </th>
 {% endblock %}
 
-{% block button %}
-    <form action="{{ path('student_bind') }}" id="studentForm" method="POST">
-        <input type="hidden" name="objectClass" value="{{ objectClass }}">
-        <input type="hidden" name="objectId" value="{{ objectId }}">
-    </form>
-    <a href="{{ path('customer_update', { 'id': objectId }) }}">Done</a>
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), student) %}
+        <td class="small-fixed edit-holder">
+            <div class="btn-edit">
+                <a href="{{ path('student_update', { 'id': student.id }) }}" class="icon hrd-edit"></a>
+            </div>
+        </td>
+    {% else %}
+        <td class="small-fixed view-holder">
+            <div class="btn-view">
+                <a href="{{ path('student_read', { 'id': student.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
+        <td class="small-fixed bind-holder">
+
+            {% set isBinded = object.students.contains(student) %}
+
+            <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+
+                {% set path = ( isBinded ) ? 'student_unbind' : 'student_bind' %}
+
+                <a href="{{ path(path, { 'targetId': student.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(students.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,6 +1,35 @@
 {# AppBundle/Resources/views/Entity/Region/CRUD/readItem.html.twig #}
 {% extends 'AppBundle:Entity/Region/Base:item.html.twig' %}
 
+{% block active_region_update %}{{ 'class="active"' }}{% endblock %}
+
 {% block data %}
-    {{ region.name }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'region.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ region.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'region.administrative_center.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( region.administrativeCenter ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'region.phone_code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( region.phoneCode ) ?: '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

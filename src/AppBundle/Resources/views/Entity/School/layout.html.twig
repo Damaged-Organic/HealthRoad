@@ -1,6 +1,10 @@
 {# AppBundle/Resources/views/Entity/School/layout.html.twig #}
 {% extends 'AppBundle:Dashboard/State:index.html.twig' %}
 
+{% block title %}
+    {{ 'school_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/schools.bundle.min.css') }}">
 {% endblock %}

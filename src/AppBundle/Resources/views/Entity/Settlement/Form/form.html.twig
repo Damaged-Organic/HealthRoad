@@ -1,5 +1,5 @@
 {# AppBundle/Resources/views/Entity/Settlement/Form/form.html.twig #}
-{% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="settlement-form">
     <div class="field-holder">
@@ -21,7 +21,9 @@
 
     {% do form.region.setRendered %}
 
-    <div class="select-holder">
+    {% set region_set = ( form.region.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( region_set ) ? 'watch-parent' : null }}">
         <div class="btn-select">
             <a href="#">
                 <div class="title-holder">
@@ -31,6 +33,12 @@
                 <span class="text">{{ ( form.region.vars.data ) ? form.region.vars.data.name : form.region.vars.placeholder|trans({}, 'forms') }}</span>
             </a>
         </div>
+
+        {% if region_set %}
+            <div class="btn-view">
+                <a href="{{ path('region_update', { 'id': form.region.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
 
         {% for error in form.region.vars.errors %}
             <span class="error-holder">{{ error.message }}</span>

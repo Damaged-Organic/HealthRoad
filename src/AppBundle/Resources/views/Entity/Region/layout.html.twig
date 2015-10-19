@@ -1,6 +1,10 @@
 {# AppBundle/Resources/views/Entity/Region/layout.html.twig #}
 {% extends 'AppBundle:Dashboard/State:index.html.twig' %}
 
+{% block title %}
+    {{ 'region_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/regions.bundle.min.css') }}">
 {% endblock %}

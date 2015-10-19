@@ -32,6 +32,8 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
         $_nfcTagBoundlessAccess = $this->get('app.security.nfc_tag_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
@@ -48,6 +50,8 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/NfcTag/CRUD:readItem.html.twig',
                 'data' => ['nfcTag' => $nfcTag]
             ];
+
+            $_breadcrumbs->add('nfc_tag_read')->add('nfc_tag_read', ['id' => $id], $_translator->trans('nfc_tag_view', [], 'routes'));
         } else {
             if( !$_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -58,9 +62,9 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/NfcTag/CRUD:readList.html.twig',
                 'data' => ['nfcTags' => $nfcTags]
             ];
-        }
 
-        $_breadcrumbs->add('nfc_tag_read');
+            $_breadcrumbs->add('nfc_tag_read');
+        }
 
         return $this->render($response['view'], $response['data']);
     }

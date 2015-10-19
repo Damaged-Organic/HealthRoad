@@ -86,7 +86,7 @@ class SettlementController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(SettlementVoter::SETTLEMENT_READ, $settlement) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('settlement_read')->add('settlement_update', ['id' => $objectId]);
+        $_breadcrumbs->add('settlement_read')->add('settlement_update', ['id' => $objectId], $_translator->trans('settlement_bounded', [], 'routes'));
 
         switch(TRUE)
         {

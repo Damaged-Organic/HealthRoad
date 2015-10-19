@@ -1,0 +1,43 @@
+{# AppBundle/Resources/views/Entity/Student/Base/table.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/Student/Base:list.html.twig' %}
+
+{% block variable %}
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+
+            {% if students|length %}
+                <table>
+                    <tr>
+
+                        {% include 'AppBundle:Entity/Student/Table:th.html.twig' %}
+
+                        {% block action_items_th %}{% endblock %}
+
+                    </tr>
+
+                    {% for student in students %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/Student/Table:tr.html.twig' with { 'student': student } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                <div class="empty-holder">
+                    <h2>{{ 'dashboard.table.empty.title'|trans }}</h2>
+                    <p>{{ 'dashboard.table.empty.text'|trans }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+
+        {% include 'AppBundle:Dashboard/Common:pagination.html.twig' only %}
+    </div>
+{% endblock %}

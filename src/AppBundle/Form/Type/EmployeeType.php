@@ -13,21 +13,21 @@ use AppBundle\Entity\Employee\Repository\EmployeeGroupRepository;
 
 class EmployeeType extends AbstractType
 {
+    private $_translator;
+
     private $boundlessAccess;
     private $boundedAccess;
 
-    private $_translator;
-
     public function __construct(TranslatorInterface $translator, $boundlessAccess, $boundedAccess = NULL)
     {
+        $this->_translator = $translator;
+
         /*
          * TRICKY: $this->boundlessAccess is a string containing exact user role,
          * which also equals TRUE during loose (==) authorization check
          */
         $this->boundlessAccess = $boundlessAccess;
         $this->boundedAccess   = $boundedAccess;
-
-        $this->_translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -108,6 +108,7 @@ class EmployeeType extends AbstractType
                 {
                     $form
                         ->add('employeeGroup', 'text', [
+                            'required'   => FALSE,
                             'read_only'  => TRUE,
                             'disabled'   => TRUE,
                             'data_class' => 'AppBundle\Entity\Employee\EmployeeGroup',
@@ -137,7 +138,7 @@ class EmployeeType extends AbstractType
                         $form
                             ->add('isEnabled', 'checkbox', [
                                 'required' => FALSE,
-                                'label' => "Включен"
+                                'label'    => 'employee.is_enabled.label'
                             ])
                         ;
                     }

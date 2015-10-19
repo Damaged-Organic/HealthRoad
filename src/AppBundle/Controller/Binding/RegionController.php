@@ -86,7 +86,7 @@ class RegionController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(RegionVoter::REGION_READ, $region) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('region_read')->add('region_update', ['id' => $objectId]);
+        $_breadcrumbs->add('region_read')->add('region_update', ['id' => $objectId], $_translator->trans('region_bounded', [], 'routes'));
 
         switch(TRUE)
         {

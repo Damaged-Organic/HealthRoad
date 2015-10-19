@@ -1,6 +1,10 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/layout.html.twig #}
 {% extends 'AppBundle:Dashboard/State:index.html.twig' %}
 
+{% block title %}
+    {{ 'vending_machine_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/vendingMachines.bundle.min.css') }}">
 {% endblock %}

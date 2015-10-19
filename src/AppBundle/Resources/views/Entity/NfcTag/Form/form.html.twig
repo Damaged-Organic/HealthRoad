@@ -1,5 +1,5 @@
 {# AppBundle/Resources/views/Entity/NfcTag/Form/form.html.twig #}
-{% form_theme form 'AppBundle:Dashboard/Form/Theme:errors.html.twig' %}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="nfc-tag-form">
     <div class="field-holder">
@@ -32,7 +32,9 @@
 
     {% do form.vendingMachine.setRendered %}
 
-    <div class="select-holder">
+    {% set vending_machine_set = ( form.vendingMachine.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( vending_machine_set ) ? 'watch-parent' : null }}">
         <div class="btn-select">
             <a href="#">
                 <div class="title-holder">
@@ -42,6 +44,12 @@
                 <span class="text">{{ ( form.vendingMachine.vars.data ) ? form.vendingMachine.vars.data.choiceLabel : form.vendingMachine.vars.placeholder|trans({}, 'forms') }}</span>
             </a>
         </div>
+
+        {% if vending_machine_set %}
+            <div class="btn-view">
+                <a href="{{ path('vending_machine_update', { 'id': form.vendingMachine.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
 
         {% for error in form.vendingMachine.vars.errors %}
             <span class="error-holder">{{ error.message }}</span>

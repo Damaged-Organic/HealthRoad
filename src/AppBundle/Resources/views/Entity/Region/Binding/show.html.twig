@@ -8,19 +8,36 @@
 {% endblock %}
 
 {% block action_items_tr %}
-    <td class="small-fixed edit-holder">
-        <div class="btn-edit">
-            <a href="{{ path('region_update', { 'id': region.id }) }}" class="icon hrd-edit"></a>
-        </div>
-    </td>
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_BIND'), region) %}
-        <td class="small-fixed delete-holder">
-            <div class="btn-bind binded">
-                <a href="{{ path('region_unbind', { 'targetId': region.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_UPDATE'), region) %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_BIND'), region) %}
+            <td class="small-fixed edit-holder">
+                <div class="btn-edit">
+                    <a href="{{ path('region_update', { 'id': region.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+            <td class="small-fixed delete-holder">
+                <div class="btn-bind binded">
+                    <a href="{{ path('region_unbind', { 'targetId': region.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder" colspan="2">
+                <div class="btn-edit">
+                    <a href="{{ path('region_update', { 'id': region.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder" colspan="2">
+            <div class="btn-view">
+                <a href="{{ path('region_read', { 'id': region.id }) }}" class="icon hrd-view"></a>
             </div>
         </td>
     {% endif %}
+
 {% endblock %}
 
 {% block action_button %}

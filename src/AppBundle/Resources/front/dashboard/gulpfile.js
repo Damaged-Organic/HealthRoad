@@ -9,12 +9,11 @@ var gulp = require("gulp"),
 	minifyCSS = require("gulp-minify-css"),
 	concatCSS = require("gulp-concat-css"),
 
-	jspm = require("gulp-jspm"),
+	exec = require("child_process").exec,
 	glob = require("glob"),
 
 	imagemin = require("gulp-imagemin"),
 	pngquant = require("imagemin-pngquant");
-
 
 gulp.task("js", function(){
 	var files = glob.sync("assets/js/app/*.js"),
@@ -23,15 +22,7 @@ gulp.task("js", function(){
 	files.map(function(entryFile){
 
 		fileName = entryFile.match(/\w+(?=\.js)/gi);
-		
-		return gulp.src(entryFile)
-					.pipe(jspm({selfExecutingBundle: true}))
-					.pipe(rename({
-						basename: fileName,
-						extname: ".bundle.min.js"
-					}))
-					.pipe(gulp.dest(cfg.buildPath + "js"))
-					.pipe(notify({ message: "js done", onLast: true }));
+		exec("jspm bundle-sfx "+ entryFile +" "+ cfg.buildPath + "js/" + fileName + ".bundle.min.js --skip-source-maps");
 	});
 });
 
@@ -84,7 +75,7 @@ gulp.task("images", function(){
 });
 
 gulp.task("watcher", function(){
-	gulp.watch(cfg.jsPath + "**/*.js", ["js"]);
+	//gulp.watch(cfg.jsPath + "**/*.js", ["js"]);
 	gulp.watch(cfg.cssPath + "**/*.less", ["css"]);
 	gulp.watch(cfg.imagePath + "**/*.*", ["images"]);
 });
