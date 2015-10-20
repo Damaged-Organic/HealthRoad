@@ -7,9 +7,14 @@
             <li {% block active_region_update %}{% endblock %}>
                 <a href="{{ path('region_update', { 'id': region.id }) }}">Данные</a>
             </li>
-            <li {% block active_region_update_bounded_settlement %}{% endblock %}>
-                <a href="{{ path('region_update_bounded', { 'objectId': region.id, 'objectClass': 'settlement' }) }}">Населенные пункты</a>
-            </li>
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_BIND'), region) %}
+                <li {% block active_region_update_bounded_settlement %}{% endblock %}>
+                    <a href="{{ path('region_update_bounded', { 'objectId': region.id, 'objectClass': 'settlement' }) }}">
+                        {{ 'settlement_read'|trans({}, 'routes') }}
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 {% endblock %}

@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
 
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Entity\Student\Student,
+    AppBundle\Entity\Product\Product,
     AppBundle\Security\Authorization\Voter\SupplierVoter;
 
 class SupplierController extends Controller implements UserRoleListInterface
@@ -47,8 +47,8 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         switch(TRUE)
         {
-            case $this->compareObjectClassNameToString(new Student, $objectClass):
-                $bounded = $this->forward('AppBundle:Binding\Student:show', [
+            case $this->compareObjectClassNameToString(new Product, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Product:show', [
                     'objectClass' => $this->getObjectClassName($supplier),
                     'objectId'    => $objectId
                 ]);
@@ -58,7 +58,7 @@ class SupplierController extends Controller implements UserRoleListInterface
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('student_read', [], 'routes')
+                    $_translator->trans('product_read', [], 'routes')
                 );
             break;
 

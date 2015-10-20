@@ -8,7 +8,7 @@
                 <a href="{{ path('settlement_update', { 'id': settlement.id }) }}">Данные</a>
             </li>
 
-            {% if settlement.schools %}
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SettlementVoter::SETTLEMENT_BIND'), settlement) %}
                 <li {% block active_settlement_update_bounded_school %}{% endblock %}>
                     <a href="{{ path('settlement_update_bounded', { 'objectId': settlement.id, 'objectClass': 'school' }) }}">
                         {{ 'school_read'|trans({}, 'routes') }}

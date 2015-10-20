@@ -12,6 +12,11 @@
 </td>
 <td>
     <span>
+        {{ ( vendingMachine.productVendingGroup ) ? vendingMachine.productVendingGroup.name : '-' }}
+    </span>
+</td>
+<td>
+    <span>
         {{ ( vendingMachine.school ) ? vendingMachine.school.name : '-' }}
     </span>
 </td>

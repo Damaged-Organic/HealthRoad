@@ -1,6 +1,19 @@
 {# AppBundle/Resources/views/Entity/Supplier/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Supplier:item.html.twig' %}
+{% extends 'AppBundle:Entity/Supplier/Base:item.html.twig' %}
+
+{% block active_supplier_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ supplier.name }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ supplier.name }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

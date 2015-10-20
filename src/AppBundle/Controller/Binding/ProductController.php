@@ -18,7 +18,8 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\ProductBoundlessAccess,
     AppBundle\Security\Authorization\Voter\ProductVoter,
     AppBundle\Security\Authorization\Voter\StudentVoter,
-    AppBundle\Security\Authorization\Voter\ProductVendingGroupVoter;
+    AppBundle\Security\Authorization\Voter\ProductVendingGroupVoter,
+    AppBundle\Security\Authorization\Voter\SupplierVoter;
 
 class ProductController extends Controller implements UserRoleListInterface
 {
@@ -44,19 +45,24 @@ class ProductController extends Controller implements UserRoleListInterface
                 $products = $object->getProducts();
 
                 $action = [
-                    'path'  => 'school_choose',
+                    'path'  => 'product_choose',
                     'voter' => ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_BIND
                 ];
             break;
 
-            /*case $this->compareObjectClassNameToString(new Supplier, $objectClass):
-                $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
+            case $this->compareObjectClassNameToString(new Supplier, $objectClass):
+                $object = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
 
-                if( !$supplier )
+                if( !$object )
                     throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
 
-                $products = $supplier->getProducts();
-            break;*/
+                $products = $object->getProducts();
+
+                $action = [
+                    'path'  => 'product_choose',
+                    'voter' => SupplierVoter::SUPPLIER_BIND
+                ];
+            break;
 
             case $this->compareObjectClassNameToString(new Student, $objectClass):
                 $object = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
@@ -67,7 +73,7 @@ class ProductController extends Controller implements UserRoleListInterface
                 $products = $object->getProducts();
 
                 $action = [
-                    'path'  => 'school_choose',
+                    'path'  => 'product_choose',
                     'voter' => StudentVoter::STUDENT_BIND
                 ];
             break;

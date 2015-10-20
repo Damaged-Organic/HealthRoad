@@ -66,7 +66,7 @@ class Supplier
 
     /**
      * @Assert\File(
-     *     maxSize="1M",
+     *     maxSize="2M",
      *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg", "image/gif"}
      * )
      *
@@ -97,11 +97,11 @@ class Supplier
     protected $emailSupplier;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @Assert\Length(
      *      min=2,
-     *      max=250,
+     *      max=500,
      *      minMessage="supplier.name_contact.length.min",
      *      maxMessage="supplier.name_contact.length.max"
      * )

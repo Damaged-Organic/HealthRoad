@@ -7,21 +7,26 @@
 </td>
 <td>
     <span>
-        {{ ('student.gender.choice.' ~ student.gender)|trans({}, 'forms') }}
+        {{ ( student.school ) ? student.school.name  : '-'  }}
     </span>
 </td>
 <td>
     <span>
-        {{ ( student.dateOfBirth ) ? student.dateOfBirth|date('d-m-Y') : '-' }}
+        {{ ( student.nfcTag ) ? student.nfcTag.number  : '-'  }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ student.totalLimit|number_format(2, ',') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ student.dailyLimit|number_format(2, ',') }}
     </span>
 </td>
 <td>
     <span>
         {{ ( student.customer ) ? student.customer.fullName  : '-'  }}
-    </span>
-</td>
-<td>
-    <span>
-        {{ ( student.school ) ? student.school.name  : '-'  }}
     </span>
 </td>

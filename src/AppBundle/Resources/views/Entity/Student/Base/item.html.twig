@@ -9,6 +9,14 @@
             </li>
 
             {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
+                <li {% block active_student_update_bounded_nfc_tag %}{% endblock %}>
+                    <a href="{{ path('student_update_bounded', { 'objectId': student.id, 'objectClass': 'nfctag' }) }}">
+                        {{ 'nfc_tag_read'|trans({}, 'routes') }}
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
                 <li {% block active_student_update_bounded_product %}{% endblock %}>
                     <a href="{{ path('student_update_bounded', { 'objectId': student.id, 'objectClass': 'product' }) }}">
                         {{ 'product_read_restricted'|trans({}, 'routes') }}

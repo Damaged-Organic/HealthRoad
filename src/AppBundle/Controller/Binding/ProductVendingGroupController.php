@@ -36,7 +36,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
 
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
-        $productVendingGroup = $_manager->getRepository('AppBundle:ProductVendingGroup\ProductVendingGroup')->find($objectId);
+        $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
         if( !$productVendingGroup )
             throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
@@ -54,7 +54,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('product_vending_group_bounded',
+                $_breadcrumbs->add('product_vending_group_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
@@ -69,7 +69,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('product_vending_group_bounded',
+                $_breadcrumbs->add('product_vending_group_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass

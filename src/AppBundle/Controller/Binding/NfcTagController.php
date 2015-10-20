@@ -43,7 +43,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 /*
                  * TRICKY: single nfcTag object pushed into array in order to be valid for template
                  */
-                $nfcTags = [$object->getNfcTag()];
+                $nfcTags = ( $object->getNfcTag() ) ? [$object->getNfcTag()] : NULL;
 
                 $action = [
                     'path'  => 'nfc_tag_choose',

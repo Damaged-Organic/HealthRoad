@@ -1,2 +1,22 @@
 {# AppBundle/Resources/views/Entity/ProductVendingGroup/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="product-vending-group-form">
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "product-vending-group-name",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product_vending_group.name.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'product_vending_group.name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'product_vending_group.name.length.max'|trans({}, "validators"),
+                'value': ( productVendingGroup is defined ) ? productVendingGroup.name
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

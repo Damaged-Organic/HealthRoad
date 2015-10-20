@@ -1,0 +1,58 @@
+{# AppBundle/Resources/views/Entity/Supplier/layout.html.twig #}
+{% extends 'AppBundle:Dashboard/State:index.html.twig' %}
+
+{% block title %}
+    {{ 'supplier_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/suppliers.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+
+        {% block variable %}
+            <div class="outer scrollable-holder">
+                <div class="inner scrollable">
+
+                    {% block data %}{% endblock %}
+
+                </div>
+            </div>
+            <div class="bottom-info-panel">
+
+                {% block action_bottom %}{% endblock %}
+
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/suppliers.bundle.min.js') }}"></script>
+{% endblock %}
+
+{#{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SupplierVoter::SUPPLIER_DELETE'), supplier) %}
+    <p>
+        <a href="{{ path('supplier_delete', { 'id': supplier.id }) }}">Удалить</a>
+    </p>
+{% endif %}
+
+<p>-------------------------------------------------------------------------------------------------</p>
+{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SupplierVoter::SUPPLIER_BIND'), supplier) %}
+    <p>
+        <a href="{{ path('product_choose', { 'objectClass': class(supplier)|lower, 'objectId': supplier.id }) }}">@ Привязать продукт</a>
+    </p>
+{% endif %}
+
+<p>Продукты:</p>
+<p>-------------------------------------------------------------------------------------------------</p>
+{% if supplier.products %}
+    {{ render(controller('AppBundle:Binding/Product:show', { 'objectClass': class(supplier)|lower, 'objectId': supplier.id })) }}
+{% endif %}#}

@@ -209,6 +209,59 @@ nfc_tag:
     vending_machine:
         label: Торговый автомат
 
+supplier:
+    name:
+        label:       Имя
+        placeholder: Введите имя поставщика
+
+    name_legal:
+        label:       Юридическое имя
+        placeholder: Введите юридическое имя поставщика
+
+    description:
+        label:       Описание
+        placeholder: Введите описание
+
+    logo_file:
+        label: Изображение логотипа
+
+    phone_number_supplier:
+        label:       Номер телефона поставщика
+        placeholder: Введите номер телефона поставщика
+
+    email_supplier:
+        label:       E-mail поставщика
+        placeholder: Введите e-mail поставщика
+
+    name_contact:
+        label:       ФИО контакта
+        placeholder: Введите ФИО контактного лица
+
+    phone_number_contact:
+        label:       Номер телефона контакта
+        placeholder: Введите номер телефона контактного лица
+
+    email_contact:
+        label:       E-mail контакта
+        placeholder: Введите e-mail контактного лица
+
+    contract_number:
+        label:       Номер контракта
+        placeholder: Введите номер контракта
+
+    contract_date_start:
+        label:       Дата начала контракта
+        placeholder: Введите дату начала контракта
+
+    contract_date_end:
+        label:       Дата окончания контракта
+        placeholder: Введите дату окончания контракта
+
+product_vending_group:
+    name:
+        label:       Имя группы автоматов
+        placeholder: Введите имя группы автоматов
+
 student:
     name:
         label:       Имя

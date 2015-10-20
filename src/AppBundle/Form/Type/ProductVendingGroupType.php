@@ -21,7 +21,10 @@ class ProductVendingGroupType extends AbstractType
     {
         $builder
             ->add('name', 'text', [
-                'label' => "Name"
+                'label' => 'product_vending_group.name.label',
+                'attr'  => [
+                    'placeholder' => 'product_vending_group.name.placeholder'
+                ]
             ])
         ;
 

@@ -41,8 +41,17 @@
 {% block action_button %}
     <div id="action-holder">
         <div id="action-holder" class="manage-holder">
+
+            {% if class(object)|lower is same as('school') %}
+                {% set path = 'school_update_bounded' %}
+            {% endif %}
+
+            {% if class(object)|lower is same as('product_vending_group') %}
+                {% set path = 'product_vending_group_update_bounded' %}
+            {% endif %}
+
             <div class="btn-connect">
-                <a href="{{ path('school_update_bounded', { 'objectId': object.id, 'objectClass': class(vendingMachines.0)|lower }) }}">Готово</a>
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(vendingMachines.0)|lower }) }}">Готово</a>
             </div>
         </div>
     </div>

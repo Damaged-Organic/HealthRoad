@@ -1,0 +1,27 @@
+{# AppBundle/Resources/views/Entity/Supplier/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ supplier.id }}</span></td>
+<td>
+    <span>
+        {{ supplier.name }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( ( supplier.phoneNumberSupplier) ? supplier.phoneNumberSupplier : '_' ) }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( supplier.emailSupplier ) ? supplier.emailSupplier : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( supplier.contractDateStart ) ? supplier.contractDateStart|date('d-m-Y') : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( supplier.contractDateEnd  ) ? supplier.contractDateEnd|date('d-m-Y') : '-' }}
+    </span>
+</td>

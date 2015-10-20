@@ -7,9 +7,14 @@
             <li {% block active_vending_machine_update %}{% endblock %}>
                 <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}">Данные</a>
             </li>
-            <li {% block active_vending_machine_update_bounded_nfc_tag %}{% endblock %}>
-                <a href="{{ path('vending_machine_update_bounded', { 'objectId': vendingMachine.id, 'objectClass': 'nfctag' }) }}">NFC-метки</a>
-            </li>
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_BIND'), vendingMachine) %}
+                <li {% block active_vending_machine_update_bounded_nfc_tag %}{% endblock %}>
+                    <a href="{{ path('vending_machine_update_bounded', { 'objectId': vendingMachine.id, 'objectClass': 'nfctag' }) }}">
+                        {{ 'nfc_tag_read'|trans({}, 'routes') }}
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 {% endblock %}

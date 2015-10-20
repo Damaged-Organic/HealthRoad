@@ -50,7 +50,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             break;
 
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $object = $_manager->getRepository('AppBundle:ProductVendingGroup\ProductVendingGroup')->find($objectId);
+                $object = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
