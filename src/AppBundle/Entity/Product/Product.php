@@ -145,13 +145,34 @@ class Product implements SyncProductPropertiesInterface
     protected $manufacturer;
 
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     *
+     * @CustomAssert\IsDecimalConstraint
+     */
+    protected $protein;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     *
+     * @CustomAssert\IsDecimalConstraint
+     */
+    protected $fat;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     *
+     * @CustomAssert\IsDecimalConstraint
+     */
+    protected $carbohydrate;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      *
      * @Assert\Range(
      *      min=1,
      *      max=1000,
-     *      minMessage="product.calories.length.min",
-     *      maxMessage="product.calories.length.max"
+     *      minMessage="product.calories.range.min",
+     *      maxMessage="product.calories.range.max"
      * )
      */
     protected $calories;
@@ -202,7 +223,7 @@ class Product implements SyncProductPropertiesInterface
      *      maxMessage="product.weight.length.max"
      * )
      */
-    protected $weigth;
+    protected $weight;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
@@ -435,6 +456,75 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /**
+     * Set protein
+     *
+     * @param string $protein
+     * @return Product
+     */
+    public function setProtein($protein)
+    {
+        $this->protein = $protein;
+
+        return $this;
+    }
+
+    /**
+     * Get protein
+     *
+     * @return string
+     */
+    public function getProtein()
+    {
+        return $this->protein;
+    }
+
+    /**
+     * Set fat
+     *
+     * @param string $fat
+     * @return Product
+     */
+    public function setFat($fat)
+    {
+        $this->fat = $fat;
+
+        return $this;
+    }
+
+    /**
+     * Get fat
+     *
+     * @return string
+     */
+    public function getFat()
+    {
+        return $this->fat;
+    }
+
+    /**
+     * Set carbohydrate
+     *
+     * @param string $carbohydrate
+     * @return Product
+     */
+    public function setCarbohydrate($carbohydrate)
+    {
+        $this->carbohydrate = $carbohydrate;
+
+        return $this;
+    }
+
+    /**
+     * Get carbohydrate
+     *
+     * @return string
+     */
+    public function getCarbohydrate()
+    {
+        return $this->carbohydrate;
+    }
+
+    /**
      * Set calories
      *
      * @param integer $calories
@@ -527,26 +617,26 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /**
-     * Set weigth
+     * Set weight
      *
-     * @param integer $weigth
+     * @param integer $weight
      * @return Product
      */
-    public function setWeigth($weigth)
+    public function setWeight($weight)
     {
-        $this->weigth = $weigth;
+        $this->weight = $weight;
 
         return $this;
     }
 
     /**
-     * Get weigth
+     * Get weight
      *
-     * @return integer 
+     * @return integer
      */
-    public function getWeigth()
+    public function getWeight()
     {
-        return $this->weigth;
+        return $this->weight;
     }
 
     /**

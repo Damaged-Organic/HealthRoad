@@ -1,9 +1,34 @@
 {# AppBundle/Resources/views/Entity/Product/Binding/show.html.twig #}
-{% for product in products %}
-    <p>
-        <a href="{{ path('product_update', { 'id': product.id }) }}">{{ product.nameFull }}</a>
-        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_BIND'), product) %}
-            <a href="{{ path('product_unbind', { 'id': product.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
-        {% endif %}
-    </p>
-{% endfor %}
+{% extends 'AppBundle:Entity/Product/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_BIND'), product) %}
+        <td class="small-fixed bind-holder">
+            <div class="btn-bind binded">
+                <a href="{{ path('product_unbind', { 'targetId': product.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+
+    {% if is_granted(action.voter, object) %}
+        <div id="action-holder">
+            <div id="action-holder" class="manage-holder">
+                <div class="btn-connect">
+                    <a href="{{ path(action.path, { 'objectClass': class(object)|lower, 'objectId': object.id }) }}"><span class="icon hrd-bind"></span>Привязать</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

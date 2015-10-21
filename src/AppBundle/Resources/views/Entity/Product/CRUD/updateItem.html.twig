@@ -1,6 +1,31 @@
 {# AppBundle/Resources/views/Entity/Product/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/Product:item.html.twig' %}
+{% extends 'AppBundle:Entity/Product/Base:item.html.twig' %}
+
+{% block active_product_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/Product/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/Product/Form:form.html.twig' with { 'form': form, 'product': product } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_DELETE'), product) %}
+            <div class="btn-delete black">
+                <a href="{{ path('product_delete', { 'id': product.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if product_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\ProductBoundlessAccess::PRODUCT_READ')) %}
+            <button type="submit" form="product-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="product-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

@@ -52,7 +52,7 @@ class Product implements SyncProductPropertiesInterface
     protected $students;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="products")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="product")
      */
     protected $purchases;
 
@@ -145,13 +145,34 @@ class Product implements SyncProductPropertiesInterface
     protected $manufacturer;
 
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     *
+     * @CustomAssert\IsDecimalConstraint
+     */
+    protected $protein;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     *
+     * @CustomAssert\IsDecimalConstraint
+     */
+    protected $fat;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     *
+     * @CustomAssert\IsDecimalConstraint
+     */
+    protected $carbohydrate;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      *
      * @Assert\Range(
      *      min=1,
      *      max=1000,
-     *      minMessage="product.calories.length.min",
-     *      maxMessage="product.calories.length.max"
+     *      minMessage="product.calories.range.min",
+     *      maxMessage="product.calories.range.max"
      * )
      */
     protected $calories;
@@ -202,7 +223,7 @@ class Product implements SyncProductPropertiesInterface
      *      maxMessage="product.weight.length.max"
      * )
      */
-    protected $weigth;
+    protected $weight;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
@@ -240,6 +261,7 @@ class Product implements SyncProductPropertiesInterface
     {
         $this->productVendingGroups = new ArrayCollection;
         $this->students             = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -431,6 +453,75 @@ class Product implements SyncProductPropertiesInterface
     public function getManufacturer()
     {
         return $this->manufacturer;
+    }
+
+    /**
+     * Set protein
+     *
+     * @param string $protein
+     * @return Product
+     */
+    public function setProtein($protein)
+    {
+        $this->protein = $protein;
+
+        return $this;
+    }
+
+    /**
+     * Get protein
+     *
+     * @return string
+     */
+    public function getProtein()
+    {
+        return $this->protein;
+    }
+
+    /**
+     * Set fat
+     *
+     * @param string $fat
+     * @return Product
+     */
+    public function setFat($fat)
+    {
+        $this->fat = $fat;
+
+        return $this;
+    }
+
+    /**
+     * Get fat
+     *
+     * @return string
+     */
+    public function getFat()
+    {
+        return $this->fat;
+    }
+
+    /**
+     * Set carbohydrate
+     *
+     * @param string $carbohydrate
+     * @return Product
+     */
+    public function setCarbohydrate($carbohydrate)
+    {
+        $this->carbohydrate = $carbohydrate;
+
+        return $this;
+    }
+
+    /**
+     * Get carbohydrate
+     *
+     * @return string
+     */
+    public function getCarbohydrate()
+    {
+        return $this->carbohydrate;
     }
 
     /**
@@ -727,6 +818,40 @@ class Product implements SyncProductPropertiesInterface
     public function getStudents()
     {
         return $this->students;
+    }
+
+    /**
+     * Add purchase
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchase
+     * @return Product
+     */
+    public function addPurchase(\AppBundle\Entity\Purchase\Purchase $purchase)
+    {
+        $purchase->setProduct($this);
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchases
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchases
+     */
+    public function removePurchase(\AppBundle\Entity\Purchase\Purchase $purchases)
+    {
+        $this->purchases->removeElement($purchases);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
     }
 
     static public function getSyncArrayName()

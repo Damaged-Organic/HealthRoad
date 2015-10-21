@@ -160,7 +160,7 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$student )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
-                $products = $student->getNfcTag()->getVendingMachine()->getProductVendingGroup()->getProducts();
+                $products = $student->getRestrictedProducts();
 
                 $path = 'student_update_bounded';
 
@@ -183,7 +183,7 @@ class ProductController extends Controller implements UserRoleListInterface
             'objectClass' => $objectClass,
         ]);
 
-        return $this->render('AppBundle:Entity/School/Binding:choose.html.twig', [
+        return $this->render('AppBundle:Entity/Product/Binding:choose.html.twig', [
             'path'     => $path,
             'products' => $products,
             'object'   => $object
@@ -191,7 +191,7 @@ class ProductController extends Controller implements UserRoleListInterface
     }
 
     /**
-     * @Method({"POST"})
+     * @Method({"GET"})
      * @Route(
      *      "/product/bind/{targetId}/{objectClass}/{objectId}",
      *      name="product_bind",

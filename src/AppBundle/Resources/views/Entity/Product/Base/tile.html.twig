@@ -1,0 +1,108 @@
+{# AppBundle/Resources/views/Entity/Product/Base/tile.html.twig #}
+{% extends 'AppBundle:Entity/Product/Base:list.html.twig' %}
+
+{% block variable %}
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+
+            {% if products|length %}
+                <div class="grid" id="products-holder">
+
+                    {% for product in products %}
+
+                        {% if loop.first %}
+                            <div class="row">
+                        {% endif %}
+
+                        <article class="col product-holder">
+                            <span class="unique-id">{{ product.id }}</span>
+                            <figure>
+
+                                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) %}
+                                    <a href="{{ path('product_update', { 'id': product.id }) }}">
+                                        <img src="{{ vich_uploader_asset(product, 'imageProductFile') }}" alt="{{ product.nameShort }}">
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('product_read', { 'id': product.id }) }}">
+                                        <img src="{{ vich_uploader_asset(product, 'imageProductFile') }}" alt="{{ product.nameShort }}">
+                                    </a>
+                                {% endif %}
+
+                            </figure>
+                            <div class="product-info">
+                                <h2>
+                                    {{ product.code ~ ":" ~ product.nameShort }}
+                                </h2>
+                                <p>
+                                    {{ product.nameFull }}
+                                </p>
+                                <ul>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.supplier.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.supplier ) ? product.supplier.name : '-' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.protein.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.protein ) ? product.protein : '-' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.fat.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.fat ) ? product.fat : '-' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.carbohydrate.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.carbohydrate ) ? product.carbohydrate : '-' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.calories.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.calories ) ? product.calories : '-' }}
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div class="action-holder">
+                                    <div class="price-holder">
+                                        <span>{{ product.price|number_format(2, ',') }} ₴</span>
+                                    </div>
+                                    <div class="buttons-holder">
+
+                                        {% block action_items %}{% endblock %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        {% if loop.last %}
+                            </div>
+                        {% elseif loop.index is divisible by(3) %}
+                            </div>
+                            <div class="row">
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+            {% else %}
+                <div class="empty-holder">
+                    <h2>{{ 'dashboard.table.empty.title'|trans }}</h2>
+                    <p>{{ 'dashboard.table.empty.text'|trans }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+
+        {% include 'AppBundle:Dashboard/Common:pagination.html.twig' only %}
+    </div>
+{% endblock %}

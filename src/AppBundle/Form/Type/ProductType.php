@@ -21,55 +21,130 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('nameFull', 'text', [
-                'label' => "Full name"
+                'label' => 'product.name_full.label',
+                'attr'  => [
+                    'placeholder' => 'product.name_full.placeholder'
+                ]
             ])
             ->add('nameShort', 'text', [
-                'label' => "Short name"
+                'label' => 'product.name_short.label',
+                'attr'  => [
+                    'placeholder' => 'product.name_short.placeholder'
+                ]
+            ])
+            ->add('code', 'text', [
+                'label' => 'product.code.label',
+                'attr'  => [
+                    'placeholder' => 'product.code.placeholder'
+                ]
+            ])
+            ->add('price', 'number', [
+                'scale' => 2,
+                'label' => 'product.price.label',
+                'attr'  => [
+                    'placeholder' => 'product.price.placeholder'
+                ]
             ])
             ->add('imageProductFile', 'file', [
                 'required' => FALSE,
-                'label'    => "Product image"
+                'label'    => 'product.image_product_file.label',
+                'attr'     => [
+                    'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
+                ]
             ])
             ->add('imageCertificateFile', 'file', [
                 'required' => FALSE,
-                'label'    => "Product certificate"
-            ])
-            ->add('code', 'text', [
-                'label' => "Code"
-            ])
-            ->add('price', 'number', [
-                'label' => "Price",
-                'scale' => 2
-            ])
-            ->add('manufacturer', 'text', [
-                'label' => "Manufacturer"
-            ])
-            ->add('calories', 'number', [
-                'label' => "Calories"
-            ])
-            ->add('shelfLife', 'text', [
-                'label' => "Shelf life"
-            ])
-            ->add('storageTemperatureMin', 'number', [
-                'label' => "Storage temperature (Min)"
-            ])
-            ->add('storageTemperatureMax', 'number', [
-                'label' => "Storage temperature (Max)"
-            ])
-            ->add('weigth', 'number', [
-                'label' => "Weigth"
-            ])
-            ->add('measurementUnit', 'text', [
-                'label' => "Measurement unit"
-            ])
-            ->add('amountInBox', 'number', [
-                'label' => "Amount in box"
+                'label'    => 'product.image_certificate_file.label',
+                'attr'     => [
+                    'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
+                ]
             ])
             ->add('supplier', 'entity', [
                 'required'     => FALSE,
                 'class'        => "AppBundle\\Entity\\Supplier\\Supplier",
                 'choice_label' => "name",
-                'placeholder'  => "Choose supplier"
+                'label'        => 'product.supplier.label',
+                'empty_value'  => 'common.choice.placeholder'
+            ])
+            ->add('manufacturer', 'text', [
+                'required' => FALSE,
+                'label'    => 'product.manufacturer.label',
+                'attr'     => [
+                    'placeholder' => 'product.manufacturer.placeholder'
+                ]
+            ])
+            ->add('protein', 'number', [
+                'required' => FALSE,
+                'scale'    => 2,
+                'label'    => 'product.protein.label',
+                'attr'     => [
+                    'placeholder' => 'product.protein.placeholder'
+                ]
+            ])
+            ->add('fat', 'number', [
+                'required' => FALSE,
+                'scale'    => 2,
+                'label'    => 'product.fat.label',
+                'attr'     => [
+                    'placeholder' => 'product.fat.placeholder'
+                ]
+            ])
+            ->add('carbohydrate', 'number', [
+                'required' => FALSE,
+                'scale'    => 2,
+                'label'    => 'product.carbohydrate.label',
+                'attr'     => [
+                    'placeholder' => 'product.carbohydrate.placeholder'
+                ]
+            ])
+            ->add('calories', 'number', [
+                'required' => FALSE,
+                'label'    => 'product.calories.label',
+                'attr'     => [
+                    'placeholder' => 'product.calories.placeholder'
+                ]
+            ])
+            ->add('shelfLife', 'text', [
+                'required' => FALSE,
+                'label'    => 'product.shelf_life.label',
+                'attr'     => [
+                    'placeholder' => 'product.shelf_life.placeholder'
+                ]
+            ])
+            ->add('storageTemperatureMin', 'number', [
+                'required' => FALSE,
+                'label'    => 'product.storage_temperature_min.label',
+                'attr'     => [
+                    'placeholder' => 'product.storage_temperature_min.placeholder'
+                ]
+            ])
+            ->add('storageTemperatureMax', 'number', [
+                'required' => FALSE,
+                'label'    => 'product.storage_temperature_max.label',
+                'attr'     => [
+                    'placeholder' => 'product.storage_temperature_max.placeholder'
+                ]
+            ])
+            ->add('weight', 'number', [
+                'required' => FALSE,
+                'label'    => 'product.weight.label',
+                'attr'     => [
+                    'placeholder' => 'product.weight.placeholder'
+                ]
+            ])
+            ->add('measurementUnit', 'text', [
+                'required' => FALSE,
+                'label'    => 'product.measurement_unit.label',
+                'attr'     => [
+                    'placeholder' => 'product.measurement_unit.placeholder'
+                ]
+            ])
+            ->add('amountInBox', 'number', [
+                'required' => FALSE,
+                'label'    => 'product.amount_in_box.label',
+                'attr'     => [
+                    'placeholder' => 'product.amount_in_box.placeholder'
+                ]
             ])
         ;
 

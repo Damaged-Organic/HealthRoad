@@ -142,7 +142,7 @@
                         'data-rule-required': "true", 'data-msg-required': 'student.total_limit.not_blank'|trans({}, "validators"),
                         'data-mask': "#0,00",
                         'data-mask-reverse': "true",
-                        'value': ( student is defined ) ? student.totalLimit|number_format(2, ',', ' ')
+                        'value': ( student is defined ) ? student.totalLimit|number_format(2, ',', '')
                     }
                 }) }}
 
@@ -157,7 +157,7 @@
                         'data-rule-required': "true", 'data-msg-required': 'student.daily_limit.not_blank'|trans({}, "validators"),
                         'data-mask': "#0,00",
                         'data-mask-reverse': "true",
-                        'value': ( student is defined ) ? student.dailyLimit|number_format(2, ',', ' ')
+                        'value': ( student is defined ) ? student.dailyLimit|number_format(2, ',', '')
                     }
                 }) }}
 

@@ -1,6 +1,19 @@
 {# AppBundle/Resources/views/Entity/Product/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Product:item.html.twig' %}
+{% extends 'AppBundle:Entity/Product/Base:item.html.twig' %}
+
+{% block active_product_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ product.nameFull }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.name_short.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.nameShort }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

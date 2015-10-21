@@ -22,7 +22,7 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
             ->setShelfLife("10 days")
             ->setStorageTemperatureMin(15)
             ->setStorageTemperatureMax(20)
-            ->setWeigth(100)
+            ->setWeight(100)
             ->setMeasurementUnit("bottle")
             ->setAmountInBox(100)
         ;
@@ -38,7 +38,7 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
             ->setShelfLife("22 hours")
             ->setStorageTemperatureMin(10)
             ->setStorageTemperatureMax(15)
-            ->setWeigth(250)
+            ->setWeight(250)
             ->setMeasurementUnit("box")
             ->setAmountInBox(50)
         ;

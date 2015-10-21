@@ -26,8 +26,8 @@
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_BIND'), nfcTag) %}
         <td class="small-fixed bind-holder">
 
-            {% if( object.nfcTag is defined ) %}
-                {% set isBinded = ( object.nfcTag.id == nfcTag.id ) %}
+            {% if object.nfcTag is defined %}
+                {% set isBinded = ( object.nfcTag ) ? object.nfcTag.id == nfcTag.id %}
             {% else %}
                 {% set isBinded = ( object.nfcTags.contains(nfcTag) ) %}
             {% endif %}

@@ -424,6 +424,27 @@ class Student
         return $this->products;
     }
 
+    /**
+     * Shortcut to get products if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getRestrictedProducts()
+    {
+        if( $this->getNfcTag() )
+        {
+            if( $this->getNfcTag()->getVendingMachine() )
+            {
+                if( $this->getNfcTag()->getVendingMachine()->getProductVendingGroup() )
+                {
+                    return $this->getNfcTag()->getVendingMachine()->getProductVendingGroup()->getProducts();
+                }
+            }
+        }
+
+        return NULL;
+    }
+
     public function getFullName()
     {
         if( !$this->patronymic && !$this->name && !$this->surname )

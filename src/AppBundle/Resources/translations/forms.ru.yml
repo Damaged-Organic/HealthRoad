@@ -257,6 +257,76 @@ supplier:
         label:       Дата окончания контракта
         placeholder: Введите дату окончания контракта
 
+product:
+    name_full:
+        label:       Полное наименование
+        placeholder: Введите полное наименование продукта
+
+    name_short:
+        label:       Краткое наименование
+        placeholder: Введите краткое наименование
+
+    code:
+        label:       Код
+        placeholder: Введите код
+
+    price:
+        label:       Цена
+        placeholder: Введите цену продукта
+
+    image_product_file:
+        label: Изображение продукта
+
+    image_certificate_file:
+        label: Изображение сертификата
+
+    supplier:
+        label: Поставщик
+
+    manufacturer:
+        label:       Производитель
+        placeholder: Введите наименование производителя
+
+    protein:
+        label:       Белки
+        placeholder: Введите количество белков
+
+    fat:
+        label:       Жиры
+        placeholder: Введите количество жиров
+
+    carbohydrate:
+        label:       Углеводы
+        placeholder: Введите количество углеводов
+
+    calories:
+        label:       Калории
+        placeholder: Введите количество калорий
+
+    shelf_life:
+        label:       Время хранения
+        placeholder: Введите время хранения
+
+    storage_temperature_min:
+        label:       Минимальная температура
+        placeholder: Введите минимальную температуру хранения
+
+    storage_temperature_max:
+        label:       Максимальная температура
+        placeholder: Введите максимальную температуру хранения
+
+    weight:
+        label:       Вес
+        placeholder: Введите вес
+
+    measurement_unit:
+        label:       Единица измерения
+        placeholder: Введите единицу измерения
+
+    amount_in_box:
+        label:       Количество в ящике
+        placeholder: Введите количество в ящике
+
 product_vending_group:
     name:
         label:       Имя группы автоматов

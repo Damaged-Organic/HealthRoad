@@ -14,6 +14,98 @@
                     <p>{{ supplier.name }}</p>
                 </div>
             </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.name_legal.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ supplier.nameLegal }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.description.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ supplier.description }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.logo_file.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    {% if supplier.logoName %}
+                        <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.phone_number_supplier.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.phoneNumberSupplier ) ? supplier.phoneNumberSupplier : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.email_supplier.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.emailSupplier ) ? supplier.emailSupplier : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.name_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.nameContact ) ? supplier.nameContact : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.phone_number_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.phoneNumberContact ) ? supplier.phoneNumberContact : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.email_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.emailContact ) ? supplier.emailContact : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.contract_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.contractNumber ) ? supplier.contractNumber : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.contract_date_start.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.contractDateStart ) ? supplier.contractDateStart|date('d-m-Y') : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.contract_date_end.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.contractDateEnd ) ? supplier.contractDateEnd|date('d-m-Y') : '-' }}</p>
+                </div>
+            </li>
         </ul>
     </div>
 {% endblock %}

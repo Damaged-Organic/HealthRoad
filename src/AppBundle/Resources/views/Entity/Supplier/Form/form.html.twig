@@ -47,7 +47,7 @@
         {{ form_errors(form.description) }}
     </div>
 
-    <div class="file-holder">
+    <div class="file-holder {{ ( supplier is defined ) ? ( ( supplier.logoName ) ? 'active' : null ) : null }}">
         {{ form_widget(form.logoFile, {
             'id': "supplier-logo-file",
             'attr': {
@@ -62,7 +62,14 @@
                 <span class="text">{{ form.logoFile.vars.label|trans({}, 'forms') }}</span>
             </div>
         </label>
-        <figure class="photo-holder"></figure>
+
+        {% if supplier is defined and supplier.logoName %}
+            <figure class="photo-holder active">
+                <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}">
+            </figure>
+        {% else %}
+            <figure class="photo-holder"></figure>
+        {% endif %}
 
         {% for error in form.logoFile.vars.errors %}
             <span class="error-holder">{{ error.message }}</span>

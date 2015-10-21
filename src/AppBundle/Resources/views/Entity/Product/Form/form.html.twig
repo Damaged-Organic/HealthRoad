@@ -1,2 +1,337 @@
 {# AppBundle/Resources/views/Entity/Product/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="product-form" enctype="multipart/form-data">
+    <div class="field-holder">
+        {{ form_widget(form.nameFull, {
+            'id': "product-name-full",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product.name_full.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'product.name_full.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'product.name_full.length.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.nameFull
+            }
+        }) }}
+
+        {{ form_label(form.nameFull) }}
+
+        {{ form_errors(form.nameFull) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.nameShort, {
+            'id': "product-name-short",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product.name_short.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'product.name_short.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'product.name_short.length.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.nameShort
+            }
+        }) }}
+
+        {{ form_label(form.nameShort) }}
+
+        {{ form_errors(form.nameShort) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.code, {
+            'id': "product-code",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product.code.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'product.code.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'product.code.length.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.code
+            }
+        }) }}
+
+        {{ form_label(form.code) }}
+
+        {{ form_errors(form.code) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.price, {
+            'id': "product-price",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product.price.not_blank'|trans({}, "validators"),
+                'data-mask': "#0,00",
+                'data-mask-reverse': "true",
+                'value': ( product is defined ) ? product.price|number_format(2, ',', '')
+            }
+        }) }}
+
+        {{ form_label(form.price) }}
+
+        {{ form_errors(form.price) }}
+    </div>
+
+    <div class="file-holder {{ ( product is defined ) ? ( ( product.imageProductName ) ? 'active' : null ) : null }}">
+        {{ form_widget(form.imageProductFile, {
+            'id': "product-image-product-file",
+            'attr': {
+                'accept': "image/jpeg,image/png,image/gif",
+                'value': ( product is defined ) ? product.imageProductFile
+            }
+        }) }}
+
+        <label for="product-image-product-file">
+            <div class="btn-file">
+                <span class="icon hrd-upload"></span>
+                <span class="text">{{ form.imageProductFile.vars.label|trans({}, 'forms') }}</span>
+            </div>
+        </label>
+
+        {% if product is defined and product.imageProductName %}
+            <figure class="photo-holder active">
+                <img src="{{ vich_uploader_asset(product, 'imageProductFile') }}">
+            </figure>
+        {% else %}
+            <figure class="photo-holder"></figure>
+        {% endif %}
+
+        {% for error in form.imageProductFile.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="file-holder {{ ( product is defined ) ? ( ( product.imageCertificateName ) ? 'active' : null ) : null }}">
+        {{ form_widget(form.imageCertificateFile, {
+            'id': "product-image-certificate-file",
+            'attr': {
+                'accept': "image/jpeg,image/png,image/gif",
+                'value': ( product is defined ) ? product.imageCertificateFile
+            }
+        }) }}
+
+        <label for="product-image-certificate-file">
+            <div class="btn-file">
+                <span class="icon hrd-upload"></span>
+                <span class="text">{{ form.imageCertificateFile.vars.label|trans({}, 'forms') }}</span>
+            </div>
+        </label>
+
+        {% if product is defined and product.imageCertificateName %}
+            <figure class="photo-holder active">
+                <img src="{{ vich_uploader_asset(product, 'imageCertificateFile') }}">
+            </figure>
+        {% else %}
+            <figure class="photo-holder"></figure>
+        {% endif %}
+
+        {% for error in form.imageCertificateFile.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+    </div>
+
+    {% do form.supplier.setRendered %}
+
+    {% set supplier_set = ( form.supplier.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( supplier_set ) ? 'watch-parent' : null }}">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">{{ form.supplier.vars.label|trans({}, 'forms') }}</span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.supplier.vars.data ) ? form.supplier.vars.data.name : form.supplier.vars.placeholder|trans({}, 'forms') }}</span>
+            </a>
+        </div>
+
+        {% if supplier_set %}
+            <div class="btn-view">
+                <a href="{{ path('supplier_update', { 'id': form.supplier.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% for error in form.supplier.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        <li class="option-item {{ ( form.supplier.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
+                        {% for supplier in form.supplier.vars.choices %}
+                            <li class="option-item {{ ( form.supplier.vars.data ) ? ( form.supplier.vars.data.id != supplier.value ) ?: 'active' : null }}" data-option="{{ supplier.value }}">
+                                <span class="option-name">{{ supplier.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="{{ form.supplier.vars.full_name }}" value="{{ ( form.supplier.vars.data ) ? form.supplier.vars.data.id : null }}">
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.manufacturer, {
+            'id': "product-manufacturer",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'product.manufacturer.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'product.manufacturer.length.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.manufacturer
+            }
+        }) }}
+
+        {{ form_label(form.manufacturer) }}
+
+        {{ form_errors(form.manufacturer) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.protein, {
+            'id': "product-protein",
+            'attr': {
+                'data-mask': "#0,00",
+                'data-mask-reverse': "true",
+                'value': ( product is defined ) ? product.protein|number_format(2, ',', '')
+            }
+        }) }}
+
+        {{ form_label(form.protein) }}
+
+        {{ form_errors(form.protein) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.fat, {
+            'id': "product-fat",
+            'attr': {
+                'data-mask': "#0,00",
+                'data-mask-reverse': "true",
+                'value': ( product is defined ) ? product.fat|number_format(2, ',', '')
+            }
+        }) }}
+
+        {{ form_label(form.fat) }}
+
+        {{ form_errors(form.fat) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.carbohydrate, {
+            'id': "product-protein",
+            'attr': {
+                'data-mask': "#0,00",
+                'data-mask-reverse': "true",
+                'value': ( product is defined ) ? product.carbohydrate|number_format(2, ',', '')
+            }
+        }) }}
+
+        {{ form_label(form.carbohydrate) }}
+
+        {{ form_errors(form.carbohydrate) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.calories, {
+            'id': "product-calories",
+            'attr': {
+                'data-rule-min': 1, 'data-msg-min': 'product.calories.range.min'|trans({}, "validators"),
+                'data-rule-max': 1000, 'data-msg-max': 'product.calories.range.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.calories
+            }
+        }) }}
+
+        {{ form_label(form.calories) }}
+
+        {{ form_errors(form.calories) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.shelfLife, {
+            'id': "product-shelf-life",
+            'attr': {
+                'data-rule-minlength': "1", 'data-msg-minlength': 'product.shelf_life.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "200", 'data-msg-maxlength': 'product.shelf_life.length.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.shelfLife
+            }
+        }) }}
+
+        {{ form_label(form.shelfLife) }}
+
+        {{ form_errors(form.shelfLife) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.storageTemperatureMin, {
+            'id': "product-storage-temperature-min",
+            'attr': {
+                'data-rule-min': -100, 'data-msg-min': 'product.storage_temperature.range.min'|trans({}, "validators"),
+                'data-rule-max': 100, 'data-msg-max': 'product.storage_temperature.range.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.storageTemperatureMin
+            }
+        }) }}
+
+        {{ form_label(form.storageTemperatureMin) }}
+
+        {{ form_errors(form.storageTemperatureMin) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.storageTemperatureMax, {
+            'id': "product-storage-temperature-max",
+            'attr': {
+                'data-rule-min': -100, 'data-msg-min': 'product.storage_temperature.range.min'|trans({}, "validators"),
+                'data-rule-max': 100, 'data-msg-max': 'product.storage_temperature.range.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.storageTemperatureMax
+            }
+        }) }}
+
+        {{ form_label(form.storageTemperatureMax) }}
+
+        {{ form_errors(form.storageTemperatureMax) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.weight, {
+            'id': "product-weight",
+            'attr': {
+                'data-rule-min': 1, 'data-msg-min': 'product.weight.range.min'|trans({}, "validators"),
+                'data-rule-max': 10000, 'data-msg-max': 'product.weight.range.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.weight
+            }
+        }) }}
+
+        {{ form_label(form.weight) }}
+
+        {{ form_errors(form.weight) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.measurementUnit, {
+            'id': "product-measurement-unit",
+            'attr': {
+                'data-rule-minlength': "1", 'data-msg-minlength': 'product.measurement_unit.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "50", 'data-msg-maxlength': 'product.measurement_unit.length.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.measurementUnit
+            }
+        }) }}
+
+        {{ form_label(form.measurementUnit) }}
+
+        {{ form_errors(form.measurementUnit) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.amountInBox, {
+            'id': "product-amount-in-box",
+            'attr': {
+                'data-rule-min': 1, 'data-msg-min': 'product.amount_in_box.range.min'|trans({}, "validators"),
+                'data-rule-max': 10000, 'data-msg-max': 'product.amount_in_box.range.max'|trans({}, "validators"),
+                'value': ( product is defined ) ? product.amountInBox
+            }
+        }) }}
+
+        {{ form_label(form.amountInBox) }}
+
+        {{ form_errors(form.amountInBox) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

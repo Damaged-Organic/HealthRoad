@@ -7,7 +7,7 @@
 </td>
 <td>
     <span>
-        {{ ( student.school ) ? student.school.name  : '-'  }}
+        {{ ( student.nfcTag ) ? ( student.nfcTag.vendingMachine ) ? ( student.nfcTag.vendingMachine.school ) ? student.nfcTag.vendingMachine.school.name : '-' : '-' : '-'  }}
     </span>
 </td>
 <td>
