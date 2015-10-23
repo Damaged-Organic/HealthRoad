@@ -6,6 +6,11 @@
 {% block data %}
     <div id="read-data-holder">
         <ul>
+
+            <div class="separator-holder">
+                <h2>Личные данные</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'student.surname.label'|trans({}, 'forms') }}</span>
@@ -43,7 +48,7 @@
                     <span>{{ 'student.dateOfBirth.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
-                    <p>{{ student.dateOfBirth }}</p>
+                    <p>{{ student.dateOfBirth|date('d-m-Y') }}</p>
                 </div>
             </li>
             <li>
@@ -54,6 +59,11 @@
                     <p>{{ ( student.school ) ? student.school.name : '-' }}</p>
                 </div>
             </li>
+
+            <div class="separator-holder">
+                <h2>Баланс</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'student.total_limit.label'|trans({}, 'forms') }}</span>

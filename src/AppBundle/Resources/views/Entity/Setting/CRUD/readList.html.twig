@@ -1,17 +1,43 @@
 {# AppBundle/Resources/views/Entity/Setting/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/Setting:list.html.twig' %}
+{% extends 'AppBundle:Entity/Setting/Base:list.html.twig' %}
+
+{% block active_setting_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    <h3>Settings Decimal</h3>
-    <ul class="tags">
-        {% for settingDecimal in setting.settingsDecimal %}
-            <li>{{ settingDecimal.name ~ ' : ' ~ settingDecimal.settingValue }}</li>
-        {% endfor %}
-    </ul>
-    <h3>Settings String</h3>
-    <ul class="tags">
-        {% for settingString in setting.settingsString %}
-            <li>{{ settingString.name ~ ' : ' ~ settingString.settingValue }}</li>
-        {% endfor %}
-    </ul>
+    <div id="read-data-holder">
+
+        <div class="separator-holder">
+            <h2>Десятичные значения</h2>
+        </div>
+
+        <ul>
+            {% for settingDecimal in setting.settingsDecimal %}
+                <li>
+                    <div class="item key">
+                        <span>{{ settingDecimal.name }}</span>
+                    </div>
+                    <div class="item value">
+                        <p>{{ settingDecimal.settingValue }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="separator-holder">
+            <h2>Строковые значения</h2>
+        </div>
+
+        <ul>
+            {% for settingString in setting.settingsString %}
+                <li>
+                    <div class="item key">
+                        <span>{{ settingString.name }}</span>
+                    </div>
+                    <div class="item value">
+                        <p>{{ settingString.settingValue }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

@@ -2,6 +2,11 @@
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="product-form" enctype="multipart/form-data">
+
+    <div class="separator-holder">
+        <h2>Данные продукта</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.nameFull, {
             'id': "product-name-full",
@@ -66,40 +71,40 @@
         {{ form_errors(form.price) }}
     </div>
 
-    <div class="file-holder {{ ( product is defined ) ? ( ( product.imageProductName ) ? 'active' : null ) : null }}">
-        {{ form_widget(form.imageProductFile, {
-            'id': "product-image-product-file",
-            'attr': {
-                'accept': "image/jpeg,image/png,image/gif",
-                'value': ( product is defined ) ? product.imageProductFile
-            }
-        }) }}
+    <div class="file-holder">
+        <input type="file" name="{{ form.uploadedProductImages.vars.full_name }}[]" value="" id="product-image-product-file" multiple="multiple">
 
         <label for="product-image-product-file">
             <div class="btn-file">
                 <span class="icon hrd-upload"></span>
-                <span class="text">{{ form.imageProductFile.vars.label|trans({}, 'forms') }}</span>
+                <span class="text">{{ form.uploadedProductImages.vars.label|trans({}, 'forms') }}</span>
             </div>
         </label>
 
-        {% if product is defined and product.imageProductName %}
-            <figure class="photo-holder active">
-                <img src="{{ vich_uploader_asset(product, 'imageProductFile') }}">
-            </figure>
+        {% if product is defined and product.productImages|length != 0 %}
+            <div class="photo-list-holder active">
+
+                {% for productImage in product.productImages %}
+                    <figure class='photo-holder'>
+                        <img src="{{ vich_uploader_asset(productImage, 'imageProductFile') }}">
+                        <span class="size">{{ productImage.imageProductName }}</span>
+                    </figure>
+                {% endfor %}
+
+            </div>
         {% else %}
-            <figure class="photo-holder"></figure>
+            <div class="photo-list-holder"></div>
         {% endif %}
 
-        {% for error in form.imageProductFile.vars.errors %}
+        {% for error in form.uploadedProductImages.vars.errors %}
             <span class="error-holder">{{ error.message }}</span>
         {% endfor %}
     </div>
 
-    <div class="file-holder {{ ( product is defined ) ? ( ( product.imageCertificateName ) ? 'active' : null ) : null }}">
+    <div class="file-holder">
         {{ form_widget(form.imageCertificateFile, {
             'id': "product-image-certificate-file",
             'attr': {
-                'accept': "image/jpeg,image/png,image/gif",
                 'value': ( product is defined ) ? product.imageCertificateFile
             }
         }) }}
@@ -112,11 +117,14 @@
         </label>
 
         {% if product is defined and product.imageCertificateName %}
-            <figure class="photo-holder active">
-                <img src="{{ vich_uploader_asset(product, 'imageCertificateFile') }}">
-            </figure>
+            <div class="photo-list-holder active">
+                <figure class='photo-holder'>
+                    <img src="{{ vich_uploader_asset(product, 'imageCertificateFile') }}">
+                    <span class="size">{{ product.imageCertificateName }}</span>
+                </figure>
+            </div>
         {% else %}
-            <figure class="photo-holder"></figure>
+            <div class="photo-list-holder"></div>
         {% endif %}
 
         {% for error in form.imageCertificateFile.vars.errors %}
@@ -183,6 +191,10 @@
         {{ form_errors(form.manufacturer) }}
     </div>
 
+    <div class="separator-holder">
+        <h2>Энергетическая ценность</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.protein, {
             'id': "product-protein",
@@ -241,6 +253,10 @@
         {{ form_label(form.calories) }}
 
         {{ form_errors(form.calories) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Логистические данные</h2>
     </div>
 
     <div class="field-holder">

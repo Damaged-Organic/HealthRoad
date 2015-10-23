@@ -6,6 +6,11 @@
 {% block data %}
     <div id="read-data-holder">
         <ul>
+
+            <div class="separator-holder">
+                <h2>Системные данные</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'customer.phone_number.label'|trans({}, 'forms') }}</span>
@@ -14,6 +19,11 @@
                     <p>{{ customer.phoneNumber }}</p>
                 </div>
             </li>
+
+            <div class="separator-holder">
+                <h2>Личные данные</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'customer.surname.label'|trans({}, 'forms') }}</span>

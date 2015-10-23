@@ -6,6 +6,11 @@
 {% block data %}
     <div id="read-data-holder">
         <ul>
+
+            <div class="separator-holder">
+                <h2>Системные данные</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'employee.username.label'|trans({}, 'forms') }}</span>
@@ -30,6 +35,11 @@
                     <span class="icon {{ ( employee.isEnabled ) ? 'hrd-accept' : 'hrd-cancel'  }}"></span>
                 </div>
             </li>
+
+            <div class="separator-holder">
+                <h2>Личные данные</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'employee.surname.label'|trans({}, 'forms') }}</span>

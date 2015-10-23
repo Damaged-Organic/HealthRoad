@@ -36,6 +36,13 @@ class Product implements SyncProductPropertiesInterface
     protected $productCategory;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product\ProductImage", mappedBy="product", cascade={"persist", "remove"})
+     */
+    protected $productImages;
+
+    protected $uploadedProductImages;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Supplier\Supplier", inversedBy="products")
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
@@ -101,21 +108,6 @@ class Product implements SyncProductPropertiesInterface
      * @CustomAssert\IsPriceConstraint
      */
     protected $price;
-
-    /**
-     * @Assert\File(
-     *     maxSize="2M",
-     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
-     * )
-     *
-     * @Vich\UploadableField(mapping="product_image", fileNameProperty="imageProductName")
-     */
-    protected $imageProductFile;
-
-    /**
-     * @ORM\Column(type="string", length=250, nullable=true)
-     */
-    protected $imageProductName;
 
     /**
      * @Assert\File(
@@ -259,25 +251,14 @@ class Product implements SyncProductPropertiesInterface
      */
     public function __construct()
     {
-        $this->productVendingGroups = new ArrayCollection;
-        $this->students             = new ArrayCollection;
-        $this->purchases            = new ArrayCollection;
+        $this->productImages         = new ArrayCollection;
+        $this->uploadedProductImages = new ArrayCollection;
+        $this->productVendingGroups  = new ArrayCollection;
+        $this->students              = new ArrayCollection;
+        $this->purchases             = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
-
-    public function setImageProductFile(File $imageProduct = NULL)
-    {
-        $this->imageProductFile = $imageProduct;
-
-        if( $imageProduct )
-            $this->updatedAt = new DateTime('now');
-    }
-
-    public function getImageProductFile()
-    {
-        return $this->imageProductFile;
-    }
 
     public function setImageCertificateFile(File $imageCertificate = NULL)
     {
@@ -384,29 +365,6 @@ class Product implements SyncProductPropertiesInterface
     public function getPrice()
     {
         return $this->price;
-    }
-
-    /**
-     * Set imageProductName
-     *
-     * @param string $imageProductName
-     * @return Product
-     */
-    public function setImageProductName($imageProductName)
-    {
-        $this->imageProductName = $imageProductName;
-
-        return $this;
-    }
-
-    /**
-     * Get imageProductName
-     *
-     * @return string 
-     */
-    public function getImageProductName()
-    {
-        return $this->imageProductName;
     }
 
     /**
@@ -729,6 +687,59 @@ class Product implements SyncProductPropertiesInterface
     public function getProductCategory()
     {
         return $this->productCategory;
+    }
+
+    /**
+     * Add productImage
+     *
+     * @param \AppBundle\Entity\Product\ProductImage $productImage
+     * @return Product
+     */
+    public function addProductImage(\AppBundle\Entity\Product\ProductImage $productImage)
+    {
+        $productImage->setProduct($this);
+        $this->productImages[] = $productImage;
+
+        return $this;
+    }
+
+    /**
+     * Remove productImages
+     *
+     * @param \AppBundle\Entity\Product\ProductImage $productImages
+     */
+    public function removeProductImage(\AppBundle\Entity\Product\ProductImage $productImages)
+    {
+        $this->productImages->removeElement($productImages);
+    }
+
+    /**
+     * Get productImages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProductImages()
+    {
+        return $this->productImages;
+    }
+
+    public function addUploadedProductImage($image)
+    {
+        $this->uploadedProductImages[] = $image;
+
+        return $this;
+    }
+
+    public function removeUploadedProductImage($image)
+    {
+        $this->uploadedProductImages->removeElement($image);
+
+        return $this;
+    }
+
+    public function getUploadedProductImages()
+    {
+        return $this->uploadedProductImages;
     }
 
     /**

@@ -17,6 +17,7 @@ class SettingType extends AbstractType
             ->add('settingsString', 'collection', [
                 'type' => new SettingStringType
             ])
+            ->add('update', 'submit', ['label' => 'common.update.label']);
         ;
     }
 

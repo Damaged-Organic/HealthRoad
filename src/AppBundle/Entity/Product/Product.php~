@@ -36,6 +36,11 @@ class Product implements SyncProductPropertiesInterface
     protected $productCategory;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product\ProductImage", mappedBy="product")
+     */
+    protected $productImages;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Supplier\Supplier", inversedBy="products")
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
@@ -101,21 +106,6 @@ class Product implements SyncProductPropertiesInterface
      * @CustomAssert\IsPriceConstraint
      */
     protected $price;
-
-    /**
-     * @Assert\File(
-     *     maxSize="2M",
-     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
-     * )
-     *
-     * @Vich\UploadableField(mapping="product_image", fileNameProperty="imageProductName")
-     */
-    protected $imageProductFile;
-
-    /**
-     * @ORM\Column(type="string", length=250, nullable=true)
-     */
-    protected $imageProductName;
 
     /**
      * @Assert\File(
@@ -259,25 +249,13 @@ class Product implements SyncProductPropertiesInterface
      */
     public function __construct()
     {
+        $this->productImages        = new ArrayCollection;
         $this->productVendingGroups = new ArrayCollection;
         $this->students             = new ArrayCollection;
         $this->purchases            = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
-
-    public function setImageProductFile(File $imageProduct = NULL)
-    {
-        $this->imageProductFile = $imageProduct;
-
-        if( $imageProduct )
-            $this->updatedAt = new DateTime('now');
-    }
-
-    public function getImageProductFile()
-    {
-        return $this->imageProductFile;
-    }
 
     public function setImageCertificateFile(File $imageCertificate = NULL)
     {
@@ -384,29 +362,6 @@ class Product implements SyncProductPropertiesInterface
     public function getPrice()
     {
         return $this->price;
-    }
-
-    /**
-     * Set imageProductName
-     *
-     * @param string $imageProductName
-     * @return Product
-     */
-    public function setImageProductName($imageProductName)
-    {
-        $this->imageProductName = $imageProductName;
-
-        return $this;
-    }
-
-    /**
-     * Get imageProductName
-     *
-     * @return string 
-     */
-    public function getImageProductName()
-    {
-        return $this->imageProductName;
     }
 
     /**
@@ -617,26 +572,26 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /**
-     * Set weigth
+     * Set weight
      *
-     * @param integer $weigth
+     * @param integer $weight
      * @return Product
      */
-    public function setWeigth($weigth)
+    public function setWeight($weight)
     {
-        $this->weigth = $weigth;
+        $this->weight = $weight;
 
         return $this;
     }
 
     /**
-     * Get weigth
+     * Get weight
      *
-     * @return integer 
+     * @return integer
      */
-    public function getWeigth()
+    public function getWeight()
     {
-        return $this->weigth;
+        return $this->weight;
     }
 
     /**

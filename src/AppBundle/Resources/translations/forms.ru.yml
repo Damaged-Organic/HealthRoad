@@ -275,7 +275,7 @@ product:
         placeholder: Введите цену продукта
 
     image_product_file:
-        label: Изображение продукта
+        label: Изображения продукта
 
     image_certificate_file:
         label: Изображение сертификата

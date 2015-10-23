@@ -2,14 +2,18 @@
 // AppBundle/Controller/CRUD/ProductController.php
 namespace AppBundle\Controller\CRUD;
 
+use DateTime;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Product\Product,
+    AppBundle\Entity\Product\ProductImage,
     AppBundle\Form\Type\ProductType,
     AppBundle\Security\Authorization\Voter\ProductVoter,
     AppBundle\Service\Security\ProductBoundlessAccess;
@@ -88,6 +92,8 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
+        $_uploadedProductImageValidator = $this->get('app.validator.uploaded_product_image');
+
         $productType = new ProductType($_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
 
         $form = $this->createForm($productType, $product = new Product, [
@@ -96,7 +102,7 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( !($form->isValid()) ) {
+        if( !($form->isValid() && $_uploadedProductImageValidator->validate($form))  ) {
             $_breadcrumbs->add('product_read')->add('product_create');
 
             return $this->render('AppBundle:Entity/Product/CRUD:createItem.html.twig', [
@@ -104,6 +110,24 @@ class ProductController extends Controller implements UserRoleListInterface
             ]);
         } else {
             $_manager = $this->getDoctrine()->getManager();
+
+            // TODO: This large logic does not belong to Controller
+            if( array_filter($form->getData()->getUploadedProductImages()) )
+            {
+                foreach ($form->getData()->getUploadedProductImages() as $uploadedProductImage)
+                {
+                    $productImage = (new ProductImage)
+                        ->setImageProductFile($uploadedProductImage)
+                        ->setUpdatedAt(new DateTime)
+                    ;
+
+                    $product->addProductImage($productImage);
+
+                    $_manager->persist($productImage);
+                }
+
+                $_manager->persist($product);
+            }
 
             $_manager->persist($product);
             $_manager->flush();
@@ -136,6 +160,8 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
+        $_uploadedProductImageValidator = $this->get('app.validator.uploaded_product_image');
+
         $product = $_manager->getRepository('AppBundle:Product\Product')->find($id);
 
         if( !$product )
@@ -155,8 +181,33 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( $form->isValid() )
+        if( $form->isValid() && $_uploadedProductImageValidator->validate($form) )
         {
+            // TODO: This large logic does not belong to Controller
+            if( array_filter($form->getData()->getUploadedProductImages()) )
+            {
+                foreach( $product->getProductImages() as $productImage )
+                {
+                    $product->removeProductImage($productImage);
+
+                    $_manager->remove($productImage);
+                }
+
+                foreach ($form->getData()->getUploadedProductImages() as $uploadedProductImage)
+                {
+                    $productImage = (new ProductImage)
+                        ->setImageProductFile($uploadedProductImage)
+                        ->setUpdatedAt(new DateTime)
+                    ;
+
+                    $product->addProductImage($productImage);
+
+                    $_manager->persist($productImage);
+                }
+
+                $_manager->persist($product);
+            }
+
             $_manager->flush();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {

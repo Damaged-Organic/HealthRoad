@@ -432,6 +432,13 @@ a{
 				}
 			}
 		}
+		&.sprtr-h{
+			display: block;
+			height: 4px;
+			background: linear-gradient(-125deg, @grey, lighten(@grey, 5%));
+			overflow: hidden;
+			
+		}
 		&:hover,
 		&.active{
 			a{
@@ -589,6 +596,38 @@ a{
 				}
 			}
 		}
+		&.photo-list-holder{
+			.item{
+				width: 240px;
+				height: 140px;
+				&.key{
+					span{
+						background: @black;
+						line-height: 140px;
+						padding: 0 0 0 20px;
+					}
+				}
+				&.value{
+					width: ~"calc(100% - 260px)";
+					height: auto;
+					padding: 0;
+					margin-left: 20px;
+					figure{
+						width: auto;
+						height: 140px;
+						float: left;
+						margin: 0 20px 20px 0;
+						border: 1px solid darken(@black, 100%);
+						box-sizing: border-box;
+						overflow: hidden;
+						img{
+							width: auto;
+							height: 100%;
+						}
+					}
+				}
+			}		
+		}
 	}
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -724,8 +763,40 @@ a{
 /*	icons end 								  				*/
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-
-
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	sprtr start 								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.sprtr-h{
+	display: block;
+	width: 100%;
+	height: 4px;
+	background: @green;
+	overflow: hidden;
+}
+.separator-holder{
+	width: 100%;
+	position: relative;
+	background: transparent;
+	margin: 0 0 20px;
+	overflow: hidden;
+	h2{
+		padding: 20px;
+		color: @grey;
+	}
+	&:before{
+		display: block;
+		width: 4px;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		content: "";
+		background: @green;
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	sprtr end 								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

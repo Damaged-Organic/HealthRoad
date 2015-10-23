@@ -2,6 +2,11 @@
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="school-form">
+
+    <div class="separator-holder">
+        <h2>Данные школы</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.name, {
             'id': "school-name",
@@ -121,6 +126,10 @@
         {{ form_errors(form.emailSchool) }}
     </div>
 
+    <div class="separator-holder">
+        <h2>Данные директора</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.nameHeadmaster, {
             'id': "school-name-headmaster",
@@ -162,6 +171,10 @@
         {{ form_label(form.emailHeadmaster) }}
 
         {{ form_errors(form.emailHeadmaster) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Данные контактного лица</h2>
     </div>
 
     <div class="field-holder">

@@ -75,9 +75,9 @@ gulp.task("images", function(){
 });
 
 gulp.task("watcher", function(){
-	//gulp.watch(cfg.jsPath + "**/*.js", ["js"]);
+	gulp.watch(cfg.jsPath + "**/*.js", ["js"]);
 	gulp.watch(cfg.cssPath + "**/*.less", ["css"]);
 	gulp.watch(cfg.imagePath + "**/*.*", ["images"]);
 });
 
-gulp.task("default", ["fonts", "css", "images", "watcher"]);
+gulp.task("default", ["fonts", "css", "images", "js"]);

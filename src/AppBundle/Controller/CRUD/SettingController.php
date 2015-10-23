@@ -17,7 +17,7 @@ class SettingController extends Controller
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/setting/read",
+     *      "/setting",
      *      name="setting_read",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
@@ -87,7 +87,8 @@ class SettingController extends Controller
         $_breadcrumbs->add('setting_read')->add('setting_update');
 
         return $this->render('AppBundle:Entity/Setting/CRUD:updateList.html.twig', [
-            'form' => $form->createView()
+            'form'    => $form->createView(),
+            'setting' => $setting
         ]);
     }
 }

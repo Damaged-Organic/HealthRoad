@@ -33,11 +33,15 @@ settings:
         setting_key:
             unique: Параметр с таким ключом уже существует
 
+    decimal:
+        setting_value:
+            not_blank: Должно быть указано значение параметра
+
     string:
        setting_value:
            not_blank: Должно быть указано значение параметра
            length:
-               min: Значение параметра не должно быть короче 2 символов
+               min: Значение параметра не должно быть короче 1 символа
                max: Значение параметра не должно быть длиннее 250 символов
 
 employee:
@@ -265,6 +269,9 @@ product:
 
     price:
         not_blank: Должна быть указана цена продукта
+
+    uploaded_product_images:
+        not_blank: К продукту необходимо прикрепить изображение
 
     manufacturer:
         length:

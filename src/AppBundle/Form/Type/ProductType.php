@@ -45,13 +45,6 @@ class ProductType extends AbstractType
                     'placeholder' => 'product.price.placeholder'
                 ]
             ])
-            ->add('imageProductFile', 'file', [
-                'required' => FALSE,
-                'label'    => 'product.image_product_file.label',
-                'attr'     => [
-                    'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
-                ]
-            ])
             ->add('imageCertificateFile', 'file', [
                 'required' => FALSE,
                 'label'    => 'product.image_certificate_file.label',
@@ -157,12 +150,32 @@ class ProductType extends AbstractType
 
                 if( $productType && $productType->getId() !== NULL )
                 {
-                    $form->add('update', 'submit', ['label' => 'common.update.label']);
+                    $form
+                        ->add('uploadedProductImages', 'file', [
+                            'required' => FALSE,
+                            'label'    => 'product.image_product_file.label',
+                            'attr'     => [
+                                'accept'   => 'image/png, image/jpeg, image/pjpeg, image/gif',
+                                'multiple' => TRUE
+                            ]
+                        ])
+                        ->add('update', 'submit', ['label' => 'common.update.label'])
+                    ;
 
                     if( $this->boundlessAccess )
                         $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', 'submit', ['label' => 'common.create.label']);
+                    $form
+                        ->add('uploadedProductImages', 'file', [
+                            'required' => TRUE,
+                            'label'    => 'product.image_product_file.label',
+                            'attr'     => [
+                                'accept'   => 'image/png, image/jpeg, image/pjpeg, image/gif',
+                                'multiple' => TRUE
+                            ]
+                        ])
+                        ->add('create', 'submit', ['label' => 'common.create.label'])
+                    ;
 
                     if( $this->boundlessAccess )
                         $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
@@ -175,7 +188,8 @@ class ProductType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'         => 'AppBundle\Entity\Product\Product',
-            'translation_domain' => 'forms'
+            'translation_domain' => 'forms',
+            'cascade_validation' => TRUE,
         ]);
     }
 

@@ -82,19 +82,13 @@ form{
 	& > p{
 		padding-bottom: 10px;
 	}
-	&.read-only{
-		input, label {
-			  pointer-events: none;
-		}
-	}
 }
 
 input[type="text"],
 input[type="tel"],
 input[type="email"],
 input[type="number"],
-input[type="password"],
-input[type="date"]{
+input[type="password"]{
 	display: block;
 	width: ~"calc(100% - 240px)";
 	font-family: "Ubuntu", sans-serif;
@@ -232,6 +226,64 @@ input[type="radio"]{
 				transform: translateX(-50%) translateY(-50%) scale(.2);
 				background: @green;
 			}
+		}
+	}
+}
+
+textarea{
+	display: block;
+	width: 100%;
+	min-height: 200px;
+	max-height: 200px;
+	resize: none;
+	border: 1px solid darken(@black, 100%);
+	box-sizing: border-box;
+	font-family: "Ubuntu", sans-serif;
+	color: @black;
+	font-size: .875em;
+	padding: 70px 10px 0;
+	transition: all .5s @easing;
+	overflow: hidden;
+	& + label,
+	& + label.error + label{
+		display: block;
+		width: 100%;
+		height: 60px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		border-bottom: 1px solid darken(@black, 100%);
+		background: @black;
+		font-family: "Ubuntu", sans-serif;
+		color: @white;
+		font-size: .875em;
+		line-height: 60px;
+		padding-left: 20px;
+		transition: all .5s @easing;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+	& + label.error{
+		position: static;
+		line-height: 30px;
+		height: auto;
+		font-size: .875em;
+		background: transparent;
+		color: @errorRedDark;
+		border-bottom: none;
+	}
+	&:hover,
+	&:focus{
+		border: 1px solid @green;
+		& + label,
+		& + label.error + label{
+			background: @green;
+			border-bottom: 1px solid @green;
+		}
+		& + label.error{
+			background: transparent;
+			color: @errorRedDark;
+			border-bottom: none;
 		}
 	}
 }
@@ -499,40 +551,46 @@ button[type="submit"]{
 			}
 		}
 	}
-	& > .photo-holder{
-		width: auto;
-		height: 140px;
-		float: left;
-		position: relative;
+	& > .photo-list-holder{
+		width: ~"calc(100% - 260px)";
 		margin-left: 20px;
-		border: 1px solid darken(@black, 100%);
-		box-sizing: border-box;
-		opacity: 0;
-		transition: all .5s @easing;
+		float: left;
 		overflow: hidden;
-		img{
+		.photo-holder{
 			width: auto;
-			height: 100%;
-			overflow: hidden;
-		}
-		& > .size{
-			display: inline-block;
-			position: absolute;
-			right: 0;
-			bottom: 0;
-			padding: 5px;
-			color: @white;
-			font-size: .875em;
-			background: @black;
-			border-top: 1px solid darken(@black, 100%);
-			border-left: 1px solid darken(@black, 100%);
+			height: 140px;
+			float: left;
+			position: relative;
+			margin: 0 20px 20px 0;
+			border: 1px solid darken(@black, 100%);
 			box-sizing: border-box;
+			opacity: 0;
+			transition: all .5s @easing;
 			overflow: hidden;
+			img{
+				width: auto;
+				height: 100%;
+				overflow: hidden;
+			}
+			& > .size{
+				display: inline-block;
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				padding: 5px;
+				color: @white;
+				font-size: .875em;
+				background: @black;
+				border-top: 1px solid darken(@black, 100%);
+				border-left: 1px solid darken(@black, 100%);
+				box-sizing: border-box;
+				overflow: hidden;
+			}
 		}
-	}
-	&.active{
-		& > .photo-holder{
-			opacity: 1;
+		&.active{
+			.photo-holder{
+				opacity: 1;
+			}
 		}
 	}
 	.error-holder{

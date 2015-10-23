@@ -1,0 +1,39 @@
+{# AppBundle/Resources/views/Entity/Setting/layout.html.twig #}
+{% extends 'AppBundle:Dashboard/State:index.html.twig' %}
+
+{% block title %}
+    {{ 'setting_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/settings.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+
+        {% block variable %}
+            <div class="outer scrollable-holder">
+                <div class="inner scrollable">
+
+                    {% block data %}{% endblock %}
+
+                </div>
+            </div>
+            <div class="bottom-info-panel">
+
+                {% block action_bottom %}{% endblock %}
+
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/settings.bundle.min.js') }}"></script>
+{% endblock %}

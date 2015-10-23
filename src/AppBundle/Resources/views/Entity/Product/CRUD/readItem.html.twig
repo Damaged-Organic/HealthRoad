@@ -6,12 +6,183 @@
 {% block data %}
     <div id="read-data-holder">
         <ul>
+
+            <div class="separator-holder">
+                <h2>Данные продукта</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.name_full.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.nameFull }}</p>
+                </div>
+            </li>
             <li>
                 <div class="item key">
                     <span>{{ 'product.name_short.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
                     <p>{{ product.nameShort }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.code }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.price.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.price }}</p>
+                </div>
+            </li>
+            <li class="photo-list-holder">
+                <div class="item key">
+                    <span>{{ 'product.image_product_file.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+
+                    {% if product.productImages|length != 0 %}
+
+                        {% for productImage in product.productImages %}
+                            <figure>
+                                <img src="{{ vich_uploader_asset(productImage, 'imageProductFile') }}" alt="{{ productImage.imageProductName }}">
+                            </figure>
+                        {% endfor %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+
+                </div>
+            </li>
+            <li class="photo-list-holder">
+                <div class="item key">
+                    <span>{{ 'product.image_certificate_file.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+
+                    {% if product.imageCertificateFile %}
+                        <figure>
+                            <img src="{{ vich_uploader_asset(product, 'imageCertificateFile') }}" alt="{{ product.imageCertificateName }}">
+                        </figure>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.supplier.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.supplier ) ? product.supplier.name : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.manufacturer.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.manufacturer ) ? product.manufacturer : '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Энергетическая ценность</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.protein.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.protein ) ? product.protein : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.fat.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.fat ) ? product.fat : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.carbohydrate.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.carbohydrate ) ? product.carbohydrate : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.calories.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.calories ) ? product.calories : '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Логистические данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.shelf_life.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.shelfLife ) ? product.shelfLife : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.storage_temperature_min.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.storageTemperatureMin ) ? product.storageTemperatureMin : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.storage_temperature_max.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.storageTemperatureMax ) ? product.storageTemperatureMax : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.weight.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.weight ) ? product.weight : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.measurement_unit.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.measurementUnit ) ? product.measurementUnit : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.amount_in_box.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.amountInBox ) ? product.amountInBox : '-' }}</p>
                 </div>
             </li>
         </ul>

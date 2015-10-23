@@ -2,6 +2,11 @@
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="vending-machine-form">
+
+    <div class="separator-holder">
+        <h2>Параметры</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.serial, {
             'id': "vending-machine-serial",
@@ -164,6 +169,10 @@
         {{ form_label(form.numberSprings) }}
 
         {{ form_errors(form.numberSprings) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Учетные данные для API</h2>
     </div>
 
     <div class="field-holder">

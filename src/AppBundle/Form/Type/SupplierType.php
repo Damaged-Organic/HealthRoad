@@ -32,7 +32,7 @@ class SupplierType extends AbstractType
                     'placeholder' => 'supplier.name_legal.placeholder'
                 ]
             ])
-            ->add('description', 'text', [
+            ->add('description', 'textarea', [
                 'label' => 'supplier.description.label',
                 'attr'  => [
                     'placeholder' => 'supplier.description.placeholder'

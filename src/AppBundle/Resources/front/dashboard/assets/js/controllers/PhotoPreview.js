@@ -1,5 +1,7 @@
 "use strict";
 
+import PhotoList from "../view/photoList";
+
 const isFileReader = window.File && window.FileReader && window.FileList && window.Blob;
 
 class PhotoPreview{
@@ -9,43 +11,56 @@ class PhotoPreview{
 	initialize(){
 		if(!isFileReader) return;
 		this._events();
+		this.files = [];
 		this.holder = [];
+		this.photosHolder = [];
+		this.photoList = new PhotoList;
 	}
 	_events(){
-		$("input[type=file]").on("change", $.proxy(this.handleFile, this));
+		$("input[type=file]").on("change", $.proxy(this.handleFiles, this));
 	}
-	handleFile(e){
-		e.stopPropagation();
-		e.preventDefault();
-		let file = e.target.files[0],
-			sizeInMB = 0;
+	handleFiles(e){
+		let target = $(e.target),
+			files = e.target.files,
+			file = {},
+			fileSize = 0,
+			key;
 
-		this.holder = $(e.target).closest(".file-holder");
+		this.files = [];
 
-		if(!file.type || !file.type.match(/image.*/)) return;
+		for(key in files){			
+			if(typeof files[key] !== "object") continue;
+			file = files[key];
+			fileSize = this.convertToMBytes(file.size);
+			this.files.push({file, fileSize, fileUrl: ""});
+		}
+		this.holder = target.closest(".file-holder");
+		this.photosHolder = this.holder.find(".photo-list-holder");
+		this.photosHolder.empty();
 		this.holder.find(".error-holder").empty();
-		sizeInMB = this.convertToMBytes(file.size);
-		this.readFile(file, sizeInMB);
+		this.readFiles();
+
+		return false;
 	}
 	convertToMBytes(bytes, mb){
 		if(bytes <= 0) return;
 		return Math.max(bytes / 1024 / 1024, 0.1).toFixed(2) + " MB";
 	}
-	readFile(file, size){
-		let self = this,
+	readFiles(){
+		let self = this, reader, key;
+
+		for(key in this.files){
 			reader = new FileReader();
 
-		reader.onload = function(e){
-			self.showFile(e.target.result, size);
+			reader.onload = (function(file, fileSize){
+				return function(e){
+					self.photoList.showPhoto(self.photosHolder, e.target.result, fileSize);
+				}
+			})(this.files[key].file, this.files[key].fileSize);
+			reader.readAsDataURL(this.files[key].file);
 		}
-		reader.readAsDataURL(file);
 	}
-	showFile(src, size){
-		this.holder.find(".photo-holder").html(`
-			<img src="${ src }" alt="preview">
-			<span class="size">${ size }</span>
-		`).andSelf().addClass("active");
-	}
+
 }
 
 export default PhotoPreview;

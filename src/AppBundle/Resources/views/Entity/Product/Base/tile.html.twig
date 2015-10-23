@@ -18,25 +18,33 @@
                             <span class="unique-id">{{ product.id }}</span>
                             <figure>
 
-                                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) %}
-                                    <a href="{{ path('product_update', { 'id': product.id }) }}">
-                                        <img src="{{ vich_uploader_asset(product, 'imageProductFile') }}" alt="{{ product.nameShort }}">
-                                    </a>
-                                {% else %}
-                                    <a href="{{ path('product_read', { 'id': product.id }) }}">
-                                        <img src="{{ vich_uploader_asset(product, 'imageProductFile') }}" alt="{{ product.nameShort }}">
-                                    </a>
-                                {% endif %}
+                                {% set path = ( is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) )
+                                        ? 'product_update'
+                                        : 'product_read' %}
+
+                                {% set image = ( product.productImages.0 is defined )
+                                        ? vich_uploader_asset(product.productImages.0, 'imageProductFile')
+                                        : asset('bundles/app/dashboard/images/no-image.jpg') %}
+
+                                <a href="{{ path(path, { 'id': product.id }) }}">
+                                    <img src="{{ image }}" alt="{{ product.nameShort }}">
+                                </a>
 
                             </figure>
                             <div class="product-info">
                                 <h2>
-                                    {{ product.code ~ ":" ~ product.nameShort }}
+                                    {{ product.nameShort }}
                                 </h2>
                                 <p>
                                     {{ product.nameFull }}
                                 </p>
                                 <ul>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.code.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.code ) ? product.code : '-' }}
+                                        </span>
+                                    </li>
                                     <li>
                                         <span class="item">
                                             <span>{{ 'product.supplier.label'|trans({}, 'forms') }}:</span>
@@ -45,26 +53,8 @@
                                     </li>
                                     <li>
                                         <span class="item">
-                                            <span>{{ 'product.protein.label'|trans({}, 'forms') }}:</span>
-                                            {{ ( product.protein ) ? product.protein : '-' }}
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="item">
-                                            <span>{{ 'product.fat.label'|trans({}, 'forms') }}:</span>
-                                            {{ ( product.fat ) ? product.fat : '-' }}
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="item">
-                                            <span>{{ 'product.carbohydrate.label'|trans({}, 'forms') }}:</span>
-                                            {{ ( product.carbohydrate ) ? product.carbohydrate : '-' }}
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="item">
-                                            <span>{{ 'product.calories.label'|trans({}, 'forms') }}:</span>
-                                            {{ ( product.calories ) ? product.calories : '-' }}
+                                            <span>{{ 'product.manufacturer.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.manufacturer ) ? product.manufacturer : '-' }}
                                         </span>
                                     </li>
                                 </ul>

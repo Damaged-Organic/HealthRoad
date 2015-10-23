@@ -2,6 +2,11 @@
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="student-form">
+
+    <div class="separator-holder">
+        <h2>Личные данные</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.surname, {
             'id': "student-surname",
@@ -131,6 +136,10 @@
             </div>
         </div>
         <input type="hidden" name="{{ form.school.vars.full_name }}" value="{{ ( form.school.vars.data ) ? form.school.vars.data.id : null }}">
+    </div>
+
+    <div class="separator-holder">
+        <h2>Баланс</h2>
     </div>
 
     {% if form.totalLimit is defined and form.dailyLimit is defined %}

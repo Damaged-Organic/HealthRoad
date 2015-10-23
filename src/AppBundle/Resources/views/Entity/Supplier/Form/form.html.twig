@@ -2,6 +2,11 @@
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="supplier-form" enctype="multipart/form-data">
+
+    <div class="separator-holder">
+        <h2>Данные поставщика</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.name, {
             'id': "supplier-name",
@@ -47,11 +52,10 @@
         {{ form_errors(form.description) }}
     </div>
 
-    <div class="file-holder {{ ( supplier is defined ) ? ( ( supplier.logoName ) ? 'active' : null ) : null }}">
+    <div class="file-holder">
         {{ form_widget(form.logoFile, {
             'id': "supplier-logo-file",
             'attr': {
-                'accept': "image/jpeg,image/png,image/gif",
                 'value': ( supplier is defined ) ? supplier.logoFile
             }
         }) }}
@@ -64,11 +68,14 @@
         </label>
 
         {% if supplier is defined and supplier.logoName %}
-            <figure class="photo-holder active">
-                <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}">
-            </figure>
+            <div class="photo-list-holder active">
+                <figure class="photo-holder">
+                    <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}">
+                    <span class="size">{{ supplier.logoName }}</span>
+                </figure>
+            </div>
         {% else %}
-            <figure class="photo-holder"></figure>
+            <div class="photo-list-holder"></div>
         {% endif %}
 
         {% for error in form.logoFile.vars.errors %}
@@ -102,6 +109,10 @@
         {{ form_label(form.emailSupplier) }}
 
         {{ form_errors(form.emailSupplier) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Данные контактного лица</h2>
     </div>
 
     <div class="field-holder">
@@ -145,6 +156,10 @@
         {{ form_label(form.emailContact) }}
 
         {{ form_errors(form.emailContact) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Данные контракта</h2>
     </div>
 
     <div class="field-holder">

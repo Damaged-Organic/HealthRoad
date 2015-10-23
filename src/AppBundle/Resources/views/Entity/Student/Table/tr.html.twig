@@ -7,12 +7,17 @@
 </td>
 <td>
     <span>
-        {{ ( student.nfcTag ) ? ( student.nfcTag.vendingMachine ) ? ( student.nfcTag.vendingMachine.school ) ? student.nfcTag.vendingMachine.school.name : '-' : '-' : '-'  }}
+        {{ ( student.school ) ? student.school.name : '-' }}
     </span>
 </td>
 <td>
     <span>
         {{ ( student.nfcTag ) ? student.nfcTag.number  : '-'  }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( student.nfcTag ) ? ( student.nfcTag.vendingMachine ) ? student.nfcTag.vendingMachine.choiceLabel : '-' : '-'  }}
     </span>
 </td>
 <td>

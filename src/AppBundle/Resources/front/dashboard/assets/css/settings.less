@@ -1,0 +1,27 @@
+@import "modules/common.less";
+@import "modules/tables.less";
+@import "modules/forms.less";
+@import "modules/confirm.less";
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="date"]{
+    width: 50%;
+    margin-left: 50%;
+    & + label.error + label,
+    & + label {
+        width: 50%;
+    }
+}
+
+#read-data-holder{
+    li{
+        .item {
+            width: 50%;
+            &.value{
+                width: 50%;
+            }
+        }
+    }
+}

@@ -8,6 +8,7 @@
                     <span class="text">{{ 'employee_read'|trans({}, 'routes') }}</span>
                 </a>
             </li>
+            <li class="sprtr-h"></li>
         {% endif %}
         <li {{ ( 'CustomerController' in controller ) ? 'class="active"' : null }} title="{{ 'customer_read'|trans({}, 'routes') }}">
             <a href="{{ path('customer_read') }}" data-count="{{ quantities.customers }}">
@@ -21,12 +22,7 @@
                 <span class="text">{{ 'student_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
-        <li {{ ( 'NfcTagController' in controller ) ? 'class="active"' : null }} title="{{ 'nfc_tag_read'|trans({}, 'routes') }}">
-            <a href="{{ path('nfc_tag_read') }}" data-count="{{ quantities.nfcTags }}">
-                <span class="icon hrd-nfc"></span>
-                <span class="text">{{ 'nfc_tag_read'|trans({}, 'routes') }}</span>
-            </a>
-        </li>
+        <li class="sprtr-h"></li>
         <li {{ ( 'RegionController' in controller ) ? 'class="active"' : null }} title="{{ 'region_read'|trans({}, 'routes') }}">
             <a href="{{ path('region_read') }}" data-count="{{ quantities.regions }}">
                 <span class="icon hrd-pin"></span>
@@ -51,12 +47,13 @@
                 <span class="text">{{ 'vending_machine_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
-        <li {{ ( 'ProductVendingGroupController' in controller ) ? 'class="active"' : null }} title="{{ 'product_vending_group_read'|trans({}, 'routes') }}">
-            <a href="{{ path('product_vending_group_read') }}" data-count="{{ quantities.productsVendingGroups }}">
-                <span class="icon hrd-tables"></span>
-                <span class="text">{{ 'product_vending_group_read'|trans({}, 'routes') }}</span>
+        <li {{ ( 'NfcTagController' in controller ) ? 'class="active"' : null }} title="{{ 'nfc_tag_read'|trans({}, 'routes') }}">
+            <a href="{{ path('nfc_tag_read') }}" data-count="{{ quantities.nfcTags }}">
+                <span class="icon hrd-nfc"></span>
+                <span class="text">{{ 'nfc_tag_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
+        <li class="sprtr-h"></li>
         <li {{ ( 'SupplierController' in controller ) ? 'class="active"' : null }} title="{{ 'supplier_read'|trans({}, 'routes') }}">
             <a href="{{ path('supplier_read') }}" data-count="{{ quantities.suppliers }}">
                 <span class="icon hrd-truck"></span>
@@ -67,6 +64,13 @@
             <a href="{{ path('product_read') }}" data-count="{{ quantities.products }}">
                 <span class="icon hrd-cart"></span>
                 <span class="text">{{ 'product_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li class="sprtr-h"></li>
+        <li {{ ( 'ProductVendingGroupController' in controller ) ? 'class="active"' : null }} title="{{ 'product_vending_group_read'|trans({}, 'routes') }}">
+            <a href="{{ path('product_vending_group_read') }}" data-count="{{ quantities.productsVendingGroups }}">
+                <span class="icon hrd-tables"></span>
+                <span class="text">{{ 'product_vending_group_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
     </ul>

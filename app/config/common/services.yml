@@ -33,6 +33,14 @@ services:
             - [setRouter, [ "@router" ]]
             - [setTranslator, [ "@translator" ]]
 
+    # Validators
+
+    app.validator.uploaded_product_image:
+        class: AppBundle\Service\Validator\UploadedProductImageValidator
+        calls:
+            - [setValidator, [ "@validator" ]]
+            - [setTranslator, [ "@translator" ]]
+
     # Security voters
 
     app.security.role_hierarchy:

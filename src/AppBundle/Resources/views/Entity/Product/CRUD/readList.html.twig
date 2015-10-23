@@ -6,11 +6,11 @@
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_DELETE'), product) %}
-            <div class="btn-edit">
-                <a href="{{ path('product_update', { 'id': product.id }) }}" class="icon hrd-edit"></a>
-            </div>
             <div class="btn-delete">
                 <a href="{{ path('product_delete', { 'id': product.id }) }}" class="icon hrd-delete"></a>
+            </div>
+            <div class="btn-edit">
+                <a href="{{ path('product_update', { 'id': product.id }) }}" class="icon hrd-edit"></a>
             </div>
         {% else %}
             <div class="btn-edit">

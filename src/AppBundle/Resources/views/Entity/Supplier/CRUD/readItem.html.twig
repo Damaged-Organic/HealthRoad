@@ -6,6 +6,11 @@
 {% block data %}
     <div id="read-data-holder">
         <ul>
+
+            <div class="separator-holder">
+                <h2>Данные поставщика</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'supplier.name.label'|trans({}, 'forms') }}</span>
@@ -30,16 +35,20 @@
                     <p>{{ supplier.description }}</p>
                 </div>
             </li>
-            <li>
+            <li class="photo-list-holder">
                 <div class="item key">
                     <span>{{ 'supplier.logo_file.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
+
                     {% if supplier.logoName %}
-                        <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
+                        <figure>
+                            <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
+                        </figure>
                     {% else %}
                         <p>-</p>
                     {% endif %}
+
                 </div>
             </li>
             <li>
@@ -58,6 +67,11 @@
                     <p>{{ ( supplier.emailSupplier ) ? supplier.emailSupplier : '-' }}</p>
                 </div>
             </li>
+
+            <div class="separator-holder">
+                <h2>Данные контактного лица</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'supplier.name_contact.label'|trans({}, 'forms') }}</span>
@@ -82,6 +96,11 @@
                     <p>{{ ( supplier.emailContact ) ? supplier.emailContact : '-' }}</p>
                 </div>
             </li>
+
+            <div class="separator-holder">
+                <h2>Данные контракта</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'supplier.contract_number.label'|trans({}, 'forms') }}</span>

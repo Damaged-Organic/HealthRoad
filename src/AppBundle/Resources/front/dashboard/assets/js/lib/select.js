@@ -52,9 +52,7 @@
 
 	$.fn[pluginName] = function(options){
 		return this.each(function(){
-			if(!$.data(this, "plugin-selectify")){
-				$.data(this, "plugin-selectify", new Plugin(this, options));
-			}
+			if(!$.data(this, "plugin-selectify")) $.data(this, "plugin-selectify", new Plugin(this, options));
 		});
 	}
 

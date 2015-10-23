@@ -2,6 +2,11 @@
 {% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
 <form action="{{ form.vars.action }}" method="POST" id="customer-form">
+
+    <div class="separator-holder">
+        <h2>Системные данные</h2>
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.phoneNumber, {
             'id': "customer-phone-number",
@@ -61,6 +66,10 @@
             </div>
         {% endif %}
     {% endif %}
+
+    <div class="separator-holder">
+        <h2>Личные данные</h2>
+    </div>
 
     <div class="field-holder">
         {{ form_widget(form.surname, {

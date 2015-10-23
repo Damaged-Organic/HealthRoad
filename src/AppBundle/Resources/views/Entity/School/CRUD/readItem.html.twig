@@ -6,6 +6,11 @@
 {% block data %}
     <div id="read-data-holder">
         <ul>
+
+            <div class="separator-holder">
+                <h2>Данные школы</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'school.name.label'|trans({}, 'forms') }}</span>
@@ -54,6 +59,11 @@
                     <p>{{ ( school.emailSchool ) ?: '-' }}</p>
                 </div>
             </li>
+
+            <div class="separator-holder">
+                <h2>Данные директора</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'school.name_headmaster.label'|trans({}, 'forms') }}</span>
@@ -78,6 +88,11 @@
                     <p>{{ ( school.emailHeadmaster ) ?: '-' }}</p>
                 </div>
             </li>
+
+            <div class="separator-holder">
+                <h2>Данные контактного лица</h2>
+            </div>
+
             <li>
                 <div class="item key">
                     <span>{{ 'school.name_contact.label'|trans({}, 'forms') }}</span>
