@@ -7,6 +7,14 @@
 
     {% include 'AppBundle:Entity/Customer/Form:form.html.twig' with { 'form': form, 'customer': customer } only %}
 
+    {% if customer.employee|length %}
+        <div class="separator-holder">
+            <h2>Сотрудник, который зарегистрировал клиента</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': customer } only %}
+    {% endif %}
+
 {% endblock %}
 
 {% block action_bottom %}

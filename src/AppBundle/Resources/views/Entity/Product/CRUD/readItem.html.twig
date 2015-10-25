@@ -58,7 +58,9 @@
                         {% endfor %}
 
                     {% else %}
-                        <p>-</p>
+                        <figure>
+                            <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}">
+                        </figure>
                     {% endif %}
 
                 </div>
@@ -74,7 +76,9 @@
                             <img src="{{ vich_uploader_asset(product, 'imageCertificateFile') }}" alt="{{ product.imageCertificateName }}">
                         </figure>
                     {% else %}
-                        <p>-</p>
+                        <figure>
+                            <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}">
+                        </figure>
                     {% endif %}
 
                 </div>
@@ -187,4 +191,12 @@
             </li>
         </ul>
     </div>
+
+    {% if product.productVendingGroups|length %}
+        <div class="separator-holder">
+            <h2>Группы автоматов, к которым привязан продукт</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/ProductVendingGroup/Binding:ancestors.html.twig' with { 'sibling': product } only %}
+    {% endif %}
 {% endblock %}

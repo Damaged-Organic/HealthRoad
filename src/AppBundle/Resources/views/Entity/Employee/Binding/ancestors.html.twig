@@ -1,22 +1,68 @@
 {# AppBundle/Resources/views/Entity/Employee/Binding/ancestors.html.twig #}
 {% if sibling.employee is defined and sibling.employee is not null %}
-    <p>
-        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), sibling.employee) %}
-            <a href="{{ path('employee_update', { 'id': sibling.employee.id }) }}">{{ sibling.employee.username }}</a>
-        {% else %}
-            <a href="{{ path('employee_read', { 'id': sibling.employee.id }) }}">{{ sibling.employee.username }}</a>
-        {% endif %}
-    </p>
-{% elseif sibling.employees is defined %}
-    {% for employee in sibling.employees %}
-        <p>
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), employee) %}
-                <a href="{{ path('employee_update', { 'id': employee.id }) }}">{{ employee.username }}</a>
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/Employee/Table:th.html.twig' %}
+
+            <th colspan="2" class="double-small-fixed">
+                <span>управление</span>
+            </th>
+
+        </tr>
+        <tr>
+
+            {% include 'AppBundle:Entity/Employee/Table:tr.html.twig' with { 'employee': sibling.employee } only %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), sibling.employee) %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('employee_update', { 'id': sibling.employee.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
             {% else %}
-                <a href="{{ path('employee_read', { 'id': employee.id }) }}">{{ employee.username }}</a>
+                <td class="double-small-fixed view-holder">
+                    <div class="btn-view">
+                        <a href="{{ path('employee_read', { 'id': sibling.employee.id }) }}" class="icon hrd-view"></a>
+                    </div>
+                </td>
             {% endif %}
-        </p>
-    {% endfor %}
-{% else %}
-    No employees
+
+        </tr>
+    </table>
+{% elseif sibling.employees is defined %}
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/Employee/Table:th.html.twig' %}
+
+            <th colspan="2" class="double-small-fixed">
+                <span>управление</span>
+            </th>
+
+        </tr>
+        <tr>
+
+        {% for employee in sibling.employees %}
+
+            {% include 'AppBundle:Entity/Employee/Table:tr.html.twig' with { 'employee': employee } only %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), employee) %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('employee_update', { 'id': employee.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed view-holder">
+                    <div class="btn-view">
+                        <a href="{{ path('employee_read', { 'id': employee.id }) }}" class="icon hrd-view"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% endfor %}
+
+        </tr>
+    </table>
 {% endif %}

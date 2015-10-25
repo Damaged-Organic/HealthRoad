@@ -23,7 +23,7 @@
                 </div>
             </td>
         {% else %}
-            <td class="double-small-fixed edit-holder" colspan="2">
+            <td class="double-small-fixed edit-holder">
                 <div class="btn-edit">
                     <a href="{{ path('region_update', { 'id': region.id }) }}" class="icon hrd-edit"></a>
                 </div>
@@ -31,7 +31,7 @@
         {% endif %}
 
     {% else %}
-        <td class="double-small-fixed view-holder" colspan="2">
+        <td class="double-small-fixed view-holder">
             <div class="btn-view">
                 <a href="{{ path('region_read', { 'id': region.id }) }}" class="icon hrd-view"></a>
             </div>

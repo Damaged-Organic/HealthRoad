@@ -45,7 +45,7 @@
             </li>
             <li>
                 <div class="item key">
-                    <span>{{ 'student.dateOfBirth.label'|trans({}, 'forms') }}</span>
+                    <span>{{ 'student.date_of_birth.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
                     <p>{{ student.dateOfBirth|date('d-m-Y') }}</p>
@@ -82,4 +82,12 @@
             </li>
         </ul>
     </div>
+
+    {% if student.employee|length %}
+        <div class="separator-holder">
+            <h2>Сотрудник, который зарегистрировал ученика</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': student } only %}
+    {% endif %}
 {% endblock %}

@@ -274,6 +274,9 @@ product:
         label:       Цена
         placeholder: Введите цену продукта
 
+    product_vending_group:
+        label: Группа автоматов
+
     image_product_file:
         label: Изображения продукта
 

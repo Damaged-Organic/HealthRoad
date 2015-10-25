@@ -96,7 +96,7 @@ class StudentController extends Controller implements UserRoleListInterface
         );
 
         $form = $this->createForm($studentType, $student = new Student, [
-            'action' => $this->generateUrl('settlement_create')
+            'action' => $this->generateUrl('student_create')
         ]);
 
         $form->handleRequest($request);

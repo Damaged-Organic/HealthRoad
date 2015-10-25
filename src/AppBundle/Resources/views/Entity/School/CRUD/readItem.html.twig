@@ -119,4 +119,12 @@
             </li>
         </ul>
     </div>
+
+    {% if school.employees|length %}
+        <div class="separator-holder">
+            <h2>Регистраторы, ответственные за школу</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': school } only %}
+    {% endif %}
 {% endblock %}

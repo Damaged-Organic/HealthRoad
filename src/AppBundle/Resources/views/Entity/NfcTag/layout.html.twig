@@ -37,18 +37,3 @@
 {% block javascripts %}
     <script src="{{ asset('bundles/app/dashboard/js/nfcTags.bundle.min.js') }}"></script>
 {% endblock %}
-
-{#{% block content %}
-    {% block data %}{% endblock %}
-
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_DELETE'), nfcTag) %}
-        <p>
-            <a href="{{ path('nfc_tag_delete', { 'id': nfcTag.id }) }}">Удалить</a>
-        </p>
-    {% endif %}
-
-    <p>-------------------------------------------------------------------------------------------------</p>
-    <p>Ученик:</p>
-    <p>-------------------------------------------------------------------------------------------------</p>
-    {% include 'AppBundle:Entity/Student/Binding:ancestors.html.twig' with { 'sibling': nfcTag } only %}
-{% endblock %}#}

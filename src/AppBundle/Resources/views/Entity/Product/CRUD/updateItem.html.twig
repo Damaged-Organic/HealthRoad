@@ -7,6 +7,14 @@
 
     {% include 'AppBundle:Entity/Product/Form:form.html.twig' with { 'form': form, 'product': product } only %}
 
+    {% if product.productVendingGroups|length %}
+        <div class="separator-holder">
+            <h2>Группы автоматов, к которым привязан продукт</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/ProductVendingGroup/Binding:ancestors.html.twig' with { 'sibling': product } only %}
+    {% endif %}
+
 {% endblock %}
 
 {% block action_bottom %}

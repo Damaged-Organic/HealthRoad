@@ -1,22 +1,37 @@
 {# AppBundle/Resources/views/Entity/Customer/Binding/ancestors.html.twig #}
 {% if sibling.customer is defined and sibling.customer is not null %}
-    <p>
-        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_UPDATE'), sibling.customer) %}
-            <a href="{{ path('customer_update', { 'id': sibling.customer.id }) }}">{{ sibling.customer.name }}</a>
-        {% else %}
-            <a href="{{ path('customer_read', { 'id': sibling.customer.id }) }}">{{ sibling.customer.name }}</a>
-        {% endif %}
-    </p>
-{% elseif sibling.customers is defined %}
-    {% for customer in sibling.customers %}
-        <p>
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_UPDATE'), customer) %}
-                <a href="{{ path('customer_update', { 'id': customer.id }) }}">{{ customer.name }}</a>
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/Customer/Table:th.html.twig' %}
+
+            <th colspan="2" class="double-small-fixed">
+                <span>управление</span>
+            </th>
+
+        </tr>
+        <tr>
+
+            {% include 'AppBundle:Entity/Customer/Table:tr.html.twig' with { 'customer': sibling.customer } only %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_UPDATE'), sibling.customer) %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('customer_update', { 'id': sibling.customer.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
             {% else %}
-                <a href="{{ path('customer_read', { 'id': customer.id }) }}">{{ customer.name }}</a>
+                <td class="double-small-fixed view-holder">
+                    <div class="btn-view">
+                        <a href="{{ path('customer_read', { 'id': sibling.customer.id }) }}" class="icon hrd-view"></a>
+                    </div>
+                </td>
             {% endif %}
-        </p>
-    {% endfor %}
-{% else %}
-    No customers
+
+        </tr>
+    </table>
+{% elseif sibling.customers is defined %}
+
+    {# Does not exists for now #}
+
 {% endif %}

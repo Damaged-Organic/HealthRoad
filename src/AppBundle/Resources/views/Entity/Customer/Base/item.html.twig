@@ -7,14 +7,11 @@
             <li {% block active_customer_update %}{% endblock %}>
                 <a href="{{ path('customer_update', { 'id': customer.id }) }}">Данные</a>
             </li>
-
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_BIND'), customer) %}
-                <li {% block active_customer_update_bounded_student %}{% endblock %}>
-                    <a href="{{ path('customer_update_bounded', { 'objectId': customer.id, 'objectClass': 'student' }) }}">
-                        {{ 'student_read'|trans({}, 'routes') }}
-                    </a>
-                </li>
-            {% endif %}
+            <li {% block active_customer_update_bounded_student %}{% endblock %}>
+                <a href="{{ path('customer_update_bounded', { 'objectId': customer.id, 'objectClass': 'student' }) }}">
+                    {{ 'student_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

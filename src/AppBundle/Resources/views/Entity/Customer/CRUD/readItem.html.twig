@@ -61,9 +61,20 @@
                     <span>{{ 'customer.is_enabled.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
-                    <span class="icon {{ ( customer.isEnabled ) ? 'hrd-accept' : 'hrd-cancel'  }}"></span>
+                    <p>
+                        {{ ( customer.isEnabled ) ? 'Да' : 'Нет' }}
+                    </p>
                 </div>
             </li>
         </ul>
     </div>
+
+    {% if customer.employee|length %}
+        <div class="separator-holder">
+            <h2>Сотрудник, который зарегистрировал клиента</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': customer } only %}
+    {% endif %}
+
 {% endblock %}

@@ -46,7 +46,9 @@
                             <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
                         </figure>
                     {% else %}
-                        <p>-</p>
+                        <figure>
+                            <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}">
+                        </figure>
                     {% endif %}
 
                 </div>

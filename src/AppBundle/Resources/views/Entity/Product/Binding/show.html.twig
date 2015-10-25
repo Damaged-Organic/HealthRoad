@@ -2,9 +2,13 @@
 {% extends 'AppBundle:Entity/Product/Base:table.html.twig' %}
 
 {% block action_items_th %}
-    <th class="double-small-fixed">
-        <span>управление</span>
-    </th>
+
+    {% if product_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\ProductBoundlessAccess::PRODUCT_BIND')) %}
+        <th class="double-small-fixed">
+            <span>управление</span>
+        </th>
+    {% endif %}
+
 {% endblock %}
 
 {% block action_items_tr %}

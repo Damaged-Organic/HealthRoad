@@ -7,6 +7,14 @@
 
     {% include 'AppBundle:Entity/NfcTag/Form:form.html.twig' with { 'form': form, 'nfcTag': nfcTag } only %}
 
+    {% if nfcTag.student|length %}
+        <div class="separator-holder">
+            <h2>Ученик, к которому привязана NFC-метка</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Student/Binding:ancestors.html.twig' with { 'sibling': nfcTag } only %}
+    {% endif %}
+
 {% endblock %}
 
 {% block action_bottom %}

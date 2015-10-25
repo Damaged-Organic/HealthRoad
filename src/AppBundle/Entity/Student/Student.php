@@ -21,7 +21,7 @@ class Student
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\Employee", inversedBy="students")
-     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $employee;
 

@@ -7,22 +7,16 @@
             <li {% block active_student_update %}{% endblock %}>
                 <a href="{{ path('student_update', { 'id': student.id }) }}">Данные</a>
             </li>
-
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
-                <li {% block active_student_update_bounded_nfc_tag %}{% endblock %}>
-                    <a href="{{ path('student_update_bounded', { 'objectId': student.id, 'objectClass': 'nfctag' }) }}">
-                        {{ 'nfc_tag_read'|trans({}, 'routes') }}
-                    </a>
-                </li>
-            {% endif %}
-
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
-                <li {% block active_student_update_bounded_product %}{% endblock %}>
-                    <a href="{{ path('student_update_bounded', { 'objectId': student.id, 'objectClass': 'product' }) }}">
-                        {{ 'product_read_restricted'|trans({}, 'routes') }}
-                    </a>
-                </li>
-            {% endif %}
+            <li {% block active_student_update_bounded_nfc_tag %}{% endblock %}>
+                <a href="{{ path('student_update_bounded', { 'objectId': student.id, 'objectClass': 'nfctag' }) }}">
+                    {{ 'nfc_tag_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+            <li {% block active_student_update_bounded_product %}{% endblock %}>
+                <a href="{{ path('student_update_bounded', { 'objectId': student.id, 'objectClass': 'product' }) }}">
+                    {{ 'product_read_restricted'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

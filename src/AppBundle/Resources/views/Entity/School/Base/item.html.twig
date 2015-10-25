@@ -7,14 +7,11 @@
             <li {% block active_school_update %}{% endblock %}>
                 <a href="{{ path('school_update', { 'id': school.id }) }}">Данные</a>
             </li>
-
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
-                <li {% block active_school_update_bounded_vending_machine %}{% endblock %}>
-                    <a href="{{ path('school_update_bounded', { 'objectId': school.id, 'objectClass': 'vendingmachine' }) }}">
-                        {{ 'vending_machine_read'|trans({}, 'routes') }}
-                    </a>
-                </li>
-            {% endif %}
+            <li {% block active_school_update_bounded_vending_machine %}{% endblock %}>
+                <a href="{{ path('school_update_bounded', { 'objectId': school.id, 'objectClass': 'vendingmachine' }) }}">
+                    {{ 'vending_machine_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

@@ -32,7 +32,9 @@
                     <span>{{ 'employee.is_enabled.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
-                    <span class="icon {{ ( employee.isEnabled ) ? 'hrd-accept' : 'hrd-cancel'  }}"></span>
+                    <p>
+                        {{ ( customer.isEnabled ) ? 'Да' : 'Нет' }}
+                    </p>
                 </div>
             </li>
 

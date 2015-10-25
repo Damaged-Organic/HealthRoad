@@ -7,6 +7,22 @@
 
     {% include 'AppBundle:Entity/Student/Form:form.html.twig' with { 'form': form, 'student': student } only %}
 
+    {% if student.customer|length %}
+        <div class="separator-holder">
+            <h2>Родитель ученика</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Customer/Binding:ancestors.html.twig' with { 'sibling': student } only %}
+    {% endif %}
+
+    {% if student.employee|length %}
+        <div class="separator-holder">
+            <h2>Сотрудник, который зарегистрировал ученика</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': student } only %}
+    {% endif %}
+
 {% endblock %}
 
 {% block action_bottom %}

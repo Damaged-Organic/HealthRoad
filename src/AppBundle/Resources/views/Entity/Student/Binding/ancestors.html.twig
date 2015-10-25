@@ -1,22 +1,37 @@
 {# AppBundle/Resources/views/Entity/Student/Binding/ancestors.html.twig #}
 {% if sibling.student is defined and sibling.student is not null %}
-    <p>
-        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), sibling.student) %}
-            <a href="{{ path('student_update', { 'id': sibling.student.id }) }}">{{ sibling.student.name }}</a>
-        {% else %}
-            <a href="{{ path('student_read', { 'id': sibling.student.id }) }}">{{ sibling.student.name }}</a>
-        {% endif %}
-    </p>
-{% elseif sibling.students is defined %}
-    {% for student in sibling.students %}
-        <p>
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), student) %}
-                <a href="{{ path('student_update', { 'id': student.id }) }}">{{ student.name }}</a>
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/Student/Table:th.html.twig' %}
+
+            <th colspan="2" class="double-small-fixed">
+                <span>управление</span>
+            </th>
+
+        </tr>
+        <tr>
+
+            {% include 'AppBundle:Entity/Student/Table:tr.html.twig' with { 'student': sibling.student } only %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), sibling.student) %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('student_update', { 'id': sibling.student.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
             {% else %}
-                <a href="{{ path('student_read', { 'id': student.id }) }}">{{ student.name }}</a>
+                <td class="double-small-fixed view-holder">
+                    <div class="btn-view">
+                        <a href="{{ path('student_read', { 'id': sibling.student.id }) }}" class="icon hrd-view"></a>
+                    </div>
+                </td>
             {% endif %}
-        </p>
-    {% endfor %}
-{% else %}
-    No students
+
+        </tr>
+    </table>
+{% elseif sibling.students is defined %}
+
+    {# Does not exists for now #}
+
 {% endif %}

@@ -32,4 +32,12 @@
             </li>
         </ul>
     </div>
+
+    {% if nfcTag.student|length %}
+        <div class="separator-holder">
+            <h2>Ученик, к которому привязана NFC-метка</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Student/Binding:ancestors.html.twig' with { 'sibling': nfcTag } only %}
+    {% endif %}
 {% endblock %}

@@ -7,14 +7,11 @@
             <li {% block active_supplier_update %}{% endblock %}>
                 <a href="{{ path('supplier_update', { 'id': supplier.id }) }}">Данные</a>
             </li>
-
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SupplierVoter::SUPPLIER_BIND'), supplier) %}
-                <li {% block active_supplier_update_bounded_product %}{% endblock %}>
-                    <a href="{{ path('supplier_update_bounded', { 'objectId': supplier.id, 'objectClass': 'product' }) }}">
-                        {{ 'product_read'|trans({}, 'routes') }}
-                    </a>
-                </li>
-            {% endif %}
+            <li {% block active_supplier_update_bounded_product %}{% endblock %}>
+                <a href="{{ path('supplier_update_bounded', { 'objectId': supplier.id, 'objectClass': 'product' }) }}">
+                    {{ 'product_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

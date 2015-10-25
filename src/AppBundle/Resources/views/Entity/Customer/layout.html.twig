@@ -37,22 +37,3 @@
 {% block javascripts %}
     <script src="{{ asset('bundles/app/dashboard/js/customer.bundle.min.js') }}"></script>
 {% endblock %}
-
-{#{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_DELETE'), customer) %}
-    <p>
-        <a href="{{ path('customer_delete', { 'id': customer.id }) }}">Удалить</a>
-    </p>
-{% endif %}
-
-{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\CustomerVoter::CUSTOMER_BIND'), customer) %}
-    <p>-------------------------------------------------------------------------------------------------</p>
-    <p>
-        <a href="{{ path('student_choose', { 'objectClass': class(customer)|lower, 'objectId': customer.id }) }}">@ Привязать ученика</a>
-    </p>
-{% endif %}
-
-<p>Ученики:</p>
-<p>-------------------------------------------------------------------------------------------------</p>
-{% if customer.students %}
-    {{ render(controller('AppBundle:Binding/Student:show', { 'objectClass': class(customer)|lower, 'objectId': customer.id })) }}
-{% endif %}#}

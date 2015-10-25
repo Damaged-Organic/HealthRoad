@@ -71,10 +71,13 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
-        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
-            return ( $student->getEmployee()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) )
+        {
+            if( $student->getEmployee() ) {
+                return ($student->getEmployee()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
         }
 
         return FALSE;
