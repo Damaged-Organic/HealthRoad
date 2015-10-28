@@ -32,13 +32,6 @@ class NfcTagType extends AbstractType
                     'placeholder' => 'nfc_tag.code.placeholder'
                 ]
             ])
-            ->add('vendingMachine', 'entity', [
-                'required'     => FALSE,
-                'class'        => "AppBundle\\Entity\\VendingMachine\\VendingMachine",
-                'choice_label' => "choiceLabel",
-                'label'        => 'nfc_tag.vending_machine.label',
-                'empty_value'  => 'common.choice.placeholder'
-            ])
         ;
 
         $builder

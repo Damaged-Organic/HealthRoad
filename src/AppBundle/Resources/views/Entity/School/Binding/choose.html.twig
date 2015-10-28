@@ -2,29 +2,26 @@
 {% extends 'AppBundle:Entity/School/Base:table.html.twig' %}
 
 {% block action_items_th %}
-    <th colspan="2" class="double-small-fixed">
+    <th class="double-small-fixed">
         <span>управление</span>
     </th>
 {% endblock %}
 
 {% block action_items_tr %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_UPDATE'), school) %}
-        <td class="small-fixed edit-holder">
+    <td class="double-small-fixed edit-holder double-btn">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_UPDATE'), school) %}
             <div class="btn-edit">
                 <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
             </div>
-        </td>
-    {% else %}
-        <td class="small-fixed view-holder">
+        {% else %}
             <div class="btn-view">
                 <a href="{{ path('school_read', { 'id': school.id }) }}" class="icon hrd-view"></a>
             </div>
-        </td>
-    {% endif %}
+        {% endif %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
-        <td class="small-fixed bind-holder">
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
 
             {% set isBinded = object.schools.contains(school) %}
 
@@ -34,8 +31,9 @@
 
                 <a href="{{ path(path, { 'targetId': school.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
             </div>
-        </td>
-    {% endif %}
+        {% endif %}
+
+    </td>
 
 {% endblock %}
 

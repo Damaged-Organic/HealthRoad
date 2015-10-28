@@ -2,7 +2,7 @@
 {% extends 'AppBundle:Entity/ProductVendingGroup/Base:table.html.twig' %}
 
 {% block action_items_th %}
-    <th colspan="2" class="double-small-fixed">
+    <th class="double-small-fixed">
         <span>управление</span>
     </th>
 {% endblock %}
@@ -12,12 +12,10 @@
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), productVendingGroup) %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_DELETE'), productVendingGroup) %}
-            <td class="small-fixed edit-holder">
+            <td class="double-small-fixed edit-holder double-btn">
                 <div class="btn-edit">
                     <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}" class="icon hrd-edit"></a>
                 </div>
-            </td>
-            <td class="small-fixed delete-holder">
                 <div class="btn-delete">
                     <a href="{{ path('product_vending_group_delete', { 'id': productVendingGroup.id }) }}" class="icon hrd-delete"></a>
                 </div>

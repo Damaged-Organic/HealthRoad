@@ -2,7 +2,7 @@
 {% extends 'AppBundle:Entity/NfcTag/Base:table.html.twig' %}
 
 {% block action_items_th %}
-    <th colspan="2" class="double-small-fixed">
+    <th class="double-small-fixed">
         <span>управление</span>
     </th>
 {% endblock %}
@@ -12,12 +12,10 @@
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_UPDATE'), nfcTag) %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_BIND'), nfcTag) %}
-            <td class="small-fixed edit-holder">
+            <td class="double-small-fixed edit-holder double-btn">
                 <div class="btn-edit">
                     <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}" class="icon hrd-edit"></a>
                 </div>
-            </td>
-            <td class="small-fixed delete-holder">
                 <div class="btn-bind binded">
                     <a href="{{ path('nfc_tag_unbind', { 'targetId': nfcTag.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
                 </div>

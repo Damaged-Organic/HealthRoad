@@ -13,8 +13,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'vending_machine.serial.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "1", 'data-msg-minlength': 'vending_machine.serial.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "16", 'data-msg-maxlength': 'vending_machine.serial.length.max'|trans({}, "validators"),
-                'value': ( vendingMachine is defined ) ? vendingMachine.serial
+                'data-rule-maxlength': "16", 'data-msg-maxlength': 'vending_machine.serial.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -116,8 +115,7 @@
             'id': "vending-machine-name",
             'attr': {
                 'data-rule-minlength': "2", 'data-msg-minlength': 'vending_machine.name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "250", 'data-msg-maxlength': 'vending_machine.name.length.max'|trans({}, "validators"),
-                'value': ( vendingMachine is defined ) ? vendingMachine.name
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'vending_machine.name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -131,8 +129,7 @@
             'id': "vending-machine-name-technician",
             'attr': {
                 'data-rule-minlength': "2", 'data-msg-minlength': 'vending_machine.name_technician.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "500", 'data-msg-maxlength': 'vending_machine.name_technician.length.max'|trans({}, "validators"),
-                'value': ( vendingMachine is defined ) ? vendingMachine.nameTechnician
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'vending_machine.name_technician.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -146,8 +143,7 @@
             'id': "vending-machine-number-shelves",
             'attr': {
                 'data-rule-min': 1, 'data-msg-min': 'vending_machine.number_shelves.range.min'|trans({}, "validators"),
-                'data-rule-max': 100, 'data-msg-max': 'vending_machine.number_shelves.range.max'|trans({}, "validators"),
-                'value': ( vendingMachine is defined ) ? vendingMachine.numberShelves
+                'data-rule-max': 100, 'data-msg-max': 'vending_machine.number_shelves.range.max'|trans({}, "validators")
             }
         }) }}
 
@@ -161,8 +157,7 @@
             'id': "vending-machine-number-springs",
             'attr': {
                 'data-rule-min': 1, 'data-msg-min': 'vending_machine.number_springs.range.min'|trans({}, "validators"),
-                'data-rule-max': 1000, 'data-msg-max': 'vending_machine.number_springs.range.max'|trans({}, "validators"),
-                'value': ( vendingMachine is defined ) ? vendingMachine.numberSprings
+                'data-rule-max': 1000, 'data-msg-max': 'vending_machine.number_springs.range.max'|trans({}, "validators")
             }
         }) }}
 
@@ -181,7 +176,6 @@
             'attr': {
                 'data-rule-minlength': "4", 'data-msg-minlength': 'vending_machine.login.length.min'|trans({}, "validators"),
                 'data-rule-maxlength': "64", 'data-msg-maxlength': 'vending_machine.login.length.max'|trans({}, "validators"),
-                'value': ( vendingMachine is defined ) ? vendingMachine.login
             }
         }) }}
 

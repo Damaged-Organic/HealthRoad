@@ -5,27 +5,33 @@
 
             {% include 'AppBundle:Entity/Employee/Table:th.html.twig' %}
 
-            <th colspan="2" class="double-small-fixed">
-                <span>управление</span>
-            </th>
+            {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
+                <th class="double-small-fixed">
+                    <span>управление</span>
+                </th>
+            {% endif %}
 
         </tr>
         <tr>
 
             {% include 'AppBundle:Entity/Employee/Table:tr.html.twig' with { 'employee': sibling.employee } only %}
 
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), sibling.employee) %}
-                <td class="double-small-fixed edit-holder">
-                    <div class="btn-edit">
-                        <a href="{{ path('employee_update', { 'id': sibling.employee.id }) }}" class="icon hrd-edit"></a>
-                    </div>
-                </td>
-            {% else %}
-                <td class="double-small-fixed view-holder">
-                    <div class="btn-view">
-                        <a href="{{ path('employee_read', { 'id': sibling.employee.id }) }}" class="icon hrd-view"></a>
-                    </div>
-                </td>
+            {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
+
+                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), sibling.employee) %}
+                    <td class="double-small-fixed edit-holder">
+                        <div class="btn-edit">
+                            <a href="{{ path('employee_update', { 'id': sibling.employee.id }) }}" class="icon hrd-edit"></a>
+                        </div>
+                    </td>
+                {% else %}
+                    <td class="double-small-fixed view-holder">
+                        <div class="btn-view">
+                            <a href="{{ path('employee_read', { 'id': sibling.employee.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    </td>
+                {% endif %}
+
             {% endif %}
 
         </tr>
@@ -36,9 +42,11 @@
 
             {% include 'AppBundle:Entity/Employee/Table:th.html.twig' %}
 
-            <th colspan="2" class="double-small-fixed">
-                <span>управление</span>
-            </th>
+            {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
+                <th class="double-small-fixed">
+                    <span>управление</span>
+                </th>
+            {% endif %}
 
         </tr>
         <tr>
@@ -47,18 +55,22 @@
 
             {% include 'AppBundle:Entity/Employee/Table:tr.html.twig' with { 'employee': employee } only %}
 
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), employee) %}
-                <td class="double-small-fixed edit-holder">
-                    <div class="btn-edit">
-                        <a href="{{ path('employee_update', { 'id': employee.id }) }}" class="icon hrd-edit"></a>
-                    </div>
-                </td>
-            {% else %}
-                <td class="double-small-fixed view-holder">
-                    <div class="btn-view">
-                        <a href="{{ path('employee_read', { 'id': employee.id }) }}" class="icon hrd-view"></a>
-                    </div>
-                </td>
+            {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
+
+                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), employee) %}
+                    <td class="double-small-fixed edit-holder">
+                        <div class="btn-edit">
+                            <a href="{{ path('employee_update', { 'id': employee.id }) }}" class="icon hrd-edit"></a>
+                        </div>
+                    </td>
+                {% else %}
+                    <td class="double-small-fixed view-holder">
+                        <div class="btn-view">
+                            <a href="{{ path('employee_read', { 'id': employee.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    </td>
+                {% endif %}
+
             {% endif %}
 
         {% endfor %}

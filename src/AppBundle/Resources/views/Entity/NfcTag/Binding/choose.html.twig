@@ -2,44 +2,42 @@
 {% extends 'AppBundle:Entity/NfcTag/Base:table.html.twig' %}
 
 {% block action_items_th %}
-    <th colspan="2" class="double-small-fixed">
+    <th class="double-small-fixed">
         <span>управление</span>
     </th>
 {% endblock %}
 
 {% block action_items_tr %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_UPDATE'), nfcTag) %}
-        <td class="small-fixed edit-holder">
+    <td class="double-small-fixed edit-holder double-btn">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_UPDATE'), nfcTag) %}
             <div class="btn-edit">
                 <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}" class="icon hrd-edit"></a>
             </div>
-        </td>
-    {% else %}
-        <td class="small-fixed view-holder">
+        {% else %}
             <div class="btn-view">
                 <a href="{{ path('nfc_tag_read', { 'id': nfcTag.id }) }}" class="icon hrd-view"></a>
             </div>
-        </td>
-    {% endif %}
+        {% endif %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_BIND'), nfcTag) %}
-        <td class="small-fixed bind-holder">
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_BIND'), nfcTag) %}
 
-            {% if object.nfcTag is defined %}
-                {% set isBinded = ( object.nfcTag ) ? object.nfcTag.id == nfcTag.id %}
-            {% else %}
-                {% set isBinded = ( object.nfcTags.contains(nfcTag) ) %}
-            {% endif %}
+                {% if object.nfcTag is defined %}
+                    {% set isBinded = ( object.nfcTag ) ? object.nfcTag.id == nfcTag.id %}
+                {% else %}
+                    {% set isBinded = ( object.nfcTags.contains(nfcTag) ) %}
+                {% endif %}
 
-            <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
 
-                {% set path = ( isBinded ) ? 'nfc_tag_unbind' : 'nfc_tag_bind' %}
+                    {% set path = ( isBinded ) ? 'nfc_tag_unbind' : 'nfc_tag_bind' %}
 
-                <a href="{{ path(path, { 'targetId': nfcTag.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
-            </div>
-        </td>
-    {% endif %}
+                    <a href="{{ path(path, { 'targetId': nfcTag.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+        {% endif %}
+
+    </td>
 
 {% endblock %}
 

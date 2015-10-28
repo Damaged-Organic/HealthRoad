@@ -22,6 +22,12 @@
                 <span class="text">{{ 'student_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
+        <li {{ ( 'NfcTagController' in controller ) ? 'class="active"' : null }} title="{{ 'nfc_tag_read'|trans({}, 'routes') }}">
+            <a href="{{ path('nfc_tag_read') }}" data-count="{{ quantities.nfcTags }}">
+                <span class="icon hrd-nfc"></span>
+                <span class="text">{{ 'nfc_tag_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
         <li class="sprtr-h"></li>
         <li {{ ( 'RegionController' in controller ) ? 'class="active"' : null }} title="{{ 'region_read'|trans({}, 'routes') }}">
             <a href="{{ path('region_read') }}" data-count="{{ quantities.regions }}">
@@ -45,12 +51,6 @@
             <a href="{{ path('vending_machine_read') }}" data-count="{{ quantities.vendingMachines }}">
                 <span class="icon hrd-table"></span>
                 <span class="text">{{ 'vending_machine_read'|trans({}, 'routes') }}</span>
-            </a>
-        </li>
-        <li {{ ( 'NfcTagController' in controller ) ? 'class="active"' : null }} title="{{ 'nfc_tag_read'|trans({}, 'routes') }}">
-            <a href="{{ path('nfc_tag_read') }}" data-count="{{ quantities.nfcTags }}">
-                <span class="icon hrd-nfc"></span>
-                <span class="text">{{ 'nfc_tag_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
         <li class="sprtr-h"></li>

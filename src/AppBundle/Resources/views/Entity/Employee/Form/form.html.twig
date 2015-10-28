@@ -14,8 +14,7 @@
                 'attr': {
                     'data-rule-required': "true", 'data-msg-required': 'employee.username.not_blank'|trans({}, "validators"),
                     'data-rule-minlength': "3", 'data-msg-minlength': 'employee.username.length.min'|trans({}, "validators"),
-                    'data-rule-maxlength': "200", 'data-msg-maxlength': 'employee.username.length.max'|trans({}, "validators"),
-                    'value': ( employee is defined ) ? employee.username
+                    'data-rule-maxlength': "200", 'data-msg-maxlength': 'employee.username.length.max'|trans({}, "validators")
                 }
             }) }}
 
@@ -62,7 +61,7 @@
                 <div class="btn-select">
                     <a href="#">
                         <div class="title-holder">
-                            <span class="title">{{ form.employeeGroup.vars.label|trans({}, 'forms') }}</span>
+                            <span class="title">{{ form.employeeGroup.vars.label|trans({}, 'forms') }} <span class="required-field">*</span></span>
                             <span class="icon hrd-list"></span>
                         </div>
                         <span class="text">{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.name : form.employeeGroup.vars.placeholder|trans({}, 'forms') }}</span>
@@ -124,8 +123,7 @@
             'id': "employee-surname",
             'attr': {
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( employee is defined ) ? employee.surname
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -139,8 +137,7 @@
             'id': "employee-name",
             'attr': {
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( employee is defined ) ? employee.name
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -154,8 +151,7 @@
             'id': "employee-patronymic",
             'attr': {
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( employee is defined ) ? employee.patronymic
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -168,8 +164,7 @@
         {{ form_widget(form.email, {
             'id': "employee-email",
             'attr': {
-                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators"),
-                'value': ( employee is defined ) ? employee.email
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
             }
         }) }}
 
@@ -182,8 +177,7 @@
         {{ form_widget(form.phoneNumber, {
             'id': "employee-phone-number",
             'attr': {
-                'data-mask': "+38 (099) 999-99-99",
-                'value': ( employee is defined ) ? employee.phoneNumber
+                'data-mask': "+38 (099) 999-99-99"
             }
         }) }}
 
@@ -194,10 +188,7 @@
 
     <div class="field-holder">
         {{ form_widget(form.skypeName, {
-            'id': "employee-skype-name",
-            'attr': {
-                'value': ( employee is defined ) ? employee.skypeName
-            }
+            'id': "employee-skype-name"
         }) }}
 
         {{ form_label(form.skypeName) }}

@@ -13,8 +13,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'product.name_full.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'product.name_full.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "250", 'data-msg-maxlength': 'product.name_full.length.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.nameFull
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'product.name_full.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -29,8 +28,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'product.name_short.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'product.name_short.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'product.name_short.length.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.nameShort
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'product.name_short.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -45,8 +43,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'product.code.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'product.code.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'product.code.length.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.code
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'product.code.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -61,8 +58,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'product.price.not_blank'|trans({}, "validators"),
                 'data-mask': "#0,00",
-                'data-mask-reverse': "true",
-                'value': ( product is defined ) ? product.price|number_format(2, ',', '')
+                'data-mask-reverse': "true"
             }
         }) }}
 
@@ -71,65 +67,42 @@
         {{ form_errors(form.price) }}
     </div>
 
-    <div class="file-holder">
-        <input type="file" name="{{ form.uploadedProductImages.vars.full_name }}[]" value="" id="product-image-product-file" multiple="multiple">
+    {% do form.productCategory.setRendered %}
 
-        <label for="product-image-product-file">
-            <div class="btn-file">
-                <span class="icon hrd-upload"></span>
-                <span class="text">{{ form.uploadedProductImages.vars.label|trans({}, 'forms') }}</span>
-            </div>
-        </label>
+    {% set productCategory_set = ( form.productCategory.vars.data ) ? true : false %}
 
-        {% if product is defined and product.productImages|length != 0 %}
-            <div class="photo-list-holder active">
+    <div class="select-holder">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">{{ form.productCategory.vars.label|trans({}, 'forms') }} <span class="required-field">*</span></span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.productCategory.vars.data ) ? form.productCategory.vars.data.name : form.productCategory.vars.placeholder|trans({}, 'forms') }}</span>
+            </a>
+        </div>
 
-                {% for productImage in product.productImages %}
-                    <figure class='photo-holder'>
-                        <img src="{{ vich_uploader_asset(productImage, 'imageProductFile') }}">
-                        <span class="size">{{ productImage.imageProductName }}</span>
-                    </figure>
-                {% endfor %}
-
-            </div>
-        {% else %}
-            <div class="photo-list-holder"></div>
-        {% endif %}
-
-        {% for error in form.uploadedProductImages.vars.errors %}
+        {% for error in form.productCategory.vars.errors %}
             <span class="error-holder">{{ error.message }}</span>
         {% endfor %}
-    </div>
 
-    <div class="file-holder">
-        {{ form_widget(form.imageCertificateFile, {
-            'id': "product-image-certificate-file",
-            'attr': {
-                'value': ( product is defined ) ? product.imageCertificateFile
-            }
-        }) }}
-
-        <label for="product-image-certificate-file">
-            <div class="btn-file">
-                <span class="icon hrd-upload"></span>
-                <span class="text">{{ form.imageCertificateFile.vars.label|trans({}, 'forms') }}</span>
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        <li class="option-item {{ ( form.productCategory.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
+                        {% for productCategory in form.productCategory.vars.choices %}
+                            <li class="option-item {{ ( form.productCategory.vars.data ) ? ( form.productCategory.vars.data.id != productCategory.value ) ?: 'active' : null }}" data-option="{{ productCategory.value }}">
+                                <span class="option-name">{{ productCategory.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-        </label>
-
-        {% if product is defined and product.imageCertificateName %}
-            <div class="photo-list-holder active">
-                <figure class='photo-holder'>
-                    <img src="{{ vich_uploader_asset(product, 'imageCertificateFile') }}">
-                    <span class="size">{{ product.imageCertificateName }}</span>
-                </figure>
-            </div>
-        {% else %}
-            <div class="photo-list-holder"></div>
-        {% endif %}
-
-        {% for error in form.imageCertificateFile.vars.errors %}
-            <span class="error-holder">{{ error.message }}</span>
-        {% endfor %}
+        </div>
+        <input type="hidden" name="{{ form.productCategory.vars.full_name }}" value="{{ ( form.productCategory.vars.data ) ? form.productCategory.vars.data.id : null }}">
     </div>
 
     {% do form.supplier.setRendered %}
@@ -176,19 +149,72 @@
         <input type="hidden" name="{{ form.supplier.vars.full_name }}" value="{{ ( form.supplier.vars.data ) ? form.supplier.vars.data.id : null }}">
     </div>
 
-    <div class="field-holder">
-        {{ form_widget(form.manufacturer, {
-            'id': "product-manufacturer",
-            'attr': {
-                'data-rule-minlength': "2", 'data-msg-minlength': 'product.manufacturer.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "250", 'data-msg-maxlength': 'product.manufacturer.length.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.manufacturer
-            }
+    <div class="file-holder">
+        <input type="file" name="{{ form.uploadedProductImages.vars.full_name }}[]" value="" id="product-image-product-file" multiple="multiple">
+
+        <label for="product-image-product-file">
+            <div class="btn-file">
+                <span class="icon hrd-upload"></span>
+                <span class="text">{{ form.uploadedProductImages.vars.label|trans({}, 'forms') }}</span>
+            </div>
+        </label>
+
+        {% if product is defined and product.productImages|length != 0 %}
+            <div class="photo-list-holder active">
+
+                {% for productImage in product.productImages %}
+                    <figure class='photo-holder'>
+                        <img src="{{ vich_uploader_asset(productImage, 'imageProductFile') }}">
+                        <span class="size">{{ productImage.imageProductName }}</span>
+                    </figure>
+                {% endfor %}
+
+            </div>
+        {% else %}
+            <div class="photo-list-holder"></div>
+        {% endif %}
+
+        {% for error in form.uploadedProductImages.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="file-holder">
+        {{ form_widget(form.imageCertificateFile, {
+            'id': "product-image-certificate-file"
         }) }}
 
-        {{ form_label(form.manufacturer) }}
+        <label for="product-image-certificate-file">
+            <div class="btn-file">
+                <span class="icon hrd-upload"></span>
+                <span class="text">{{ form.imageCertificateFile.vars.label|trans({}, 'forms') }}</span>
+            </div>
+        </label>
 
-        {{ form_errors(form.manufacturer) }}
+        {% if product is defined and product.imageCertificateName %}
+            <div class="photo-list-holder active">
+                <figure class='photo-holder'>
+                    <img src="{{ vich_uploader_asset(product, 'imageCertificateFile') }}">
+                    <span class="size">{{ product.imageCertificateName }}</span>
+                </figure>
+            </div>
+        {% else %}
+            <div class="photo-list-holder"></div>
+        {% endif %}
+
+        {% for error in form.imageCertificateFile.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.description, {
+            'id': "product-description"
+        }) }}
+
+        {{ form_label(form.description) }}
+
+        {{ form_errors(form.description) }}
     </div>
 
     <div class="separator-holder">
@@ -200,8 +226,7 @@
             'id': "product-protein",
             'attr': {
                 'data-mask': "#0,00",
-                'data-mask-reverse': "true",
-                'value': ( product is defined ) ? product.protein|number_format(2, ',', '')
+                'data-mask-reverse': "true"
             }
         }) }}
 
@@ -215,8 +240,7 @@
             'id': "product-fat",
             'attr': {
                 'data-mask': "#0,00",
-                'data-mask-reverse': "true",
-                'value': ( product is defined ) ? product.fat|number_format(2, ',', '')
+                'data-mask-reverse': "true"
             }
         }) }}
 
@@ -230,8 +254,7 @@
             'id': "product-protein",
             'attr': {
                 'data-mask': "#0,00",
-                'data-mask-reverse': "true",
-                'value': ( product is defined ) ? product.carbohydrate|number_format(2, ',', '')
+                'data-mask-reverse': "true"
             }
         }) }}
 
@@ -245,8 +268,7 @@
             'id': "product-calories",
             'attr': {
                 'data-rule-min': 1, 'data-msg-min': 'product.calories.range.min'|trans({}, "validators"),
-                'data-rule-max': 1000, 'data-msg-max': 'product.calories.range.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.calories
+                'data-rule-max': 1000, 'data-msg-max': 'product.calories.range.max'|trans({}, "validators")
             }
         }) }}
 
@@ -264,8 +286,7 @@
             'id': "product-shelf-life",
             'attr': {
                 'data-rule-minlength': "1", 'data-msg-minlength': 'product.shelf_life.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "200", 'data-msg-maxlength': 'product.shelf_life.length.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.shelfLife
+                'data-rule-maxlength': "200", 'data-msg-maxlength': 'product.shelf_life.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -279,8 +300,7 @@
             'id': "product-storage-temperature-min",
             'attr': {
                 'data-rule-min': -100, 'data-msg-min': 'product.storage_temperature.range.min'|trans({}, "validators"),
-                'data-rule-max': 100, 'data-msg-max': 'product.storage_temperature.range.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.storageTemperatureMin
+                'data-rule-max': 100, 'data-msg-max': 'product.storage_temperature.range.max'|trans({}, "validators")
             }
         }) }}
 
@@ -294,8 +314,7 @@
             'id': "product-storage-temperature-max",
             'attr': {
                 'data-rule-min': -100, 'data-msg-min': 'product.storage_temperature.range.min'|trans({}, "validators"),
-                'data-rule-max': 100, 'data-msg-max': 'product.storage_temperature.range.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.storageTemperatureMax
+                'data-rule-max': 100, 'data-msg-max': 'product.storage_temperature.range.max'|trans({}, "validators")
             }
         }) }}
 
@@ -309,8 +328,7 @@
             'id': "product-weight",
             'attr': {
                 'data-rule-min': 1, 'data-msg-min': 'product.weight.range.min'|trans({}, "validators"),
-                'data-rule-max': 10000, 'data-msg-max': 'product.weight.range.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.weight
+                'data-rule-max': 10000, 'data-msg-max': 'product.weight.range.max'|trans({}, "validators")
             }
         }) }}
 
@@ -324,8 +342,7 @@
             'id': "product-measurement-unit",
             'attr': {
                 'data-rule-minlength': "1", 'data-msg-minlength': 'product.measurement_unit.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "50", 'data-msg-maxlength': 'product.measurement_unit.length.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.measurementUnit
+                'data-rule-maxlength': "50", 'data-msg-maxlength': 'product.measurement_unit.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -339,8 +356,7 @@
             'id': "product-amount-in-box",
             'attr': {
                 'data-rule-min': 1, 'data-msg-min': 'product.amount_in_box.range.min'|trans({}, "validators"),
-                'data-rule-max': 10000, 'data-msg-max': 'product.amount_in_box.range.max'|trans({}, "validators"),
-                'value': ( product is defined ) ? product.amountInBox
+                'data-rule-max': 10000, 'data-msg-max': 'product.amount_in_box.range.max'|trans({}, "validators")
             }
         }) }}
 

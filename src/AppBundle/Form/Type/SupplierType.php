@@ -38,13 +38,6 @@ class SupplierType extends AbstractType
                     'placeholder' => 'supplier.description.placeholder'
                 ]
             ])
-            ->add('logoFile', 'file', [
-                'required' => FALSE,
-                'label'    => 'supplier.logo_file.label',
-                'attr'     => [
-                    'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
-                ]
-            ])
             ->add('phoneNumberSupplier', 'text', [
                 'required' => FALSE,
                 'label'    => 'supplier.phone_number_supplier.label',
@@ -116,12 +109,28 @@ class SupplierType extends AbstractType
 
                 if( $supplier && $supplier->getId() !== NULL )
                 {
-                    $form->add('update', 'submit', ['label' => 'common.update.label']);
+                    $form
+                        ->add('logoFile', 'file', [
+                            'required' => FALSE,
+                            'label'    => 'supplier.logo_file.label',
+                            'attr'     => [
+                                'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
+                            ]
+                        ])
+                        ->add('update', 'submit', ['label' => 'common.update.label']);
 
                     if( $this->boundlessAccess )
                         $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', 'submit', ['label' => 'common.create.label']);
+                    $form
+                        ->add('logoFile', 'file', [
+                            'required' => TRUE,
+                            'label'    => 'supplier.logo_file.label',
+                            'attr'     => [
+                                'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
+                            ]
+                        ])
+                        ->add('create', 'submit', ['label' => 'common.create.label']);
 
                     if( $this->boundlessAccess )
                         $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);

@@ -2,7 +2,7 @@
 {% extends 'AppBundle:Entity/Supplier/Base:table.html.twig' %}
 
 {% block action_items_th %}
-    <th colspan="2" class="double-small-fixed">
+    <th class="double-small-fixed">
         <span>управление</span>
     </th>
 {% endblock %}
@@ -12,12 +12,10 @@
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SupplierVoter::SUPPLIER_UPDATE'), supplier) %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SupplierVoter::SUPPLIER_DELETE'), supplier) %}
-            <td class="small-fixed edit-holder">
+            <td class="double-small-fixed edit-holder double-btn">
                 <div class="btn-edit">
                     <a href="{{ path('supplier_update', { 'id': supplier.id }) }}" class="icon hrd-edit"></a>
                 </div>
-            </td>
-            <td class="small-fixed delete-holder">
                 <div class="btn-delete">
                     <a href="{{ path('supplier_delete', { 'id': supplier.id }) }}" class="icon hrd-delete"></a>
                 </div>

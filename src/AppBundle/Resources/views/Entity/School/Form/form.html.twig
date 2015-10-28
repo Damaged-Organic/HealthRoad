@@ -13,8 +13,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'school.name_school.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'school.name_school.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "250", 'data-msg-maxlength': 'school.name_school.length.max'|trans({}, "validators"),
-                'value': ( school is defined ) ? school.name
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'school.name_school.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -29,8 +28,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'school.address.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'school.address.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.address.length.max'|trans({}, "validators"),
-                'value': ( school is defined ) ? school.address
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.address.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -88,8 +86,7 @@
             'id': "school-students-quantity",
             'attr': {
                 'data-rule-min': 1, 'data-msg-min': 'school.students_quantity.range.min'|trans({}, "validators"),
-                'data-rule-max': 100000, 'data-msg-max': 'school.students_quantity.range.max'|trans({}, "validators"),
-                'value': ( school is defined ) ? school.studentsQuantity
+                'data-rule-max': 100000, 'data-msg-max': 'school.students_quantity.range.max'|trans({}, "validators")
             }
         }) }}
 
@@ -102,8 +99,7 @@
         {{ form_widget(form.phoneNumberSchool, {
             'id': "school-phone-number-school",
             'attr': {
-                'data-mask': "+38 (099) 999-99-99",
-                'value': ( school is defined ) ? school.phoneNumberSchool
+                'data-mask': "+38 (099) 999-99-99"
             }
         }) }}
 
@@ -116,8 +112,7 @@
         {{ form_widget(form.emailSchool, {
             'id': "school-email-school",
             'attr': {
-                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators"),
-                'value': ( school is defined ) ? school.emailSchool
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
             }
         }) }}
 
@@ -135,8 +130,7 @@
             'id': "school-name-headmaster",
             'attr': {
                 'data-rule-minlength': "2", 'data-msg-minlength': 'school.name_headmaster.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.name_headmaster.length.max'|trans({}, "validators"),
-                'value': ( school is defined ) ? school.nameHeadmaster
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.name_headmaster.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -149,8 +143,7 @@
         {{ form_widget(form.phoneNumberHeadmaster, {
             'id': "school-phone-number-headmaster",
             'attr': {
-                'data-mask': "+38 (099) 999-99-99",
-                'value': ( school is defined ) ? school.phoneNumberHeadmaster
+                'data-mask': "+38 (099) 999-99-99"
             }
         }) }}
 
@@ -163,8 +156,7 @@
         {{ form_widget(form.emailHeadmaster, {
             'id': "school-email-headmaster",
             'attr': {
-                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators"),
-                'value': ( school is defined ) ? school.emailHeadmaster
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
             }
         }) }}
 
@@ -182,8 +174,7 @@
             'id': "school-name-contact",
             'attr': {
                 'data-rule-minlength': "2", 'data-msg-minlength': 'school.name_contact.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.name_contact.length.max'|trans({}, "validators"),
-                'value': ( school is defined ) ? school.nameContact
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.name_contact.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -196,8 +187,7 @@
         {{ form_widget(form.phoneNumberContact, {
             'id': "school-phone-number-contact",
             'attr': {
-                'data-mask': "+38 (099) 999-99-99",
-                'value': ( school is defined ) ? school.phoneNumberContact
+                'data-mask': "+38 (099) 999-99-99"
             }
         }) }}
 
@@ -210,8 +200,7 @@
         {{ form_widget(form.emailContact, {
             'id': "school-email-contact",
             'attr': {
-                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators"),
-                'value': ( school is defined ) ? school.emailContact
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
             }
         }) }}
 

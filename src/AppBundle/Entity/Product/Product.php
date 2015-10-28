@@ -110,6 +110,11 @@ class Product implements SyncProductPropertiesInterface
     protected $price;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
+
+    /**
      * @Assert\File(
      *     maxSize="2M",
      *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
@@ -123,18 +128,6 @@ class Product implements SyncProductPropertiesInterface
      * @ORM\Column(type="string", length=250, nullable=true)
      */
     protected $imageCertificateName;
-
-    /**
-     * @ORM\Column(type="string", length=250, nullable=true)
-     *
-     * @Assert\Length(
-     *      min=2,
-     *      max=250,
-     *      minMessage="product.manufacturer.length.min",
-     *      maxMessage="product.manufacturer.length.max"
-     * )
-     */
-    protected $manufacturer;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -251,11 +244,10 @@ class Product implements SyncProductPropertiesInterface
      */
     public function __construct()
     {
-        $this->productImages         = new ArrayCollection;
-        $this->uploadedProductImages = new ArrayCollection;
-        $this->productVendingGroups  = new ArrayCollection;
-        $this->students              = new ArrayCollection;
-        $this->purchases             = new ArrayCollection;
+        $this->productImages        = new ArrayCollection;
+        $this->productVendingGroups = new ArrayCollection;
+        $this->students             = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -368,6 +360,29 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /**
+     * Set description
+     *
+     * @param string $description
+     * @return Product
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * Set imageCertificateName
      *
      * @param string $imageCertificateName
@@ -388,29 +403,6 @@ class Product implements SyncProductPropertiesInterface
     public function getImageCertificateName()
     {
         return $this->imageCertificateName;
-    }
-
-    /**
-     * Set manufacturer
-     *
-     * @param string $manufacturer
-     * @return Product
-     */
-    public function setManufacturer($manufacturer)
-    {
-        $this->manufacturer = $manufacturer;
-
-        return $this;
-    }
-
-    /**
-     * Get manufacturer
-     *
-     * @return string 
-     */
-    public function getManufacturer()
-    {
-        return $this->manufacturer;
     }
 
     /**

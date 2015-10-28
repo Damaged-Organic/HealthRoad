@@ -90,11 +90,13 @@ class ProductController extends Controller implements UserRoleListInterface
         if( !$_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         $_uploadedProductImageValidator = $this->get('app.validator.uploaded_product_image');
 
-        $productType = new ProductType($_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
+        $productType = new ProductType($_translator, $_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
 
         $form = $this->createForm($productType, $product = new Product, [
             'action' => $this->generateUrl('product_create')
@@ -158,6 +160,8 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $_productBoundlessAccess = $this->get('app.security.product_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         $_uploadedProductImageValidator = $this->get('app.validator.uploaded_product_image');
@@ -173,7 +177,7 @@ class ProductController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $productType = new ProductType($_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
+        $productType = new ProductType($_translator, $_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
 
         $form = $this->createForm($productType, $product, [
             'action' => $this->generateUrl('product_update', ['id' => $id])

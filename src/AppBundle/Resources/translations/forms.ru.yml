@@ -206,39 +206,36 @@ nfc_tag:
         label:       Код
         placeholder: Введите код
 
-    vending_machine:
-        label: Торговый автомат
-
 supplier:
     name:
-        label:       Имя
-        placeholder: Введите имя поставщика
+        label:       Название
+        placeholder: Введите название производителя
 
     name_legal:
         label:       Юридическое имя
-        placeholder: Введите юридическое имя поставщика
+        placeholder: Введите юридическое имя производителя
 
     description:
         label:       Описание
-        placeholder: Введите описание
+        placeholder: Введите описание производителя
 
     logo_file:
         label: Изображение логотипа
 
     phone_number_supplier:
-        label:       Номер телефона поставщика
-        placeholder: Введите номер телефона поставщика
+        label:       Телефон производителя
+        placeholder: Введите номер телефона производителя
 
     email_supplier:
-        label:       E-mail поставщика
-        placeholder: Введите e-mail поставщика
+        label:       E-mail производителя
+        placeholder: Введите e-mail производителя
 
     name_contact:
         label:       ФИО контакта
         placeholder: Введите ФИО контактного лица
 
     phone_number_contact:
-        label:       Номер телефона контакта
+        label:       Телефон контакта
         placeholder: Введите номер телефона контактного лица
 
     email_contact:
@@ -266,13 +263,20 @@ product:
         label:       Краткое наименование
         placeholder: Введите краткое наименование
 
+    product_category:
+        label: Категория
+
     code:
-        label:       Код
-        placeholder: Введите код
+        label:       Код товара
+        placeholder: Введите код товара
 
     price:
         label:       Цена
         placeholder: Введите цену продукта
+
+    description:
+        label:       Описание
+        placeholder: Введите описание продукта
 
     product_vending_group:
         label: Группа автоматов
@@ -284,11 +288,7 @@ product:
         label: Изображение сертификата
 
     supplier:
-        label: Поставщик
-
-    manufacturer:
-        label:       Производитель
-        placeholder: Введите наименование производителя
+        label: Производитель
 
     protein:
         label:       Белки

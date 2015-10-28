@@ -150,12 +150,13 @@ class EmployeeType extends AbstractType
                 } else {
                     $form
                         ->add('employeeGroup', 'entity', [
-                            'class'         => "AppBundle\\Entity\\Employee\\EmployeeGroup",
-                            'empty_data'    => 0,
-                            'choice_label'  => "name",
-                            'label'         => 'employee.employee_group.label',
-                            'empty_value'   => 'common.choice.placeholder',
-                            'query_builder' => function (EmployeeGroupRepository $repository) {
+                            'class'           => "AppBundle\\Entity\\Employee\\EmployeeGroup",
+                            'empty_data'      => 0,
+                            'choice_label'    => "name",
+                            'label'           => 'employee.employee_group.label',
+                            'empty_value'     => 'common.choice.placeholder',
+                            'invalid_message' => $this->_translator->trans('employee.employee_group.invalid_massage', [], 'validators'),
+                            'query_builder'   => function (EmployeeGroupRepository $repository) {
                                 return $repository->getSubordinateRolesQuery($this->boundlessAccess);
                             }
                         ])

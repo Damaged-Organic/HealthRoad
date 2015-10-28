@@ -38,6 +38,8 @@ class ProductCategory
      */
     protected $name;
 
+    /** Кондитерские изделия, Соки, Вода, Фрукты */
+
     /**
      * Constructor
      */

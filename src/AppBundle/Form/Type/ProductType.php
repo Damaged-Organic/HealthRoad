@@ -6,14 +6,19 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilderInterface,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormEvents,
-    Symfony\Component\OptionsResolver\OptionsResolver;
+    Symfony\Component\OptionsResolver\OptionsResolver,
+    Symfony\Component\Translation\TranslatorInterface;
 
 class ProductType extends AbstractType
 {
+    private $_translator;
+
     private $boundlessAccess;
 
-    public function __construct($boundlessAccess)
+    public function __construct(TranslatorInterface $translator, $boundlessAccess)
     {
+        $this->_translator = $translator;
+
         $this->boundlessAccess = $boundlessAccess;
     }
 
@@ -45,12 +50,13 @@ class ProductType extends AbstractType
                     'placeholder' => 'product.price.placeholder'
                 ]
             ])
-            ->add('imageCertificateFile', 'file', [
-                'required' => FALSE,
-                'label'    => 'product.image_certificate_file.label',
-                'attr'     => [
-                    'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
-                ]
+            ->add('productCategory', 'entity', [
+                'class'           => "AppBundle\\Entity\\Product\\ProductCategory",
+                'empty_data'      => 0,
+                'choice_label'    => "name",
+                'empty_value'     => 'common.choice.placeholder',
+                'label'           => 'product.product_category.label',
+                'invalid_message' => $this->_translator->trans('product.product_category.invalid_massage', [], 'validators'),
             ])
             ->add('supplier', 'entity', [
                 'required'     => FALSE,
@@ -59,11 +65,18 @@ class ProductType extends AbstractType
                 'label'        => 'product.supplier.label',
                 'empty_value'  => 'common.choice.placeholder'
             ])
-            ->add('manufacturer', 'text', [
+            ->add('imageCertificateFile', 'file', [
                 'required' => FALSE,
-                'label'    => 'product.manufacturer.label',
+                'label'    => 'product.image_certificate_file.label',
                 'attr'     => [
-                    'placeholder' => 'product.manufacturer.placeholder'
+                    'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
+                ]
+            ])
+            ->add('description', 'textarea', [
+                'required' => FALSE,
+                'label'    => 'product.description.label',
+                'attr'     => [
+                    'placeholder' => 'product.description.placeholder'
                 ]
             ])
             ->add('protein', 'number', [

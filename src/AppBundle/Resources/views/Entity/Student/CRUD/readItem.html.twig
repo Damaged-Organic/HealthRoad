@@ -83,6 +83,14 @@
         </ul>
     </div>
 
+    {% if student.customer|length %}
+        <div class="separator-holder">
+            <h2>Родитель ученика</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Customer/Binding:ancestors.html.twig' with { 'sibling': student } only %}
+    {% endif %}
+
     {% if student.employee|length %}
         <div class="separator-holder">
             <h2>Сотрудник, который зарегистрировал ученика</h2>

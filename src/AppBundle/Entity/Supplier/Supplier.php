@@ -65,6 +65,7 @@ class Supplier
     protected $description;
 
     /**
+     * @Assert\NotBlank(message="supplier.logo_file.not_blank")
      * @Assert\File(
      *     maxSize="2M",
      *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg", "image/gif"}

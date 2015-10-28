@@ -12,8 +12,7 @@
             'id': "customer-phone-number",
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'customer.phone_number.not_blank'|trans({}, "validators"),
-                'data-mask': "+38 (099) 999-99-99",
-                'value': ( customer is defined ) ? customer.phoneNumber
+                'data-mask': "+38 (099) 999-99-99"
             }
         }) }}
 
@@ -77,8 +76,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'customer.surname.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( customer is defined ) ? customer.surname
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -93,8 +91,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'customer.name.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( customer is defined ) ? customer.name
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -109,8 +106,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'customer.patronymic.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( customer is defined ) ? customer.patronymic
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -123,8 +119,7 @@
         {{ form_widget(form.email, {
             'id': "customer-email",
             'attr': {
-                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators"),
-                'value': ( customer is defined ) ? customer.email
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
             }
         }) }}
 

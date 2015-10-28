@@ -2,7 +2,7 @@
 {% extends 'AppBundle:Entity/Student/Base:table.html.twig' %}
 
 {% block action_items_th %}
-    <th colspan="2" class="double-small-fixed">
+    <th class="double-small-fixed">
         <span>управление</span>
     </th>
 {% endblock %}
@@ -12,12 +12,10 @@
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), student) %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
-            <td class="small-fixed edit-holder">
+            <td class="double-small-fixed edit-holder double-btn">
                 <div class="btn-edit">
                     <a href="{{ path('student_update', { 'id': student.id }) }}" class="icon hrd-edit"></a>
                 </div>
-            </td>
-            <td class="small-fixed delete-holder">
                 <div class="btn-bind binded">
                     <a href="{{ path('student_unbind', { 'targetId': student.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
                 </div>

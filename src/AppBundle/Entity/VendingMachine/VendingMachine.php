@@ -34,10 +34,10 @@ class VendingMachine
      */
     protected $productVendingGroup;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="vendingMachine", indexBy="code")
-     */
-    protected $nfcTags;
+    #/**
+    # * @ORM\OneToMany(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="vendingMachine", indexBy="code")
+    # */
+    #protected $nfcTags;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineSync", mappedBy="vendingMachine")
@@ -155,9 +155,10 @@ class VendingMachine
      */
     public function __construct()
     {
-        $this->nfcTags             = new ArrayCollection;
-        $this->vendingMachineSyncs = new ArrayCollection;
-        $this->purchases           = new ArrayCollection;
+        $this->nfcTags              = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
+        $this->vendingMachineSyncs  = new ArrayCollection;
+        $this->vendingMachineEvents = new ArrayCollection;
     }
 
     /**
@@ -392,39 +393,39 @@ class VendingMachine
         return $this->productVendingGroup;
     }
 
-    /**
-     * Add nfcTag
-     *
-     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
-     * @return VendingMachine
-     */
-    public function addNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag)
-    {
-        $nfcTag->setVendingMachine($this);
-        $this->nfcTags[] = $nfcTag;
+    #/**
+    # * Add nfcTag
+    # *
+    # * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
+    # * @return VendingMachine
+    # */
+    #public function addNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag)
+    #{
+    #    $nfcTag->setVendingMachine($this);
+    #    $this->nfcTags[] = $nfcTag;
+    #
+    #    return $this;
+    #}
 
-        return $this;
-    }
+    #/**
+    # * Remove nfcTags
+    # *
+    # * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTags
+    # */
+    #public function removeNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTags)
+    #{
+    #    $this->nfcTags->removeElement($nfcTags);
+    #}
 
-    /**
-     * Remove nfcTags
-     *
-     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTags
-     */
-    public function removeNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTags)
-    {
-        $this->nfcTags->removeElement($nfcTags);
-    }
-
-    /**
-     * Get nfcTags
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getNfcTags()
-    {
-        return $this->nfcTags;
-    }
+    #/**
+    # * Get nfcTags
+    # *
+    # * @return \Doctrine\Common\Collections\Collection
+    # */
+    #public function getNfcTags()
+    #{
+    #    return $this->nfcTags;
+    #}
 
     /**
      * Add vendingMachineSync

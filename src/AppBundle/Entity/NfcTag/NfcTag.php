@@ -23,11 +23,11 @@ class NfcTag implements SyncNfcTagPropertiesInterface
 {
     use IdMapperTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", inversedBy="nfcTags")
-     * @ORM\JoinColumn(name="vending_machine_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $vendingMachine;
+    #/**
+    # * @ORM\ManyToOne(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", inversedBy="nfcTags")
+    # * @ORM\JoinColumn(name="vending_machine_id", referencedColumnName="id", onDelete="SET NULL")
+    # */
+    #protected $vendingMachine;
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Student\Student", inversedBy="nfcTag")
@@ -118,28 +118,28 @@ class NfcTag implements SyncNfcTagPropertiesInterface
         return $this->code;
     }
 
-    /**
-     * Set vendingMachine
-     *
-     * @param \AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine
-     * @return NfcTag
-     */
-    public function setVendingMachine(\AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine = null)
-    {
-        $this->vendingMachine = $vendingMachine;
+    #/**
+    # * Set vendingMachine
+    # *
+    # * @param \AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine
+    # * @return NfcTag
+    # */
+    #public function setVendingMachine(\AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine = null)
+    #{
+    #    $this->vendingMachine = $vendingMachine;
+    #
+    #    return $this;
+    #}
 
-        return $this;
-    }
-
-    /**
-     * Get vendingMachine
-     *
-     * @return \AppBundle\Entity\VendingMachine\VendingMachine
-     */
-    public function getVendingMachine()
-    {
-        return $this->vendingMachine;
-    }
+    #/**
+    # * Get vendingMachine
+    # *
+    # * @return \AppBundle\Entity\VendingMachine\VendingMachine
+    # */
+    #public function getVendingMachine()
+    #{
+    #    return $this->vendingMachine;
+    #}
 
     /**
      * Set student

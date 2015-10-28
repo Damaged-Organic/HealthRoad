@@ -16,5 +16,15 @@
     </span>
 </td>
 <td>
+    <span>
+        {{ ( employee.email ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( employee.phoneNumber ) ?: '-' }}
+    </span>
+</td>
+<td>
     <span class="icon {{ ( employee.isEnabled ) ? 'hrd-accept' : 'hrd-cancel'  }}"></span>
 </td>

@@ -45,12 +45,12 @@ nfc_tag_read:    NFC-метки
 nfc_tag_view:    Просмотр NFC-метки
 nfc_tag_choose:  Привязать NFC-метку
 
-supplier_create:  Добавить поставщика
-supplier_update:  Редактировать поставщика
-supplier_bounded: Связи поставщика
-supplier_read:    Поставщики
-supplier_view:    Просмотр поставщика
-supplier_choose:  Привязать поставщика
+supplier_create:  Добавить производителя
+supplier_update:  Редактировать производителя
+supplier_bounded: Связи производителя
+supplier_read:    Производители
+supplier_view:    Просмотр производителя
+supplier_choose:  Привязать производителя
 
 product_create:  Добавить продукт
 product_update:  Редактировать продукт

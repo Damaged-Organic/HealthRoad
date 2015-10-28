@@ -36,9 +36,11 @@ class Product implements SyncProductPropertiesInterface
     protected $productCategory;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product\ProductImage", mappedBy="product")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product\ProductImage", mappedBy="product", cascade={"persist", "remove"})
      */
     protected $productImages;
+
+    protected $uploadedProductImages;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Supplier\Supplier", inversedBy="products")
@@ -106,6 +108,11 @@ class Product implements SyncProductPropertiesInterface
      * @CustomAssert\IsPriceConstraint
      */
     protected $price;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
 
     /**
      * @Assert\File(
@@ -249,10 +256,11 @@ class Product implements SyncProductPropertiesInterface
      */
     public function __construct()
     {
-        $this->productImages        = new ArrayCollection;
-        $this->productVendingGroups = new ArrayCollection;
-        $this->students             = new ArrayCollection;
-        $this->purchases            = new ArrayCollection;
+        $this->productImages         = new ArrayCollection;
+        $this->uploadedProductImages = new ArrayCollection;
+        $this->productVendingGroups  = new ArrayCollection;
+        $this->students              = new ArrayCollection;
+        $this->purchases             = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -684,6 +692,59 @@ class Product implements SyncProductPropertiesInterface
     public function getProductCategory()
     {
         return $this->productCategory;
+    }
+
+    /**
+     * Add productImage
+     *
+     * @param \AppBundle\Entity\Product\ProductImage $productImage
+     * @return Product
+     */
+    public function addProductImage(\AppBundle\Entity\Product\ProductImage $productImage)
+    {
+        $productImage->setProduct($this);
+        $this->productImages[] = $productImage;
+
+        return $this;
+    }
+
+    /**
+     * Remove productImages
+     *
+     * @param \AppBundle\Entity\Product\ProductImage $productImages
+     */
+    public function removeProductImage(\AppBundle\Entity\Product\ProductImage $productImages)
+    {
+        $this->productImages->removeElement($productImages);
+    }
+
+    /**
+     * Get productImages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProductImages()
+    {
+        return $this->productImages;
+    }
+
+    public function addUploadedProductImage($image)
+    {
+        $this->uploadedProductImages[] = $image;
+
+        return $this;
+    }
+
+    public function removeUploadedProductImage($image)
+    {
+        $this->uploadedProductImages->removeElement($image);
+
+        return $this;
+    }
+
+    public function getUploadedProductImages()
+    {
+        return $this->uploadedProductImages;
     }
 
     /**

@@ -61,10 +61,12 @@ class StudentType extends AbstractType
                 ]
             ])
             ->add('school', 'entity', [
-                'required'     => TRUE,
-                'class'        => "AppBundle\\Entity\\School\\School",
-                'choice_label' => "name",
-                'label'        => 'student.school.label'
+                'class'           => "AppBundle\\Entity\\School\\School",
+                'empty_data'      => 0,
+                'choice_label'    => "name",
+                'label'           => 'student.school.label',
+                'empty_value'     => 'common.choice.placeholder',
+                'invalid_message' => $this->_translator->trans('student.school.invalid_massage', [], 'validators'),
             ])
         ;
 

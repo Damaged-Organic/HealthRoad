@@ -6,8 +6,7 @@
         {{ form_widget(form.number, {
             'id': "nfc-tag-number",
             'attr': {
-                'data-rule-required': "true", 'data-msg-required': 'nfc_tag.number.not_blank'|trans({}, "validators"),
-                'value': ( nfcTag is defined ) ? nfcTag.number
+                'data-rule-required': "true", 'data-msg-required': 'nfc_tag.number.not_blank'|trans({}, "validators")
             }
         }) }}
 
@@ -20,58 +19,13 @@
         {{ form_widget(form.code, {
             'id': "nfc-tag-code",
             'attr': {
-                'data-rule-required': "true", 'data-msg-required': 'nfc_tag.code.not_blank'|trans({}, "validators"),
-                'value': ( nfcTag is defined ) ? nfcTag.code
+                'data-rule-required': "true", 'data-msg-required': 'nfc_tag.code.not_blank'|trans({}, "validators")
             }
         }) }}
 
         {{ form_label(form.code) }}
 
         {{ form_errors(form.code) }}
-    </div>
-
-    {% do form.vendingMachine.setRendered %}
-
-    {% set vending_machine_set = ( form.vendingMachine.vars.data ) ? true : false %}
-
-    <div class="select-holder {{ ( vending_machine_set ) ? 'watch-parent' : null }}">
-        <div class="btn-select">
-            <a href="#">
-                <div class="title-holder">
-                    <span class="title">{{ form.vendingMachine.vars.label|trans({}, 'forms') }}</span>
-                    <span class="icon hrd-list"></span>
-                </div>
-                <span class="text">{{ ( form.vendingMachine.vars.data ) ? form.vendingMachine.vars.data.choiceLabel : form.vendingMachine.vars.placeholder|trans({}, 'forms') }}</span>
-            </a>
-        </div>
-
-        {% if vending_machine_set %}
-            <div class="btn-view">
-                <a href="{{ path('vending_machine_update', { 'id': form.vendingMachine.vars.data.id }) }}" class="icon hrd-view"></a>
-            </div>
-        {% endif %}
-
-        {% for error in form.vendingMachine.vars.errors %}
-            <span class="error-holder">{{ error.message }}</span>
-        {% endfor %}
-
-        <div class="select-list">
-            <div class="outer">
-                <div class="inner">
-                    <ul>
-                        <li class="option-item {{ ( form.vendingMachine.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
-                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
-                        </li>
-                        {% for vendingMachine in form.vendingMachine.vars.choices %}
-                            <li class="option-item {{ ( form.vendingMachine.vars.data ) ? ( form.vendingMachine.vars.data.id != vendingMachine.value ) ?: 'active' : null }}" data-option="{{ vendingMachine.value }}">
-                                <span class="option-name">{{ vendingMachine.label }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <input type="hidden" name="{{ form.vendingMachine.vars.full_name }}" value="{{ ( form.vendingMachine.vars.data ) ? form.vendingMachine.vars.data.id : null }}">
     </div>
 
     {{ form_widget(form._token) }}

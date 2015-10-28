@@ -13,8 +13,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'student.name.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( student is defined ) ? student.surname
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -29,8 +28,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'student.surname.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( student is defined ) ? student.name
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -45,8 +43,7 @@
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'student.patronymic.not_blank'|trans({}, "validators"),
                 'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
-                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators"),
-                'value': ( student is defined ) ? student.patronymic
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
             }
         }) }}
 
@@ -84,8 +81,7 @@
             'id': "student-date-of-birth",
             'attr': {
                 'data-rule-required': "true", 'data-msg-required': 'student.date_of_birth.not_blank'|trans({}, "validators"),
-                'data-mask': "00-00-0000",
-                'value': ( student is defined ) ? student.dateOfBirth|date('d-m-Y')
+                'data-mask': "00-00-0000"
             }
         }) }}
 
@@ -150,8 +146,7 @@
                     'attr': {
                         'data-rule-required': "true", 'data-msg-required': 'student.total_limit.not_blank'|trans({}, "validators"),
                         'data-mask': "#0,00",
-                        'data-mask-reverse': "true",
-                        'value': ( student is defined ) ? student.totalLimit|number_format(2, ',', '')
+                        'data-mask-reverse': "true"
                     }
                 }) }}
 
@@ -165,8 +160,7 @@
                     'attr': {
                         'data-rule-required': "true", 'data-msg-required': 'student.daily_limit.not_blank'|trans({}, "validators"),
                         'data-mask': "#0,00",
-                        'data-mask-reverse': "true",
-                        'value': ( student is defined ) ? student.dailyLimit|number_format(2, ',', '')
+                        'data-mask-reverse': "true"
                     }
                 }) }}
 
