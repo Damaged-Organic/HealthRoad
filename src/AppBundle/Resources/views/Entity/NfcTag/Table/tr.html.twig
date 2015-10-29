@@ -17,6 +17,6 @@
 </td>
 <td>
     <span>
-        {{ ( nfcTag.vendingMachine ) ? nfcTag.vendingMachine.choiceLabel : '-' }}
+        {{ ( nfcTag.student ) ? (( nfcTag.student.school ) ? nfcTag.student.school.name : '-') : '-' }}
     </span>
 </td>

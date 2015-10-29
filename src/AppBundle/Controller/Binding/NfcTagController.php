@@ -2,13 +2,12 @@
 // AppBundle/Controller/Binding/NfcTagController.php
 namespace AppBundle\Controller\Binding;
 
-use AppBundle\Security\Authorization\Voter\StudentVoter;
-use AppBundle\Security\Authorization\Voter\VendingMachineVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
@@ -16,8 +15,9 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\NfcTagBoundlessAccess,
     AppBundle\Security\Authorization\Voter\NfcTagVoter,
     AppBundle\Entity\VendingMachine\VendingMachine,
-    AppBundle\Entity\Student\Student;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+    AppBundle\Entity\Student\Student,
+    AppBundle\Security\Authorization\Voter\StudentVoter,
+    AppBundle\Security\Authorization\Voter\VendingMachineVoter;
 
 class NfcTagController extends Controller implements UserRoleListInterface
 {
@@ -51,6 +51,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 ];
             break;
 
+            /*
             case $this->compareObjectClassNameToString(new VendingMachine, $objectClass):
                 $object = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
 
@@ -64,6 +65,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                     'voter' => VendingMachineVoter::VENDING_MACHINE_BIND
                 ];
             break;
+            */
 
             default:
                 throw new NotAcceptableHttpException("Object not supported");
@@ -120,6 +122,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 );
             break;
 
+            /*
             case $this->compareObjectClassNameToString(new VendingMachine, $objectClass):
                 $vendingMachine = $object = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
 
@@ -136,6 +139,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                     $_translator->trans('nfc_tag_read', [], 'routes')
                 );
             break;
+            */
 
             default:
                 throw new NotAcceptableHttpException("Object not supported");
@@ -211,6 +215,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 });
             break;
 
+            /*
             case $this->compareObjectClassNameToString(new VendingMachine, $objectClass):
                 $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
 
@@ -221,6 +226,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
                 $_manager->persist($vendingMachine);
             break;
+            */
 
             default:
                 throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));

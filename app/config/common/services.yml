@@ -212,8 +212,9 @@ services:
     app.sync.sync_data_validator:
         class: AppBundle\Service\Sync\SyncDataValidator
         calls:
-            - [setChecksum, [ "@app.sync.utility.checksum" ]]
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
             - [setValidator, [ "@validator" ]]
+            - [setChecksum, [ "@app.sync.utility.checksum" ]]
 
     app.sync.sync_data_handler:
         class: AppBundle\Service\Sync\SyncDataHandler

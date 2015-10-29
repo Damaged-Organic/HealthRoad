@@ -4,8 +4,6 @@ namespace AppBundle\Service\Sync;
 
 use DateTime;
 
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-
 use Doctrine\ORM\EntityManager;
 
 use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
@@ -22,109 +20,91 @@ class SyncDataRecorder implements SyncDataInterface, SyncVendingMachineSyncPrope
         $this->_manager = $manager;
     }
 
-    public function recordProductData(VendingMachine $vendingMachine, $syncResponse)
+    public function recordDataIfValid(VendingMachine $vendingMachine, $syncData, $recordMethod)
     {
-        if( !$syncResponse[self::SYNC_CHECKSUM] || !$syncResponse[self::SYNC_DATA] )
-            throw new BadCredentialsException('Sync response array is missing required data');
+        if( !$syncData[self::SYNC_CHECKSUM] || !$syncData[self::SYNC_DATA] )
+            return FALSE;
 
-        $vendingMachineSync = (new VendingMachineSync)
-            ->setVendingMachine($vendingMachine)
-            ->setVendingMachineSyncId(NULL)
-            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_PRODUCTS)
-            ->setSyncedAt(new DateTime)
-            ->setChecksum($syncResponse[self::SYNC_CHECKSUM])
-            ->setData(json_encode($syncResponse[self::SYNC_DATA]))
-        ;
+        $vendingMachineSync = $recordMethod(
+            $this->persistBaseData($vendingMachine, $syncData),
+            $syncData
+        );
 
         $this->_manager->persist($vendingMachineSync);
         $this->_manager->flush();
+
+        return TRUE;
     }
 
-    public function recordNfcTagData(VendingMachine $vendingMachine, $syncResponse)
+    protected function persistBaseData(VendingMachine $vendingMachine, $syncData)
     {
-        if( !$syncResponse[self::SYNC_CHECKSUM] || !$syncResponse[self::SYNC_DATA] )
-            throw new BadCredentialsException('Sync response array is missing required data');
-
         $vendingMachineSync = (new VendingMachineSync)
             ->setVendingMachine($vendingMachine)
-            ->setVendingMachineSyncId(NULL)
-            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_NFC_TAGS)
             ->setSyncedAt(new DateTime)
-            ->setChecksum($syncResponse[self::SYNC_CHECKSUM])
-            ->setData(json_encode($syncResponse[self::SYNC_DATA]))
+            ->setChecksum($syncData[self::SYNC_CHECKSUM])
+            ->setData(json_encode($syncData[self::SYNC_DATA]))
         ;
 
-        $this->_manager->persist($vendingMachineSync);
-        $this->_manager->flush();
+        return $vendingMachineSync;
     }
 
-    public function recordSyncData(VendingMachine $vendingMachine, $syncResponse)
+    protected function recordSyncData(VendingMachineSync $vendingMachineSync)
     {
-        if( !$syncResponse[self::SYNC_CHECKSUM] || !$syncResponse[self::SYNC_DATA] )
-            throw new BadCredentialsException('Sync response array is missing required data');
-
-        $vendingMachineSync = (new VendingMachineSync)
-            ->setVendingMachine($vendingMachine)
+        $vendingMachineSync
             ->setVendingMachineSyncId(NULL)
             ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_VENDING_MACHINE_SYNC)
-            ->setSyncedAt(new DateTime)
-            ->setChecksum($syncResponse[self::SYNC_CHECKSUM])
-            ->setData(json_encode($syncResponse[self::SYNC_DATA]))
         ;
 
-        $this->_manager->persist($vendingMachineSync);
-        $this->_manager->flush();
+        return $vendingMachineSync;
     }
 
-    public function recordVendingMachineData(VendingMachine $vendingMachine, $syncRequest)
+    protected function recordProductData(VendingMachineSync $vendingMachineSync)
     {
-        if( !$syncRequest[self::SYNC_CHECKSUM] || !$syncRequest[self::SYNC_DATA] )
-            throw new BadCredentialsException('Sync response array is missing required data');
+        $vendingMachineSync
+            ->setVendingMachineSyncId(NULL)
+            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_PRODUCTS)
+        ;
 
-        $vendingMachineSync = (new VendingMachineSync)
-            ->setVendingMachine($vendingMachine)
+        return $vendingMachineSync;
+    }
+
+    protected function recordNfcTagData(VendingMachineSync $vendingMachineSync)
+    {
+        $vendingMachineSync
+            ->setVendingMachineSyncId(NULL)
+            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_NFC_TAGS)
+        ;
+
+        return $vendingMachineSync;
+    }
+
+    protected function recordVendingMachineData(VendingMachineSync $vendingMachineSync)
+    {
+        $vendingMachineSync
             ->setVendingMachineSyncId(NULL)
             ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_VENDING_MACHINE)
-            ->setSyncedAt(new DateTime)
-            ->setChecksum($syncRequest[self::SYNC_CHECKSUM])
-            ->setData(json_encode($syncRequest[self::SYNC_DATA]))
         ;
 
-        $this->_manager->persist($vendingMachineSync);
-        $this->_manager->flush();
+        return $vendingMachineSync;
     }
 
-    public function recordPurchaseData($vendingMachine, $syncRequest)
+    protected function recordVendingMachineEventData(VendingMachineSync $vendingMachineSync, $syncData)
     {
-        if( !$syncRequest[self::SYNC_CHECKSUM] || !$syncRequest[self::SYNC_DATA] )
-            throw new BadCredentialsException('Sync response array is missing required data');
-
-        $vendingMachineSync = (new VendingMachineSync)
-            ->setVendingMachine($vendingMachine)
-            ->setVendingMachineSyncId($syncRequest[self::SYNC_DATA][self::VENDING_MACHINE_SYNC_ARRAY][0][self::VENDING_MACHINE_SYNC_ID])
-            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_PURCHASES)
-            ->setSyncedAt(new DateTime)
-            ->setChecksum($syncRequest[self::SYNC_CHECKSUM])
-            ->setData(json_encode($syncRequest[self::SYNC_DATA]))
-        ;
-
-        $this->_manager->persist($vendingMachineSync);
-    }
-
-    public function recordVendingMachineEventData($vendingMachine, $syncRequest)
-    {
-        if( !$syncRequest[self::SYNC_CHECKSUM] || !$syncRequest[self::SYNC_DATA] )
-            throw new BadCredentialsException('Sync response array is missing required data');
-
-        $vendingMachineSync = (new VendingMachineSync)
-            ->setVendingMachine($vendingMachine)
+        $vendingMachineSync
             ->setVendingMachineSyncId(NULL)
             ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_VENDING_MACHINE_EVENTS)
-            ->setSyncedAt(new DateTime)
-            ->setChecksum($syncRequest[self::SYNC_CHECKSUM])
-            ->setData(json_encode($syncRequest[self::SYNC_DATA]))
         ;
 
-        $this->_manager->persist($vendingMachineSync);
+        return $vendingMachineSync;
+    }
+
+    protected function recordPurchaseData(VendingMachineSync $vendingMachineSync, $syncData)
+    {
+        $vendingMachineSync
+            ->setVendingMachineSyncId($syncData[self::SYNC_DATA][self::VENDING_MACHINE_SYNC_ARRAY][0][self::VENDING_MACHINE_SYNC_ID])
+            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_PURCHASES)
+        ;
+
+        return $vendingMachineSync;
     }
 }

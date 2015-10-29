@@ -541,6 +541,18 @@ class VendingMachine
             : NULL;
     }
 
+    /**
+     * Shortcut to get students if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getStudents()
+    {
+        return ( $this->getSchool() )
+            ? $this->getSchool()->getStudents()
+            : NULL;
+    }
+
     public function getChoiceLabel()
     {
         return "{$this->serial}" . (( $this->name ) ? " ({$this->name})" : NULL);

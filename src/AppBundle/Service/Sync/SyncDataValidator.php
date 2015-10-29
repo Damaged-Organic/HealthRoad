@@ -2,35 +2,55 @@
 // AppBundle/Service/Sync/SyncDataValidator.php
 namespace AppBundle\Service\Sync;
 
-use AppBundle\Entity\Purchase\Purchase;
-use AppBundle\Entity\VendingMachine\VendingMachineEvent;
-use AppBundle\Entity\VendingMachine\VendingMachineSync;
 use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\Validator\Constraints as Assert;
+    Symfony\Component\Validator\Constraints as Assert,
+    Symfony\Component\Validator\Validator\ValidatorInterface;
+
+use Doctrine\ORM\EntityManager;
 
 use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface,
+    AppBundle\Entity\Purchase\Purchase,
+    AppBundle\Entity\VendingMachine\VendingMachineEvent,
+    AppBundle\Entity\VendingMachine\VendingMachineSync,
     AppBundle\Service\Sync\Utility\Checksum,
     AppBundle\Validator\Constraints as CustomAssert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SyncDataValidator implements
     SyncDataInterface,
     SyncVendingMachinePropertiesInterface,
     SyncVendingMachineSyncPropertiesInterface
 {
-    public $_checksum;
-    public $_validator;
+    private $_manager;
+    private $_validator;
+
+    private $_checksum;
+
+    public function setManager(EntityManager $manager)
+    {
+        $this->_manager = $manager;
+    }
+
+    public function setValidator(ValidatorInterface $validator)
+    {
+        $this->_validator = $validator;
+    }
 
     public function setChecksum(Checksum $checksum)
     {
         $this->_checksum = $checksum;
     }
 
-    public function setValidator(ValidatorInterface $validator)
+    public function validateSyncSequence($vendingMachine, $type, $data)
     {
-        $this->_validator = $validator;
+        $vendingMachineSync = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachineSync')->findOneBy([
+            'vendingMachine'       => $vendingMachine,
+            'vendingMachineSyncId' => $data[self::SYNC_DATA][self::VENDING_MACHINE_SYNC_ARRAY][0][self::VENDING_MACHINE_SYNC_ID],
+            'syncedType'           => $type
+        ]);
+
+        return $vendingMachineSync;
     }
 
     public function validateVendingMachineSyncData(Request $request)

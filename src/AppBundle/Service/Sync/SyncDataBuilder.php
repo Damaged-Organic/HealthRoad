@@ -20,6 +20,25 @@ class SyncDataBuilder implements SyncDataInterface
         $this->_checksum = $checksum;
     }
 
+    public function buildSyncData(VendingMachineSync $vendingMachineSync = NULL)
+    {
+        $data = [];
+
+        if( $vendingMachineSync )
+            $data[] = $vendingMachineSync->getSyncObjectData();
+
+        $data = [
+            VendingMachineSync::getSyncArrayName() => $data
+        ];
+
+        $syncResponse = [
+            self::SYNC_CHECKSUM => $this->_checksum->getDataChecksum($data),
+            self::SYNC_DATA     => $data
+        ];
+
+        return $syncResponse;
+    }
+
     public function buildProductData(PersistentCollection $products)
     {
         $data = [];
@@ -40,10 +59,8 @@ class SyncDataBuilder implements SyncDataInterface
         return $syncResponse;
     }
 
-    public function buildNfcTagData(PersistentCollection $nfcTags)
+    public function buildNfcTagData(PersistentCollection $students)
     {
-        $data = [];
-
         $build = function($nfcTag)
         {
             $data = $nfcTag->getSyncObjectData();
@@ -57,9 +74,11 @@ class SyncDataBuilder implements SyncDataInterface
             return $data;
         };
 
-        foreach($nfcTags as $nfcTag)
-        {
-            $data[] = $build($nfcTag);
+        $data = [];
+
+        foreach($students as $student) {
+            if( $student->getNfcTag() )
+                $data[] = $build($student->getNfcTag());
         }
 
         $data = [
@@ -74,23 +93,5 @@ class SyncDataBuilder implements SyncDataInterface
         return $syncResponse;
     }
 
-    public function buildSyncData(VendingMachineSync $vendingMachineSync = NULL)
-    {
-        $data = NULL;
 
-        if( $vendingMachineSync ) {
-            $data[] = $vendingMachineSync->getSyncObjectData();
-        }
-
-        $data = [
-            VendingMachineSync::getSyncArrayName() => $data
-        ];
-
-        $syncResponse = [
-            self::SYNC_CHECKSUM => $this->_checksum->getDataChecksum($data),
-            self::SYNC_DATA     => $data
-        ];
-
-        return $syncResponse;
-    }
 }

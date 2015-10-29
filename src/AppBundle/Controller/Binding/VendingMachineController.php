@@ -86,6 +86,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "objectId" = "\d+", "objectClass" = "[a-z]+"}
      * )
      */
+    /*
     public function boundedAction($objectId, $objectClass)
     {
         $_manager = $this->getDoctrine()->getManager();
@@ -106,6 +107,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
         switch(TRUE)
         {
+
             case $this->compareObjectClassNameToString(new NfcTag, $objectClass):
                 $bounded = $this->forward('AppBundle:Binding\NfcTag:show', [
                     'objectClass' => $this->getObjectClassName($vendingMachine),
@@ -132,6 +134,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             'vendingMachine' => $vendingMachine
         ]);
     }
+    */
 
     /**
      * @Method({"GET"})

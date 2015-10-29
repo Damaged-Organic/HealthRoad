@@ -57,6 +57,10 @@ class LoadStudent extends AbstractFixture implements OrderedFixtureInterface
         // ---
 
         $manager->flush();
+
+        $this->addReference('kid_1', $kid_1);
+        $this->addReference('kid_2', $kid_2);
+        $this->addReference('kid_3', $kid_3);
     }
 
     public function getOrder()
