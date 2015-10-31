@@ -66,6 +66,12 @@
                 <span class="text">{{ 'product_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
+        <li {{ ( 'PurchaseController' in controller ) ? 'class="active"' : null }} title="{{ 'purchase_read'|trans({}, 'routes') }}">
+            <a href="{{ path('purchase_read') }}" data-count="{{ quantities.purchases }}">
+                <span class="icon hrd-cart"></span>
+                <span class="text">{{ 'purchase_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
         <li class="sprtr-h"></li>
         <li {{ ( 'ProductVendingGroupController' in controller ) ? 'class="active"' : null }} title="{{ 'product_vending_group_read'|trans({}, 'routes') }}">
             <a href="{{ path('product_vending_group_read') }}" data-count="{{ quantities.productsVendingGroups }}">

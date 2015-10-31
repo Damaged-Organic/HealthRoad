@@ -18,8 +18,15 @@
                 <div class="item key">
                     <span>{{ 'settlement.region.label'|trans({}, 'forms') }}</span>
                 </div>
-                <div class="item value">
-                    <p>{{ ( settlement.region ) ? settlement.region.name : '-' }}</p>
+                <div class="item value btn-holder">
+                    {% if settlement.region %}
+                        <p>{{ settlement.region.name }}</p>
+                        <div class="btn-view padded">
+                            <a href="{{ path('region_update', { 'id': settlement.region.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
                 </div>
             </li>
         </ul>

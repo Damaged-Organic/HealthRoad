@@ -22,6 +22,22 @@
 
             <li>
                 <div class="item key">
+                    <span>{{ 'purchase.product_name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if purchase.product %}
+                        <p>{{ purchase.product.nameFull }}</p>
+                        <div class="btn-view">
+                            <a href="{{ path('product_update', { 'id': purchase.product.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
                     <span>{{ 'purchase.product_id.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
@@ -31,10 +47,26 @@
 
             <li>
                 <div class="item key">
-                    <span>{{ 'purchase.product_name.label'|trans({}, 'forms') }}</span>
+                    <span>{{ 'purchase.product_price.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
-                    <p>{{ ( purchase.product ) ? purchase.product.nameFull : '-' }}</p>
+                    <p>{{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.vending_machine_choice_label.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if purchase.vendingMachine %}
+                        <p>{{ purchase.vendingMachine.choiceLabel }}</p>
+                        <div class="btn-view">
+                            <a href="{{ path('vending_machine_update', { 'id': purchase.vendingMachine.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
                 </div>
             </li>
 
@@ -42,8 +74,15 @@
                 <div class="item key">
                     <span>{{ 'purchase.nfc_tag_number.label'|trans({}, 'forms') }}</span>
                 </div>
-                <div class="item value">
-                    <p>{{ ( purchase.nfcTag ) ? purchase.nfcTag.number : '-' }}</p>
+                <div class="item value btn-holder">
+                    {% if purchase.nfcTag %}
+                        <p>{{ purchase.nfcTag.number }}</p>
+                        <div class="btn-view">
+                            <a href="{{ path('nfc_tag_update', { 'id': purchase.nfcTag.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
                 </div>
             </li>
 
@@ -60,8 +99,15 @@
                 <div class="item key">
                     <span>{{ 'purchase.student.label'|trans({}, 'forms') }}</span>
                 </div>
-                <div class="item value">
-                    <p>{{ ( purchase.nfcTag ) ? (( purchase.nfcTag.student ) ? purchase.nfcTag.student.fullName : '-' ) : '-' }}</p>
+                <div class="item value btn-holder">
+                    {% if purchase.nfcTag and purchase.nfcTag.student %}
+                        <p>{{ purchase.nfcTag.student.fullName }}</p>
+                        <div class="btn-view">
+                            <a href="{{ path('student_update', { 'id': purchase.nfcTag.student.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
                 </div>
             </li>
 
@@ -69,17 +115,15 @@
                 <div class="item key">
                     <span>{{ 'purchase.customer.label'|trans({}, 'forms') }}</span>
                 </div>
-                <div class="item value">
-                    <p>{{ ( purchase.nfcTag ) ? ((purchase.nfcTag.student) ? (( purchase.nfcTag.student.customer ) ? purchase.nfcTag.student.customer : '-' ) : '-' ) : '-' }}</p>
-                </div>
-            </li>
-
-            <li>
-                <div class="item key">
-                    <span>{{ 'purchase.product_price.label'|trans({}, 'forms') }}</span>
-                </div>
-                <div class="item value">
-                    <p>{{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') : '-' }}</p>
+                <div class="item value btn-holder">
+                    {% if purchase.nfcTag and purchase.nfcTag.student and purchase.nfcTag.student.customer %}
+                        <p>{{ purchase.nfcTag.student.customer.fullName }}</p>
+                        <div class="btn-view">
+                            <a href="{{ path('customer_update', { 'id': purchase.nfcTag.student.customer.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
                 </div>
             </li>
 

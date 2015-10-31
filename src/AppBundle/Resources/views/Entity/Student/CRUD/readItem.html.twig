@@ -55,8 +55,15 @@
                 <div class="item key">
                     <span>{{ 'student.school.label'|trans({}, 'forms') }}</span>
                 </div>
-                <div class="item value">
-                    <p>{{ ( student.school ) ? student.school.name : '-' }}</p>
+                <div class="item value btn-holder">
+                    {% if student.school %}
+                        <p>{{ student.school.name }}</p>
+                        <div class="btn-view">
+                            <a href="{{ path('student_update', { 'id': student.school.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
                 </div>
             </li>
 

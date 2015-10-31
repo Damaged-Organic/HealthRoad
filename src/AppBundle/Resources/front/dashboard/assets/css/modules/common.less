@@ -566,7 +566,7 @@ a{
 	}
 }
 #read-data-holder{
-	ul, li{
+  	ul, li{
 		display: block;
 		width: 100%;
 		height: auto;
@@ -593,6 +593,26 @@ a{
 				width: ~"calc(100% - 240px)";
 				p{
 					padding: 20px;
+				}
+			  	&.btn-holder{
+				  	p{
+					  	display: inline-block;
+					  	padding-right: 60px;
+					}
+				  	*[class^="btn"]{
+					  	float: right;
+					  	&.padded{
+						  	padding-right: 15px;
+						}
+					  	a, span{
+						  	background: @black;
+						  	color: @white;
+						  	&:hover{
+								background: @white;
+								color: @black;
+							}
+						}
+					}
 				}
 			}
 		}

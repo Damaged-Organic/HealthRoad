@@ -59,11 +59,12 @@ class ProductType extends AbstractType
                 'invalid_message' => $this->_translator->trans('product.product_category.invalid_massage', [], 'validators'),
             ])
             ->add('supplier', 'entity', [
-                'required'     => FALSE,
-                'class'        => "AppBundle\\Entity\\Supplier\\Supplier",
-                'choice_label' => "name",
-                'label'        => 'product.supplier.label',
-                'empty_value'  => 'common.choice.placeholder'
+                'required'          => FALSE,
+                'class'             => "AppBundle\\Entity\\Supplier\\Supplier",
+                'choice_label'      => "name",
+                'label'             => 'product.supplier.label',
+                'empty_value'       => 'common.choice.placeholder',
+                'validation_groups' => ['Supplier', 'Strict', 'Update']
             ])
             ->add('imageCertificateFile', 'file', [
                 'required' => FALSE,

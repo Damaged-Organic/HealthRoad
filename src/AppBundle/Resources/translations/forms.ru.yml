@@ -371,35 +371,38 @@ student:
 
 purchase:
     product_id:
-        label:
+        label: Идентификатор продукта
 
     product_name:
-        label:
+        label: Наименование продукта
 
     product_price:
-        label:
+        label: Цена продукта
+
+    vending_machine_choice_label:
+        label: Торговый автомат
 
     nfc_tag_number:
-        label:
+        label: Номер NFC-метки
 
     nfc_tag_code:
-        label:
+        label: Код NFC-метки
 
     student:
-        label:
+        label: Ученик
 
     customer:
-        label:
+        label: Клиент
 
     sync:
         purchased_at:
-            label:
+            label: Дата и время продажи
 
         product_id:
-            label:
+            label: Идентификатор продукта
 
         nfc_tag_code:
-            label:
+            label: Код NFC-метки
 
         product_price:
-            label:
+            label: Цена продукта

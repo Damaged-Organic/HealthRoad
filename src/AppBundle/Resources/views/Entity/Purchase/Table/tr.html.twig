@@ -12,6 +12,11 @@
 </td>
 <td>
     <span>
+        {{ ( purchase.vendingMachine ) ? purchase.vendingMachine.choiceLabel : '-' }}
+    </span>
+</td>
+<td>
+    <span>
         {{ ( purchase.nfcTag ) ? purchase.nfcTag.number : '-' }}
     </span>
 </td>
@@ -22,11 +27,6 @@
 </td>
 <td>
     <span>
-        {{ ( purchase.nfcTag ) ? ((purchase.nfcTag.student) ? (( purchase.nfcTag.student.customer ) ? purchase.nfcTag.student.customer : '-' ) : '-' ) : '-' }}
-    </span>
-</td>
-<td>
-    <span>
-        {{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') ~ '₴' : '-' }}
+        {{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') : '-' }}
     </span>
 </td>

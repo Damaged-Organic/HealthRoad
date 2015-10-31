@@ -23,16 +23,30 @@
                 <div class="item key">
                     <span>{{ 'vending_machine.school.label'|trans({}, 'forms') }}</span>
                 </div>
-                <div class="item value">
-                    <p>{{ ( vendingMachine.school ) ? vendingMachine.school.name : '-' }}</p>
+                <div class="item value btn-holder">
+                    {% if vendingMachine.school %}
+                        <p>{{ vendingMachine.school.name }}</p>
+                        <div class="btn-view padded">
+                            <a href="{{ path('school_update', { 'id': vendingMachine.school.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
                 </div>
             </li>
             <li>
                 <div class="item key">
                     <span>{{ 'vending_machine.product_vending_group.label'|trans({}, 'forms') }}</span>
                 </div>
-                <div class="item value">
-                    <p>{{ ( vendingMachine.productVendingGroup ) ? vendingMachine.productVendingGroup.name : '-' }}</p>
+                <div class="item value btn-holder">
+                    {% if vendingMachine.productVendingGroup %}
+                        <p>{{ vendingMachine.productVendingGroup.name }}</p>
+                        <div class="btn-view padded">
+                            <a href="{{ path('product_vending_group_update', { 'id': vendingMachine.productVendingGroup.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
                 </div>
             </li>
             <li>

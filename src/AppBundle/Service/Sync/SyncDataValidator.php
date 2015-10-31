@@ -150,10 +150,10 @@ class SyncDataValidator implements
         if( !$this->_checksum->verifyDataChecksum($requestContent[self::SYNC_CHECKSUM], $requestContent[self::SYNC_DATA]) )
             return FALSE;
 
-        foreach( $requestContent[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()] as $value ) {
+        /*foreach( $requestContent[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()] as $value ) {
             if( !$value[self::VENDING_MACHINE_SYNC_ID] )
                 return FALSE;
-        }
+        }*/
 
         // specific validation
 
