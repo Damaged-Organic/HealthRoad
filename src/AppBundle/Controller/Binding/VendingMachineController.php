@@ -2,6 +2,7 @@
 // AppBundle/Controller/Binding/VendingMachineController.php
 namespace AppBundle\Controller\Binding;
 
+use AppBundle\Entity\Purchase\Purchase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -86,7 +87,6 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "objectId" = "\d+", "objectClass" = "[a-z]+"}
      * )
      */
-    /*
     public function boundedAction($objectId, $objectClass)
     {
         $_manager = $this->getDoctrine()->getManager();
@@ -108,7 +108,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         switch(TRUE)
         {
 
-            case $this->compareObjectClassNameToString(new NfcTag, $objectClass):
+            /*case $this->compareObjectClassNameToString(new NfcTag, $objectClass):
                 $bounded = $this->forward('AppBundle:Binding\NfcTag:show', [
                     'objectClass' => $this->getObjectClassName($vendingMachine),
                     'objectId'    => $objectId
@@ -120,6 +120,21 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                         'objectClass' => $objectClass
                     ],
                     $_translator->trans('nfc_tag_read', [], 'routes')
+                );
+            break;*/
+
+            case $this->compareObjectClassNameToString(new Purchase, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Purchase:show', [
+                    'objectClass' => $this->getObjectClassName($vendingMachine),
+                    'objectId'    => $objectId
+                ]);
+
+                $_breadcrumbs->add('vending_machine_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $_translator->trans('purchase_read', [], 'routes')
                 );
             break;
 
@@ -134,7 +149,6 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             'vendingMachine' => $vendingMachine
         ]);
     }
-    */
 
     /**
      * @Method({"GET"})

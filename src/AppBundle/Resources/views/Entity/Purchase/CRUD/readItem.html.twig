@@ -1,0 +1,119 @@
+{# AppBundle/Resources/views/Entity/Purchase/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/Purchase/Base:item.html.twig' %}
+
+{% block active_purchase_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Данные, зафиксированные в системе на момент синхронизации</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.sync.purchased_at.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ purchase.syncPurchasedAt|date('Y-m-d H:i:s') }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.product_id.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( purchase.product ) ? purchase.product.id : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.product_name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( purchase.product ) ? purchase.product.nameFull : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.nfc_tag_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( purchase.nfcTag ) ? purchase.nfcTag.number : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.nfc_tag_code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( purchase.nfcTag ) ? purchase.nfcTag.code : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.student.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( purchase.nfcTag ) ? (( purchase.nfcTag.student ) ? purchase.nfcTag.student.fullName : '-' ) : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.customer.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( purchase.nfcTag ) ? ((purchase.nfcTag.student) ? (( purchase.nfcTag.student.customer ) ? purchase.nfcTag.student.customer : '-' ) : '-' ) : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.product_price.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') : '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Данные, полученные от торгового автомата</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.sync.product_id.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ purchase.syncProductId }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.sync.nfc_tag_code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ purchase.syncNfcTagCode }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase.sync.product_price.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ purchase.syncProductPrice }}</p>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+{% endblock %}

@@ -25,7 +25,7 @@ class VendingMachineEventRepository extends ExtendedEntityRepository
         $queryString = substr($queryString, 0, -1);
 
         $queryString = "
-            INSERT INTO purchases (
+            INSERT INTO vending_machines_events (
                 vending_machine_id,
                 sync_event_id,
                 occurred_at,

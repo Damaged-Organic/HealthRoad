@@ -1,0 +1,32 @@
+{# AppBundle/Resources/views/Entity/Purchase/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ purchase.id }}</span></td>
+<td>
+    <span>
+        {{ purchase.syncPurchasedAt|date('Y-m-d H:i:s') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( purchase.product ) ? purchase.product.nameFull : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( purchase.nfcTag ) ? purchase.nfcTag.number : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( purchase.nfcTag ) ? (( purchase.nfcTag.student ) ? purchase.nfcTag.student.fullName : '-' ) : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( purchase.nfcTag ) ? ((purchase.nfcTag.student) ? (( purchase.nfcTag.student.customer ) ? purchase.nfcTag.student.customer : '-' ) : '-' ) : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') ~ '₴' : '-' }}
+    </span>
+</td>

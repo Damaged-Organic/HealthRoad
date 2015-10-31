@@ -368,3 +368,38 @@ student:
     daily_limit:
         label:       Дневной лимит средств
         placeholder: Введите дневной лимит средств
+
+purchase:
+    product_id:
+        label:
+
+    product_name:
+        label:
+
+    product_price:
+        label:
+
+    nfc_tag_number:
+        label:
+
+    nfc_tag_code:
+        label:
+
+    student:
+        label:
+
+    customer:
+        label:
+
+    sync:
+        purchased_at:
+            label:
+
+        product_id:
+            label:
+
+        nfc_tag_code:
+            label:
+
+        product_price:
+            label:

@@ -7,7 +7,6 @@ use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 

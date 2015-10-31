@@ -38,7 +38,7 @@ class PurchaseRepository extends ExtendedEntityRepository
                     '{$purchase->getSyncNfcTagCode()}',
                     '{$purchase->getSyncProductId()}',
                     '{$purchase->getSyncProductPrice()}',
-                    '{$purchase->getSyncPurchasedAt()->format('d-m-Y H:i:s')}',
+                    '{$purchase->getSyncPurchasedAt()->format('Y-m-d H:i:s')}',
                     '{$purchase->getVendingMachineSerial()}',
                     '{$purchase->getVendingMachineSyncId()}'
                 ),";

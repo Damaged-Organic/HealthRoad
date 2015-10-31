@@ -27,17 +27,6 @@ class SyncDataHandler implements
         $this->_manager = $manager;
     }
 
-    /*public function validateSyncSequence($vendingMachine, $type, $data)
-    {
-        $vendingMachineSync = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachineSync')->findOneBy([
-            'vendingMachine'       => $vendingMachine,
-            'vendingMachineSyncId' => $data[self::SYNC_DATA][self::VENDING_MACHINE_SYNC_ARRAY][0][self::VENDING_MACHINE_SYNC_ID],
-            'syncedType'           => $type
-        ]);
-
-        return $vendingMachineSync;
-    }*/
-
     public function handleVendingMachineSyncData($vendingMachine, $data)
     {
         $vendingMachineSync = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachineSync')
@@ -128,7 +117,7 @@ class SyncDataHandler implements
     {
         $eventsArray = [];
 
-        foreach( $data[self::SYNC_DATA][Purchase::getSyncArrayName()] as $value )
+        foreach( $data[self::SYNC_DATA][VendingMachineEvent::getSyncArrayName()] as $value )
         {
             $vendingMachineEvent = (new VendingMachineEvent)
                 ->setSyncEventId($value[VendingMachineEvent::VENDING_MACHINE_EVENT_ID])

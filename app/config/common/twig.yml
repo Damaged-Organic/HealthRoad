@@ -13,3 +13,4 @@ twig:
         product_vending_group_boundless_access: "@app.security.product_vending_group_boundless_access"
         customer_boundless_access:              "@app.security.customer_boundless_access"
         student_boundless_access:               "@app.security.student_boundless_access"
+        purchase_boundless_access:              "@app.security.purchase_boundless_access"

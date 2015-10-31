@@ -82,3 +82,6 @@ student_bounded: Связи ученика
 student_read:    Ученики
 student_view:    Просмотр ученика
 student_choose:  Привязать ученика
+
+purchase_read: Продажи
+purchase_view: Просмотр продажи

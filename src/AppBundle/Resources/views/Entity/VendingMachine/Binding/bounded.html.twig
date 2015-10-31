@@ -9,6 +9,12 @@
 {% endblock %}
 #}
 
+{% block active_vending_machine_update_bounded_purchase %}
+    {% if objectClass is same as('purchase') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
 {% block variable %}
 
     {{ bounded|raw }}
