@@ -2,18 +2,23 @@
 // AppBundle/Controller/Binding/VendingMachineController.php
 namespace AppBundle\Controller\Binding;
 
+use AppBundle\Entity\Purchase\Purchase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
+use Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse,
+    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Controller\Traits\ClassOperationsTrait,
+    AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\School\School,
+    AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Entity\Product\ProductVendingGroup,
     AppBundle\Security\Authorization\Voter\VendingMachineVoter,
+    AppBundle\Security\Authorization\Voter\SchoolVoter,
+    AppBundle\Security\Authorization\Voter\ProductVendingGroupVoter,
     AppBundle\Service\Security\VendingMachineBoundlessAccess;
 
 class VendingMachineController extends Controller implements UserRoleListInterface
@@ -32,11 +37,31 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new School, $objectClass):
-                $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['school' => $objectId]);
+                $object = $_manager->getRepository('AppBundle:School\School')->find($objectId);
+
+                if( !$object )
+                    throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
+
+                $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['school' => $object]);
+
+                $action = [
+                    'path'  => 'vending_machine_choose',
+                    'voter' => SchoolVoter::SCHOOL_BIND
+                ];
             break;
 
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['productVendingGroup' => $objectId]);
+                $object = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+
+                if( !$object )
+                    throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
+
+                $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['productVendingGroup' => $object]);
+
+                $action = [
+                    'path'  => 'vending_machine_choose',
+                    'voter' => ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_BIND
+                ];
             break;
 
             default:
@@ -45,9 +70,83 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         }
 
         return $this->render('AppBundle:Entity/VendingMachine/Binding:show.html.twig', [
+            'standalone'      => TRUE,
             'vendingMachines' => $vendingMachines,
-            'objectId'        => $objectId,
-            'objectClass'     => $objectClass
+            'object'          => $object,
+            'action'          => $action
+        ]);
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/vending_machine/update/{objectId}/bounded/{objectClass}",
+     *      name="vending_machine_update_bounded",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "objectId" = "\d+", "objectClass" = "[a-z]+"}
+     * )
+     */
+    public function boundedAction($objectId, $objectClass)
+    {
+        $_manager = $this->getDoctrine()->getManager();
+
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
+        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
+
+        if( !$vendingMachine )
+            throw $this->createNotFoundException("Vending Machine identified by `id` {$objectId} not found");
+
+        if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_READ, $vendingMachine) )
+            throw $this->createAccessDeniedException('Access denied');
+
+        $_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $objectId], $_translator->trans('vending_machine_bounded', [], 'routes'));
+
+        switch(TRUE)
+        {
+
+            /*case $this->compareObjectClassNameToString(new NfcTag, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\NfcTag:show', [
+                    'objectClass' => $this->getObjectClassName($vendingMachine),
+                    'objectId'    => $objectId
+                ]);
+
+                $_breadcrumbs->add('vending_machine_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $_translator->trans('nfc_tag_read', [], 'routes')
+                );
+            break;*/
+
+            case $this->compareObjectClassNameToString(new Purchase, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Purchase:show', [
+                    'objectClass' => $this->getObjectClassName($vendingMachine),
+                    'objectId'    => $objectId
+                ]);
+
+                $_breadcrumbs->add('vending_machine_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $_translator->trans('purchase_read', [], 'routes')
+                );
+            break;
+
+            default:
+                throw new NotAcceptableHttpException("Object not supported");
+            break;
+        }
+
+        return $this->render('AppBundle:Entity/VendingMachine/Binding:bounded.html.twig', [
+            'objectClass'    => $objectClass,
+            'bounded'        => $bounded->getContent(),
+            'vendingMachine' => $vendingMachine
         ]);
     }
 
@@ -70,30 +169,44 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
         $_manager = $this->getDoctrine()->getManager();
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new School, $objectClass):
-                $school = $_manager->getRepository('AppBundle:School\School')->find($objectId);
+                $school = $object = $_manager->getRepository('AppBundle:School\School')->find($objectId);
 
                 if( !$school )
                     throw $this->createNotFoundException("School identified by `id` {$objectId} not found");
 
-                $object = [
-                    'class' => $this->getObjectClassName($school),
-                    'id'    => $school->getId()
-                ];
+                $path = 'school_update_bounded';
+
+                $_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId])->add('school_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'vendingmachine'
+                    ],
+                    $_translator->trans('vending_machine_read', [], 'routes')
+                );
             break;
 
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+                $productVendingGroup = $object = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
                 if( !$productVendingGroup )
                     throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
 
-                $object = [
-                    'class' => $this->getObjectClassName($productVendingGroup),
-                    'id'    => $productVendingGroup->getId()
-                ];
+                $path = 'product_vending_group_update_bounded';
+
+                $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $objectId])->add('product_vending_group_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'vendingmachine'
+                    ],
+                    $_translator->trans('vending_machine_read', [], 'routes')
+                );
             break;
 
             default:
@@ -103,39 +216,41 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
         $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll();
 
+        $_breadcrumbs->add('vending_machine_choose', [
+            'objectId'    => $objectId,
+            'objectClass' => $objectClass
+        ]);
+
         return $this->render('AppBundle:Entity/VendingMachine/Binding:choose.html.twig', [
+            'path'            => $path,
             'vendingMachines' => $vendingMachines,
-            'objectClass'     => $object['class'],
-            'objectId'        => $object['id']
+            'object'          => $object
         ]);
     }
 
     /**
-     * @Method({"POST"})
+     * @Method({"GET"})
      * @Route(
-     *      "/vending_machine/bind",
+     *      "/vending_machine/bind/{targetId}/{objectClass}/{objectId}",
      *      name="vending_machine_bind",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"}
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
      * )
      */
-    public function bindToAction(Request $request)
+    public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $vendingMachineId = ( $request->request->has('vendingMachineId') ) ? $request->request->get('vendingMachineId') : NULL;
-
         $_manager = $this->getDoctrine()->getManager();
 
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($vendingMachineId);
+        $_translator = $this->get('translator');
+
+        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($targetId);
 
         if( !$vendingMachine )
-            throw $this->createNotFoundException("Vending Machine identified by `id` {$vendingMachineId} not found");
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_BIND, $vendingMachine) )
-            throw $this->createAccessDeniedException('Access denied');
-
-        $objectClass = ( $request->request->get('objectClass') ) ? $request->request->get('objectClass') : NULL;
-        $objectId    = ( $request->request->get('objectId') ) ? $request->request->get('objectId') : NULL;
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
@@ -143,103 +258,75 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 $school = $_manager->getRepository('AppBundle:School\School')->find($objectId);
 
                 if( !$school )
-                    throw $this->createNotFoundException("School identified by `id` {$objectId} not found");
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
                 $school->addVendingMachine($vendingMachine);
 
                 $_manager->persist($school);
-
-                $redirect = [
-                    'route' => "school_update",
-                    'id'    => $school->getId()
-                ];
             break;
 
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
                 $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
                 if( !$productVendingGroup )
-                    throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
                 $productVendingGroup->addVendingMachine($vendingMachine);
 
                 $_manager->persist($productVendingGroup);
-
-                $redirect = [
-                    'route' => "product_vending_group_update",
-                    'id'    => $productVendingGroup->getId()
-                ];
             break;
 
             default:
-                throw $this->createNotFoundException("Object not supported");
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
         $_manager->flush();
 
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
-        ]);
+        return new RedirectResponse($request->headers->get('referer'));
     }
 
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/vending_machine/unbind/{id}/{objectClass}/{objectId}",
+     *      "/vending_machine/unbind/{targetId}/{objectClass}/{objectId}",
      *      name="vending_machine_unbind",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
      * )
      */
-    public function unbindFromAction($id, $objectClass, $objectId)
+    public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
     {
         $_manager = $this->getDoctrine()->getManager();
 
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
+        $_translator = $this->get('translator');
+
+        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($targetId);
 
         if( !$vendingMachine )
-            throw $this->createNotFoundException("Vending Machine identified by `id` {$id} not found");
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_BIND, $vendingMachine) )
-            throw $this->createAccessDeniedException('Access denied');
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new School, $objectClass):
-                //this should be gone in AJAX version
-                $schoolId = $vendingMachine->getSchool()->getId();
-
                 $vendingMachine->setSchool(NULL);
-
-                $redirect = [
-                    'route' => "school_update",
-                    'id'    => $schoolId
-                ];
             break;
 
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                //this should be gone in AJAX version
-                $productVendingGroupId = $vendingMachine->getProductVendingGroup()->getId();
-
                 $vendingMachine->setProductVendingGroup(NULL);
-
-                $redirect = [
-                    'route' => "product_vending_group_update",
-                    'id'    => $productVendingGroupId
-                ];
             break;
 
             default:
-                throw $this->createNotFoundException("Object not supported");
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
             break;
         }
 
         $_manager->flush();
 
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
-        ]);
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

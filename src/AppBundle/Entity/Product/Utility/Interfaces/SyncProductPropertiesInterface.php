@@ -9,4 +9,8 @@ interface SyncProductPropertiesInterface
     const PRODUCT_ID    = 'id';
     const PRODUCT_NAME  = 'name';
     const PRODUCT_PRICE = 'price';
+
+    const PRODUCT_RESTRICTED_ARRAY = 'restricted-products';
+
+    const PRODUCT_RESTRICTED_ID = 'id';
 }

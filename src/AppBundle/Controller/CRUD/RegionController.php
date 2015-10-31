@@ -26,11 +26,15 @@ class RegionController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction($id)
+    public function readAction($id = NULL)
     {
         $_manager = $this->getDoctrine()->getManager();
 
         $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
+
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
         {
@@ -46,6 +50,8 @@ class RegionController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Region/CRUD:readItem.html.twig',
                 'data' => ['region' => $region]
             ];
+
+            $_breadcrumbs->add('region_read')->add('region_read', ['id' => $id], $_translator->trans('region_view', [], 'routes'));
         } else {
             if( !$_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -56,6 +62,8 @@ class RegionController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Region/CRUD:readList.html.twig',
                 'data' => ['regions' => $regions]
             ];
+
+            $_breadcrumbs->add('region_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -78,13 +86,19 @@ class RegionController extends Controller implements UserRoleListInterface
         if( !$_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $regionType = new RegionType($_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_CREATE));
 
-        $form = $this->createForm($regionType, $region = new Region);
+        $form = $this->createForm($regionType, $region = new Region, [
+            'action' => $this->generateUrl('region_create')
+        ]);
 
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('region_read')->add('region_create');
+
             return $this->render('AppBundle:Entity/Region/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -120,6 +134,8 @@ class RegionController extends Controller implements UserRoleListInterface
 
         $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $region = $_manager->getRepository('AppBundle:Region\Region')->find($id);
 
         if( !$region )
@@ -133,7 +149,9 @@ class RegionController extends Controller implements UserRoleListInterface
 
         $regionType = new RegionType($_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_CREATE));
 
-        $form = $this->createForm($regionType, $region);
+        $form = $this->createForm($regionType, $region, [
+            'action' => $this->generateUrl('region_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 
@@ -149,6 +167,8 @@ class RegionController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('region_read')->add('region_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Region/CRUD:updateItem.html.twig', [
             'form'   => $form->createView(),

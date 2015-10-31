@@ -1,0 +1,9 @@
+# AppBundle/Resources/translations/messages.ru.yml
+dashboard:
+    title: Дорога Здоровья - Офис для Сотрудников
+
+    table:
+        empty:
+            title: Этот список пуст
+            text: >
+                Вы можете расширить его с помощью добавления или привязки необходимых сущностей

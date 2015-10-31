@@ -1,15 +1,51 @@
 {# AppBundle/Resources/views/Entity/Employee/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/Employee:list.html.twig' %}
+{% extends 'AppBundle:Entity/Employee/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_UPDATE'), employee) %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_DELETE'), employee) %}
+            <td class="double-small-fixed edit-holder double-btn">
+                <div class="btn-edit">
+                    <a href="{{ path('employee_update', { 'id': employee.id }) }}" class="icon hrd-edit"></a>
+                </div>
+                <div class="btn-delete">
+                    <a href="{{ path('employee_delete', { 'id': employee.id }) }}" class="icon hrd-delete"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-edit">
+                    <a href="{{ path('employee_update', { 'id': employee.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder">
+            <div class="btn-view">
+                <a href="{{ path('employee_read', { 'id': employee.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
 
 {% block action_button %}
     {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_CREATE')) %}
-        <a href="{{ path('employee_create') }}">+ Создать сотрудника<a>
-        <p>-------------------------------------------------------------------------------------------------</p>
-    {% endif %}
-{% endblock %}
-
-{% block action_items %}
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\EmployeeVoter::EMPLOYEE_DELETE'), employee) %}
-        <a href="{{ path('employee_delete', { 'id': employee.id }) }}">[X]</a>
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('employee_create') }}">
+                    <span class="icon hrd-add"></span>Добавить
+                </a>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

@@ -1,0 +1,83 @@
+{# AppBundle/Resources/views/Dashboard/Common/entities.html.twig #}
+<nav id="menu-holder">
+    <ul>
+        {% if employee_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\EmployeeBoundlessAccess::EMPLOYEE_READ')) %}
+            <li {{ ( 'EmployeeController' in controller ) ? 'class="active"' : null }} title="{{ 'employee_read'|trans({}, 'routes') }}">
+                <a href="{{ path('employee_read') }}" data-count="{{ quantities.employees }}">
+                    <span class="icon hrd-staff"></span>
+                    <span class="text">{{ 'employee_read'|trans({}, 'routes') }}</span>
+                </a>
+            </li>
+            <li class="sprtr-h"></li>
+        {% endif %}
+        <li {{ ( 'CustomerController' in controller ) ? 'class="active"' : null }} title="{{ 'customer_read'|trans({}, 'routes') }}">
+            <a href="{{ path('customer_read') }}" data-count="{{ quantities.customers }}">
+                <span class="icon hrd-user"></span>
+                <span class="text">{{ 'customer_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li {{ ( 'StudentController' in controller ) ? 'class="active"' : null }} title="{{ 'student_read'|trans({}, 'routes') }}">
+            <a href="{{ path('student_read') }}" data-count="{{ quantities.students }}">
+                <span class="icon hrd-bag"></span>
+                <span class="text">{{ 'student_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li {{ ( 'NfcTagController' in controller ) ? 'class="active"' : null }} title="{{ 'nfc_tag_read'|trans({}, 'routes') }}">
+            <a href="{{ path('nfc_tag_read') }}" data-count="{{ quantities.nfcTags }}">
+                <span class="icon hrd-nfc"></span>
+                <span class="text">{{ 'nfc_tag_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li class="sprtr-h"></li>
+        <li {{ ( 'RegionController' in controller ) ? 'class="active"' : null }} title="{{ 'region_read'|trans({}, 'routes') }}">
+            <a href="{{ path('region_read') }}" data-count="{{ quantities.regions }}">
+                <span class="icon hrd-pin"></span>
+                <span class="text">{{ 'region_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li {{ ( 'SettlementController' in controller ) ? 'class="active"' : null }} title="{{ 'settlement_read'|trans({}, 'routes') }}">
+            <a href="{{ path('settlement_read') }}" data-count="{{ quantities.settlements }}">
+                <span class="icon hrd-city"></span>
+                <span class="text">{{ 'settlement_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li {{ ( 'SchoolController' in controller ) ? 'class="active"' : null }} title="{{ 'school_read'|trans({}, 'routes') }}">
+            <a href="{{ path('school_read') }}" data-count="{{ quantities.schools }}">
+                <span class="icon hrd-education"></span>
+                <span class="text">{{ 'school_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li {{ ( 'VendingMachineController' in controller ) ? 'class="active"' : null }} title="{{ 'vending_machine_read'|trans({}, 'routes') }}">
+            <a href="{{ path('vending_machine_read') }}" data-count="{{ quantities.vendingMachines }}">
+                <span class="icon hrd-table"></span>
+                <span class="text">{{ 'vending_machine_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li class="sprtr-h"></li>
+        <li {{ ( 'SupplierController' in controller ) ? 'class="active"' : null }} title="{{ 'supplier_read'|trans({}, 'routes') }}">
+            <a href="{{ path('supplier_read') }}" data-count="{{ quantities.suppliers }}">
+                <span class="icon hrd-truck"></span>
+                <span class="text">{{ 'supplier_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li {{ ( 'ProductController' in controller ) ? 'class="active"' : null }} title="{{ 'product_read'|trans({}, 'routes') }}">
+            <a href="{{ path('product_read') }}" data-count="{{ quantities.products }}">
+                <span class="icon hrd-cart"></span>
+                <span class="text">{{ 'product_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li {{ ( 'PurchaseController' in controller ) ? 'class="active"' : null }} title="{{ 'purchase_read'|trans({}, 'routes') }}">
+            <a href="{{ path('purchase_read') }}" data-count="{{ quantities.purchases }}">
+                <span class="icon hrd-cart"></span>
+                <span class="text">{{ 'purchase_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+        <li class="sprtr-h"></li>
+        <li {{ ( 'ProductVendingGroupController' in controller ) ? 'class="active"' : null }} title="{{ 'product_vending_group_read'|trans({}, 'routes') }}">
+            <a href="{{ path('product_vending_group_read') }}" data-count="{{ quantities.productsVendingGroups }}">
+                <span class="icon hrd-tables"></span>
+                <span class="text">{{ 'product_vending_group_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -21,7 +21,7 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
  *
  * @UniqueEntity(fields="phoneNumber", message="customer.phone_number.unique")
  *
- * @Assert\GroupSequence({"Employee", "Strict", "Create", "Update"})
+ * @Assert\GroupSequence({"Customer", "Strict", "Create", "Update"})
  */
 class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializable
 {
@@ -29,7 +29,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\Employee", inversedBy="customers")
-     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $employee;
 
@@ -58,6 +58,10 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
      * @Assert\NotBlank(
      *      message="customer.password.not_blank",
      *      groups={"Create"}
+     * )
+     * @Assert\Length(
+     *      min=6,
+     *      minMessage="customer.password.length.min",
      * )
      */
     protected $password;
@@ -419,5 +423,13 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     public function isPasswordLegal()
     {
         return ($this->password !== $this->phoneNumber);
+    }
+
+    public function getFullName()
+    {
+        if( !$this->patronymic && !$this->name && !$this->surname )
+            return NULL;
+
+        return "{$this->surname} {$this->name} {$this->patronymic}";
     }
 }

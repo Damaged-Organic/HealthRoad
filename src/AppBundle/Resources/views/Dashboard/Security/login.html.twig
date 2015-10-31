@@ -1,2 +1,23 @@
 {# AppBundle/Resources/views/Dashboard/Security/login.html.twig #}
-{% extends 'base.html.twig' %}
+{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/auth.bundle.min.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div id="page">
+        <main id="content">
+            <div class="inner">
+                <h1>Аутентификация</h1>
+
+                {% block form %}{% endblock %}
+
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/auth.bundle.min.js') }}"></script>
+{% endblock %}

@@ -1,6 +1,39 @@
 {# AppBundle/Resources/views/Entity/NfcTag/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/NfcTag:item.html.twig' %}
+{% extends 'AppBundle:Entity/NfcTag/Base:item.html.twig' %}
+
+{% block active_nfc_tag_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/NfcTag/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/NfcTag/Form:form.html.twig' with { 'form': form, 'nfcTag': nfcTag } only %}
+
+    {% if nfcTag.student|length %}
+        <div class="separator-holder">
+            <h2>Ученик, к которому привязана NFC-метка</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Student/Binding:ancestors.html.twig' with { 'sibling': nfcTag } only %}
+    {% endif %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_DELETE'), nfcTag) %}
+            <div class="btn-delete black">
+                <a href="{{ path('nfc_tag_delete', { 'id': nfcTag.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if nfc_tag_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\NfcTagBoundlessAccess::NFC_TAG_READ')) %}
+            <button type="submit" form="nfc-tag-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="nfc-tag-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

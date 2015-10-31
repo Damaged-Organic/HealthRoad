@@ -10,7 +10,7 @@ class Authentication
 {
     private $_passwordEncoder;
 
-    public function __construct(PasswordEncoder $passwordEncoder)
+    public function setPasswordEncoder(PasswordEncoder $passwordEncoder)
     {
         $this->_passwordEncoder = $passwordEncoder;
     }

@@ -1,14 +1,48 @@
 {# AppBundle/Resources/views/Entity/Region/Binding/choose.html.twig #}
-{% extends 'AppBundle:Entity/Region:list.html.twig' %}
+{% extends 'AppBundle:Entity/Region/Base:table.html.twig' %}
 
-{% block action %}
-    <input type="submit" name="regionId" value="{{ region.id }}" form="regionForm">
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
 {% endblock %}
 
-{% block button %}
-    <form action="{{ path('region_bind') }}" id="regionForm" method="POST">
-        <input type="hidden" name="objectClass" value="{{ objectClass }}">
-        <input type="hidden" name="objectId" value="{{ objectId }}">
-    </form>
-    <a href="{{ path('employee_update', { 'id': objectId }) }}">Done</a>
+{% block action_items_tr %}
+
+    <td class="double-small-fixed edit-holder double-btn">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_UPDATE'), region) %}
+            <div class="btn-edit">
+                <a href="{{ path('region_update', { 'id': region.id }) }}" class="icon hrd-edit"></a>
+            </div>
+        {% else %}
+            <div class="btn-view">
+                <a href="{{ path('region_read', { 'id': region.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_BIND'), region) %}
+
+            {% set isBinded = object.regions.contains(region) %}
+
+            <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+
+                {% set path = ( isBinded ) ? 'region_unbind' : 'region_bind' %}
+
+                <a href="{{ path(path, { 'targetId': region.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+            </div>
+        {% endif %}
+
+    </td>
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(regions.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

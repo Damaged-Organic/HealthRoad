@@ -1,2 +1,49 @@
 {# AppBundle/Resources/views/Entity/Region/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="region-form">
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "region-name",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'region.name.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'region.name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'region.name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.administrativeCenter, {
+            'id': "region-administrative-center",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'region.administrative_center.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'region.administrative_center.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.administrativeCenter) }}
+
+        {{ form_errors(form.administrativeCenter) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneCode, {
+            'id': "region-phone-code",
+            'attr': {
+                'data-mask': "99",
+                'value': ( region is defined ) ? region.phoneCode
+            }
+        }) }}
+
+        {{ form_label(form.phoneCode) }}
+
+        {{ form_errors(form.phoneCode) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

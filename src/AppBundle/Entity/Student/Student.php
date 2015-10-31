@@ -21,7 +21,7 @@ class Student
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\Employee", inversedBy="students")
-     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $employee;
 
@@ -41,6 +41,12 @@ class Student
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="student")
      */
     protected $nfcTag;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product\Product", inversedBy="students")
+     * @ORM\JoinTable(name="students_products")
+     */
+    protected $products;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -122,6 +128,14 @@ class Student
      * @CustomAssert\IsPriceConstraint
      */
     protected $dailyLimit;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->products = new ArrayCollection;
+    }
 
     /**
      * Set name
@@ -374,5 +388,68 @@ class Student
     public function getNfcTag()
     {
         return $this->nfcTag;
+    }
+
+    /**
+     * Add product
+     *
+     * @param \AppBundle\Entity\Product\Product $product
+     * @return Student
+     */
+    public function addProduct(\AppBundle\Entity\Product\Product $product)
+    {
+        $product->addStudent($this);
+        $this->products[] = $product;
+
+        return $this;
+    }
+
+    /**
+     * Remove products
+     *
+     * @param \AppBundle\Entity\Product\Product $products
+     */
+    public function removeProduct(\AppBundle\Entity\Product\Product $products)
+    {
+        $this->products->removeElement($products);
+    }
+
+    /**
+     * Get products
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * Shortcut to get products if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getRestrictedProducts()
+    {
+        if( $this->getNfcTag() )
+        {
+            if( $this->getNfcTag()->getVendingMachine() )
+            {
+                if( $this->getNfcTag()->getVendingMachine()->getProductVendingGroup() )
+                {
+                    return $this->getNfcTag()->getVendingMachine()->getProductVendingGroup()->getProducts();
+                }
+            }
+        }
+
+        return NULL;
+    }
+
+    public function getFullName()
+    {
+        if( !$this->patronymic && !$this->name && !$this->surname )
+            return NULL;
+
+        return "{$this->surname} {$this->name} {$this->patronymic}";
     }
 }

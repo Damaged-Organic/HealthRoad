@@ -1,0 +1,44 @@
+{# AppBundle/Resources/views/Entity/NfcTag/Base/table.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/NfcTag/Base:list.html.twig' %}
+
+{% block variable %}
+
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+
+            {% if nfcTags|length %}
+                <table>
+                    <tr>
+
+                        {% include 'AppBundle:Entity/NfcTag/Table:th.html.twig' %}
+
+                        {% block action_items_th %}{% endblock %}
+
+                    </tr>
+
+                    {% for nfcTag in nfcTags %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/NfcTag/Table:tr.html.twig' with { 'nfcTag': nfcTag } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                <div class="empty-holder">
+                    <h2>{{ 'dashboard.table.empty.title'|trans }}</h2>
+                    <p>{{ 'dashboard.table.empty.text'|trans }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+
+        {% include 'AppBundle:Dashboard/Common:pagination.html.twig' only %}
+    </div>
+{% endblock %}

@@ -1,15 +1,51 @@
 {# AppBundle/Resources/views/Entity/ProductVendingGroup/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/ProductVendingGroup:list.html.twig' %}
+{% extends 'AppBundle:Entity/ProductVendingGroup/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), productVendingGroup) %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_DELETE'), productVendingGroup) %}
+            <td class="double-small-fixed edit-holder double-btn">
+                <div class="btn-edit">
+                    <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}" class="icon hrd-edit"></a>
+                </div>
+                <div class="btn-delete">
+                    <a href="{{ path('product_vending_group_delete', { 'id': productVendingGroup.id }) }}" class="icon hrd-delete"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-view">
+                    <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder">
+            <div class="btn-view">
+                <a href="{{ path('product_vending_group_read', { 'id': productVendingGroup.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
 
 {% block action_button %}
     {% if product_vending_group_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE')) %}
-        <a href="{{ path('product_vending_group_create') }}">+ Создать группу торговых автоматов<a>
-        <p>-------------------------------------------------------------------------------------------------</p>
-    {% endif %}
-{% endblock %}
-
-{% block action %}
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_DELETE'), productVendingGroup) %}
-        <a href="{{ path('product_vending_group_delete', { 'id': productVendingGroup.id }) }}">[X]</a>
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('product_vending_group_create') }}">
+                    <span class="icon hrd-add"></span>Добавить
+                </a>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

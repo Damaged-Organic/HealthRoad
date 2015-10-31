@@ -1,14 +1,36 @@
 {# AppBundle/Resources/views/Entity/Product/Binding/choose.html.twig #}
-{% extends 'AppBundle:Entity/Product:list.html.twig' %}
+{% extends 'AppBundle:Entity/Product/Base:table.html.twig' %}
 
-{% block action %}
-    <input type="submit" name="productId" value="{{ product.id }}" form="productForm">
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
 {% endblock %}
 
-{% block button %}
-    <form action="{{ path('product_bind') }}" id="productForm" method="POST">
-        <input type="hidden" name="objectClass" value="{{ objectClass }}">
-        <input type="hidden" name="objectId" value="{{ objectId }}">
-    </form>
-    <a href="{{ path('product_vending_group_update', { 'id': objectId }) }}">Done</a>
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_BIND'), product) %}
+        <td class="small-fixed bind-holder">
+
+            {% set isBinded = object.products.contains(product) %}
+
+            <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+
+                {% set path = ( isBinded ) ? 'product_unbind' : 'product_bind' %}
+
+                <a href="{{ path(path, { 'targetId': product.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': 'product' }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

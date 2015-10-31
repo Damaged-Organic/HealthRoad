@@ -26,11 +26,15 @@ class EmployeeController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction($id)
+    public function readAction($id = NULL)
     {
         $_manager = $this->getDoctrine()->getManager();
 
         $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
+
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
         {
@@ -46,6 +50,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Employee/CRUD:readItem.html.twig',
                 'data' => ['employee' => $employee]
             ];
+
+            $_breadcrumbs->add('employee_read')->add('employee_read', ['id' => $id], $_translator->trans('employee_view', [], 'routes'));
         } else {
             if( !$_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -56,6 +62,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/Employee/CRUD:readList.html.twig',
                 'data' => ['employees' => $employees]
             ];
+
+            $_breadcrumbs->add('employee_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -78,15 +86,22 @@ class EmployeeController extends Controller implements UserRoleListInterface
         if( !$_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $employeeType = new EmployeeType($_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE));
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
+        $employeeType = new EmployeeType($_translator, $_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE));
 
         $form = $this->createForm($employeeType, $employee = new Employee, [
-            'validation_groups' => ['Employee', 'Strict', 'Create']
+            'validation_groups' => ['Employee', 'Strict', 'Create'],
+            'action'            => $this->generateUrl('employee_create')
         ]);
 
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('employee_read')->add('employee_create');
+
             return $this->render('AppBundle:Entity/Employee/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -101,6 +116,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 ->encodePassword($employee, $employee->getPassword())
             ;
 
+            // Set employee's password
             $employee->setPassword($encodedPassword);
 
             $_manager->persist($employee);
@@ -132,6 +148,10 @@ class EmployeeController extends Controller implements UserRoleListInterface
 
         $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($id);
 
         if( !$employee )
@@ -144,12 +164,14 @@ class EmployeeController extends Controller implements UserRoleListInterface
         }
 
         $employeeType = new EmployeeType(
+            $_translator,
             $_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE),
             $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_SYSTEM, $employee)
         );
 
         $form = $this->createForm($employeeType, $employee, [
-            'validation_groups' => ['Employee', 'Strict', 'Update']
+            'validation_groups' => ['Employee', 'Strict', 'Update'],
+            'action'            => $this->generateUrl('employee_update', ['id' => $id])
         ]);
 
         $form->handleRequest($request);
@@ -175,6 +197,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Employee/CRUD:updateItem.html.twig', [
             'form'     => $form->createView(),

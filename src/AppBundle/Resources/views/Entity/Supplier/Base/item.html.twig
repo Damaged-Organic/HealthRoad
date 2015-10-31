@@ -1,0 +1,17 @@
+{# AppBundle/Resources/views/Entity/Supplier/item.html.twig #}
+{% extends 'AppBundle:Entity/Supplier:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_supplier_update %}{% endblock %}>
+                <a href="{{ path('supplier_update', { 'id': supplier.id }) }}">Данные</a>
+            </li>
+            <li {% block active_supplier_update_bounded_product %}{% endblock %}>
+                <a href="{{ path('supplier_update_bounded', { 'objectId': supplier.id, 'objectClass': 'product' }) }}">
+                    {{ 'product_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

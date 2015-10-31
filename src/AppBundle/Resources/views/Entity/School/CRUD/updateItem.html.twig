@@ -1,6 +1,38 @@
 {# AppBundle/Resources/views/Entity/School/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/School:item.html.twig' %}
+{% extends 'AppBundle:Entity/School/Base:item.html.twig' %}
+
+{% block active_school_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/School/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/School/Form:form.html.twig' with { 'form': form, 'school': school } only %}
+
+    {% if school.employees|length %}
+        <div class="separator-holder">
+            <h2>Регистраторы, ответственные за школу</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': school } only %}
+    {% endif %}
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_DELETE'), school) %}
+            <div class="btn-delete black">
+                <a href="{{ path('school_delete', { 'id': school.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if school_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\SchoolBoundlessAccess::SCHOOL_READ')) %}
+            <button type="submit" form="school-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="school-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

@@ -5,16 +5,21 @@ namespace AppBundle\Controller\Binding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request,
+use Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
-use AppBundle\Controller\Traits\ClassOperationsTrait,
+use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+    AppBundle\Entity\Supplier\Supplier,
+    AppBundle\Entity\Product\ProductVendingGroup,
+    AppBundle\Entity\Student\Student,
     AppBundle\Service\Security\ProductBoundlessAccess,
     AppBundle\Security\Authorization\Voter\ProductVoter,
-    AppBundle\Entity\Supplier\Supplier,
-    AppBundle\Entity\Product\ProductVendingGroup;
+    AppBundle\Security\Authorization\Voter\StudentVoter,
+    AppBundle\Security\Authorization\Voter\ProductVendingGroupVoter,
+    AppBundle\Security\Authorization\Voter\SupplierVoter;
 
 class ProductController extends Controller implements UserRoleListInterface
 {
@@ -32,21 +37,45 @@ class ProductController extends Controller implements UserRoleListInterface
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+                $object = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
-                if( !$productVendingGroup )
+                if( !$object )
                     throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
 
-                $products = $productVendingGroup->getProducts();
+                $products = $object->getProducts();
+
+                $action = [
+                    'path'  => 'product_choose',
+                    'voter' => ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_BIND
+                ];
             break;
 
             case $this->compareObjectClassNameToString(new Supplier, $objectClass):
-                $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
+                $object = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
 
-                if( !$supplier )
+                if( !$object )
                     throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
 
-                $products = $supplier->getProducts();
+                $products = $object->getProducts();
+
+                $action = [
+                    'path'  => 'product_choose',
+                    'voter' => SupplierVoter::SUPPLIER_BIND
+                ];
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $object = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$object )
+                    throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
+
+                $products = $object->getProducts();
+
+                $action = [
+                    'path'  => 'product_choose',
+                    'voter' => StudentVoter::STUDENT_BIND
+                ];
             break;
 
             default:
@@ -55,9 +84,10 @@ class ProductController extends Controller implements UserRoleListInterface
         }
 
         return $this->render('AppBundle:Entity/Product/Binding:show.html.twig', [
+            'standalone'  => TRUE,
             'products'    => $products,
-            'objectId'    => $objectId,
-            'objectClass' => $objectClass
+            'object'      => $object,
+            'action'      => $action
         ]);
     }
 
@@ -80,30 +110,67 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $_manager = $this->getDoctrine()->getManager();
 
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+                $productVendingGroup = $object = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
                 if( !$productVendingGroup )
                     throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
 
-                $object = [
-                    'class' => $this->getObjectClassName($productVendingGroup),
-                    'id'    => $productVendingGroup->getId()
-                ];
+                $products = $_manager->getRepository('AppBundle:Product\Product')->findAll();
+
+                $path = 'product_vending_group_update_bounded';
+
+                $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $objectId])->add('product_vending_group_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'product'
+                    ],
+                    $_translator->trans('product_read', [], 'routes')
+                );
             break;
 
             case $this->compareObjectClassNameToString(new Supplier, $objectClass):
-                $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
+                $supplier = $object = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
 
                 if( !$supplier )
                     throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
 
-                $object = [
-                    'class' => $this->getObjectClassName($supplier),
-                    'id'    => $supplier->getId()
-                ];
+                $products = $_manager->getRepository('AppBundle:Product\Product')->findAll();
+
+                $path = 'supplier_update_bounded';
+
+                $_breadcrumbs->add('supplier_read')->add('supplier_update', ['id' => $objectId])->add('supplier_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'product'
+                    ],
+                    $_translator->trans('product_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $student = $object = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$student )
+                    throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
+
+                $products = $student->getRestrictedProducts();
+
+                $path = 'student_update_bounded';
+
+                $_breadcrumbs->add('student_read')->add('student_update', ['id' => $objectId])->add('student_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'product'
+                    ],
+                    $_translator->trans('product_read', [], 'routes')
+                );
             break;
 
             default:
@@ -111,109 +178,41 @@ class ProductController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $products = $_manager->getRepository('AppBundle:Product\Product')->findAll();
+        $_breadcrumbs->add('product_choose', [
+            'objectId'    => $objectId,
+            'objectClass' => $objectClass,
+        ]);
 
         return $this->render('AppBundle:Entity/Product/Binding:choose.html.twig', [
-            'products'    => $products,
-            'objectClass' => $object['class'],
-            'objectId'    => $object['id']
-        ]);
-    }
-
-    /**
-     * @Method({"POST"})
-     * @Route(
-     *      "/product/bind",
-     *      name="product_bind",
-     *      host="{domain_dashboard}",
-     *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"}
-     * )
-     */
-    public function bindToAction(Request $request)
-    {
-        $productId = ( $request->request->has('productId') ) ? $request->request->get('productId') : NULL;
-
-        $_manager = $this->getDoctrine()->getManager();
-
-        $product = $_manager->getRepository('AppBundle:Product\Product')->find($productId);
-
-        if( !$product )
-            throw $this->createNotFoundException("Product identified by `id` {$productId} not found");
-
-        if( !$this->isGranted(ProductVoter::PRODUCT_BIND, $product) )
-            throw $this->createAccessDeniedException('Access denied');
-
-        $objectClass = ( $request->request->get('objectClass') ) ? $request->request->get('objectClass') : NULL;
-        $objectId    = ( $request->request->get('objectId') ) ? $request->request->get('objectId') : NULL;
-
-        switch(TRUE)
-        {
-            case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
-
-                if( !$productVendingGroup )
-                    throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
-
-                $productVendingGroup->addProduct($product);
-
-                $_manager->persist($productVendingGroup);
-
-                $redirect = [
-                    'route' => "product_vending_group_update",
-                    'id'    => $productVendingGroup->getId()
-                ];
-            break;
-
-            case $this->compareObjectClassNameToString(new Supplier, $objectClass):
-                $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
-
-                if( !$supplier )
-                    throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
-
-                $supplier->addProduct($product);
-
-                $_manager->persist($supplier);
-
-                $redirect = [
-                    'route' => "supplier_update",
-                    'id'    => $supplier->getId()
-                ];
-            break;
-
-            default:
-                throw $this->createNotFoundException("Object not supported");
-            break;
-        }
-
-        $_manager->flush();
-
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
+            'path'     => $path,
+            'products' => $products,
+            'object'   => $object
         ]);
     }
 
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/product/unbind/{id}/{objectClass}/{objectId}",
-     *      name="product_unbind",
+     *      "/product/bind/{targetId}/{objectClass}/{objectId}",
+     *      name="product_bind",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
-     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
      * )
      */
-    public function unbindFromAction($id, $objectClass, $objectId)
+    public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
         $_manager = $this->getDoctrine()->getManager();
 
-        $product = $_manager->getRepository('AppBundle:Product\Product')->find($id);
+        $_translator = $this->get('translator');
+
+        $product = $_manager->getRepository('AppBundle:Product\Product')->find($targetId);
 
         if( !$product )
-            throw $this->createNotFoundException("Product identified by `id` {$id} not found");
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(ProductVoter::PRODUCT_BIND, $product) )
-            throw $this->createAccessDeniedException('Access denied');
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
@@ -221,39 +220,104 @@ class ProductController extends Controller implements UserRoleListInterface
                 $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
                 if( !$productVendingGroup )
-                    throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
-                $productVendingGroup->removeProduct($product);
+                $productVendingGroup->addProduct($product);
 
                 $_manager->persist($productVendingGroup);
-
-                $redirect = [
-                    'route' => "product_vending_group_update",
-                    'id'    => $productVendingGroup->getId()
-                ];
             break;
 
             case $this->compareObjectClassNameToString(new Supplier, $objectClass):
-                //this should be gone in AJAX version
-                $supplierId = $product->getSupplier()->getId();
+                $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
 
-                $product->setSupplier(NULL);
+                if( !$supplier )
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
 
-                $redirect = [
-                    'route' => "supplier_update",
-                    'id'    => $supplierId
-                ];
+                $supplier->addProduct($product);
+
+                $_manager->persist($supplier);
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$student )
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+
+                $student->addProduct($product);
+
+                $_manager->persist($student);
             break;
 
             default:
-                throw $this->createNotFoundException("Object not supported");
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
         $_manager->flush();
 
-        return $this->redirectToRoute($redirect['route'], [
-            'id' => $redirect['id']
-        ]);
+        return new RedirectResponse($request->headers->get('referer'));
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route(
+     *      "/product/unbind/{targetId}/{objectClass}/{objectId}",
+     *      name="product_unbind",
+     *      host="{domain_dashboard}",
+     *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
+     *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "targetId" = "\d+", "objectClass" = "[a-z]+", "objectId" = "\d+"}
+     * )
+     */
+    public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
+    {
+        $_manager = $this->getDoctrine()->getManager();
+
+        $_translator = $this->get('translator');
+
+        $product = $_manager->getRepository('AppBundle:Product\Product')->find($targetId);
+
+        if( !$product )
+            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+
+        if( !$this->isGranted(ProductVoter::PRODUCT_BIND, $product) )
+            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+
+        switch(TRUE)
+        {
+            case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
+                $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+
+                if( !$productVendingGroup )
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+
+                $productVendingGroup->removeProduct($product);
+
+                $_manager->persist($productVendingGroup);
+            break;
+
+            case $this->compareObjectClassNameToString(new Supplier, $objectClass):
+                $product->setSupplier(NULL);
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$student )
+                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+
+                $student->removeProduct($product);
+
+                $_manager->persist($student);
+            break;
+
+            default:
+                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+            break;
+        }
+
+        $_manager->flush();
+
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

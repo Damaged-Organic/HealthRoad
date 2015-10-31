@@ -17,7 +17,7 @@ class SettingController extends Controller
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/setting/read",
+     *      "/setting",
      *      name="setting_read",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%"},
@@ -30,6 +30,8 @@ class SettingController extends Controller
 
         $_settingBoundlessAccess = $this->get('app.security.setting_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         if( !$_settingBoundlessAccess->isGranted(SettingBoundlessAccess::SETTING_READ) )
             throw $this->createAccessDeniedException('Access denied');
 
@@ -39,6 +41,8 @@ class SettingController extends Controller
             'view' => 'AppBundle:Entity/Setting/CRUD:readList.html.twig',
             'data' => ['setting' => $setting]
         ];
+
+        $_breadcrumbs->add('setting_read');
 
         return $this->render($response['view'], $response['data']);
     }
@@ -57,6 +61,8 @@ class SettingController extends Controller
     {
         $_manager = $this->getDoctrine()->getManager();
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $setting = $_manager->getRepository('AppBundle:Setting\Setting')->findOne();
 
         if( !$setting )
@@ -65,7 +71,9 @@ class SettingController extends Controller
         if( !$this->isGranted(SettingVoter::SETTING_UPDATE, $setting) )
             return $this->redirectToRoute('setting_read');
 
-        $form = $this->createForm(new SettingType, $setting);
+        $form = $this->createForm(new SettingType, $setting, [
+            'action' => $this->generateUrl('setting_update')
+        ]);
 
         $form->handleRequest($request);
 
@@ -76,8 +84,11 @@ class SettingController extends Controller
             return $this->redirectToRoute('setting_update');
         }
 
+        $_breadcrumbs->add('setting_read')->add('setting_update');
+
         return $this->render('AppBundle:Entity/Setting/CRUD:updateList.html.twig', [
-            'form' => $form->createView()
+            'form'    => $form->createView(),
+            'setting' => $setting
         ]);
     }
 }

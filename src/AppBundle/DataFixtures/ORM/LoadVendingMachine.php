@@ -15,7 +15,7 @@ class LoadVendingMachine extends AbstractFixture implements OrderedFixtureInterf
         $vendingMachine_donatello = (new VendingMachine)
             ->setSchool(NULL)
             ->setProductVendingGroup(NULL)
-            ->setSerial("UA001-4294967295")
+            ->setSerial("tstboard-0001")
             ->setName("Donatello")
             ->setNameTechnician("Splinter")
             ->setNumberShelves("5")

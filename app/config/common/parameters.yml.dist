@@ -19,4 +19,4 @@ parameters:
     developers_agency: CHEERS! Unlimited
     developers_link:   http://cheersunlimited.com.ua
     # Token
-    secret:
+    secret: 123

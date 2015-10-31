@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/Setting/list.html.twig #}
+{% extends 'AppBundle:Entity/Setting:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_setting_update %}{% endblock %}>
+                <a href="{{ path('setting_update') }}">Настройки</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

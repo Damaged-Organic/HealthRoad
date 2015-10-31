@@ -1,0 +1,17 @@
+{# AppBundle/Resources/views/Entity/Region/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/Region:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_region_update %}{% endblock %}>
+                <a href="{{ path('region_update', { 'id': region.id }) }}">Данные</a>
+            </li>
+            <li {% block active_region_update_bounded_settlement %}{% endblock %}>
+                <a href="{{ path('region_update_bounded', { 'objectId': region.id, 'objectClass': 'settlement' }) }}">
+                    {{ 'settlement_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

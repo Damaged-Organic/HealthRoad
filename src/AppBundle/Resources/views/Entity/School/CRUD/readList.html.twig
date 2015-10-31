@@ -1,15 +1,51 @@
 {# AppBundle/Resources/views/Entity/School/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/School:list.html.twig' %}
+{% extends 'AppBundle:Entity/School/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_UPDATE'), school) %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_DELETE'), school) %}
+            <td class="double-small-fixed edit-holder double-btn">
+                <div class="btn-edit">
+                    <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
+                </div>
+                <div class="btn-delete">
+                    <a href="{{ path('school_delete', { 'id': school.id }) }}" class="icon hrd-delete"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-edit">
+                    <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder">
+            <div class="btn-view">
+                <a href="{{ path('school_read', { 'id': school.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
 
 {% block action_button %}
     {% if school_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\SchoolBoundlessAccess::SCHOOL_CREATE')) %}
-        <a href="{{ path('school_create') }}">+ Создать школу<a>
-        <p>-------------------------------------------------------------------------------------------------</p>
-    {% endif %}
-{% endblock %}
-
-{% block action %}
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_DELETE'), school) %}
-        <a href="{{ path('school_delete', { 'id': school.id }) }}">[X]</a>
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('school_create') }}">
+                    <span class="icon hrd-add"></span>Добавить
+                </a>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

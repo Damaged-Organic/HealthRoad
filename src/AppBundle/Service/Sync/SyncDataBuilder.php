@@ -2,21 +2,41 @@
 // AppBundle/Service/Sync/SyncDataBuilder.php
 namespace AppBundle\Service\Sync;
 
-use DateTime;
-
-use Doctrine\ORM\EntityManager,
-    Doctrine\ORM\PersistentCollection;
+use Doctrine\ORM\PersistentCollection;
 
 use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
+    AppBundle\Service\Sync\Utility\Checksum,
     AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Entity\VendingMachine\VendingMachineSync,
-    AppBundle\Entity\Product\Product;
+    AppBundle\Entity\Product\Product,
+    AppBundle\Entity\NfcTag\NfcTag;
 
 class SyncDataBuilder implements SyncDataInterface
 {
-    public function getRecordChecksum($data)
+    public $_checksum;
+
+    public function setChecksum(Checksum $checksum)
     {
-        return hash('sha256', json_encode($data));
+        $this->_checksum = $checksum;
+    }
+
+    public function buildSyncData(VendingMachineSync $vendingMachineSync = NULL)
+    {
+        $data = [];
+
+        if( $vendingMachineSync )
+            $data[] = $vendingMachineSync->getSyncObjectData();
+
+        $data = [
+            VendingMachineSync::getSyncArrayName() => $data
+        ];
+
+        $syncResponse = [
+            self::SYNC_CHECKSUM => $this->_checksum->getDataChecksum($data),
+            self::SYNC_DATA     => $data
+        ];
+
+        return $syncResponse;
     }
 
     public function buildProductData(PersistentCollection $products)
@@ -32,10 +52,46 @@ class SyncDataBuilder implements SyncDataInterface
         ];
 
         $syncResponse = [
-            self::SYNC_CHECKSUM => $this->getRecordChecksum($data),
+            self::SYNC_CHECKSUM => $this->_checksum->getDataChecksum($data),
             self::SYNC_DATA     => $data
         ];
 
         return $syncResponse;
     }
+
+    public function buildNfcTagData(PersistentCollection $students)
+    {
+        $build = function($nfcTag)
+        {
+            $data = $nfcTag->getSyncObjectData();
+
+            $data[Product::getSyncArrayNameRestricted()] = NULL;
+
+            foreach($nfcTag->getStudent()->getProducts() as $product) {
+                $data[Product::getSyncArrayNameRestricted()][] = $product->getSyncObjectDataRestricted();
+            }
+
+            return $data;
+        };
+
+        $data = [];
+
+        foreach($students as $student) {
+            if( $student->getNfcTag() )
+                $data[] = $build($student->getNfcTag());
+        }
+
+        $data = [
+            NfcTag::getSyncArrayName() => $data
+        ];
+
+        $syncResponse = [
+            self::SYNC_CHECKSUM => $this->_checksum->getDataChecksum($data),
+            self::SYNC_DATA     => $data
+        ];
+
+        return $syncResponse;
+    }
+
+
 }

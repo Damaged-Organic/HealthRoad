@@ -1,6 +1,19 @@
 {# AppBundle/Resources/views/Entity/Setting/CRUD/updateList.html.twig #}
-{% extends 'AppBundle:Entity/Setting:list.html.twig' %}
+{% extends 'AppBundle:Entity/Setting/Base:list.html.twig' %}
+
+{% block active_setting_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/Setting/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/Setting/Form:form.html.twig' with { 'form': form, 'setting': setting } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        <button type="submit" form="setting-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

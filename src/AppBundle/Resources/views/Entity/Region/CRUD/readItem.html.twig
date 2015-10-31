@@ -1,6 +1,43 @@
 {# AppBundle/Resources/views/Entity/Region/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Region:item.html.twig' %}
+{% extends 'AppBundle:Entity/Region/Base:item.html.twig' %}
+
+{% block active_region_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ region.name }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'region.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ region.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'region.administrative_center.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( region.administrativeCenter ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'region.phone_code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( region.phoneCode ) ?: '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    {% if region.employee|length %}
+        <div class="separator-holder">
+            <h2>Менеджер, ответственный за регион</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': region } only %}
+    {% endif %}
 {% endblock %}

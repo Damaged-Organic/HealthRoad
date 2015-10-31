@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Entity/Settlement/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Settlement/Base:item.html.twig' %}
+
+{% block active_settlement_update_bounded_school %}
+    {% if objectClass is same as('school') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

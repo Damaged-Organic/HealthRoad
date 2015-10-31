@@ -1,6 +1,29 @@
 {# AppBundle/Resources/views/Entity/Region/CRUD/createItem.html.twig #}
-{% extends 'AppBundle:Dashboard:layout.html.twig' %}
+{% extends 'AppBundle:Entity/Region/Base:item.html.twig' %}
 
-{% block content %}
-    {% include 'AppBundle:Entity/Region/Form:form.html.twig' with {'form': form} only %}
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active">
+                <a href="{{ path('region_create') }}">Ввод данных</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block data %}
+
+    {% include 'AppBundle:Entity/Region/Form:form.html.twig' with { 'form': form } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+        <button type="submit" form="region-form" name="{{ form.create_and_return.vars.full_name }}" class="btn-save back">
+            <span>{{ form.create_and_return.vars.label|trans({}, 'forms') }}</span>
+        </button>
+        <button type="submit" form="region-form" name="{{ form.create.vars.full_name }}" class="btn-save">
+            <span>{{ form.create.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

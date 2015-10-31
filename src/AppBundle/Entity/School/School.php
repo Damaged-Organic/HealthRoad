@@ -96,11 +96,11 @@ class School
     protected $emailSchool;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @Assert\Length(
      *      min=2,
-     *      max=250,
+     *      max=500,
      *      minMessage="school.name_headmaster.length.min",
      *      maxMessage="school.name_headmaster.length.max"
      * )
@@ -129,11 +129,11 @@ class School
     protected $emailHeadmaster;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @Assert\Length(
      *      min=2,
-     *      max=250,
+     *      max=500,
      *      minMessage="school.name_contact.length.min",
      *      maxMessage="school.name_contact.length.max"
      * )

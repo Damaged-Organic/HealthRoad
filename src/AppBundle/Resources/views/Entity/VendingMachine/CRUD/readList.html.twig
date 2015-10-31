@@ -1,15 +1,51 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/VendingMachine:list.html.twig' %}
+{% extends 'AppBundle:Entity/VendingMachine/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_UPDATE'), vendingMachine) %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_DELETE'), vendingMachine) %}
+            <td class="double-small-fixed edit-holder double-btn">
+                <div class="btn-edit">
+                    <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}" class="icon hrd-edit"></a>
+                </div>
+                <div class="btn-delete">
+                    <a href="{{ path('vending_machine_delete', { 'id': vendingMachine.id }) }}" class="icon hrd-delete"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-edit">
+                    <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
+        {% endif %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder">
+            <div class="btn-view">
+                <a href="{{ path('vending_machine_read', { 'id': vendingMachine.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
 
 {% block action_button %}
     {% if vending_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE')) %}
-        <a href="{{ path('vending_machine_create') }}">+ Создать торговый автомат<a>
-        <p>-------------------------------------------------------------------------------------------------</p>
-    {% endif %}
-{% endblock %}
-
-{% block action %}
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_DELETE'), vendingMachine) %}
-        <a href="{{ path('vending_machine_delete', { 'id': vendingMachine.id }) }}">[X]</a>
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('vending_machine_create') }}">
+                    <span class="icon hrd-add"></span>Добавить
+                </a>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

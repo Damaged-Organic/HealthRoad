@@ -1,0 +1,20 @@
+{# AppBundle/Resources/views/Entity/Student/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Student/Base:item.html.twig' %}
+
+{% block active_student_update_bounded_nfc_tag %}
+    {% if objectClass is same as('nfctag') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_student_update_bounded_product %}
+    {% if objectClass is same as('product') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

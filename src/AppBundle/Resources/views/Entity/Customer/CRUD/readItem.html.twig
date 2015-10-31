@@ -1,8 +1,80 @@
 {# AppBundle/Resources/views/Entity/Customer/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Customer:item.html.twig' %}
+{% extends 'AppBundle:Entity/Customer/Base:item.html.twig' %}
+
+{% block active_customer_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ customer.surname }}
-    {{ customer.name }}
-    {{ customer.patronymic }}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Системные данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'customer.phone_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ customer.phoneNumber }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Личные данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'customer.surname.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ customer.surname }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'customer.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ customer.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'customer.patronymic.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ customer.patronymic}}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'customer.email.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ customer.email }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'customer.is_enabled.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>
+                        {{ ( customer.isEnabled ) ? 'Да' : 'Нет' }}
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    {% if customer.employee|length %}
+        <div class="separator-holder">
+            <h2>Сотрудник, который зарегистрировал клиента</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': customer } only %}
+    {% endif %}
+
 {% endblock %}

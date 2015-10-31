@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/School/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ school.id }}</span></td>
+<td>
+    <span>
+        {{ school.name }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ school.address }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( school.settlement ) ? school.settlement.name : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( school.settlement ) ? (( school.settlement.region ) ? school.settlement.region.name : '-') : '-' }}
+    </span>
+</td>

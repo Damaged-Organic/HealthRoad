@@ -1,2 +1,196 @@
 {# AppBundle/Resources/views/Entity/Supplier/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="supplier-form" enctype="multipart/form-data">
+
+    <div class="separator-holder">
+        <h2>Данные производителя</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "supplier-name",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'supplier.name.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'supplier.name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'supplier.name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.nameLegal, {
+            'id': "supplier-name-legal",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'supplier.name_legal.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'supplier.name_legal.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'supplier.name_legal.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.nameLegal) }}
+
+        {{ form_errors(form.nameLegal) }}
+    </div>
+
+    <div class="file-holder">
+        {{ form_widget(form.logoFile, {
+            'id': "supplier-logo-file"
+        }) }}
+
+        <label for="supplier-logo-file">
+            <div class="btn-file">
+                <span class="icon hrd-upload"></span>
+                <span class="text">{{ form.logoFile.vars.label|trans({}, 'forms') }} {{ ( supplier is not defined ) ? '<span class="required-field">*</span>' }}</span>
+            </div>
+        </label>
+
+        {% if supplier is defined and supplier.logoName %}
+            <div class="photo-list-holder active">
+                <figure class="photo-holder">
+                    <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}">
+                    <span class="size">{{ supplier.logoName }}</span>
+                </figure>
+            </div>
+        {% else %}
+            <div class="photo-list-holder"></div>
+        {% endif %}
+
+        {% for error in form.logoFile.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.description, {
+            'id': "supplier-description",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'supplier.description.not_blank'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.description) }}
+
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneNumberSupplier, {
+            'id': "supplier-phone-number-supplier",
+            'attr': {
+                'data-mask': "+38 (099) 999-99-99"
+            }
+        }) }}
+
+        {{ form_label(form.phoneNumberSupplier) }}
+
+        {{ form_errors(form.phoneNumberSupplier) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.emailSupplier, {
+            'id': "supplier-email-supplier",
+            'attr': {
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.emailSupplier) }}
+
+        {{ form_errors(form.emailSupplier) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Данные контактного лица</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.nameContact, {
+            'id': "supplier-name-contact",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'supplier.name_contact.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'supplier.name_contact.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.nameContact) }}
+
+        {{ form_errors(form.nameContact) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneNumberContact, {
+            'id': "supplier-phone-number-contact",
+            'attr': {
+                'data-mask': "+38 (099) 999-99-99"
+            }
+        }) }}
+
+        {{ form_label(form.phoneNumberContact) }}
+
+        {{ form_errors(form.phoneNumberContact) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.emailContact, {
+            'id': "supplier-email-contact",
+            'attr': {
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.emailContact) }}
+
+        {{ form_errors(form.emailContact) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Данные контракта</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.contractNumber, {
+            'id': "supplier-contract-number",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'supplier.contract_number.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'supplier.contract_number.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.contractNumber) }}
+
+        {{ form_errors(form.contractNumber) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.contractDateStart, {
+            'id': "student-contract-date-start",
+            'attr': {
+                'data-mask': "00-00-0000"
+            }
+        }) }}
+
+        {{ form_label(form.contractDateStart) }}
+
+        {{ form_errors(form.contractDateStart) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.contractDateEnd, {
+            'id': "student-contract-date-end",
+            'attr': {
+                'data-mask': "00-00-0000"
+            }
+        }) }}
+
+        {{ form_label(form.contractDateEnd) }}
+
+        {{ form_errors(form.contractDateEnd) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

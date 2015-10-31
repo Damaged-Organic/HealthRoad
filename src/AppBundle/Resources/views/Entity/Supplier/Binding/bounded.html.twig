@@ -1,0 +1,14 @@
+{# AppBundle/Resources/views/Entity/Supplier/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Supplier/Base:item.html.twig' %}
+
+{% block active_supplier_update_bounded_product %}
+    {% if objectClass is same as('product') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

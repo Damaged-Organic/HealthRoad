@@ -41,11 +41,11 @@ class CustomerVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
             break;
 
             case self::CUSTOMER_UPDATE:
-                return $this->update($user);
+                return $this->update($customer, $user);
             break;
 
             case self::CUSTOMER_DELETE:
-                return $this->delete($user);
+                return $this->delete($customer, $user);
             break;
 
             case self::CUSTOMER_BIND:
@@ -66,23 +66,35 @@ class CustomerVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         return FALSE;
     }
 
-    protected function update($user = NULL)
+    protected function update($customer, $user = NULL)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
+            return ( $customer->getEmployee()->getId() == $user->getId() )
+                ? TRUE
+                : FALSE;
+        }
+
         return FALSE;
     }
 
-    protected function delete($user = NULL)
+    protected function delete($customer, $user = NULL)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
+            return ( $customer->getEmployee()->getId() == $user->getId() )
+                ? TRUE
+                : FALSE;
+        }
+
         return FALSE;
     }
 
-    protected function bind($customer, $user)
+    protected function bind($customer, $user = NULL)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;

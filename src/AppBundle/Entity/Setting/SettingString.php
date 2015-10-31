@@ -42,7 +42,7 @@ class SettingString
      *
      * @Assert\NotBlank(message="settings.string.setting_value.not_blank")
      * @Assert\Length(
-     *      min=2,
+     *      min=1,
      *      max=250,
      *      minMessage="settings.string.setting_value.length.min",
      *      maxMessage="settings.string.setting_value.length.max"

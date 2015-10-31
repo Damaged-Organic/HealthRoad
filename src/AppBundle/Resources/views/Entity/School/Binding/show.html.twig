@@ -1,9 +1,53 @@
 {# AppBundle/Resources/views/Entity/School/Binding/show.html.twig #}
-{% for school in schools %}
-    <p>
-        <a href="{{ path('school_update', { 'id': school.id }) }}">{{ school.name }}</a>
+{% extends 'AppBundle:Entity/School/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_UPDATE'), school) %}
+
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
-            <a href="{{ path('school_unbind', { 'id': school.id, 'objectClass': objectClass, 'objectId': objectId }) }}">[X]</a>
+            <td class="double-small-fixed edit-holder double-btn">
+                <div class="btn-edit">
+                    <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
+                </div>
+                <div class="btn-bind binded">
+                    <a href="{{ path('school_unbind', { 'targetId': school.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
+        {% else %}
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-edit">
+                    <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            </td>
         {% endif %}
-    </p>
-{% endfor %}
+
+    {% else %}
+        <td class="double-small-fixed view-holder">
+            <div class="btn-view">
+                <a href="{{ path('school_read', { 'id': school.id }) }}" class="icon hrd-view"></a>
+            </div>
+        </td>
+    {% endif %}
+
+{% endblock %}
+
+{% block action_button %}
+
+    {% if is_granted(action.voter, object) %}
+        <div id="action-holder">
+            <div id="action-holder" class="manage-holder">
+                <div class="btn-connect">
+                    <a href="{{ path(action.path, { 'objectClass': class(object)|lower, 'objectId': object.id }) }}"><span class="icon hrd-bind"></span>Привязать</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

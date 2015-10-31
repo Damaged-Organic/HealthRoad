@@ -14,11 +14,11 @@ class LoadEmployee extends AbstractFixture implements OrderedFixtureInterface
     {
         $employee_1 = (new Employee)
             ->setEmployeeGroup($this->getReference('superadministrator'))
-            ->setUsername("Superanonymous")
-            ->setPassword('$2y$15$ZINZ7dY.USDTyhWwfLvlB.476X.6kcOZA0OVh08fUqGThpAWm9Xrq')
-            ->setName("...")
-            ->setSurname("...")
-            ->setPatronymic("...")
+            ->setUsername("Superadmin")
+            ->setPassword('$2y$15$T3cF.FdR2q2I/kureAXbI.ahZDXl.Tu.81j4UsG9krMWLh1XvLo.O')
+            ->setName("")
+            ->setSurname("")
+            ->setPatronymic("")
             ->setEmail("grimv01k@gmail.com")
             ->setPhoneNumber("+38 (000) 000-00-00")
             ->setSkypeName("grimv01k@live.com")
@@ -29,11 +29,11 @@ class LoadEmployee extends AbstractFixture implements OrderedFixtureInterface
 
         $employee_2 = (new Employee)
             ->setEmployeeGroup($this->getReference('administrator'))
-            ->setUsername("Anonymous")
-            ->setPassword('$2y$15$ZINZ7dY.USDTyhWwfLvlB.476X.6kcOZA0OVh08fUqGThpAWm9Xrq')
-            ->setName("...")
-            ->setSurname("...")
-            ->setPatronymic("...")
+            ->setUsername("Admin")
+            ->setPassword('$2y$15$T3cF.FdR2q2I/kureAXbI.ahZDXl.Tu.81j4UsG9krMWLh1XvLo.O')
+            ->setName("")
+            ->setSurname("")
+            ->setPatronymic("")
             ->setEmail("grimv01k@gmail.com")
             ->setPhoneNumber("+38 (000) 000-00-00")
             ->setSkypeName("grimv01k@live.com")
@@ -43,12 +43,12 @@ class LoadEmployee extends AbstractFixture implements OrderedFixtureInterface
         // ---
 
         $employee_3 = (new Employee)
-            ->setEmployeeGroup($this->getReference('registrar'))
-            ->setUsername("Registronymous")
-            ->setPassword('$2y$15$ZINZ7dY.USDTyhWwfLvlB.476X.6kcOZA0OVh08fUqGThpAWm9Xrq')
-            ->setName("...")
-            ->setSurname("...")
-            ->setPatronymic("...")
+            ->setEmployeeGroup($this->getReference('manager'))
+            ->setUsername("Manager")
+            ->setPassword('$2y$15$T3cF.FdR2q2I/kureAXbI.ahZDXl.Tu.81j4UsG9krMWLh1XvLo.O')
+            ->setName("")
+            ->setSurname("")
+            ->setPatronymic("")
             ->setEmail("grimv01k@gmail.com")
             ->setPhoneNumber("+38 (000) 000-00-00")
             ->setSkypeName("grimv01k@live.com")
@@ -57,9 +57,24 @@ class LoadEmployee extends AbstractFixture implements OrderedFixtureInterface
 
         // ---
 
+        $employee_4 = (new Employee)
+            ->setEmployeeGroup($this->getReference('registrar'))
+            ->setUsername("Registrar")
+            ->setPassword('$2y$15$T3cF.FdR2q2I/kureAXbI.ahZDXl.Tu.81j4UsG9krMWLh1XvLo.O')
+            ->setName("")
+            ->setSurname("")
+            ->setPatronymic("")
+            ->setEmail("grimv01k@gmail.com")
+            ->setPhoneNumber("+38 (000) 000-00-00")
+            ->setSkypeName("grimv01k@live.com")
+        ;
+        $manager->persist($employee_4);
+
+        // ---
+
         $manager->flush();
 
-        $this->addReference('registronymous', $employee_3);
+        $this->addReference('registronymous', $employee_4);
     }
 
     public function getOrder()

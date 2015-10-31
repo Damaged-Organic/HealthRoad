@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/ProductVendingGroup/item.html.twig #}
+{% extends 'AppBundle:Entity/ProductVendingGroup:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_product_vending_group_update %}{% endblock %}>
+                <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}">Данные</a>
+            </li>
+             <li {% block active_product_vending_group_update_bounded_vending_machine %}{% endblock %}>
+                <a href="{{ path('product_vending_group_update_bounded', { 'objectId': productVendingGroup.id, 'objectClass': 'vendingmachine' }) }}">
+                    {{ 'vending_machine_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+            <li {% block active_product_vending_group_update_bounded_product %}{% endblock %}>
+                <a href="{{ path('product_vending_group_update_bounded', { 'objectId': productVendingGroup.id, 'objectClass': 'product' }) }}">
+                    {{ 'product_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

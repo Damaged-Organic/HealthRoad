@@ -1,12 +1,95 @@
 {# AppBundle/Resources/views/Entity/Employee/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Employee:item.html.twig' %}
+{% extends 'AppBundle:Entity/Employee/Base:item.html.twig' %}
+
+{% block active_employee_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ employee.username}}
-    {{ employee.surname }}
-    {{ employee.name }}
-    {{ employee.patronymic }}
-    {{ employee.email }}
-    {{ employee.phoneNumber }}
-    {{ employee.skypeName }}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Системные данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.username.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ employee.username }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.employee_group.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ employee.employeeGroup.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.is_enabled.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>
+                        {{ ( employee.isEnabled ) ? 'Да' : 'Нет' }}
+                    </p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Личные данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.surname.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( employee.surname ) ? employee.surname : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( employee.name ) ? employee.name : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.patronymic.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( employee.patronymic ) ? employee.patronymic : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.email.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( employee.email ) ? employee.email : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.phone_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( employee.phoneNumber ) ? employee.phoneNumber : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'employee.skype_name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( employee.skypeName ) ? employee.skypeName : '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

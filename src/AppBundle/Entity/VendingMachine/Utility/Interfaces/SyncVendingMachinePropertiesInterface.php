@@ -4,5 +4,7 @@ namespace AppBundle\Entity\VendingMachine\Utility\Interfaces;
 
 interface SyncVendingMachinePropertiesInterface
 {
-    const VENDING_MACHINE_LOAD_DATETIME = 'load-datetime';
+    const VENDING_MACHINE_ARRAY = 'vending-machine';
+
+    const VENDING_MACHINE_LOAD_LOADED_AT = 'load-datetime';
 }

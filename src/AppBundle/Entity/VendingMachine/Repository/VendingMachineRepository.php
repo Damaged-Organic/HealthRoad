@@ -6,4 +6,5 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
 class VendingMachineRepository extends ExtendedEntityRepository
 {
+
 }

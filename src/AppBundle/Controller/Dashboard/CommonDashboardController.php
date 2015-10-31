@@ -7,33 +7,34 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 class CommonDashboardController extends Controller
 {
-    public function entitiesListAction()
+    public function breadcrumbsAction()
     {
-        $_manager = $this->getDoctrine()->getManager();
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
-        $entitiesQuantity = [
-            'regions'             => $_manager->getRepository('AppBundle:Region\Region')->count(),
-            'employees'           => $_manager->getRepository('AppBundle:Employee\Employee')->count(),
-            'settlement'          => $_manager->getRepository('AppBundle:Settlement\Settlement')->count(),
-            'school'              => $_manager->getRepository('AppBundle:School\School')->count(),
-            'vendingMachine'      => $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->count(),
-            'nfcTag'              => $_manager->getRepository('AppBundle:NfcTag\NfcTag')->count(),
-            'supplier'            => $_manager->getRepository('AppBundle:Supplier\Supplier')->count(),
-            'product'             => $_manager->getRepository('AppBundle:Product\Product')->count(),
-            'productVendingGroup' => $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->count(),
-            'customer'            => $_manager->getRepository('AppBundle:Customer\Customer')->count(),
-            'student'             => $_manager->getRepository('AppBundle:Student\Student')->count(),
-        ];
-
-        return $this->render('AppBundle:Dashboard/Common:entitiesList.html.twig', [
-            'entitiesQuantity' => $entitiesQuantity
+        return $this->render('AppBundle:Dashboard/Common:breadcrumbs.html.twig', [
+            'breadcrumbs' => $_breadcrumbs->getBreadcrumbs()
         ]);
     }
 
-    public function breadcrumbsAction(Request $request)
+    public function toolbarAction()
     {
-        return $this->render('AppBundle:Dashboard/Common:breadcrumbs.html.twig', [
-            'pageTitle' => $this->get('translator')->trans($request->attributes->get('_route'), [], 'routes')
+        return $this->render('AppBundle:Dashboard/Common:toolbar.html.twig');
+    }
+
+    public function entitiesAction(Request $request)
+    {
+        $_globalRepository = $this->get('app.repository.global');
+
+        $quantities = $_globalRepository->countEntities();
+
+        $route = $request->attributes->get('_route');
+
+        $controller = $request->attributes->get('_controller');
+
+        return $this->render('AppBundle:Dashboard/Common:entities.html.twig', [
+            'route'      => $route,
+            'controller' => $controller,
+            'quantities' => $quantities
         ]);
     }
 }

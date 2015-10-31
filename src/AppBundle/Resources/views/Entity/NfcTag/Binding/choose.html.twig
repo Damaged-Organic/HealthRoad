@@ -1,14 +1,52 @@
 {# AppBundle/Resources/views/Entity/NfcTag/Binding/choose.html.twig #}
-{% extends 'AppBundle:Entity/NfcTag:list.html.twig' %}
+{% extends 'AppBundle:Entity/NfcTag/Base:table.html.twig' %}
 
-{% block action %}
-    <input type="submit" name="nfcTagId" value="{{ nfcTag.id }}" form="nfcTagForm">
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
 {% endblock %}
 
-{% block button %}
-    <form action="{{ path('nfc_tag_bind') }}" id="nfcTagForm" method="POST">
-        <input type="hidden" name="objectClass" value="{{ objectClass }}">
-        <input type="hidden" name="objectId" value="{{ objectId }}">
-    </form>
-    <a href="{{ path('student_update', { 'id': objectId }) }}">Done</a>
+{% block action_items_tr %}
+
+    <td class="double-small-fixed edit-holder double-btn">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_UPDATE'), nfcTag) %}
+            <div class="btn-edit">
+                <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}" class="icon hrd-edit"></a>
+            </div>
+        {% else %}
+            <div class="btn-view">
+                <a href="{{ path('nfc_tag_read', { 'id': nfcTag.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_BIND'), nfcTag) %}
+
+                {% if object.nfcTag is defined %}
+                    {% set isBinded = ( object.nfcTag ) ? object.nfcTag.id == nfcTag.id %}
+                {% else %}
+                    {% set isBinded = ( object.nfcTags.contains(nfcTag) ) %}
+                {% endif %}
+
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+
+                    {% set path = ( isBinded ) ? 'nfc_tag_unbind' : 'nfc_tag_bind' %}
+
+                    <a href="{{ path(path, { 'targetId': nfcTag.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+        {% endif %}
+
+    </td>
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(nfcTags.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

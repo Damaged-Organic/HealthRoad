@@ -1,0 +1,12 @@
+{# AppBundle/Resources/views/Entity/Product/item.html.twig #}
+{% extends 'AppBundle:Entity/Product:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_product_update %}{% endblock %}>
+                <a href="{{ path('product_update', { 'id': product.id }) }}">Данные</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

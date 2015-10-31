@@ -1,0 +1,98 @@
+{# AppBundle/Resources/views/Entity/Product/Base/tile.html.twig #}
+{% extends 'AppBundle:Entity/Product/Base:list.html.twig' %}
+
+{% block variable %}
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+
+            {% if products|length %}
+                <div class="grid" id="products-holder">
+
+                    {% for product in products %}
+
+                        {% if loop.first %}
+                            <div class="row">
+                        {% endif %}
+
+                        <article class="col product-holder">
+                            <span class="unique-id">{{ product.id }}</span>
+                            <figure>
+
+                                {% set path = ( is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) )
+                                        ? 'product_update'
+                                        : 'product_read' %}
+
+                                {% set image = ( product.productImages.0 is defined )
+                                        ? vich_uploader_asset(product.productImages.0, 'imageProductFile')
+                                        : asset('bundles/app/dashboard/images/no-image.jpg') %}
+
+                                <a href="{{ path(path, { 'id': product.id }) }}">
+                                    <img src="{{ image }}" alt="{{ product.nameShort }}">
+                                </a>
+
+                            </figure>
+                            <div class="product-info">
+                                <h2>
+                                    {{ product.nameShort }}
+                                </h2>
+                                <p>
+                                    {{ product.nameFull }}
+                                </p>
+                                <ul>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.code.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.code ) ? product.code : '-' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.product_category.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.productCategory ) ? product.productCategory.name : '-' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.supplier.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.supplier ) ? product.supplier.name : '-' }}
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div class="action-holder">
+                                    <div class="price-holder">
+                                        <span>{{ product.price|number_format(2, ',') }} ₴</span>
+                                    </div>
+                                    <div class="buttons-holder">
+
+                                        {% block action_items %}{% endblock %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        {% if loop.last %}
+                            </div>
+                        {% elseif loop.index is divisible by(3) %}
+                            </div>
+                            <div class="row">
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+            {% else %}
+                <div class="empty-holder">
+                    <h2>{{ 'dashboard.table.empty.title'|trans }}</h2>
+                    <p>{{ 'dashboard.table.empty.text'|trans }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+
+        {% include 'AppBundle:Dashboard/Common:pagination.html.twig' only %}
+    </div>
+{% endblock %}

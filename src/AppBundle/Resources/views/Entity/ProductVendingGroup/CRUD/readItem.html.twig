@@ -1,6 +1,19 @@
 {# AppBundle/Resources/views/Entity/ProductVendingGroup/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/ProductVendingGroup:item.html.twig' %}
+{% extends 'AppBundle:Entity/ProductVendingGroup/Base:item.html.twig' %}
+
+{% block active_product_vending_group_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ productVendingGroup.name }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product_vending_group.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ productVendingGroup.name }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

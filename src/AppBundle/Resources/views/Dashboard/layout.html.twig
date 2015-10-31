@@ -1,16 +1,15 @@
 {# AppBundle/Resources/views/Dashboard/layout.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block title %}
+    {{ 'dashboard.title'|trans }} | Аутентификация
+{% endblock %}
 
-    {% include 'AppBundle:Dashboard/Employee:userbar.html.twig' %}
+{% block metadata %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+{% endblock %}
 
-    {{ render(controller('AppBundle:Dashboard/CommonDashboard:entitiesList')) }}
-
-    {{ render(controller('AppBundle:Dashboard/CommonDashboard:breadcrumbs', { 'request': app.request })) }}
-
-    {% block content %}
-        Добро пожаловать в Офис для сотрудников!
-    {% endblock %}
+{% block favicons %}
 
 {% endblock %}

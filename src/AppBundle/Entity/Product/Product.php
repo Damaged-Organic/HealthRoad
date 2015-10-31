@@ -36,6 +36,13 @@ class Product implements SyncProductPropertiesInterface
     protected $productCategory;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product\ProductImage", mappedBy="product", cascade={"persist", "remove"})
+     */
+    protected $productImages;
+
+    protected $uploadedProductImages;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Supplier\Supplier", inversedBy="products")
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
@@ -45,6 +52,16 @@ class Product implements SyncProductPropertiesInterface
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product\ProductVendingGroup", mappedBy="products")
      */
     protected $productVendingGroups;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Student\Student", mappedBy="products")
+     */
+    protected $students;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="product")
+     */
+    protected $purchases;
 
     /**
      * @ORM\Column(type="string", length=250)
@@ -93,19 +110,9 @@ class Product implements SyncProductPropertiesInterface
     protected $price;
 
     /**
-     * @Assert\File(
-     *     maxSize="2M",
-     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
-     * )
-     *
-     * @Vich\UploadableField(mapping="product_image", fileNameProperty="imageProductName")
+     * @ORM\Column(type="text", nullable=true)
      */
-    protected $imageProductFile;
-
-    /**
-     * @ORM\Column(type="string", length=250, nullable=true)
-     */
-    protected $imageProductName;
+    protected $description;
 
     /**
      * @Assert\File(
@@ -123,16 +130,25 @@ class Product implements SyncProductPropertiesInterface
     protected $imageCertificateName;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      *
-     * @Assert\Length(
-     *      min=2,
-     *      max=250,
-     *      minMessage="product.manufacturer.length.min",
-     *      maxMessage="product.manufacturer.length.max"
-     * )
+     * @CustomAssert\IsDecimalConstraint
      */
-    protected $manufacturer;
+    protected $protein;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     *
+     * @CustomAssert\IsDecimalConstraint
+     */
+    protected $fat;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     *
+     * @CustomAssert\IsDecimalConstraint
+     */
+    protected $carbohydrate;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -140,8 +156,8 @@ class Product implements SyncProductPropertiesInterface
      * @Assert\Range(
      *      min=1,
      *      max=1000,
-     *      minMessage="product.calories.length.min",
-     *      maxMessage="product.calories.length.max"
+     *      minMessage="product.calories.range.min",
+     *      maxMessage="product.calories.range.max"
      * )
      */
     protected $calories;
@@ -192,7 +208,7 @@ class Product implements SyncProductPropertiesInterface
      *      maxMessage="product.weight.length.max"
      * )
      */
-    protected $weigth;
+    protected $weight;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
@@ -228,23 +244,13 @@ class Product implements SyncProductPropertiesInterface
      */
     public function __construct()
     {
+        $this->productImages        = new ArrayCollection;
         $this->productVendingGroups = new ArrayCollection;
+        $this->students             = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
-
-    public function setImageProductFile(File $imageProduct = NULL)
-    {
-        $this->imageProductFile = $imageProduct;
-
-        if( $imageProduct )
-            $this->updatedAt = new DateTime('now');
-    }
-
-    public function getImageProductFile()
-    {
-        return $this->imageProductFile;
-    }
 
     public function setImageCertificateFile(File $imageCertificate = NULL)
     {
@@ -354,26 +360,26 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /**
-     * Set imageProductName
+     * Set description
      *
-     * @param string $imageProductName
+     * @param string $description
      * @return Product
      */
-    public function setImageProductName($imageProductName)
+    public function setDescription($description)
     {
-        $this->imageProductName = $imageProductName;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get imageProductName
+     * Get description
      *
-     * @return string 
+     * @return string
      */
-    public function getImageProductName()
+    public function getDescription()
     {
-        return $this->imageProductName;
+        return $this->description;
     }
 
     /**
@@ -400,26 +406,72 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /**
-     * Set manufacturer
+     * Set protein
      *
-     * @param string $manufacturer
+     * @param string $protein
      * @return Product
      */
-    public function setManufacturer($manufacturer)
+    public function setProtein($protein)
     {
-        $this->manufacturer = $manufacturer;
+        $this->protein = $protein;
 
         return $this;
     }
 
     /**
-     * Get manufacturer
+     * Get protein
      *
-     * @return string 
+     * @return string
      */
-    public function getManufacturer()
+    public function getProtein()
     {
-        return $this->manufacturer;
+        return $this->protein;
+    }
+
+    /**
+     * Set fat
+     *
+     * @param string $fat
+     * @return Product
+     */
+    public function setFat($fat)
+    {
+        $this->fat = $fat;
+
+        return $this;
+    }
+
+    /**
+     * Get fat
+     *
+     * @return string
+     */
+    public function getFat()
+    {
+        return $this->fat;
+    }
+
+    /**
+     * Set carbohydrate
+     *
+     * @param string $carbohydrate
+     * @return Product
+     */
+    public function setCarbohydrate($carbohydrate)
+    {
+        $this->carbohydrate = $carbohydrate;
+
+        return $this;
+    }
+
+    /**
+     * Get carbohydrate
+     *
+     * @return string
+     */
+    public function getCarbohydrate()
+    {
+        return $this->carbohydrate;
     }
 
     /**
@@ -515,26 +567,26 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /**
-     * Set weigth
+     * Set weight
      *
-     * @param integer $weigth
+     * @param integer $weight
      * @return Product
      */
-    public function setWeigth($weigth)
+    public function setWeight($weight)
     {
-        $this->weigth = $weigth;
+        $this->weight = $weight;
 
         return $this;
     }
 
     /**
-     * Get weigth
+     * Get weight
      *
-     * @return integer 
+     * @return integer
      */
-    public function getWeigth()
+    public function getWeight()
     {
-        return $this->weigth;
+        return $this->weight;
     }
 
     /**
@@ -630,6 +682,59 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /**
+     * Add productImage
+     *
+     * @param \AppBundle\Entity\Product\ProductImage $productImage
+     * @return Product
+     */
+    public function addProductImage(\AppBundle\Entity\Product\ProductImage $productImage)
+    {
+        $productImage->setProduct($this);
+        $this->productImages[] = $productImage;
+
+        return $this;
+    }
+
+    /**
+     * Remove productImages
+     *
+     * @param \AppBundle\Entity\Product\ProductImage $productImages
+     */
+    public function removeProductImage(\AppBundle\Entity\Product\ProductImage $productImages)
+    {
+        $this->productImages->removeElement($productImages);
+    }
+
+    /**
+     * Get productImages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProductImages()
+    {
+        return $this->productImages;
+    }
+
+    public function addUploadedProductImage($image)
+    {
+        $this->uploadedProductImages[] = $image;
+
+        return $this;
+    }
+
+    public function removeUploadedProductImage($image)
+    {
+        $this->uploadedProductImages->removeElement($image);
+
+        return $this;
+    }
+
+    public function getUploadedProductImages()
+    {
+        return $this->uploadedProductImages;
+    }
+
+    /**
      * Set supplier
      *
      * @param \AppBundle\Entity\Supplier\Supplier $supplier
@@ -685,6 +790,73 @@ class Product implements SyncProductPropertiesInterface
         return $this->productVendingGroups;
     }
 
+    /**
+     * Add students
+     *
+     * @param \AppBundle\Entity\Student\Student $students
+     * @return Product
+     */
+    public function addStudent(\AppBundle\Entity\Student\Student $students)
+    {
+        $this->students[] = $students;
+
+        return $this;
+    }
+
+    /**
+     * Remove students
+     *
+     * @param \AppBundle\Entity\Student\Student $students
+     */
+    public function removeStudent(\AppBundle\Entity\Student\Student $students)
+    {
+        $this->students->removeElement($students);
+    }
+
+    /**
+     * Get students
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStudents()
+    {
+        return $this->students;
+    }
+
+    /**
+     * Add purchase
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchase
+     * @return Product
+     */
+    public function addPurchase(\AppBundle\Entity\Purchase\Purchase $purchase)
+    {
+        $purchase->setProduct($this);
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchases
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchases
+     */
+    public function removePurchase(\AppBundle\Entity\Purchase\Purchase $purchases)
+    {
+        $this->purchases->removeElement($purchases);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
+
     static public function getSyncArrayName()
     {
         return self::PRODUCT_ARRAY;
@@ -696,6 +868,18 @@ class Product implements SyncProductPropertiesInterface
             self::PRODUCT_ID    => $this->getId(),
             self::PRODUCT_NAME  => $this->getNameShort(),
             self::PRODUCT_PRICE => $this->getPrice()
+        ];
+    }
+
+    static public function getSyncArrayNameRestricted()
+    {
+        return self::PRODUCT_RESTRICTED_ARRAY;
+    }
+
+    public function getSyncObjectDataRestricted()
+    {
+        return [
+            self::PRODUCT_RESTRICTED_ID => $this->getId()
         ];
     }
 }

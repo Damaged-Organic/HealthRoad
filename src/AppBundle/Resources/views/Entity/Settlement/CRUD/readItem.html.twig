@@ -1,7 +1,34 @@
 {# AppBundle/Resources/views/Entity/Settlement/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Settlement:item.html.twig' %}
+{% extends 'AppBundle:Entity/Settlement/Base:item.html.twig' %}
+
+{% block active_settlement_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ settlement.name }}
-    {{ settlement.region.name }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'settlement.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ settlement.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'settlement.region.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if settlement.region %}
+                        <p>{{ settlement.region.name }}</p>
+                        <div class="btn-view padded">
+                            <a href="{{ path('region_update', { 'id': settlement.region.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

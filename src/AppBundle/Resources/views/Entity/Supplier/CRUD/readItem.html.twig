@@ -1,6 +1,132 @@
 {# AppBundle/Resources/views/Entity/Supplier/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Supplier:item.html.twig' %}
+{% extends 'AppBundle:Entity/Supplier/Base:item.html.twig' %}
+
+{% block active_supplier_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ supplier.name }}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Данные производителя</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ supplier.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.name_legal.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ supplier.nameLegal }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.description.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ supplier.description }}</p>
+                </div>
+            </li>
+            <li class="photo-list-holder">
+                <div class="item key">
+                    <span>{{ 'supplier.logo_file.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+
+                    {% if supplier.logoName %}
+                        <figure>
+                            <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
+                        </figure>
+                    {% else %}
+                        <figure>
+                            <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}">
+                        </figure>
+                    {% endif %}
+
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.phone_number_supplier.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.phoneNumberSupplier ) ? supplier.phoneNumberSupplier : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.email_supplier.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.emailSupplier ) ? supplier.emailSupplier : '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Данные контактного лица</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.name_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.nameContact ) ? supplier.nameContact : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.phone_number_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.phoneNumberContact ) ? supplier.phoneNumberContact : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.email_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.emailContact ) ? supplier.emailContact : '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Данные контракта</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.contract_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.contractNumber ) ? supplier.contractNumber : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.contract_date_start.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.contractDateStart ) ? supplier.contractDateStart|date('d-m-Y') : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'supplier.contract_date_end.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( supplier.contractDateEnd ) ? supplier.contractDateEnd|date('d-m-Y') : '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

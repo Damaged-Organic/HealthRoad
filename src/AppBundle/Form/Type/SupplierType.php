@@ -21,49 +21,82 @@ class SupplierType extends AbstractType
     {
         $builder
             ->add('name', 'text', [
-                'label' => "Name"
+                'label' => 'supplier.name.label',
+                'attr'  => [
+                    'placeholder' => 'supplier.name.placeholder'
+                ]
             ])
             ->add('nameLegal', 'text', [
-                'label' => "Name Legal"
+                'label' => 'supplier.name_legal.label',
+                'attr'  => [
+                    'placeholder' => 'supplier.name_legal.placeholder'
+                ]
             ])
-            ->add('description', 'text', [
-                'label' => "Description"
-            ])
-            ->add('logoFile', 'file', [
-                'required' => FALSE,
-                'label'    => "Logo image"
+            ->add('description', 'textarea', [
+                'label' => 'supplier.description.label',
+                'attr'  => [
+                    'placeholder' => 'supplier.description.placeholder'
+                ]
             ])
             ->add('phoneNumberSupplier', 'text', [
                 'required' => FALSE,
-                'label'    => "Supplier phone number"
+                'label'    => 'supplier.phone_number_supplier.label',
+                'attr'     => [
+                    'placeholder' => 'supplier.phone_number_supplier.placeholder'
+                ]
             ])
             ->add('emailSupplier', 'email', [
                 'required' => FALSE,
-                'label'    => "Supplier email"
+                'label'    => 'supplier.email_supplier.label',
+                'attr'     => [
+                    'placeholder' => 'supplier.email_supplier.placeholder'
+                ]
             ])
             ->add('nameContact', 'text', [
                 'required' => FALSE,
-                'label'    => "Contact name"
+                'label'    => 'supplier.name_contact.label',
+                'attr'     => [
+                    'placeholder' => 'supplier.name_contact.placeholder'
+                ]
             ])
             ->add('phoneNumberContact', 'text', [
                 'required' => FALSE,
-                'label'    => "Product image"
+                'label'    => 'supplier.phone_number_contact.label',
+                'attr'     => [
+                    'placeholder' => 'supplier.phone_number_contact.placeholder'
+                ]
             ])
             ->add('emailContact', 'email', [
                 'required' => FALSE,
-                'label'    => "Contact email"
+                'label'    => 'supplier.email_contact.label',
+                'attr'     => [
+                    'placeholder' => 'supplier.email_contact.placeholder'
+                ]
             ])
             ->add('contractNumber', 'text', [
                 'required' => FALSE,
-                'label'    => "Contract number"
+                'label'    => 'supplier.contract_number.label',
+                'attr'     => [
+                    'placeholder' => 'supplier.contract_number.placeholder'
+                ]
             ])
             ->add('contractDateStart', 'date', [
                 'required' => FALSE,
-                'label'    => "Contract date start"
+                'widget'   => 'single_text',
+                'format'   => 'dd-MM-yy',
+                'label'    => 'supplier.contract_date_start.label',
+                'attr'     => [
+                    'placeholder' => 'supplier.contract_date_start.placeholder'
+                ]
             ])
             ->add('contractDateEnd', 'date', [
                 'required' => FALSE,
-                'label'    => "Contract date end"
+                'widget'   => 'single_text',
+                'format'   => 'dd-MM-yy',
+                'label'    => 'supplier.contract_date_end.label',
+                'attr'     => [
+                    'placeholder' => 'supplier.contract_date_end.placeholder'
+                ]
             ])
         ;
 
@@ -76,15 +109,31 @@ class SupplierType extends AbstractType
 
                 if( $supplier && $supplier->getId() !== NULL )
                 {
-                    $form->add('update', 'submit', ['label' => "Сохранить"]);
+                    $form
+                        ->add('logoFile', 'file', [
+                            'required' => FALSE,
+                            'label'    => 'supplier.logo_file.label',
+                            'attr'     => [
+                                'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
+                            ]
+                        ])
+                        ->add('update', 'submit', ['label' => 'common.update.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('update_and_return', 'submit', ['label' => "Сохранить и вернуться к списку"]);
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form->add('create', 'submit', ['label' => "Создать"]);
+                    $form
+                        ->add('logoFile', 'file', [
+                            'required' => TRUE,
+                            'label'    => 'supplier.logo_file.label',
+                            'attr'     => [
+                                'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
+                            ]
+                        ])
+                        ->add('create', 'submit', ['label' => 'common.create.label']);
 
                     if( $this->boundlessAccess )
-                        $form->add('create_and_return', 'submit', ['label' => "Создать и вернуться к списку"]);
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;

@@ -26,11 +26,15 @@ class SchoolController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction($id)
+    public function readAction($id = NULL)
     {
         $_manager = $this->getDoctrine()->getManager();
 
         $_schoolBoundlessAccess = $this->get('app.security.school_boundless_access');
+
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
         {
@@ -46,6 +50,8 @@ class SchoolController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/School/CRUD:readItem.html.twig',
                 'data' => ['school' => $school]
             ];
+
+            $_breadcrumbs->add('school_read')->add('school_read', ['id' => $id], $_translator->trans('school_view', [], 'routes'));
         } else {
             if( !$_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -56,6 +62,8 @@ class SchoolController extends Controller implements UserRoleListInterface
                 'view' => 'AppBundle:Entity/School/CRUD:readList.html.twig',
                 'data' => ['schools' => $schools]
             ];
+
+            $_breadcrumbs->add('school_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -78,13 +86,19 @@ class SchoolController extends Controller implements UserRoleListInterface
         if( !$_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $schoolType = new SchoolType($_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE));
 
-        $form = $this->createForm($schoolType, $school = new School);
+        $form = $this->createForm($schoolType, $school = new School, [
+            'action' => $this->generateUrl('school_create')
+        ]);
 
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('school_read')->add('school_create');
+
             return $this->render('AppBundle:Entity/School/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -120,6 +134,8 @@ class SchoolController extends Controller implements UserRoleListInterface
 
         $_schoolBoundlessAccess = $this->get('app.security.school_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $school = $_manager->getRepository('AppBundle:School\School')->find($id);
 
         if( !$school )
@@ -133,7 +149,9 @@ class SchoolController extends Controller implements UserRoleListInterface
 
         $schoolType = new SchoolType($_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE));
 
-        $form = $this->createForm($schoolType, $school);
+        $form = $this->createForm($schoolType, $school, [
+            'action' => $this->generateUrl('school_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 
@@ -149,6 +167,8 @@ class SchoolController extends Controller implements UserRoleListInterface
                 ]);
             }
         }
+
+        $_breadcrumbs->add('school_read')->add('school_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/School/CRUD:updateItem.html.twig', [
             'form'   => $form->createView(),

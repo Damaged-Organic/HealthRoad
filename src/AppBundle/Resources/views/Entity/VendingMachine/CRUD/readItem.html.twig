@@ -1,10 +1,86 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/VendingMachine:item.html.twig' %}
+{% extends 'AppBundle:Entity/VendingMachine/Base:item.html.twig' %}
+
+{% block active_vending_machine_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ vendingMachine.name }}
-    {{ vendingMachine.code }}
-    {{ vendingMachine.school.name }}
-    {{ vendingMachine.school.settlement.name }}
-    {{ vendingMachine.school.settlement.region.name }}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Параметры</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.serial.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ vendingMachine.serial }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.school.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if vendingMachine.school %}
+                        <p>{{ vendingMachine.school.name }}</p>
+                        <div class="btn-view padded">
+                            <a href="{{ path('school_update', { 'id': vendingMachine.school.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.product_vending_group.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if vendingMachine.productVendingGroup %}
+                        <p>{{ vendingMachine.productVendingGroup.name }}</p>
+                        <div class="btn-view padded">
+                            <a href="{{ path('product_vending_group_update', { 'id': vendingMachine.productVendingGroup.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.name ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.name_technician.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.nameTechnician ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.number_shelves.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.numberShelves ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'vending_machine.number_springs.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( vendingMachine.numberSprings ) ?: '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

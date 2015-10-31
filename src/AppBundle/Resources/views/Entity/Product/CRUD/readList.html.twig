@@ -1,15 +1,41 @@
 {# AppBundle/Resources/views/Entity/Product/CRUD/readList.html.twig #}
-{% extends 'AppBundle:Entity/Product:list.html.twig' %}
+{% extends 'AppBundle:Entity/Product/Base:tile.html.twig' %}
 
-{% block action_button %}
-    {% if product_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\ProductBoundlessAccess::PRODUCT_CREATE')) %}
-        <a href="{{ path('product_create') }}">+ Создать продукт<a>
-        <p>-------------------------------------------------------------------------------------------------</p>
+{% block action_items %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_DELETE'), product) %}
+            <div class="btn-delete">
+                <a href="{{ path('product_delete', { 'id': product.id }) }}" class="icon hrd-delete"></a>
+            </div>
+            <div class="btn-edit">
+                <a href="{{ path('product_update', { 'id': product.id }) }}" class="icon hrd-edit"></a>
+            </div>
+        {% else %}
+            <div class="btn-edit">
+                <a href="{{ path('product_update', { 'id': product.id }) }}" class="icon hrd-edit"></a>
+            </div>
+        {% endif %}
+
+    {% else %}
+        <div class="btn-view">
+            <a href="{{ path('product_read', { 'id': product.id }) }}" class="icon hrd-view"></a>
+        </div>
     {% endif %}
+
 {% endblock %}
 
-{% block action %}
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_DELETE'), product) %}
-        <a href="{{ path('product_delete', { 'id': product.id }) }}">[X]</a>
+{% block action_button %}
+
+    {% if product_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\ProductBoundlessAccess::PRODUCT_CREATE')) %}
+        <div id="action-holder">
+            <div class="btn-add">
+                <a href="{{ path('product_create') }}">
+                    <span class="icon hrd-add"></span>Добавить
+                </a>
+            </div>
+        </div>
     {% endif %}
+
 {% endblock %}

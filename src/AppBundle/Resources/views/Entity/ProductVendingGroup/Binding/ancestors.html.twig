@@ -1,22 +1,41 @@
 {# AppBundle/Resources/views/Entity/ProductVendingGroup/Binding/ancestors.html.twig #}
 {% if sibling.productVendingGroup is defined and sibling.productVendingGroup is not null %}
-    <p>
-        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), sibling.productVendingGroup) %}
-            <a href="{{ path('product_vending_group_update', { 'id': sibling.productVendingGroup.id }) }}">{{ sibling.productVendingGroup.name }}</a>
-        {% else %}
-            <a href="{{ path('product_vending_group_read', { 'id': sibling.productVendingGroup.id }) }}">{{ sibling.productVendingGroup.name }}</a>
-        {% endif %}
-    </p>
+
+    {# Does not exists for now #}
+
 {% elseif sibling.productVendingGroups is defined %}
-    {% for productVendingGroup in sibling.productVendingGroups %}
-        <p>
-            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), productVendingGroup) %}
-                <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}">{{ productVendingGroup.name }}</a>
-            {% else %}
-                <a href="{{ path('product_vending_group_read', { 'id': productVendingGroup.id }) }}">{{ productVendingGroup.name }}</a>
-            {% endif %}
-        </p>
-    {% endfor %}
-{% else %}
-    No product vending groups
+    <table>
+        <tr>
+
+            {% include 'AppBundle:Entity/ProductVendingGroup/Table:th.html.twig' %}
+
+            <th class="double-small-fixed">
+                <span>управление</span>
+            </th>
+
+        </tr>
+
+        {% for productVendingGroup in sibling.productVendingGroups %}
+            <tr>
+
+                {% include 'AppBundle:Entity/ProductVendingGroup/Table:tr.html.twig' with { 'productVendingGroup': productVendingGroup } only %}
+
+                {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), productVendingGroup) %}
+                    <td class="double-small-fixed edit-holder">
+                        <div class="btn-edit">
+                            <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}" class="icon hrd-edit"></a>
+                        </div>
+                    </td>
+                {% else %}
+                    <td class="double-small-fixed view-holder">
+                        <div class="btn-view">
+                            <a href="{{ path('product_vending_group_read', { 'id': productVendingGroup.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    </td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+
+    </table>
 {% endif %}

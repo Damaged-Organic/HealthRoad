@@ -66,7 +66,24 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         return FALSE;
     }
 
-    protected function update($student, $user)
+    protected function update($student, $user = NULL)
+    {
+        if( $this->hasRole($user, self::ROLE_ADMIN) )
+            return TRUE;
+
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) )
+        {
+            if( $student->getEmployee() ) {
+                return ($student->getEmployee()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    protected function delete($student, $user = NULL)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
@@ -80,21 +97,7 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         return FALSE;
     }
 
-    protected function delete($student, $user)
-    {
-        if( $this->hasRole($user, self::ROLE_ADMIN) )
-            return TRUE;
-
-        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
-            return ( $student->getEmployee()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
-        }
-
-        return FALSE;
-    }
-
-    protected function bind($student, $user)
+    protected function bind($student, $user = NULL)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;

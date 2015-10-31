@@ -1,2 +1,209 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="vending-machine-form">
+
+    <div class="separator-holder">
+        <h2>Параметры</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.serial, {
+            'id': "vending-machine-serial",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'vending_machine.serial.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "1", 'data-msg-minlength': 'vending_machine.serial.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "16", 'data-msg-maxlength': 'vending_machine.serial.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.serial) }}
+
+        {{ form_errors(form.serial) }}
+    </div>
+
+    {% do form.school.setRendered %}
+
+    {% set school_set = ( form.school.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( school_set ) ? 'watch-parent' : null }}">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">{{ form.school.vars.label|trans({}, 'forms') }}</span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.school.vars.data ) ? form.school.vars.data.name : form.school.vars.placeholder|trans({}, 'forms') }}</span>
+            </a>
+        </div>
+
+        {% if school_set %}
+            <div class="btn-view">
+                <a href="{{ path('school_update', { 'id': form.school.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% for error in form.school.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        <li class="option-item {{ ( form.school.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
+                        {% for school in form.school.vars.choices %}
+                            <li class="option-item {{ ( form.school.vars.data ) ? ( form.school.vars.data.id != school.value ) ?: 'active' : null }}" data-option="{{ school.value }}">
+                                <span class="option-name">{{ school.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="{{ form.school.vars.full_name }}" value="{{ ( form.school.vars.data ) ? form.school.vars.data.id : null }}">
+    </div>
+
+    {% do form.productVendingGroup.setRendered %}
+
+    {% set product_vending_group_set = ( form.productVendingGroup.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( product_vending_group_set ) ? 'watch-parent' : null }}">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">{{ form.productVendingGroup.vars.label|trans({}, 'forms') }}</span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.productVendingGroup.vars.data ) ? form.productVendingGroup.vars.data.name : form.productVendingGroup.vars.placeholder|trans({}, 'forms') }}</span>
+            </a>
+        </div>
+
+        {% if product_vending_group_set %}
+            <div class="btn-view">
+                <a href="{{ path('product_vending_group_update', { 'id': form.productVendingGroup.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% for error in form.productVendingGroup.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        <li class="option-item {{ ( form.productVendingGroup.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
+                        {% for productVendingGroup in form.productVendingGroup.vars.choices %}
+                            <li class="option-item {{ ( form.productVendingGroup.vars.data ) ? ( form.productVendingGroup.vars.data.id != productVendingGroup.value ) ?: 'active' : null }}" data-option="{{ productVendingGroup.value }}">
+                                <span class="option-name">{{ productVendingGroup.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="{{ form.productVendingGroup.vars.full_name }}" value="{{ ( form.productVendingGroup.vars.data ) ? form.productVendingGroup.vars.data.id : null }}">
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "vending-machine-name",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'vending_machine.name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'vending_machine.name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.nameTechnician, {
+            'id': "vending-machine-name-technician",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'vending_machine.name_technician.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'vending_machine.name_technician.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.nameTechnician) }}
+
+        {{ form_errors(form.nameTechnician) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.numberShelves, {
+            'id': "vending-machine-number-shelves",
+            'attr': {
+                'data-rule-min': 1, 'data-msg-min': 'vending_machine.number_shelves.range.min'|trans({}, "validators"),
+                'data-rule-max': 100, 'data-msg-max': 'vending_machine.number_shelves.range.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.numberShelves) }}
+
+        {{ form_errors(form.numberShelves) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.numberSprings, {
+            'id': "vending-machine-number-springs",
+            'attr': {
+                'data-rule-min': 1, 'data-msg-min': 'vending_machine.number_springs.range.min'|trans({}, "validators"),
+                'data-rule-max': 1000, 'data-msg-max': 'vending_machine.number_springs.range.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.numberSprings) }}
+
+        {{ form_errors(form.numberSprings) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Учетные данные для API</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.login, {
+            'id': "vending-machine-login",
+            'attr': {
+                'data-rule-minlength': "4", 'data-msg-minlength': 'vending_machine.login.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "64", 'data-msg-maxlength': 'vending_machine.login.length.max'|trans({}, "validators"),
+            }
+        }) }}
+
+        {{ form_label(form.login) }}
+
+        {{ form_errors(form.login) }}
+    </div>
+
+    <div class="field-holder">
+        {%
+            set placeholder = ( vendingMachine is defined )
+                ? (( vendingMachine.password ) ? 'vending_machine.password.placeholder.filled'|trans({}, 'forms') : 'vending_machine.password.placeholder.empty'|trans({}, 'forms'))
+                : 'vending_machine.password.placeholder.empty'|trans({}, 'forms') %}
+
+        {{ form_widget(form.password, {
+            'id': "vending-machine-password",
+            'attr': {
+                'placeholder': placeholder,
+                'data-rule-minlength': "8", 'data-msg-minlength': 'vending_machine.password.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "64", 'data-msg-maxlength': 'vending_machine.password.length.max'|trans({}, "validators"),
+                'value': null
+            }
+        }) }}
+
+        {{ form_label(form.password) }}
+
+        {{ form_errors(form.password) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

@@ -34,15 +34,25 @@ class VendingMachine
      */
     protected $productVendingGroup;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="vendingMachine")
-     */
-    protected $nfcTags;
+    #/**
+    # * @ORM\OneToMany(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="vendingMachine", indexBy="code")
+    # */
+    #protected $nfcTags;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineSync", mappedBy="vendingMachine")
      */
     protected $vendingMachineSyncs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineEvent", mappedBy="vendingMachine")
+     */
+    protected $vendingMachineEvents;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="vendingMachine")
+     */
+    protected $purchases;
 
     /**
      * @ORM\Column(type="string", length=16, unique=true)
@@ -69,7 +79,7 @@ class VendingMachine
     protected $login;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=64, nullable=true)
      * @Assert\Length(
      *      min=8,
      *      max=64,
@@ -96,11 +106,11 @@ class VendingMachine
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @Assert\Length(
      *      min=2,
-     *      max=250,
+     *      max=500,
      *      minMessage="vending_machine.name_technician.length.min",
      *      maxMessage="vending_machine.name_technician.length.max"
      * )
@@ -136,12 +146,19 @@ class VendingMachine
     protected $numberSprings;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $vendingMachineLoadedAt;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->nfcTags             = new ArrayCollection;
-        $this->vendingMachineSyncs = new ArrayCollection;
+        $this->nfcTags              = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
+        $this->vendingMachineSyncs  = new ArrayCollection;
+        $this->vendingMachineEvents = new ArrayCollection;
     }
 
     /**
@@ -308,6 +325,29 @@ class VendingMachine
     }
 
     /**
+     * Set vendingMachineLoadedAt
+     *
+     * @param \DateTime $vendingMachineLoadedAt
+     * @return VendingMachine
+     */
+    public function setVendingMachineLoadedAt($vendingMachineLoadedAt)
+    {
+        $this->vendingMachineLoadedAt = $vendingMachineLoadedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get vendingMachineLoadedAt
+     *
+     * @return \DateTime
+     */
+    public function getVendingMachineLoadedAt()
+    {
+        return $this->vendingMachineLoadedAt;
+    }
+
+    /**
      * Set school
      *
      * @param \AppBundle\Entity\School\School $school
@@ -353,39 +393,39 @@ class VendingMachine
         return $this->productVendingGroup;
     }
 
-    /**
-     * Add nfcTag
-     *
-     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
-     * @return VendingMachine
-     */
-    public function addNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag)
-    {
-        $nfcTag->setVendingMachine($this);
-        $this->nfcTags[] = $nfcTag;
+    #/**
+    # * Add nfcTag
+    # *
+    # * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
+    # * @return VendingMachine
+    # */
+    #public function addNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag)
+    #{
+    #    $nfcTag->setVendingMachine($this);
+    #    $this->nfcTags[] = $nfcTag;
+    #
+    #    return $this;
+    #}
 
-        return $this;
-    }
+    #/**
+    # * Remove nfcTags
+    # *
+    # * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTags
+    # */
+    #public function removeNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTags)
+    #{
+    #    $this->nfcTags->removeElement($nfcTags);
+    #}
 
-    /**
-     * Remove nfcTags
-     *
-     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTags
-     */
-    public function removeNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTags)
-    {
-        $this->nfcTags->removeElement($nfcTags);
-    }
-
-    /**
-     * Get nfcTags
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getNfcTags()
-    {
-        return $this->nfcTags;
-    }
+    #/**
+    # * Get nfcTags
+    # *
+    # * @return \Doctrine\Common\Collections\Collection
+    # */
+    #public function getNfcTags()
+    #{
+    #    return $this->nfcTags;
+    #}
 
     /**
      * Add vendingMachineSync
@@ -419,5 +459,102 @@ class VendingMachine
     public function getVendingMachineSyncs()
     {
         return $this->vendingMachineSyncs;
+    }
+
+    /**
+     * Add purchase
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchase
+     * @return VendingMachine
+     */
+    public function addPurchase(\AppBundle\Entity\Purchase\Purchase $purchase)
+    {
+        $purchase->setVendingMachine($this);
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchases
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchases
+     */
+    public function removePurchase(\AppBundle\Entity\Purchase\Purchase $purchases)
+    {
+        $this->purchases->removeElement($purchases);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
+
+    /**
+     * Add vendingMachineEvent
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvent
+     * @return VendingMachine
+     */
+    public function addVendingMachineEvent(\AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvent)
+    {
+        $vendingMachineEvent->setVendingMachine($this);
+        $this->vendingMachineEvents[] = $vendingMachineEvent;
+
+        return $this;
+    }
+
+    /**
+     * Remove vendingMachineEvents
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvents
+     */
+    public function removeVendingMachineEvent(\AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvents)
+    {
+        $this->vendingMachineEvents->removeElement($vendingMachineEvents);
+    }
+
+    /**
+     * Get vendingMachineEvents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVendingMachineEvents()
+    {
+        return $this->vendingMachineEvents;
+    }
+
+    /**
+     * Shortcut to get products if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getProducts()
+    {
+        return ( $this->getProductVendingGroup() )
+            ? $this->getProductVendingGroup()->getProducts()
+            : NULL;
+    }
+
+    /**
+     * Shortcut to get students if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getStudents()
+    {
+        return ( $this->getSchool() )
+            ? $this->getSchool()->getStudents()
+            : NULL;
+    }
+
+    public function getChoiceLabel()
+    {
+        return "{$this->serial}" . (( $this->name ) ? " ({$this->name})" : NULL);
     }
 }

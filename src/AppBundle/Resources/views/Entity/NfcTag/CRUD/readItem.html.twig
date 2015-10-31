@@ -1,6 +1,35 @@
 {# AppBundle/Resources/views/Entity/NfcTag/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/NfcTag:item.html.twig' %}
+{% extends 'AppBundle:Entity/NfcTag/Base:item.html.twig' %}
+
+{% block active_nfc_tag_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ nfcTag.number }}
+    <div id="read-data-holder">
+        <ul>
+            <li>
+                <div class="item key">
+                    <span>{{ 'nfc_tag.number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ nfcTag.number }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'nfc_tag.code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ nfcTag.code }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    {% if nfcTag.student|length %}
+        <div class="separator-holder">
+            <h2>Ученик, к которому привязана NFC-метка</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Student/Binding:ancestors.html.twig' with { 'sibling': nfcTag } only %}
+    {% endif %}
 {% endblock %}

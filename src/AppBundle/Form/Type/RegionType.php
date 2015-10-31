@@ -21,15 +21,24 @@ class RegionType extends AbstractType
     {
         $builder
             ->add('name', 'text', [
-                'label' => "Name"
+                'label' => 'region.name.label',
+                'attr'  => [
+                    'placeholder' => 'region.name.placeholder'
+                ]
             ])
             ->add('administrativeCenter', 'text', [
                 'required' => FALSE,
-                'label'    => "Administrative Center"
+                'label'    => 'region.administrative_center.label',
+                'attr'     => [
+                    'placeholder' => 'region.administrative_center.placeholder'
+                ]
             ])
             ->add('phoneCode', 'text', [
                 'required' => FALSE,
-                'label'    => "Phone Code"
+                'label'    => 'region.phone_code.label',
+                'attr'     => [
+                    'placeholder' => 'region.phone_code.placeholder'
+                ]
             ])
         ;
 
@@ -42,33 +51,15 @@ class RegionType extends AbstractType
 
                 if( $region && $region->getId() !== NULL )
                 {
-                    $form
-                        ->add('update', 'submit', [
-                            'label' => "Сохранить"
-                        ])
-                    ;
+                    $form->add('update', 'submit', ['label' => 'common.update.label']);
 
                     if( $this->boundlessAccess )
-                    {
-                        $form->
-                            add('update_and_return', 'submit', [
-                                'label' => "Сохранить и вернуться к списку"
-                            ]);
-                    }
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form
-                        ->add('create', 'submit', [
-                            'label' => "Создать"
-                        ])
-                    ;
+                    $form->add('create', 'submit', ['label' => 'common.create.label']);
 
                     if( $this->boundlessAccess )
-                    {
-                        $form
-                            ->add('create_and_return', 'submit', [
-                                'label' => "Создать и вернуться к списку"
-                            ]);
-                    }
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;

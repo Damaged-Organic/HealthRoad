@@ -1,2 +1,175 @@
 {# AppBundle/Resources/views/Entity/Student/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="student-form">
+
+    <div class="separator-holder">
+        <h2>Личные данные</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.surname, {
+            'id': "student-surname",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'student.name.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.surname) }}
+
+        {{ form_errors(form.surname) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "student-name",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'student.surname.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.patronymic, {
+            'id': "student-patronymic",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'student.patronymic.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.patronymic) }}
+
+        {{ form_errors(form.patronymic) }}
+    </div>
+
+    <div class="field-holder trpl-field">
+        <p>Выберите пол: <span class="required-field">*</span></p>
+        <div class="field">
+            {{ form_widget(form.gender.0, {
+                'id': "student-gender-male"
+            }) }}
+
+            <label for="student-gender-male">
+                <span class="radio"></span>
+                <span class="text">{{ form.gender.0.vars.label|trans({}, 'forms') }}</span>
+            </label>
+        </div>
+        <div class="field">
+            {{ form_widget(form.gender.1, {
+                'id': "student-gender-female"
+            }) }}
+
+            <label for="student-gender-female">
+                <span class="radio"></span>
+                <span class="text">{{ form.gender.1.vars.label|trans({}, 'forms') }}</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.dateOfBirth, {
+            'id': "student-date-of-birth",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'student.date_of_birth.not_blank'|trans({}, "validators"),
+                'data-mask': "00-00-0000"
+            }
+        }) }}
+
+        {{ form_label(form.dateOfBirth) }}
+
+        {{ form_errors(form.dateOfBirth) }}
+    </div>
+
+    {% do form.school.setRendered %}
+
+    {% set school_set = ( form.school.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( school_set ) ? 'watch-parent' : null }}">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">{{ form.school.vars.label|trans({}, 'forms') }} <span class="required-field">*</span></span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.school.vars.data ) ? form.school.vars.data.name : form.school.vars.placeholder|trans({}, 'forms') }}</span>
+            </a>
+        </div>
+
+        {% if school_set %}
+            <div class="btn-view">
+                <a href="{{ path('school_update', { 'id': form.school.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% for error in form.school.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        <li class="option-item {{ ( form.school.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
+                        {% for school in form.school.vars.choices %}
+                            <li class="option-item {{ ( form.school.vars.data ) ? ( form.school.vars.data.id != school.value ) ?: 'active' : null }}" data-option="{{ school.value }}">
+                                <span class="option-name">{{ school.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="{{ form.school.vars.full_name }}" value="{{ ( form.school.vars.data ) ? form.school.vars.data.id : null }}">
+    </div>
+
+    {% if form.totalLimit is defined and form.dailyLimit is defined %}
+        <div class="separator-holder">
+            <h2>Баланс</h2>
+        </div>
+
+        <div class="field-holder dbl-field">
+            <div class="field">
+                {{ form_widget(form.totalLimit, {
+                    'id': "student-total-limit",
+                    'attr': {
+                        'data-rule-required': "true", 'data-msg-required': 'student.total_limit.not_blank'|trans({}, "validators"),
+                        'data-mask': "#0,00",
+                        'data-mask-reverse': "true"
+                    }
+                }) }}
+
+                {{ form_label(form.totalLimit) }}
+
+                {{ form_errors(form.totalLimit) }}
+            </div>
+            <div class="field">
+                {{ form_widget(form.dailyLimit, {
+                    'id': "student-daily-limit",
+                    'attr': {
+                        'data-rule-required': "true", 'data-msg-required': 'student.daily_limit.not_blank'|trans({}, "validators"),
+                        'data-mask': "#0,00",
+                        'data-mask-reverse': "true"
+                    }
+                }) }}
+
+                {{ form_label(form.dailyLimit) }}
+
+                {{ form_errors(form.dailyLimit) }}
+            </div>
+        </div>
+    {% endif %}
+
+    {{ form_widget(form._token) }}
+</form>

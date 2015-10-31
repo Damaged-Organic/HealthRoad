@@ -1,1 +1,408 @@
 # AppBundle/Resources/translations/forms.ru.yml
+common:
+    choice:
+        placeholder: Выбрать...
+        empty_value: Оставить пустым
+
+    create:
+        label: Добавить
+
+    create_and_return:
+        label: Добавить и вернуться
+
+    update:
+        label: Сохранить
+
+    update_and_return:
+        label: Сохранить и вернуться
+
+employee:
+    username:
+        label:       Логин
+        placeholder: Введите логин
+
+    employee_group:
+        label: Должность
+
+    name:
+        label:       Имя
+        placeholder: Введите имя
+
+    surname:
+        label:       Фамилия
+        placeholder: Введите фамилию
+
+    patronymic:
+        label:       Отчество
+        placeholder: Введите отчество
+
+    email:
+        label:       E-mail
+        placeholder: Введите e-mail
+
+    phone_number:
+        label:       Номер телефона
+        placeholder: Введите номер телефона
+
+    skype_name:
+        label:       Skype
+        placeholder: Введите имя сотрудника в Skype
+
+    password:
+        label:       Пароль
+        placeholder: Введите пароль
+
+    password_confirm:
+        label:       Подтверждение пароля
+        placeholder: Введите пароль для подтверждения
+
+    is_enabled:
+        label: Включен
+
+customer:
+    phone_number:
+        label:       Номер телефона
+        placeholder: Введите номер телефона
+
+    name:
+        label:       Имя
+        placeholder: Введите имя
+
+    surname:
+        label:       Фамилия
+        placeholder: Введите фамилию
+
+    patronymic:
+        label:       Отчество
+        placeholder: Введите отчество
+
+    email:
+        label:       E-mail
+        placeholder: Введите e-mail
+
+    is_enabled:
+        label: Включен
+
+    password:
+        label:       Пароль
+        placeholder: Введите пароль
+
+    password_confirm:
+        label:       Подтверждение пароля
+        placeholder: Введите пароль для подтверждения
+
+region:
+    name:
+        label:       Название
+        placeholder: Введите название
+
+    administrative_center:
+        label:       Административный центр
+        placeholder: Введите название административного центра
+
+    phone_code:
+        label:       Телефонный код
+        placeholder: Введите телефонный код
+
+settlement:
+    name:
+        label:       Название
+        placeholder: Введите название
+
+    region:
+        label: Регион
+
+school:
+    name:
+        label:       Название
+        placeholder: Введите название
+
+    settlement:
+        label: Населенный пункт
+
+    address:
+        label:       Адрес
+        placeholder: Введите адрес
+
+    students_quantity:
+        label:       Количество учеников
+        placeholder: Введите количество учеников
+
+    phone_number_school:
+        label:       Номер телефона школы
+        placeholder: Введите номер телефона школы
+
+    email_school:
+        label:       E-mail школы
+        placeholder: Введите e-mail школы
+
+    name_headmaster:
+        label:       ФИО директора
+        placeholder: Введите ФИО директора
+
+    phone_number_headmaster:
+        label:       Номер телефона директора
+        placeholder: Введите номер телефона директора
+
+    email_headmaster:
+        label:       E-mail директора
+        placeholder: Введите e-mail директора
+
+    name_contact:
+        label:       ФИО контакта
+        placeholder: Введите ФИО контактного лица
+
+    phone_number_contact:
+        label:       Номер телефона контакта
+        placeholder: Введите номер телефона контактного лица
+
+    email_contact:
+        label:       E-mail контакта
+        placeholder: Введите e-mail контактного лица
+
+vending_machine:
+    serial:
+        label:       Серийный номер
+        placeholder: Введите серийный номер
+
+    login:
+        label:       API - Логин для доступа
+        placeholder: Введите логин для API-доступа
+
+    password:
+        label: API - Пароль для доступа
+        placeholder:
+            empty:  Введите пароль для API-доступа
+            filled: Пароль для API-доступа установлен. Введите новый пароль, чтобы изменить его
+
+    name:
+        label:       Имя торгового автомата
+        placeholder: Введите имя торгового автомата : )
+
+    school:
+        label: Школа
+
+    product_vending_group:
+        label: Группа автоматов
+
+    name_technician:
+        label:       Имя техника
+        placeholder: Введите имя техника
+
+    number_shelves:
+        label:       Количество полок
+        placeholder: Введите количество полок
+
+    number_springs:
+        label:       Количество пружин
+        placeholder: Введите количество пружин
+
+nfc_tag:
+    number:
+        label:       Номер
+        placeholder: Введите номер
+
+    code:
+        label:       Код
+        placeholder: Введите код
+
+supplier:
+    name:
+        label:       Название
+        placeholder: Введите название производителя
+
+    name_legal:
+        label:       Юридическое имя
+        placeholder: Введите юридическое имя производителя
+
+    description:
+        label:       Описание
+        placeholder: Введите описание производителя
+
+    logo_file:
+        label: Изображение логотипа
+
+    phone_number_supplier:
+        label:       Телефон производителя
+        placeholder: Введите номер телефона производителя
+
+    email_supplier:
+        label:       E-mail производителя
+        placeholder: Введите e-mail производителя
+
+    name_contact:
+        label:       ФИО контакта
+        placeholder: Введите ФИО контактного лица
+
+    phone_number_contact:
+        label:       Телефон контакта
+        placeholder: Введите номер телефона контактного лица
+
+    email_contact:
+        label:       E-mail контакта
+        placeholder: Введите e-mail контактного лица
+
+    contract_number:
+        label:       Номер контракта
+        placeholder: Введите номер контракта
+
+    contract_date_start:
+        label:       Дата начала контракта
+        placeholder: Введите дату начала контракта
+
+    contract_date_end:
+        label:       Дата окончания контракта
+        placeholder: Введите дату окончания контракта
+
+product:
+    name_full:
+        label:       Полное наименование
+        placeholder: Введите полное наименование продукта
+
+    name_short:
+        label:       Краткое наименование
+        placeholder: Введите краткое наименование
+
+    product_category:
+        label: Категория
+
+    code:
+        label:       Код товара
+        placeholder: Введите код товара
+
+    price:
+        label:       Цена
+        placeholder: Введите цену продукта
+
+    description:
+        label:       Описание
+        placeholder: Введите описание продукта
+
+    product_vending_group:
+        label: Группа автоматов
+
+    image_product_file:
+        label: Изображения продукта
+
+    image_certificate_file:
+        label: Изображение сертификата
+
+    supplier:
+        label: Производитель
+
+    protein:
+        label:       Белки
+        placeholder: Введите количество белков
+
+    fat:
+        label:       Жиры
+        placeholder: Введите количество жиров
+
+    carbohydrate:
+        label:       Углеводы
+        placeholder: Введите количество углеводов
+
+    calories:
+        label:       Калории
+        placeholder: Введите количество калорий
+
+    shelf_life:
+        label:       Время хранения
+        placeholder: Введите время хранения
+
+    storage_temperature_min:
+        label:       Минимальная температура
+        placeholder: Введите минимальную температуру хранения
+
+    storage_temperature_max:
+        label:       Максимальная температура
+        placeholder: Введите максимальную температуру хранения
+
+    weight:
+        label:       Вес
+        placeholder: Введите вес
+
+    measurement_unit:
+        label:       Единица измерения
+        placeholder: Введите единицу измерения
+
+    amount_in_box:
+        label:       Количество в ящике
+        placeholder: Введите количество в ящике
+
+product_vending_group:
+    name:
+        label:       Имя группы автоматов
+        placeholder: Введите имя группы автоматов
+
+student:
+    name:
+        label:       Имя
+        placeholder: Введите имя
+
+    surname:
+        label:       Фамилия
+        placeholder: Введите фамилию
+
+    patronymic:
+        label:       Отчество
+        placeholder: Введите отчество
+
+    gender:
+        label: Пол
+        choice:
+            male:   Мужской
+            female: Женский
+
+    date_of_birth:
+        label:       Дата рождения
+        placeholder: Введите дату рождения
+
+    school:
+        label: Школа
+
+    total_limit:
+        label:       Общий лимит средств
+        placeholder: Введите общий лимит средств
+
+    daily_limit:
+        label:       Дневной лимит средств
+        placeholder: Введите дневной лимит средств
+
+purchase:
+    product_id:
+        label: Идентификатор продукта
+
+    product_name:
+        label: Наименование продукта
+
+    product_price:
+        label: Цена продукта
+
+    vending_machine_choice_label:
+        label: Торговый автомат
+
+    nfc_tag_number:
+        label: Номер NFC-метки
+
+    nfc_tag_code:
+        label: Код NFC-метки
+
+    student:
+        label: Ученик
+
+    customer:
+        label: Клиент
+
+    sync:
+        purchased_at:
+            label: Дата и время продажи
+
+        product_id:
+            label: Идентификатор продукта
+
+        nfc_tag_code:
+            label: Код NFC-метки
+
+        product_price:
+            label: Цена продукта

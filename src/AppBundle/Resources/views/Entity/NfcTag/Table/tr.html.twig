@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/NfcTag/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ nfcTag.id }}</span></td>
+<td>
+    <span>
+        {{ nfcTag.number }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ nfcTag.code }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( nfcTag.student ) ? nfcTag.student.fullName : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( nfcTag.student ) ? (( nfcTag.student.school ) ? nfcTag.student.school.name : '-') : '-' }}
+    </span>
+</td>

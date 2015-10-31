@@ -14,8 +14,9 @@ class LoadNfcTag extends AbstractFixture implements OrderedFixtureInterface
     {
         $nfcTag_1 = (new NfcTag)
             ->setNumber("AA123456")
-            ->setCode("q1w2e3r4t5y6u7")
-            ->setVendingMachine($this->getReference('vendingMachine_donatello'))
+            ->setCode("q1w2e3r4t5y6u71")
+            //->setVendingMachine($this->getReference('vendingMachine_donatello'))
+            ->setStudent($this->getReference('kid_1'))
         ;
         $manager->persist($nfcTag_1);
 
@@ -23,8 +24,9 @@ class LoadNfcTag extends AbstractFixture implements OrderedFixtureInterface
 
         $nfcTag_2 = (new NfcTag)
             ->setNumber("BB123456")
-            ->setCode("q1w2e3r4t5y6u7")
-            ->setVendingMachine($this->getReference('vendingMachine_donatello'))
+            ->setCode("q1w2e3r4t5y6u72")
+            //->setVendingMachine($this->getReference('vendingMachine_donatello'))
+            ->setStudent($this->getReference('kid_2'))
         ;
         $manager->persist($nfcTag_2);
 
@@ -32,8 +34,9 @@ class LoadNfcTag extends AbstractFixture implements OrderedFixtureInterface
 
         $nfcTag_3 = (new NfcTag)
             ->setNumber("CC123456")
-            ->setCode("q1w2e3r4t5y6u7")
-            ->setVendingMachine($this->getReference('vendingMachine_donatello'))
+            ->setCode("q1w2e3r4t5y6u73")
+            //->setVendingMachine($this->getReference('vendingMachine_donatello'))
+            ->setStudent($this->getReference('kid_3'))
         ;
         $manager->persist($nfcTag_3);
 
@@ -48,6 +51,6 @@ class LoadNfcTag extends AbstractFixture implements OrderedFixtureInterface
 
     public function getOrder()
     {
-        return 8;
+        return 12;
     }
 }

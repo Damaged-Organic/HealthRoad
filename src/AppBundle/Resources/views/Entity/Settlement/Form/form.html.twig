@@ -1,2 +1,66 @@
 {# AppBundle/Resources/views/Entity/Settlement/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="settlement-form">
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "settlement-username",
+            'attr': {
+                'placeholder': "Введите название",
+                'data-rule-required': "true", 'data-msg-required': 'settlement.name.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'settlement.name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'settlement.name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    {% do form.region.setRendered %}
+
+    {% set region_set = ( form.region.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( region_set ) ? 'watch-parent' : null }}">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">{{ form.region.vars.label|trans({}, 'forms') }}</span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.region.vars.data ) ? form.region.vars.data.name : form.region.vars.placeholder|trans({}, 'forms') }}</span>
+            </a>
+        </div>
+
+        {% if region_set %}
+            <div class="btn-view">
+                <a href="{{ path('region_update', { 'id': form.region.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% for error in form.region.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        <li class="option-item {{ ( form.region.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
+                        {% for region in form.region.vars.choices %}
+                            <li class="option-item {{ ( form.region.vars.data ) ? ( form.region.vars.data.id != region.value ) ?: 'active' : null }}" data-option="{{ region.value }}">
+                                <span class="option-name">{{ region.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="{{ form.region.vars.full_name }}" value="{{ ( form.region.vars.data ) ? form.region.vars.data.id : null }}">
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

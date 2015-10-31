@@ -26,11 +26,15 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction($id)
+    public function readAction($id = NULL)
     {
         $_manager = $this->getDoctrine()->getManager();
 
         $_productVendingGroupBoundlessAccess = $this->get('app.security.product_vending_group_boundless_access');
+
+        $_translator = $this->get('translator');
+
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         if( $id )
         {
@@ -46,6 +50,8 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                 'view' => 'AppBundle:Entity/ProductVendingGroup/CRUD:readItem.html.twig',
                 'data' => ['productVendingGroup' => $productVendingGroup]
             ];
+
+            $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_read', ['id' => $id], $_translator->trans('product_vending_group_view', [], 'routes'));
         } else {
             if( !$_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_READ) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -56,6 +62,8 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                 'view' => 'AppBundle:Entity/ProductVendingGroup/CRUD:readList.html.twig',
                 'data' => ['productVendingGroups' => $productVendingGroups]
             ];
+
+            $_breadcrumbs->add('product_vending_group_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -78,13 +86,19 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
         if( !$_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $productVendingGroupType = new ProductVendingGroupType($_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
 
-        $form = $this->createForm($productVendingGroupType, $productVendingGroup = new ProductVendingGroup);
+        $form = $this->createForm($productVendingGroupType, $productVendingGroup = new ProductVendingGroup, [
+            'action' => $this->generateUrl('product_vending_group_create')
+        ]);
 
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
+            $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_create');
+
             return $this->render('AppBundle:Entity/ProductVendingGroup/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
@@ -120,6 +134,8 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
 
         $_productVendingGroupBoundlessAccess = $this->get('app.security.product_vending_group_boundless_access');
 
+        $_breadcrumbs = $this->get('app.common.breadcrumbs');
+
         $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($id);
 
         if( !$productVendingGroup )
@@ -133,7 +149,9 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
 
         $productVendingGroupType = new ProductVendingGroupType($_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
 
-        $form = $this->createForm($productVendingGroupType, $productVendingGroup);
+        $form = $this->createForm($productVendingGroupType, $productVendingGroup, [
+            'action' => $this->generateUrl('product_vending_group_update', ['id' => $id])
+        ]);
 
         $form->handleRequest($request);
 
@@ -149,6 +167,8 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                 ]);
             }
         }
+
+        $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/ProductVendingGroup/CRUD:updateItem.html.twig', [
             'form'                => $form->createView(),

@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Employee/Base/list.html.twig #}
+{% extends 'AppBundle:Entity/Employee:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active"><a href="{{ path('employee_read') }}">Все</a></li>
+            <li><a href="#">Суперадминистраторы</a></li>
+            <li><a href="#">Администраторы</a></li>
+            <li><a href="#">Менеджеры</a></li>
+            <li><a href="#">Регистраторы</a></li>
+            <li><a href="#">Бухгалтеры</a></li>
+        </ul>
+    </div>
+{% endblock %}

@@ -29,7 +29,7 @@ class CustomerAccessController extends Controller
 
         $error = $authenticationUtils->getLastAuthenticationError();
 
-        return $this->render('AppBundle:Public/Security/Login:customer.html.twig', [
+        return $this->render('AppBundle:Office/Security/Login:customer.html.twig', [
             'error' => $error
         ]);
     }

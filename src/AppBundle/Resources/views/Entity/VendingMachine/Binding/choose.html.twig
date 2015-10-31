@@ -1,14 +1,57 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/Binding/choose.html.twig #}
-{% extends 'AppBundle:Entity/VendingMachine:list.html.twig' %}
+{% extends 'AppBundle:Entity/VendingMachine/Base:table.html.twig' %}
 
-{% block action %}
-    <input type="submit" name="vendingMachineId" value="{{ vendingMachine.id }}" form="vendingMachineForm">
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
 {% endblock %}
 
-{% block button %}
-    <form action="{{ path('vending_machine_bind') }}" id="vendingMachineForm" method="POST">
-        <input type="hidden" name="objectClass" value="{{ objectClass }}">
-        <input type="hidden" name="objectId" value="{{ objectId }}">
-    </form>
-    <a href="{{ path('product_vending_group_update', { 'id': objectId }) }}">Done</a>
+{% block action_items_tr %}
+
+    <td class="double-small-fixed edit-holder double-btn">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_UPDATE'), vendingMachine) %}
+            <div class="btn-edit">
+                <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}" class="icon hrd-edit"></a>
+            </div>
+        {% else %}
+            <div class="btn-view">
+                <a href="{{ path('vending_machine_read', { 'id': vendingMachine.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_BIND'), vendingMachine) %}
+
+            {% set isBinded = object.vendingMachines.contains(vendingMachine) %}
+
+            <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+
+                {% set path = ( isBinded ) ? 'vending_machine_unbind' : 'vending_machine_bind' %}
+
+                <a href="{{ path(path, { 'targetId': vendingMachine.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+            </div>
+        {% endif %}
+
+    </td>
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+
+            {% if class(object)|lower is same as('school') %}
+                {% set path = 'school_update_bounded' %}
+            {% endif %}
+
+            {% if class(object)|lower is same as('product_vending_group') %}
+                {% set path = 'product_vending_group_update_bounded' %}
+            {% endif %}
+
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(vendingMachines.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

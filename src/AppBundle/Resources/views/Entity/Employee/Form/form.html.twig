@@ -1,13 +1,200 @@
 {# AppBundle/Resources/views/Entity/Employee/Form/form.html.twig #}
-{{ form_start(form) }}
-    {{ form_errors(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
 
-    <p>Системные данные:</p>
-    {{ ( form.username is defined ) ? form_row(form.username) : null }}
-    {{ ( form.password is defined ) ? form_row(form.password) : null }}
-    {{ ( form.isEnabled is defined ) ? form_row(form.isEnabled) : null }}
+<form action="{{ form.vars.action }}" method="POST" id="employee-form">
 
-    {{ ( form.employeeGroup is defined ) ? form_row(form.employeeGroup) : null }}
+    <div class="separator-holder">
+        <h2>Системные данные</h2>
+    </div>
 
-    <p>Персональные данные:</p>
-{{ form_end(form) }}
+    {% if form.username is defined %}
+        <div class="field-holder">
+            {{ form_widget(form.username, {
+                'id': "employee-username",
+                'attr': {
+                    'data-rule-required': "true", 'data-msg-required': 'employee.username.not_blank'|trans({}, "validators"),
+                    'data-rule-minlength': "3", 'data-msg-minlength': 'employee.username.length.min'|trans({}, "validators"),
+                    'data-rule-maxlength': "200", 'data-msg-maxlength': 'employee.username.length.max'|trans({}, "validators")
+                }
+            }) }}
+
+            {{ form_label(form.username) }}
+
+            {{ form_errors(form.username) }}
+        </div>
+    {% endif %}
+
+    {% if form.password is defined %}
+        <div class="field-holder">
+            {{ form_widget(form.password.password, {
+                'id': "employee-password",
+                'attr': {
+                    'data-rule-minlength': "6", 'data-msg-minlength': 'employee.password.length.min'|trans({}, "validators"),
+                    'value': null
+                }
+            }) }}
+
+            {{ form_label(form.password.password) }}
+
+            {{ form_errors(form.password.password) }}
+        </div>
+        <div class="field-holder">
+            {{ form_widget(form.password.password_confirm, {
+                'id': "employee-password-confirm",
+                'attr': {
+                    'value': null
+                }
+            }) }}
+
+            {{ form_label(form.password.password_confirm) }}
+
+            {{ form_errors(form.password.password_confirm) }}
+        </div>
+    {% endif %}
+
+    {% if form.employeeGroup is defined %}
+
+        {% do form.employeeGroup.setRendered %}
+
+        {% if( form.employeeGroup.vars.block_prefixes.2 == 'entity' ) %}
+            <div class="select-holder">
+                <div class="btn-select">
+                    <a href="#">
+                        <div class="title-holder">
+                            <span class="title">{{ form.employeeGroup.vars.label|trans({}, 'forms') }} <span class="required-field">*</span></span>
+                            <span class="icon hrd-list"></span>
+                        </div>
+                        <span class="text">{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.name : form.employeeGroup.vars.placeholder|trans({}, 'forms') }}</span>
+                    </a>
+                </div>
+
+                {% for error in form.employeeGroup.vars.errors %}
+                    <span class="error-holder">{{ error.message }}</span>
+                {% endfor %}
+
+                <div class="select-list">
+                    <div class="outer">
+                        <div class="inner">
+                            <ul>
+                                {% for employeeGroup in form.employeeGroup.vars.choices %}
+                                    <li class="option-item {{ ( form.employeeGroup.vars.data ) ? ( form.employeeGroup.vars.data.id != employeeGroup.value ) ?: 'active' : null }}" data-option="{{ employeeGroup.value }}">
+                                        <span class="option-name">{{ employeeGroup.label }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="{{ form.employeeGroup.vars.full_name }}" value="{{ ( form.employeeGroup.vars.data ) ? form.employeeGroup.vars.data.id : null }}">
+            </div>
+        {% endif %}
+
+        {% if( form.employeeGroup.vars.block_prefixes.1 == 'text' ) %}
+            <div class="field-holder read-only">
+                <input type="text" id="employee-employee-group" name="{{ form.employeeGroup.vars.full_name }}" value="{{ form.employeeGroup.vars.data.name }}" readonly>
+
+                {{ form_label(form.employeeGroup) }}
+            </div>
+        {% endif %}
+
+    {% endif %}
+
+    {% if form.isEnabled is defined %}
+        <div class="field-holder trpl-field">
+            <div class="field">
+                {{ form_widget(form.isEnabled, {
+                    'id': "employee-is-enabled"
+                }) }}
+
+                <label for="employee-is-enabled">
+                    <span class="radio"></span>
+                    <span class="text">{{ form.isEnabled.vars.label|trans({}, 'forms') }}</span>
+                </label>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="separator-holder">
+        <h2>Личные данные</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.surname, {
+            'id': "employee-surname",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.surname) }}
+
+        {{ form_errors(form.surname) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "employee-name",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.patronymic, {
+            'id': "employee-patronymic",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.patronymic) }}
+
+        {{ form_errors(form.patronymic) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.email, {
+            'id': "employee-email",
+            'attr': {
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.email) }}
+
+        {{ form_errors(form.email) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneNumber, {
+            'id': "employee-phone-number",
+            'attr': {
+                'data-mask': "+38 (099) 999-99-99"
+            }
+        }) }}
+
+        {{ form_label(form.phoneNumber) }}
+
+        {{ form_errors(form.phoneNumber) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.skypeName, {
+            'id': "employee-skype-name"
+        }) }}
+
+        {{ form_label(form.skypeName) }}
+
+        {{ form_errors(form.skypeName) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

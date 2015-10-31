@@ -1,8 +1,137 @@
 {# AppBundle/Resources/views/Entity/School/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/School:item.html.twig' %}
+{% extends 'AppBundle:Entity/School/Base:item.html.twig' %}
+
+{% block active_school_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ school.name }}
-    {{ school.settlement.name }}
-    {{ school.settlement.region.name }}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Данные школы</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ school.name }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.address.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ school.address }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.settlement.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if school.settlement %}
+                        <p>{{ school.settlement.name }}</p>
+                        <div class="btn-view">
+                            <a href="{{ path('settlement_update', { 'id': school.settlement.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.students_quantity.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.studentsQuantity ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.phone_number_school.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.phoneNumberSchool ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.email_school.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.emailSchool ) ?: '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Данные директора</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.name_headmaster.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.nameHeadmaster ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.phone_number_headmaster.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.phoneNumberHeadmaster ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.email_headmaster.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.emailHeadmaster ) ?: '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Данные контактного лица</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.name_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.nameContact ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.phone_number_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.phoneNumberContact ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'school.email_contact.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( school.emailContact ) ?: '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    {% if school.employees|length %}
+        <div class="separator-holder">
+            <h2>Регистраторы, ответственные за школу</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': school } only %}
+    {% endif %}
 {% endblock %}

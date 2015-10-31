@@ -1,0 +1,17 @@
+{# AppBundle/Resources/views/Entity/Customer/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/Customer:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_customer_update %}{% endblock %}>
+                <a href="{{ path('customer_update', { 'id': customer.id }) }}">Данные</a>
+            </li>
+            <li {% block active_customer_update_bounded_student %}{% endblock %}>
+                <a href="{{ path('customer_update_bounded', { 'objectId': customer.id, 'objectClass': 'student' }) }}">
+                    {{ 'student_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

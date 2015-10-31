@@ -21,6 +21,10 @@ class EmployeeDashboardController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('AppBundle:Dashboard:layout.html.twig');
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ) {
+            return $this->redirectToRoute('employee_read');
+        } else {
+            return $this->redirectToRoute('customer_read');
+        }
     }
 }

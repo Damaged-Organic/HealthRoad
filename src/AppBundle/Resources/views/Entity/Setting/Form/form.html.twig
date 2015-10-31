@@ -1,16 +1,49 @@
 {# src/AppBundle/Resources/views/Entity/Setting/form.html.twig #}
-{{ form_start(form) }}
-    <h3>Settings Decimal</h3>
-    <ul class="tags">
-        {% for settingDecimal in form.settingsDecimal %}
-            <li>{{ form_row(settingDecimal.settingValue) }}</li>
-        {% endfor %}
-    </ul>
-    <h3>Settings String</h3>
-    <ul class="tags">
-        {% for settingString in form.settingsString %}
-            <li>{{ form_row(settingString.settingValue) }}</li>
-        {% endfor %}
-    </ul>
-    <input type="submit" value="Save">
-{{ form_end(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="setting-form">
+
+    <div class="separator-holder">
+        <h2>Десятичные значения</h2>
+    </div>
+
+    {% for settingDecimal in form.settingsDecimal %}
+        <div class="field-holder">
+            {{ form_widget(settingDecimal.settingValue, {
+                'id': settingDecimal.vars.id,
+                'attr': {
+                    'data-rule-required': "true", 'data-msg-required': 'settings.decimal.setting_value.not_blank'|trans({}, "validators"),
+                    'data-mask': "#0,00",
+                    'data-mask-reverse': "true"
+                }
+            }) }}
+
+            {{ form_label(settingDecimal.settingValue) }}
+
+            {{ form_errors(settingDecimal.settingValue) }}
+        </div>
+    {% endfor %}
+
+    <div class="separator-holder">
+        <h2>Строковые значения</h2>
+    </div>
+
+    {% for settingString in form.settingsString %}
+        <div class="field-holder">
+            {{ form_widget(settingString.settingValue, {
+                'id': settingString.vars.id,
+                'attr': {
+                    'data-rule-required': "true", 'data-msg-required': 'settings.string.setting_value.not_blank'|trans({}, "validators"),
+                    'data-rule-minlength': "1", 'data-msg-minlength': 'settings.string.setting_value.length.min'|trans({}, "validators"),
+                    'data-rule-maxlength': "250", 'data-msg-maxlength': 'settings.string.setting_value.length.max'|trans({}, "validators")
+                }
+            }) }}
+
+            {{ form_label(settingString.settingValue) }}
+
+            {{ form_errors(settingString.settingValue) }}
+        </div>
+    {% endfor %}
+
+    {{ form_widget(form._token) }}
+</form>

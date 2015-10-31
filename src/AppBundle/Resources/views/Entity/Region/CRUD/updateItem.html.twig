@@ -1,6 +1,39 @@
 {# AppBundle/Resources/views/Entity/Region/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/Region:item.html.twig' %}
+{% extends 'AppBundle:Entity/Region/Base:item.html.twig' %}
+
+{% block active_region_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/Region/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/Region/Form:form.html.twig' with { 'form': form, 'region': region } only %}
+
+    {% if region.employee|length %}
+        <div class="separator-holder">
+            <h2>Менеджер, ответственный за регион</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': region } only %}
+    {% endif %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\RegionVoter::REGION_DELETE'), region) %}
+            <div class="btn-delete black">
+                <a href="{{ path('region_delete', { 'id': region.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if region_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\RegionBoundlessAccess::REGION_READ')) %}
+            <button type="submit" form="region-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="region-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

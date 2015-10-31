@@ -1,0 +1,20 @@
+{# AppBundle/Resources/views/Entity/Employee/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Employee/Base:item.html.twig' %}
+
+{% block active_employee_update_bounded_region %}
+    {% if objectClass is same as('region') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_employee_update_bounded_school %}
+    {% if objectClass is same as('school') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

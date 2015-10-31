@@ -1,0 +1,51 @@
+# AppBundle/Resources/translations/responses.ru.yml
+common:
+    error:
+        bad_request: >
+            Запрос содержит неверные данные
+        forbidden: >
+            Доступ к ресурсу запрещен
+        not_found: >
+            Ресурс под таким идентификатором не найден
+
+bind:
+    success:
+        region: >
+            Регион привязан
+        settlement: >
+            Населенный пункт привязан
+        school: >
+            Школа привязана
+        vending_machine: >
+            Торговый автомат привязан
+        nfc_tag: >
+            NFC-метка привязана
+        product: >
+            Продукт привязан
+        student: >
+            Ученик привязан
+
+    error:
+        not_boundalbe: >
+            Привязка объектов данного типа не поддерживается
+
+unbind:
+    success:
+        region: >
+            Регион отвязан
+        settlement: >
+            Населенный пункт отвязан
+        school: >
+            Школа привязана
+        vending_machine: >
+            Торговый автомат отвязан
+        nfc_tag: >
+            NFC-метка отвязана
+        product: >
+            Продукт отвязан
+        student: >
+            Ученик отвязан
+
+    error:
+        not_unboundalbe: >
+            Отвязка объектов данного типа не поддерживается

@@ -1,6 +1,31 @@
 {# AppBundle/Resources/views/Entity/VendingMachine/CRUD/updateItem.html.twig #}
-{% extends 'AppBundle:Entity/VendingMachine:item.html.twig' %}
+{% extends 'AppBundle:Entity/VendingMachine/Base:item.html.twig' %}
+
+{% block active_vending_machine_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {% include 'AppBundle:Entity/VendingMachine/Form:form.html.twig' with {'form': form} only %}
+
+    {% include 'AppBundle:Entity/VendingMachine/Form:form.html.twig' with { 'form': form, 'vendingMachine': vendingMachine } only %}
+
+{% endblock %}
+
+{% block action_bottom %}
+    <div id="action-holder" class="manage-holder">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_DELETE'), vendingMachine) %}
+            <div class="btn-delete black">
+                <a href="{{ path('vending_machine_delete', { 'id': vendingMachine.id }) }}" class="icon hrd-delete"></a>
+            </div>
+        {% endif %}
+
+        {% if vending_machine_boundless_access.isGranted(constant('AppBundle\\Service\\Security\\VendingMachineBoundlessAccess::VENDING_MACHINE_READ')) %}
+            <button type="submit" form="vending-machine-form" name="{{ form.update_and_return.vars.full_name }}" class="btn-save back">
+                <span>{{ form.update_and_return.vars.label|trans({}, 'forms') }}</span>
+            </button>
+        {% endif %}
+
+        <button type="submit" form="vending-machine-form" name="{{ form.update.vars.full_name }}" class="btn-save">
+            <span>{{ form.update.vars.label|trans({}, 'forms') }}</span>
+        </button>
+    </div>
 {% endblock %}

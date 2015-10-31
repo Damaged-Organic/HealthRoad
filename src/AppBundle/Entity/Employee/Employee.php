@@ -54,7 +54,7 @@ class Employee implements AdvancedUserInterface, Serializable
     protected $students;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=200, unique=true)
      *
      * @Assert\NotBlank(message="employee.username.not_blank")
      * @Assert\Length(
@@ -72,6 +72,10 @@ class Employee implements AdvancedUserInterface, Serializable
      * @Assert\NotBlank(
      *      message="employee.password.not_blank",
      *      groups={"Create"}
+     * )
+     * @Assert\Length(
+     *      min=6,
+     *      minMessage="employee.password.length.min",
      * )
      */
     protected $password;
@@ -582,5 +586,13 @@ class Employee implements AdvancedUserInterface, Serializable
     public function isPasswordLegal()
     {
         return ($this->password !== $this->username);
+    }
+
+    public function getFullName()
+    {
+        if( !$this->patronymic && !$this->name && !$this->surname )
+            return NULL;
+
+        return "{$this->surname} {$this->name} {$this->patronymic}";
     }
 }

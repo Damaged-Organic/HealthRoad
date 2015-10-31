@@ -1,0 +1,20 @@
+{# AppBundle/Resources/views/Entity/ProductVendingGroup/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/ProductVendingGroup/Base:item.html.twig' %}
+
+{% block active_product_vending_group_update_bounded_vending_machine %}
+    {% if objectClass is same as('vendingmachine') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_product_vending_group_update_bounded_product %}
+    {% if objectClass is same as('product') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

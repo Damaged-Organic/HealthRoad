@@ -1,2 +1,132 @@
 {# AppBundle/Resources/views/Entity/Customer/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="customer-form">
+
+    <div class="separator-holder">
+        <h2>Системные данные</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneNumber, {
+            'id': "customer-phone-number",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'customer.phone_number.not_blank'|trans({}, "validators"),
+                'data-mask': "+38 (099) 999-99-99"
+            }
+        }) }}
+
+        {{ form_label(form.phoneNumber) }}
+
+        {{ form_errors(form.phoneNumber) }}
+    </div>
+
+    {% if form.password is defined %}
+        <div class="field-holder">
+            {{ form_widget(form.password.password, {
+                'id': "customer-password",
+                'attr': {
+                    'data-rule-minlength': "6", 'data-msg-minlength': 'customer.password.length.min'|trans({}, "validators"),
+                    'value': null
+                }
+            }) }}
+
+            {{ form_label(form.password.password) }}
+
+            {{ form_errors(form.password.password) }}
+        </div>
+        <div class="field-holder">
+            {{ form_widget(form.password.password_confirm, {
+                'id': "customer-password-confirm",
+                'attr': {
+                    'value': null
+                }
+            }) }}
+
+            {{ form_label(form.password.password_confirm) }}
+
+            {{ form_errors(form.password.password_confirm) }}
+        </div>
+    {% endif %}
+
+    {% if form.isEnabled is defined %}
+        {% if form.isEnabled is defined %}
+            <div class="field-holder trpl-field">
+                <div class="field">
+                    {{ form_widget(form.isEnabled, {
+                        'id': "customer-is-enabled"
+                    }) }}
+
+                    <label for="customer-is-enabled">
+                        <span class="radio"></span>
+                        <span class="text">{{ form.isEnabled.vars.label|trans({}, 'forms') }}</span>
+                    </label>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <div class="separator-holder">
+        <h2>Личные данные</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.surname, {
+            'id': "customer-surname",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'customer.surname.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.surname) }}
+
+        {{ form_errors(form.surname) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "customer-name",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'customer.name.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.patronymic, {
+            'id': "customer-patronymic",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'customer.patronymic.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'common.human_name.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "100", 'data-msg-maxlength': 'common.human_name.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.patronymic) }}
+
+        {{ form_errors(form.patronymic) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.email, {
+            'id': "customer-email",
+            'attr': {
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.email) }}
+
+        {{ form_errors(form.email) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

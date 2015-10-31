@@ -1,0 +1,15 @@
+{# AppBundle/Resources/views/Entity/Customer/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ customer.id }}</span></td>
+<td>
+    <span>
+        {{ customer.phoneNumber }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( customer.fullName ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span class="icon {{ ( customer.isEnabled ) ? 'hrd-accept' : 'hrd-cancel'  }}"></span>
+</td>

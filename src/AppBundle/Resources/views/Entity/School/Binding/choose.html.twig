@@ -1,14 +1,48 @@
 {# AppBundle/Resources/views/Entity/School/Binding/choose.html.twig #}
-{% extends 'AppBundle:Entity/School:list.html.twig' %}
+{% extends 'AppBundle:Entity/School/Base:table.html.twig' %}
 
-{% block action %}
-    <input type="submit" name="schoolId" value="{{ school.id }}" form="schoolForm">
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
 {% endblock %}
 
-{% block button %}
-    <form action="{{ path('school_bind') }}" id="schoolForm" method="POST">
-        <input type="hidden" name="objectClass" value="{{ objectClass }}">
-        <input type="hidden" name="objectId" value="{{ objectId }}">
-    </form>
-    <a href="{{ path('settlement_update', { 'id': objectId }) }}">Done</a>
+{% block action_items_tr %}
+
+    <td class="double-small-fixed edit-holder double-btn">
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_UPDATE'), school) %}
+            <div class="btn-edit">
+                <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
+            </div>
+        {% else %}
+            <div class="btn-view">
+                <a href="{{ path('school_read', { 'id': school.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
+
+            {% set isBinded = object.schools.contains(school) %}
+
+            <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+
+                {% set path = ( isBinded ) ? 'school_unbind' : 'school_bind' %}
+
+                <a href="{{ path(path, { 'targetId': school.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+            </div>
+        {% endif %}
+
+    </td>
+
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder">
+        <div id="action-holder" class="manage-holder">
+            <div class="btn-connect">
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(schools.0)|lower }) }}">Готово</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

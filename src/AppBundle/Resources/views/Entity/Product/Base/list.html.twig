@@ -1,0 +1,10 @@
+{# AppBundle/Resources/views/Entity/Product/list.html.twig #}
+{% extends 'AppBundle:Entity/Product:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active"><a href="{{ path('product_read') }}">Все</a></li>
+        </ul>
+    </div>
+{% endblock %}

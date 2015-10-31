@@ -1,0 +1,64 @@
+{# AppBundle/Resources/views/Entity/School/layout.html.twig #}
+{% extends 'AppBundle:Dashboard/State:index.html.twig' %}
+
+{% block title %}
+    {{ 'school_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/schools.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+
+        {% block variable %}
+            <div class="outer scrollable-holder">
+                <div class="inner scrollable">
+
+                    {% block data %}{% endblock %}
+
+                </div>
+            </div>
+            <div class="bottom-info-panel">
+
+                {% block action_bottom %}{% endblock %}
+
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/employees.bundle.min.js') }}"></script>
+{% endblock %}
+
+{#{% block data %}{% endblock %}
+
+{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_DELETE'), school) %}
+    <p>
+        <a href="{{ path('school_delete', { 'id': school.id }) }}">Удалить</a>
+    </p>
+{% endif %}
+<p>-------------------------------------------------------------------------------------------------</p>
+
+<p>Регистраторы школы:</p>
+{% include 'AppBundle:Entity/Employee/Binding:ancestors.html.twig' with { 'sibling': school } only %}
+
+<p>-------------------------------------------------------------------------------------------------</p>
+{% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
+    <p>
+        <a href="{{ path('vending_machine_choose', { 'objectClass': class(school)|lower, 'objectId': school.id }) }}">@ Привязать торговый автомат</a>
+    </p>
+{% endif %}
+
+<p>Торговые автоматы:</p>
+<p>-------------------------------------------------------------------------------------------------</p>
+{% if school.vendingMachines %}
+    {{ render(controller('AppBundle:Binding/VendingMachine:show', { 'objectClass': class(school)|lower, 'objectId': school.id })) }}
+{% endif %}#}

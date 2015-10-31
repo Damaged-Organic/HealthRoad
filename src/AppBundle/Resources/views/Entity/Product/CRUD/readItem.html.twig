@@ -1,6 +1,217 @@
 {# AppBundle/Resources/views/Entity/Product/CRUD/readItem.html.twig #}
-{% extends 'AppBundle:Entity/Product:item.html.twig' %}
+{% extends 'AppBundle:Entity/Product/Base:item.html.twig' %}
+
+{% block active_product_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
-    {{ product.nameFull }}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Данные продукта</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.name_full.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.nameFull }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.name_short.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.nameShort }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.code }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.price.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.price }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.product_category.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.productCategory ) ? product.productCategory.name : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.supplier.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if product.supplier %}
+                        <p>{{ product.supplier.name }}</p>
+                        <div class="btn-view padded">
+                            <a href="{{ path('supplier_update', { 'id': product.supplier.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.description.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.description ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li class="photo-list-holder">
+                <div class="item key">
+                    <span>{{ 'product.image_product_file.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+
+                    {% if product.productImages|length != 0 %}
+
+                        {% for productImage in product.productImages %}
+                            <figure>
+                                <img src="{{ vich_uploader_asset(productImage, 'imageProductFile') }}" alt="{{ productImage.imageProductName }}">
+                            </figure>
+                        {% endfor %}
+
+                    {% else %}
+                        <figure>
+                            <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}">
+                        </figure>
+                    {% endif %}
+
+                </div>
+            </li>
+            <li class="photo-list-holder">
+                <div class="item key">
+                    <span>{{ 'product.image_certificate_file.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+
+                    {% if product.imageCertificateFile %}
+                        <figure>
+                            <img src="{{ vich_uploader_asset(product, 'imageCertificateFile') }}" alt="{{ product.imageCertificateName }}">
+                        </figure>
+                    {% else %}
+                        <figure>
+                            <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}">
+                        </figure>
+                    {% endif %}
+
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Энергетическая ценность</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.protein.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.protein ) ? product.protein : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.fat.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.fat ) ? product.fat : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.carbohydrate.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.carbohydrate ) ? product.carbohydrate : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.calories.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.calories ) ? product.calories : '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Логистические данные</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.shelf_life.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.shelfLife ) ? product.shelfLife : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.storage_temperature_min.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.storageTemperatureMin ) ? product.storageTemperatureMin : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.storage_temperature_max.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.storageTemperatureMax ) ? product.storageTemperatureMax : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.weight.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.weight ) ? product.weight : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.measurement_unit.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.measurementUnit ) ? product.measurementUnit : '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.amount_in_box.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.amountInBox ) ? product.amountInBox : '-' }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    {% if product.productVendingGroups|length %}
+        <div class="separator-holder">
+            <h2>Группы автоматов, к которым привязан продукт</h2>
+        </div>
+
+        {% include 'AppBundle:Entity/ProductVendingGroup/Binding:ancestors.html.twig' with { 'sibling': product } only %}
+    {% endif %}
 {% endblock %}

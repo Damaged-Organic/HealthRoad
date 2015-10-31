@@ -21,51 +21,86 @@ class SchoolType extends AbstractType
     {
         $builder
             ->add('name', 'text', [
-                'label' => "School name"
+                'label' => 'school.name.label',
+                'attr'  => [
+                    'placeholder' => 'school.name.placeholder'
+                ]
             ])
             ->add('settlement', 'entity', [
+                'required'     => FALSE,
                 'class'        => "AppBundle\\Entity\\Settlement\\Settlement",
                 'choice_label' => "name",
-                'placeholder'  => "Choose settlement"
+                'label'        => 'school.settlement.label',
+                'empty_value'  => 'common.choice.placeholder'
             ])
             ->add('address', 'text', [
-                'label' => "Address"
+                'label' => 'school.address.label',
+                'attr'  => [
+                    'placeholder' => 'school.address.placeholder'
+                ]
             ])
             ->add('studentsQuantity', 'number', [
                 'required' => FALSE,
-                'label'    => "Students quantity"
+                'label'    => 'school.students_quantity.label',
+                'attr'     => [
+                    'placeholder' => 'school.students_quantity.placeholder'
+                ]
             ])
             ->add('phoneNumberSchool', 'text', [
                 'required' => FALSE,
-                'label'    => "School phone number"
+                'label'    => 'school.phone_number_school.label',
+                'attr'     => [
+                    'placeholder' => 'school.phone_number_school.placeholder'
+                ]
             ])
             ->add('emailSchool', 'email', [
                 'required' => FALSE,
-                'label'    => "School email"
+                'label'    => 'school.email_school.label',
+                'attr'     => [
+                    'placeholder' => 'school.email_school.placeholder'
+                ]
             ])
             ->add('nameHeadmaster', 'text', [
                 'required' => FALSE,
-                'label'    => "Headmaster name"
+                'label'    => 'school.name_headmaster.label',
+                'attr'     => [
+                    'placeholder' => 'school.name_headmaster.placeholder'
+                ]
             ])
             ->add('phoneNumberHeadmaster', 'text', [
                 'required' => FALSE,
-                'label'    => "Headmaster phone number"
+                'label'    => 'school.phone_number_headmaster.label',
+                'attr'     => [
+                    'placeholder' => 'school.phone_number_headmaster.placeholder'
+                ]
             ])
             ->add('emailHeadmaster', 'email', [
                 'required' => FALSE,
-                'label'    => "Headmaster email"
+                'label'    => 'school.email_headmaster.label',
+                'attr'     => [
+                    'placeholder' => 'school.email_headmaster.placeholder'
+                ]
             ])
             ->add('nameContact', 'text', [
                 'required' => FALSE,
-                'label'    => "Contact name"
+                'label'    => 'school.name_contact.label',
+                'attr'     => [
+                    'placeholder' => 'school.name_contact.placeholder'
+                ]
             ])
             ->add('phoneNumberContact', 'text', [
                 'required' => FALSE,
-                'label'    => "Contact phone number"
+                'label'    => 'school.phone_number_contact.label',
+                'attr'     => [
+                    'placeholder' => 'school.phone_number_contact.placeholder'
+                ]
             ])
             ->add('emailContact', 'email', [
                 'required' => FALSE,
-                'label'    => "Contact email"
+                'label'    => 'school.email_contact.label',
+                'attr'     => [
+                    'placeholder' => 'school.email_contact.placeholder'
+                ]
             ])
         ;
 
@@ -78,33 +113,15 @@ class SchoolType extends AbstractType
 
                 if( $school && $school->getId() !== NULL )
                 {
-                    $form
-                        ->add('update', 'submit', [
-                            'label' => "Сохранить"
-                        ])
-                    ;
+                    $form->add('update', 'submit', ['label' => 'common.update.label']);
 
                     if( $this->boundlessAccess )
-                    {
-                        $form->
-                        add('update_and_return', 'submit', [
-                            'label' => "Сохранить и вернуться к списку"
-                        ]);
-                    }
+                        $form->add('update_and_return', 'submit', ['label' => 'common.update_and_return.label']);
                 } else {
-                    $form
-                        ->add('create', 'submit', [
-                            'label' => "Создать"
-                        ])
-                    ;
+                    $form->add('create', 'submit', ['label' => 'common.create.label']);
 
                     if( $this->boundlessAccess )
-                    {
-                        $form
-                            ->add('create_and_return', 'submit', [
-                                'label' => "Создать и вернуться к списку"
-                            ]);
-                    }
+                        $form->add('create_and_return', 'submit', ['label' => 'common.create_and_return.label']);
                 }
             })
         ;

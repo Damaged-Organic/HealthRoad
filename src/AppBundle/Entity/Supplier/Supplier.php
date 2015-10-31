@@ -22,6 +22,8 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="name", message="supplier.name.unique")
  *
+ * @Assert\GroupSequence({"Supplier", "Strict", "Create", "Update"})
+ *
  * @Vich\Uploadable
  */
 class Supplier
@@ -65,8 +67,9 @@ class Supplier
     protected $description;
 
     /**
+     * @Assert\NotBlank(message="supplier.logo_file.not_blank", groups={"Create"})
      * @Assert\File(
-     *     maxSize="1M",
+     *     maxSize="2M",
      *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg", "image/gif"}
      * )
      *
@@ -97,11 +100,11 @@ class Supplier
     protected $emailSupplier;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @Assert\Length(
      *      min=2,
-     *      max=250,
+     *      max=500,
      *      minMessage="supplier.name_contact.length.min",
      *      maxMessage="supplier.name_contact.length.max"
      * )

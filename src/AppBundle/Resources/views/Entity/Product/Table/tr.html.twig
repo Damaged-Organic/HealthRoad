@@ -1,0 +1,42 @@
+{# AppBundle/Resources/views/Entity/Product/Table/tr.html.twig #}
+<td>
+    <span>
+        {{ product.id }}
+    </span>
+</td>
+<td class="photo-preview-holder">
+    <div class="photo-preview">
+
+        {% set path = ( is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) )
+                ? 'product_update'
+                : 'product_read' %}
+
+        {% set image = ( product.productImages.0 is defined )
+                ? vich_uploader_asset(product.productImages.0, 'imageProductFile')
+                : asset('bundles/app/dashboard/images/no-image-square.jpg') %}
+
+        <figure>
+            <a href="{{ path(path, { 'id': product.id }) }}">
+                <img src="{{ image }}" alt="{{ product.nameShort }}">
+            </a>
+        </figure>
+    </div>
+</td>
+<td>
+    <a href="{{ path(path, { 'id': product.id }) }}">{{ product.nameShort }}</a>
+</td>
+<td>
+    <span>
+        {{ product.code }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ product.price|number_format(2, ',') }} ₴
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( product.supplier ) ? product.supplier.name : '-' }}
+    </span>
+</td>

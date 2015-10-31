@@ -1,2 +1,213 @@
 {# AppBundle/Resources/views/Entity/School/Form/form.html.twig #}
-{{ form(form) }}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST" id="school-form">
+
+    <div class="separator-holder">
+        <h2>Данные школы</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.name, {
+            'id': "school-name",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'school.name_school.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'school.name_school.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'school.name_school.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.name) }}
+
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.address, {
+            'id': "school-address",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'school.address.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'school.address.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.address.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.address) }}
+
+        {{ form_errors(form.address) }}
+    </div>
+
+    {% do form.settlement.setRendered %}
+
+    {% set settlement_set = ( form.settlement.vars.data ) ? true : false %}
+
+    <div class="select-holder {{ ( settlement_set ) ? 'watch-parent' : null }}">
+        <div class="btn-select">
+            <a href="#">
+                <div class="title-holder">
+                    <span class="title">{{ form.settlement.vars.label|trans({}, 'forms') }}</span>
+                    <span class="icon hrd-list"></span>
+                </div>
+                <span class="text">{{ ( form.settlement.vars.data ) ? form.settlement.vars.data.name : form.settlement.vars.placeholder|trans({}, 'forms') }}</span>
+            </a>
+        </div>
+
+        {% if settlement_set %}
+            <div class="btn-view">
+                <a href="{{ path('settlement_update', { 'id': form.settlement.vars.data.id }) }}" class="icon hrd-view"></a>
+            </div>
+        {% endif %}
+
+        {% for error in form.settlement.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+
+        <div class="select-list">
+            <div class="outer">
+                <div class="inner">
+                    <ul>
+                        <li class="option-item {{ ( form.settlement.vars.data is null ) ? 'active' : null }}" data-option="{{ null }}">
+                            <span class="option-name">{{ 'common.choice.empty_value'|trans({}, 'forms') }}</span>
+                        </li>
+                        {% for settlement in form.settlement.vars.choices %}
+                            <li class="option-item {{ ( form.settlement.vars.data ) ? ( form.settlement.vars.data.id != settlement.value ) ?: 'active' : null }}" data-option="{{ settlement.value }}">
+                                <span class="option-name">{{ settlement.label }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="{{ form.settlement.vars.full_name }}" value="{{ ( form.settlement.vars.data ) ? form.settlement.vars.data.id : null }}">
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.studentsQuantity, {
+            'id': "school-students-quantity",
+            'attr': {
+                'data-rule-min': 1, 'data-msg-min': 'school.students_quantity.range.min'|trans({}, "validators"),
+                'data-rule-max': 100000, 'data-msg-max': 'school.students_quantity.range.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.studentsQuantity) }}
+
+        {{ form_errors(form.studentsQuantity) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneNumberSchool, {
+            'id': "school-phone-number-school",
+            'attr': {
+                'data-mask': "+38 (099) 999-99-99"
+            }
+        }) }}
+
+        {{ form_label(form.phoneNumberSchool) }}
+
+        {{ form_errors(form.phoneNumberSchool) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.emailSchool, {
+            'id': "school-email-school",
+            'attr': {
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.emailSchool) }}
+
+        {{ form_errors(form.emailSchool) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Данные директора</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.nameHeadmaster, {
+            'id': "school-name-headmaster",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'school.name_headmaster.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.name_headmaster.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.nameHeadmaster) }}
+
+        {{ form_errors(form.nameHeadmaster) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneNumberHeadmaster, {
+            'id': "school-phone-number-headmaster",
+            'attr': {
+                'data-mask': "+38 (099) 999-99-99"
+            }
+        }) }}
+
+        {{ form_label(form.phoneNumberHeadmaster) }}
+
+        {{ form_errors(form.phoneNumberHeadmaster) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.emailHeadmaster, {
+            'id': "school-email-headmaster",
+            'attr': {
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.emailHeadmaster) }}
+
+        {{ form_errors(form.emailHeadmaster) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Данные контактного лица</h2>
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.nameContact, {
+            'id': "school-name-contact",
+            'attr': {
+                'data-rule-minlength': "2", 'data-msg-minlength': 'school.name_contact.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "500", 'data-msg-maxlength': 'school.name_contact.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.nameContact) }}
+
+        {{ form_errors(form.nameContact) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.phoneNumberContact, {
+            'id': "school-phone-number-contact",
+            'attr': {
+                'data-mask': "+38 (099) 999-99-99"
+            }
+        }) }}
+
+        {{ form_label(form.phoneNumberContact) }}
+
+        {{ form_errors(form.phoneNumberContact) }}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.emailContact, {
+            'id': "school-email-contact",
+            'attr': {
+                'data-rule-email': "true", 'data-msg-email': 'common.email.valid'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.emailContact) }}
+
+        {{ form_errors(form.emailContact) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+</form>

@@ -1,7 +1,6 @@
 # app/config/common/services.yml
 services:
-    app.security.role_hierarchy:
-        alias: security.role_hierarchy
+    # Twig
 
     app.twig_extension:
         class:  AppBundle\Twig\AppExtension
@@ -9,7 +8,43 @@ services:
         tags:
             - { name: twig.extension }
 
+    # Event listeners
+
+    app.listener.sync.authentication:
+        class: AppBundle\EventListener\Sync\SyncAuthenticationListener
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setAuthentication, [ "@app.sync.security.authentication" ]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    # Database
+
+    app.repository.global:
+        class: AppBundle\Service\Repository\GlobalRepository
+        calls:
+            - [setConnection, [ "@database_connection" ]]
+
+    # Common
+
+    app.common.breadcrumbs:
+        class: AppBundle\Service\Common\Breadcrumbs
+        calls:
+            - [setRouter, [ "@router" ]]
+            - [setTranslator, [ "@translator" ]]
+
+    # Validators
+
+    app.validator.uploaded_product_image:
+        class: AppBundle\Service\Validator\UploadedProductImageValidator
+        calls:
+            - [setValidator, [ "@validator" ]]
+            - [setTranslator, [ "@translator" ]]
+
     # Security voters
+
+    app.security.role_hierarchy:
+        alias: security.role_hierarchy
 
     app.voter_setting:
         class:  AppBundle\Security\Authorization\Voter\SettingVoter
@@ -107,80 +142,112 @@ services:
         tags:
             - { name: security.voter }
 
+    app.voter_purchase:
+        class:  AppBundle\Security\Authorization\Voter\PurchaseVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
     # Security services
 
     app.security.setting_boundless_access:
         class: AppBundle\Service\Security\SettingBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.employee_boundless_access:
         class: AppBundle\Service\Security\EmployeeBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.region_boundless_access:
         class: AppBundle\Service\Security\RegionBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.settlement_boundless_access:
         class: AppBundle\Service\Security\SettlementBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.school_boundless_access:
         class: AppBundle\Service\Security\SchoolBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.vending_machine_boundless_access:
         class: AppBundle\Service\Security\VendingMachineBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.nfc_tag_boundless_access:
         class: AppBundle\Service\Security\NfcTagBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.supplier_boundless_access:
         class: AppBundle\Service\Security\SupplierBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.product_boundless_access:
         class: AppBundle\Service\Security\ProductBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.product_vending_group_boundless_access:
         class: AppBundle\Service\Security\ProductVendingGroupBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.customer_boundless_access:
         class: AppBundle\Service\Security\CustomerBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     app.security.student_boundless_access:
         class: AppBundle\Service\Security\StudentBoundlessAccess
         calls:
-             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.purchase_boundless_access:
+        class: AppBundle\Service\Security\PurchaseBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
     # Sync
 
+    app.sync.utility.checksum:
+        class: AppBundle\Service\Sync\Utility\Checksum
+
+    app.sync.sync_data_validator:
+        class: AppBundle\Service\Sync\SyncDataValidator
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setValidator, [ "@validator" ]]
+            - [setChecksum, [ "@app.sync.utility.checksum" ]]
+
+    app.sync.sync_data_handler:
+        class: AppBundle\Service\Sync\SyncDataHandler
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+
     app.sync.sync_data_builder:
         class: AppBundle\Service\Sync\SyncDataBuilder
+        calls:
+            - [setChecksum, [ "@app.sync.utility.checksum" ]]
 
     app.sync.sync_data_recorder:
-        class:     AppBundle\Service\Sync\SyncDataRecorder
-        arguments: ["@doctrine.orm.entity_manager"]
+        class: AppBundle\Service\Sync\SyncDataRecorder
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
 
     app.sync.security.password_encoder:
         class: AppBundle\Service\Sync\Security\PasswordEncoder
 
     app.sync.security.authentication:
-        class:     AppBundle\Service\Sync\Security\Authentication
-        arguments: ["@app.sync.security.password_encoder"]
+        class: AppBundle\Service\Sync\Security\Authentication
+        calls:
+            - [setPasswordEncoder, [ "@app.sync.security.password_encoder" ]]

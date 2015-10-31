@@ -1,0 +1,30 @@
+{# AppBundle/Resources/views/Entity/Employee/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ employee.id }}</span></td>
+<td>
+    <span>
+        {{ employee.username }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ employee.employeeGroup.name }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( employee.fullName ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( employee.email ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( employee.phoneNumber ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span class="icon {{ ( employee.isEnabled ) ? 'hrd-accept' : 'hrd-cancel'  }}"></span>
+</td>
