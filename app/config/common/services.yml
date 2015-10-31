@@ -182,6 +182,16 @@ services:
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
+    app.security.vending_machine_event_boundless_access:
+        class: AppBundle\Service\Security\VendingMachineEventBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.vending_machine_load_boundless_access:
+        class: AppBundle\Service\Security\VendingMachineLoadBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
     app.security.nfc_tag_boundless_access:
         class: AppBundle\Service\Security\NfcTagBoundlessAccess
         calls:

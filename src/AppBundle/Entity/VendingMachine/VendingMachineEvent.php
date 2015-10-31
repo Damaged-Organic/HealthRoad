@@ -42,7 +42,7 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
     protected $code;
 
     /**
-     * @ORM\Column(type="string", length=250)
+     * @ORM\Column(type="string", length=250, nullable=true)
      */
     protected $message;
 

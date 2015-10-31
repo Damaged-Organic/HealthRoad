@@ -2,10 +2,6 @@
 // AppBundle/Service/Sync/SyncDataHandler.php
 namespace AppBundle\Service\Sync;
 
-use AppBundle\Entity\Purchase\Purchase;
-use AppBundle\Entity\VendingMachine\VendingMachine;
-use AppBundle\Entity\VendingMachine\VendingMachineEvent;
-use AppBundle\Entity\VendingMachine\VendingMachineSync;
 use DateTime;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,12 +9,19 @@ use Doctrine\ORM\EntityManager;
 
 use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface,
-    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface;
+    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface,
+    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineLoadPropertiesInterface,
+    AppBundle\Entity\VendingMachine\VendingMachine,
+    AppBundle\Entity\VendingMachine\VendingMachineSync,
+    AppBundle\Entity\VendingMachine\VendingMachineEvent,
+    AppBundle\Entity\VendingMachine\VendingMachineLoad,
+    AppBundle\Entity\Purchase\Purchase;
 
 class SyncDataHandler implements
     SyncDataInterface,
     SyncVendingMachinePropertiesInterface,
-    SyncVendingMachineSyncPropertiesInterface
+    SyncVendingMachineSyncPropertiesInterface,
+    SyncVendingMachineLoadPropertiesInterface
 {
     private $_manager;
 
@@ -38,6 +41,33 @@ class SyncDataHandler implements
     public function handleVendingMachineData($vendingMachine, $data)
     {
         $vendingMachine->setVendingMachineLoadedAt(new DateTime($data[self::SYNC_DATA][self::VENDING_MACHINE_ARRAY][0][self::VENDING_MACHINE_LOAD_LOADED_AT]));
+
+        $vendingMachineLoadArray = [];
+
+        foreach( $data[self::SYNC_DATA][self::VENDING_MACHINE_LOAD_ARRAY] as $value )
+        {
+            // TRANSACTIONAL!!!
+
+            //bulk remove query
+
+            //bulk insert query
+
+            $vendingMachineLoad = (new VendingMachineLoad)
+                ->setVendingMachine($vendingMachine)
+                ->setProductId($value[VendingMachineLoad::VENDING_MACHINE_LOAD_PRODUCT_ID])
+                ->setProductQuantity($value[VendingMachineLoad::VENDING_MACHINE_LOAD_PRODUCT_QUANTITY])
+                ->setSpringPosition($value[VendingMachineLoad::VENDING_MACHINE_LOAD_SPRING_POSITION])
+            ;
+
+            $vendingMachineLoadArray[] = $vendingMachineLoad;
+        }
+
+        if( $vendingMachineLoadArray )
+        {
+            $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachineLoad')->rawDeleteVendingMachineLoad($vendingMachine);
+
+            $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachineLoad')->rawInsertVendingMachineLoad($vendingMachineLoadArray);
+        }
 
         $this->_manager->persist($vendingMachine);
     }
@@ -61,6 +91,7 @@ class SyncDataHandler implements
 
         foreach( $data[self::SYNC_DATA][Purchase::getSyncArrayName()] as $value )
         {
+            // TODO: why the fuck you're checking it after validator?
             if( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]) && $products->get($value[Purchase::PURCHASE_PRODUCT_ID]))
             {
                 $purchase = (new Purchase)

@@ -154,12 +154,17 @@ class SyncController extends Controller implements
         if( !($validSyncData = $_syncDataValidator->validateVendingMachineData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
 
-        $_syncDataHandler->handleVendingMachineData($vendingMachine, $validSyncData);
+        $_manager->transactional(function($_manager) use($_syncDataHandler, $_syncDataRecorder, $validSyncData, $vendingMachine)
+        {
+            $_syncDataHandler->handleVendingMachineData($vendingMachine, $validSyncData);
 
-        $recordMethod = [$_syncDataRecorder, 'recordVendingMachineData'];
+            $recordMethod = [$_syncDataRecorder, 'recordVendingMachineData'];
 
-        if( !$_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
-            throw new BadCredentialsException('Sync response array is missing required data');
+            if (!$_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod))
+                throw new BadCredentialsException('Sync response array is missing required data');
+
+            $_manager->flush();
+        });
 
         return new JsonResponse(NULL, 200);
     }

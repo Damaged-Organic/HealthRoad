@@ -1,0 +1,27 @@
+{# AppBundle/Resources/views/Entity/VendingMachineEvent/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ vendingMachineEvent.id }}</span></td>
+<td>
+    <span>
+        {{ vendingMachineEvent.occurredAt|date('Y-m-d H:i:s') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( vendingMachineEvent.vendingMachine ) ? vendingMachineEvent.vendingMachine.choiceLabel : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ vendingMachineEvent.type }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ vendingMachineEvent.code }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( vendingMachineEvent.message ) ?: '-' }}
+    </span>
+</td>

@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Entity/VendingMachineLoad/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ vendingMachineLoad.id }}</span></td>
+<td>
+    <span>
+        {{ ( vendingMachineLoad.vendingMachine ) ? vendingMachineLoad.vendingMachine.choiceLabel : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ vendingMachineLoad.springPosition }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ vendingMachineLoad.productId }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ vendingMachineLoad.productQuantity }}
+    </span>
+</td>

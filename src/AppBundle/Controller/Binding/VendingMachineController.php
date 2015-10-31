@@ -2,7 +2,6 @@
 // AppBundle/Controller/Binding/VendingMachineController.php
 namespace AppBundle\Controller\Binding;
 
-use AppBundle\Entity\Purchase\Purchase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -15,6 +14,9 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\School\School,
     AppBundle\Entity\NfcTag\NfcTag,
+    AppBundle\Entity\Purchase\Purchase,
+    AppBundle\Entity\VendingMachine\VendingMachineEvent,
+    AppBundle\Entity\VendingMachine\VendingMachineLoad,
     AppBundle\Entity\Product\ProductVendingGroup,
     AppBundle\Security\Authorization\Voter\VendingMachineVoter,
     AppBundle\Security\Authorization\Voter\SchoolVoter,
@@ -135,6 +137,36 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                         'objectClass' => $objectClass
                     ],
                     $_translator->trans('purchase_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new VendingMachineEvent, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\VendingMachineEvent:show', [
+                    'objectClass' => $this->getObjectClassName($vendingMachine),
+                    'objectId'    => $objectId
+                ]);
+
+                $_breadcrumbs->add('vending_machine_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $_translator->trans('vending_machine_event_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new VendingMachineLoad, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\VendingMachineLoad:show', [
+                    'objectClass' => $this->getObjectClassName($vendingMachine),
+                    'objectId'    => $objectId
+                ]);
+
+                $_breadcrumbs->add('vending_machine_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $_translator->trans('vending_machine_load_read', [], 'routes')
                 );
             break;
 

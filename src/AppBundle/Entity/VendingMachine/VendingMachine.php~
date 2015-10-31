@@ -8,7 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface;
 
 /**
  * @ORM\Table(name="vending_machines")
@@ -18,7 +19,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
  * @UniqueEntity(fields="login", message="vending_machine.login.unique")
  * @UniqueEntity(fields="name", message="vending_machine.name.unique")
  */
-class VendingMachine
+class VendingMachine implements SyncVendingMachinePropertiesInterface
 {
     use IdMapperTrait;
 
@@ -34,10 +35,10 @@ class VendingMachine
      */
     protected $productVendingGroup;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="vendingMachine", indexBy="code")
-     */
-    protected $nfcTags;
+    #/**
+    # * @ORM\OneToMany(targetEntity="AppBundle\Entity\NfcTag\NfcTag", mappedBy="vendingMachine", indexBy="code")
+    # */
+    #protected $nfcTags;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineSync", mappedBy="vendingMachine")
@@ -48,6 +49,11 @@ class VendingMachine
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineEvent", mappedBy="vendingMachine")
      */
     protected $vendingMachineEvents;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineLoad", mappedBy="vendingMachine")
+     */
+    protected $vendingMachineLoad;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="vendingMachine")
@@ -79,7 +85,7 @@ class VendingMachine
     protected $login;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=64, nullable=true)
      * @Assert\Length(
      *      min=8,
      *      max=64,
@@ -106,11 +112,11 @@ class VendingMachine
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @Assert\Length(
      *      min=2,
-     *      max=250,
+     *      max=500,
      *      minMessage="vending_machine.name_technician.length.min",
      *      maxMessage="vending_machine.name_technician.length.max"
      * )
@@ -146,7 +152,7 @@ class VendingMachine
     protected $numberSprings;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $vendingMachineLoadedAt;
 
@@ -155,9 +161,10 @@ class VendingMachine
      */
     public function __construct()
     {
-        $this->nfcTags             = new ArrayCollection;
-        $this->vendingMachineSyncs = new ArrayCollection;
-        $this->purchases           = new ArrayCollection;
+        $this->nfcTags              = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
+        $this->vendingMachineSyncs  = new ArrayCollection;
+        $this->vendingMachineEvents = new ArrayCollection;
     }
 
     /**
@@ -392,39 +399,39 @@ class VendingMachine
         return $this->productVendingGroup;
     }
 
-    /**
-     * Add nfcTag
-     *
-     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
-     * @return VendingMachine
-     */
-    public function addNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag)
-    {
-        $nfcTag->setVendingMachine($this);
-        $this->nfcTags[] = $nfcTag;
+    #/**
+    # * Add nfcTag
+    # *
+    # * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTag
+    # * @return VendingMachine
+    # */
+    #public function addNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTag)
+    #{
+    #    $nfcTag->setVendingMachine($this);
+    #    $this->nfcTags[] = $nfcTag;
+    #
+    #    return $this;
+    #}
 
-        return $this;
-    }
+    #/**
+    # * Remove nfcTags
+    # *
+    # * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTags
+    # */
+    #public function removeNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTags)
+    #{
+    #    $this->nfcTags->removeElement($nfcTags);
+    #}
 
-    /**
-     * Remove nfcTags
-     *
-     * @param \AppBundle\Entity\NfcTag\NfcTag $nfcTags
-     */
-    public function removeNfcTag(\AppBundle\Entity\NfcTag\NfcTag $nfcTags)
-    {
-        $this->nfcTags->removeElement($nfcTags);
-    }
-
-    /**
-     * Get nfcTags
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getNfcTags()
-    {
-        return $this->nfcTags;
-    }
+    #/**
+    # * Get nfcTags
+    # *
+    # * @return \Doctrine\Common\Collections\Collection
+    # */
+    #public function getNfcTags()
+    #{
+    #    return $this->nfcTags;
+    #}
 
     /**
      * Add vendingMachineSync
@@ -495,6 +502,50 @@ class VendingMachine
     }
 
     /**
+     * Add vendingMachineEvent
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvent
+     * @return VendingMachine
+     */
+    public function addVendingMachineEvent(\AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvent)
+    {
+        $vendingMachineEvent->setVendingMachine($this);
+        $this->vendingMachineEvents[] = $vendingMachineEvent;
+
+        return $this;
+    }
+
+    /**
+     * Remove vendingMachineEvents
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvents
+     */
+    public function removeVendingMachineEvent(\AppBundle\Entity\VendingMachine\VendingMachineEvent $vendingMachineEvents)
+    {
+        $this->vendingMachineEvents->removeElement($vendingMachineEvents);
+    }
+
+    /**
+     * Get vendingMachineEvents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVendingMachineEvents()
+    {
+        return $this->vendingMachineEvents;
+    }
+
+    public function getChoiceLabel()
+    {
+        return "{$this->serial}" . (( $this->name ) ? " ({$this->name})" : NULL);
+    }
+
+    static public function getSyncArrayName()
+    {
+        return self::VENDING_MACHINE_ARRAY;
+    }
+
+    /**
      * Shortcut to get products if possible
      *
      * @return \Doctrine\Common\Collections\Collection|null
@@ -503,6 +554,18 @@ class VendingMachine
     {
         return ( $this->getProductVendingGroup() )
             ? $this->getProductVendingGroup()->getProducts()
+            : NULL;
+    }
+
+    /**
+     * Shortcut to get students if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getStudents()
+    {
+        return ( $this->getSchool() )
+            ? $this->getSchool()->getStudents()
             : NULL;
     }
 }

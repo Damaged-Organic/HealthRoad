@@ -15,6 +15,18 @@
     {% endif %}
 {% endblock %}
 
+{% block active_vending_machine_update_bounded_vending_machine_event %}
+    {% if objectClass is same as('vendingmachineevent') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_vending_machine_update_bounded_vending_machine_load %}
+    {% if objectClass is same as('vendingmachineload') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
 {% block variable %}
 
     {{ bounded|raw }}

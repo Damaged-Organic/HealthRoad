@@ -1,24 +1,24 @@
-{# AppBundle/Resources/views/Entity/Purchase/Base/table.html.twig #}
-{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/Purchase/Base:list.html.twig' %}
+{# AppBundle/Resources/views/Entity/VendingMachineEvent/Base/list.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/VendingMachineEvent/Base:list.html.twig' %}
 
 {% block variable %}
     <div class="outer scrollable-holder">
         <div class="inner scrollable">
 
-            {% if purchases|length %}
+            {% if vendingMachineEvents|length %}
                 <table>
                     <tr>
 
-                        {% include 'AppBundle:Entity/Purchase/Table:th.html.twig' %}
+                        {% include 'AppBundle:Entity/VendingMachineEvent/Table:th.html.twig' %}
 
                         {% block action_items_th %}{% endblock %}
 
                     </tr>
 
-                    {% for purchase in purchases %}
+                    {% for vendingMachineEvent in vendingMachineEvents %}
                         <tr>
 
-                            {% include 'AppBundle:Entity/Purchase/Table:tr.html.twig' with { 'purchase': purchase } only %}
+                            {% include 'AppBundle:Entity/VendingMachineEvent/Table:tr.html.twig' with { 'vendingMachineEvent': vendingMachineEvent } only %}
 
                             {% block action_items_tr %}{% endblock %}
 

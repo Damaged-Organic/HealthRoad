@@ -85,3 +85,7 @@ student_choose:  Привязать ученика
 
 purchase_read: Продажи
 purchase_view: Просмотр продажи
+
+vending_machine_event_read: События
+
+vending_machine_load_read: Загрузка

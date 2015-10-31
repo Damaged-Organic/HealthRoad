@@ -7,6 +7,8 @@ twig:
         settlement_boundless_access:            "@app.security.settlement_boundless_access"
         school_boundless_access:                "@app.security.school_boundless_access"
         vending_machine_boundless_access:       "@app.security.vending_machine_boundless_access"
+        vending_machine_event_boundless_access: "@app.security.vending_machine_event_boundless_access"
+        vending_machine_load_boundless_access:  "@app.security.vending_machine_load_boundless_access"
         nfc_tag_boundless_access:               "@app.security.nfc_tag_boundless_access"
         supplier_boundless_access:              "@app.security.supplier_boundless_access"
         product_boundless_access:               "@app.security.product_boundless_access"

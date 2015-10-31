@@ -8,7 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface;
 
 /**
  * @ORM\Table(name="vending_machines")
@@ -18,7 +19,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
  * @UniqueEntity(fields="login", message="vending_machine.login.unique")
  * @UniqueEntity(fields="name", message="vending_machine.name.unique")
  */
-class VendingMachine
+class VendingMachine implements SyncVendingMachinePropertiesInterface
 {
     use IdMapperTrait;
 
@@ -48,6 +49,11 @@ class VendingMachine
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineEvent", mappedBy="vendingMachine")
      */
     protected $vendingMachineEvents;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineLoad", mappedBy="vendingMachine")
+     */
+    protected $vendingMachineLoad;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="vendingMachine")
@@ -159,6 +165,7 @@ class VendingMachine
         $this->purchases            = new ArrayCollection;
         $this->vendingMachineSyncs  = new ArrayCollection;
         $this->vendingMachineEvents = new ArrayCollection;
+        $this->vendingMachineLoad   = new ArrayCollection;
     }
 
     /**
@@ -530,6 +537,50 @@ class VendingMachine
     }
 
     /**
+     * Add vendingMachineLoad
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineLoad $vendingMachineLoad
+     * @return VendingMachine
+     */
+    public function addVendingMachineLoad(\AppBundle\Entity\VendingMachine\VendingMachineLoad $vendingMachineLoad)
+    {
+        $vendingMachineLoad->setVendingMachine($this);
+        $this->vendingMachineLoad[] = $vendingMachineLoad;
+
+        return $this;
+    }
+
+    /**
+     * Remove vendingMachineLoad
+     *
+     * @param \AppBundle\Entity\VendingMachine\VendingMachineLoad $vendingMachineLoad
+     */
+    public function removeVendingMachineLoad(\AppBundle\Entity\VendingMachine\VendingMachineLoad $vendingMachineLoad)
+    {
+        $this->vendingMachineLoad->removeElement($vendingMachineLoad);
+    }
+
+    /**
+     * Get vendingMachineLoad
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVendingMachineLoad()
+    {
+        return $this->vendingMachineLoad;
+    }
+
+    public function getChoiceLabel()
+    {
+        return "{$this->serial}" . (( $this->name ) ? " ({$this->name})" : NULL);
+    }
+
+    static public function getSyncArrayName()
+    {
+        return self::VENDING_MACHINE_ARRAY;
+    }
+
+    /**
      * Shortcut to get products if possible
      *
      * @return \Doctrine\Common\Collections\Collection|null
@@ -551,10 +602,5 @@ class VendingMachine
         return ( $this->getSchool() )
             ? $this->getSchool()->getStudents()
             : NULL;
-    }
-
-    public function getChoiceLabel()
-    {
-        return "{$this->serial}" . (( $this->name ) ? " ({$this->name})" : NULL);
     }
 }
