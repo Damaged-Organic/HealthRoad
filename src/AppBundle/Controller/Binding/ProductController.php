@@ -160,7 +160,7 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$student )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
-                $products = $student->getRestrictedProducts();
+                $products = $_manager->getRepository('AppBundle:Product\Product')->findAvailableByStudent($student);
 
                 $path = 'student_update_bounded';
 

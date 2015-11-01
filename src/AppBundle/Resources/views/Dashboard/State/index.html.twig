@@ -37,7 +37,7 @@
 
                     {{ render(controller('AppBundle:Dashboard/CommonDashboard:breadcrumbs', { 'request': app.request })) }}
 
-                    {{ render(controller('AppBundle:Dashboard/CommonDashboard:toolbar')) }}
+                    {{ render(controller('AppBundle:Dashboard/CommonDashboard:toolbar', { 'request': app.request })) }}
 
                 </div>
                 <div class="inner success-holder">

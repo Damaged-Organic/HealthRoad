@@ -46,12 +46,6 @@ class SyncDataHandler implements
 
         foreach( $data[self::SYNC_DATA][self::VENDING_MACHINE_LOAD_ARRAY] as $value )
         {
-            // TRANSACTIONAL!!!
-
-            //bulk remove query
-
-            //bulk insert query
-
             $vendingMachineLoad = (new VendingMachineLoad)
                 ->setVendingMachine($vendingMachine)
                 ->setProductId($value[VendingMachineLoad::VENDING_MACHINE_LOAD_PRODUCT_ID])
@@ -77,15 +71,8 @@ class SyncDataHandler implements
         //if products null?
         $products = $vendingMachine->getProducts();
 
-        //if no students?
-        $students = $vendingMachine->getStudents();
-
-        $nfcTags = new ArrayCollection;
-
-        //if students have no tags?
-        foreach($students as $student) {
-            $nfcTags->set($student->getNfcTag()->getCode(), $student->getNfcTag());
-        }
+        //if nfc tags null?
+        $nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAvailableByVendingMachine($vendingMachine));
 
         $purchasesArray = [];
 

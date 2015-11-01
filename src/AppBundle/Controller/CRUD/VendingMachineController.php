@@ -40,6 +40,12 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         {
             $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
 
+            // TODO: Destroy
+            $nfcTags = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAvailableByVendingMachine($vendingMachine);
+            foreach($nfcTags as $nfcTag) {
+                var_dump($nfcTag->getNumber());
+            }
+
             if( !$vendingMachine )
                 throw $this->createNotFoundException("Vending Machine identified by `id` {$id} not found");
 

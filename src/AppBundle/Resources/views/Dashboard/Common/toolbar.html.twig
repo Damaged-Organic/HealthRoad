@@ -3,7 +3,8 @@
     <div class="inner logout">
         <a href="{{ path('employee_dashboard_logout') }}" class="hrd-logout"></a>
     </div>
-    <div class="inner settings">
+
+    <div class="inner settings {{ ( 'SettingController' in controller ) ? 'active' : null }}">
         <a href="{{ path('setting_update') }}" class="hrd-gear"></a>
     </div>
     <div class="inner entrance">

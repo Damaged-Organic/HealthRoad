@@ -338,6 +338,9 @@ a{
 					color: @white;
 				}
 			}
+			&.active{
+				a{ color: @white; }
+			}
 		}
 	}
 }
@@ -799,6 +802,14 @@ a{
 	background: transparent;
 	margin: 0 0 20px;
 	overflow: hidden;
+	&.shift{
+		&.small-top{ margin-top: 20px; }
+		&.large-top{ margin-top: 40px; }
+		&.extra-large-top{ margin-top: 60px; }
+		&.small-bottom{ margin-bottom: 20px; }
+		&.large-bottom{ margin-bottom: 40px; }
+		&.extra-large-bottom{ margin-bottom: 60px; }
+	}
 	h2{
 		padding: 20px;
 		color: @grey;
@@ -822,7 +833,7 @@ a{
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	adaptive start 					 		  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-@media only screen and (max-width: 1366px){
+@media only screen and (max-width: 1280px){
 
 	#header{
 		& > .entitled{ display: none; }

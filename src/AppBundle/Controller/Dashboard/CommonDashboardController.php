@@ -16,9 +16,13 @@ class CommonDashboardController extends Controller
         ]);
     }
 
-    public function toolbarAction()
+    public function toolbarAction(Request $request)
     {
-        return $this->render('AppBundle:Dashboard/Common:toolbar.html.twig');
+        $controller = $request->attributes->get('_controller');
+
+        return $this->render('AppBundle:Dashboard/Common:toolbar.html.twig', [
+            'controller' => $controller
+        ]);
     }
 
     public function entitiesAction(Request $request)

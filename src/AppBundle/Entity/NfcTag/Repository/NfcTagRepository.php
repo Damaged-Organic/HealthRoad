@@ -2,19 +2,19 @@
 // AppBundle/Entity/NfcTag/Repository/NfcTagRepository.php
 namespace AppBundle\Entity\NfcTag\Repository;
 
-use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
-use Doctrine\ORM\Query;
+use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
+    AppBundle\Entity\VendingMachine\VendingMachine;
 
 class NfcTagRepository extends ExtendedEntityRepository
 {
-    public function findByVendingMachine($vendingMachine)
+    public function findAvailableByVendingMachine(VendingMachine $vendingMachine)
     {
         $query = $this->_em->createQueryBuilder()
-            ->select('nt, s')
+            ->select('nt')
             ->from('AppBundle:NfcTag\NfcTag', 'nt', 'nt.code')
-            ->leftJoin('nt.student', 's')
-            ->where('nt.vendingMachine = :vendingMachine')
-            ->setParameter('vendingMachine', $vendingMachine)
+            ->leftJoin('nt.student', 'st')
+            ->where('st.school = :school')
+            ->setParameter('school', $vendingMachine->getSchool())
             ->getQuery()
         ;
 
