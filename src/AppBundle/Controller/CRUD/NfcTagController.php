@@ -86,6 +86,8 @@ class NfcTagController extends Controller implements UserRoleListInterface
         if( !$_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         $nfcTagType = new NfcTagType($_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE));
@@ -105,8 +107,12 @@ class NfcTagController extends Controller implements UserRoleListInterface
         } else {
             $_manager = $this->getDoctrine()->getManager();
 
+            $_session = $this->get('session');
+
             $_manager->persist($nfcTag);
             $_manager->flush();
+
+            $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.create', [], 'responses')]]);
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('nfc_tag_read');
@@ -134,6 +140,8 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
         $_nfcTagBoundlessAccess = $this->get('app.security.nfc_tag_boundless_access');
 
+        $_translator = $this->get('translator');
+
         $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
@@ -157,7 +165,11 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
         if( $form->isValid() )
         {
+            $_session = $this->get('session');
+
             $_manager->flush();
+
+            $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.update', [], 'responses')]]);
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('nfc_tag_read');
@@ -190,6 +202,10 @@ class NfcTagController extends Controller implements UserRoleListInterface
     {
         $_manager = $this->getDoctrine()->getManager();
 
+        $_session = $this->get('session');
+
+        $_translator = $this->get('translator');
+
         $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 
         if( !$nfcTag )
@@ -200,6 +216,8 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
         $_manager->remove($nfcTag);
         $_manager->flush();
+
+        $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.delete', [], 'responses')]]);
 
         return $this->redirectToRoute('nfc_tag_read');
     }

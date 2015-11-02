@@ -4,6 +4,19 @@
 {% block active_student_update %}{{ 'class="active"' }}{% endblock %}
 
 {% block data %}
+
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BALANCE_REPLENISH'), student) %}
+
+        {% if student.nfcTag %}
+            <div class="separator-holder">
+                <h2>Пополнение баланса ученика ({{ ( student.nfcTag.number ) }})</h2>
+            </div>
+
+            {{ render(controller('AppBundle:Payment/Payment:paymentForm', { 'student': student })) }}
+        {% endif %}
+
+    {% endif %}
+
     <div id="read-data-holder">
         <ul>
 

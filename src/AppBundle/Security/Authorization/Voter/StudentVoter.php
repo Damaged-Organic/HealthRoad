@@ -14,13 +14,16 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
     const STUDENT_DELETE = 'student_delete';
     const STUDENT_BIND   = 'student_bind';
 
+    const STUDENT_BALANCE_REPLENISH = "student_balance_replenish";
+
     protected function getSupportedAttributes()
     {
         return [
             self::STUDENT_READ,
             self::STUDENT_UPDATE,
             self::STUDENT_DELETE,
-            self::STUDENT_BIND
+            self::STUDENT_BIND,
+            self::STUDENT_BALANCE_REPLENISH
         ];
     }
 
@@ -50,6 +53,10 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
 
             case self::STUDENT_BIND:
                 return $this->bind($student, $user);
+            break;
+
+            case self::STUDENT_BALANCE_REPLENISH:
+                return $this->balanceReplenish($student, $user);
             break;
 
             default:
@@ -107,6 +114,14 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
                 ? TRUE
                 : FALSE;
         }
+
+        return FALSE;
+    }
+
+    protected function balanceReplenish($student, $user = NULL)
+    {
+        if( $user->getRoles()[0]->getRole() === self::ROLE_ACCOUNTANT )
+            return TRUE;
 
         return FALSE;
     }

@@ -40,18 +40,9 @@
                     {{ render(controller('AppBundle:Dashboard/CommonDashboard:toolbar', { 'request': app.request })) }}
 
                 </div>
-                <div class="inner success-holder">
-                    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
-                </div>
-                <div class="inner warning-holder">
-                    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
-                </div>
-                <div class="inner error-holder">
-                    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
-                </div>
-                <div class="inner info-holder">
-                    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
-                </div>
+
+                {{ render(controller('AppBundle:Dashboard/CommonDashboard:messages')) }}
+
             </div>
         </header>
         <main id="content">

@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Employee\Employee,
     AppBundle\Form\Type\EmployeeType,
@@ -16,6 +18,21 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class EmployeeController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("session") */
+    private $_session;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.security.employee_boundless_access") */
+    private $_employeeBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -28,17 +45,9 @@ class EmployeeController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($id);
+            $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($id);
 
             if( !$employee )
                 throw $this->createNotFoundException("Employee identified by `id` {$id} not found");
@@ -51,19 +60,19 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 'data' => ['employee' => $employee]
             ];
 
-            $_breadcrumbs->add('employee_read')->add('employee_read', ['id' => $id], $_translator->trans('employee_view', [], 'routes'));
+            $this->_breadcrumbs->add('employee_read')->add('employee_read', ['id' => $id], $this->_translator->trans('employee_view', [], 'routes'));
         } else {
-            if( !$_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_READ) )
+            if( !$this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $employees = $_manager->getRepository('AppBundle:Employee\Employee')->findAll();
+            $employees = $this->_manager->getRepository('AppBundle:Employee\Employee')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/Employee/CRUD:readList.html.twig',
                 'data' => ['employees' => $employees]
             ];
 
-            $_breadcrumbs->add('employee_read');
+            $this->_breadcrumbs->add('employee_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -81,16 +90,10 @@ class EmployeeController extends Controller implements UserRoleListInterface
      */
     public function createAction(Request $request)
     {
-        $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
-
-        if( !$_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE) )
+        if( !$this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $employeeType = new EmployeeType($_translator, $_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE));
+        $employeeType = new EmployeeType($this->_translator, $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE));
 
         $form = $this->createForm($employeeType, $employee = new Employee, [
             'validation_groups' => ['Employee', 'Strict', 'Create'],
@@ -100,14 +103,12 @@ class EmployeeController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
-            $_breadcrumbs->add('employee_read')->add('employee_create');
+            $this->_breadcrumbs->add('employee_read')->add('employee_create');
 
             return $this->render('AppBundle:Entity/Employee/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
-
             if( !$this->isGranted(EmployeeVoter::EMPLOYEE_CREATE, $employee) )
                 throw $this->createAccessDeniedException('Access denied');
 
@@ -119,8 +120,10 @@ class EmployeeController extends Controller implements UserRoleListInterface
             // Set employee's password
             $employee->setPassword($encodedPassword);
 
-            $_manager->persist($employee);
-            $_manager->flush();
+            $this->_manager->persist($employee);
+            $this->_manager->flush();
+
+            $this->_session->getFlashBag()->add('messages', ['success' => [$this->_translator->trans('common.success.create', [], 'responses')]]);
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('employee_read');
@@ -144,15 +147,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_employeeBoundlessAccess = $this->get('app.security.employee_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($id);
+        $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($id);
 
         if( !$employee )
             throw $this->createNotFoundException("Employee identified by `id` {$id} not found");
@@ -164,8 +159,8 @@ class EmployeeController extends Controller implements UserRoleListInterface
         }
 
         $employeeType = new EmployeeType(
-            $_translator,
-            $_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE),
+            $this->_translator,
+            $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE),
             $this->isGranted(EmployeeVoter::EMPLOYEE_UPDATE_SYSTEM, $employee)
         );
 
@@ -187,7 +182,9 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 $employee->setPassword($encodedPassword);
             }
 
-            $_manager->flush();
+            $this->_manager->flush();
+
+            $this->_session->getFlashBag()->add('messages', ['success' => [$this->_translator->trans('common.success.update', [], 'responses')]]);
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('employee_read');
@@ -198,7 +195,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
             }
         }
 
-        $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $id]);
+        $this->_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Employee/CRUD:updateItem.html.twig', [
             'form'     => $form->createView(),
@@ -218,9 +215,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($id);
+        $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($id);
 
         if( !$employee )
             throw $this->createNotFoundException("Employee identified by `id` {$id} not found");
@@ -228,8 +223,10 @@ class EmployeeController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(EmployeeVoter::EMPLOYEE_DELETE, $employee) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($employee);
-        $_manager->flush();
+        $this->_manager->remove($employee);
+        $this->_manager->flush();
+
+        $this->_session->getFlashBag()->add('messages', ['success' => [$this->_translator->trans('common.success.delete', [], 'responses')]]);
 
         return $this->redirectToRoute('employee_read');
     }

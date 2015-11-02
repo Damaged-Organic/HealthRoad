@@ -1,5 +1,15 @@
 # AppBundle/Resources/translations/responses.ru.yml
 common:
+    success:
+        create: >
+            Данные успешно добавлены.
+
+        update: >
+            Данные успешно сохранены.
+
+        delete: >
+            Данные удалены.
+
     error:
         bad_request: >
             Запрос содержит неверные данные
@@ -49,3 +59,7 @@ unbind:
     error:
         not_unboundalbe: >
             Отвязка объектов данного типа не поддерживается
+
+student_balance:
+    success: >
+        Баланс успешно изменен.

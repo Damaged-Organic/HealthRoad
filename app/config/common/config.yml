@@ -5,6 +5,7 @@ imports:
     - { resource: twig.yml }
     - { resource: services.yml }
     - { resource: config_vich.yml }
+    - { resource: config_jms_di_extra.yml }
 
 parameters:
     locale: ru

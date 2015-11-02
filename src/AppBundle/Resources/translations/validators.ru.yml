@@ -346,5 +346,8 @@ student:
     daily_limit:
         not_blank: Должен быть указан суточный лимит средств
 
+    replenish_limit:
+        not_blank: Должна быть указана сумма пополнения
+
     school:
         invalid_massage: Для ученика должна быть указана школа

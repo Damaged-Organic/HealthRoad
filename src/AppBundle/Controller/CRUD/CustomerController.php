@@ -110,6 +110,8 @@ class CustomerController extends Controller implements UserRoleListInterface
         } else {
             $_manager = $this->getDoctrine()->getManager();
 
+            $_session = $this->get('session');
+
             $encodedPassword = $this
                 ->container->get('security.password_encoder')
                 ->encodePassword($customer, $customer->getPassword())
@@ -123,6 +125,8 @@ class CustomerController extends Controller implements UserRoleListInterface
 
             $_manager->persist($customer);
             $_manager->flush();
+
+            $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.create', [], 'responses')]]);
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('customer_read');
@@ -179,6 +183,8 @@ class CustomerController extends Controller implements UserRoleListInterface
 
         if( $form->isValid() )
         {
+            $_session = $this->get('session');
+
             if( $form->has('password') && $form->get('password')->getData() )
             {
                 $encodedPassword = $this
@@ -189,6 +195,8 @@ class CustomerController extends Controller implements UserRoleListInterface
             }
 
             $_manager->flush();
+
+            $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.update', [], 'responses')]]);
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('customer_read');
@@ -221,6 +229,10 @@ class CustomerController extends Controller implements UserRoleListInterface
     {
         $_manager = $this->getDoctrine()->getManager();
 
+        $_session = $this->get('session');
+
+        $_translator = $this->get('translator');
+
         $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($id);
 
         if( !$customer )
@@ -231,6 +243,8 @@ class CustomerController extends Controller implements UserRoleListInterface
 
         $_manager->remove($customer);
         $_manager->flush();
+
+        $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.delete', [], 'responses')]]);
 
         return $this->redirectToRoute('customer_read');
     }

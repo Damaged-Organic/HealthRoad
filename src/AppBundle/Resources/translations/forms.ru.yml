@@ -362,12 +362,16 @@ student:
         label: Школа
 
     total_limit:
-        label:       Общий лимит средств
-        placeholder: Введите общий лимит средств
+        label:       Общий баланс
+        placeholder: Введите общий баланс
 
     daily_limit:
         label:       Дневной лимит средств
         placeholder: Введите дневной лимит средств
+
+    replenish_limit:
+        label:       Пополнить баланс
+        placeholder: Введите сумму пополнения баланса
 
 purchase:
     product_id:

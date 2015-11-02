@@ -1,0 +1,55 @@
+{# AppBundle/Resources/views/Entity/Student/Form/balance.html.twig #}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<div id="bank-account-widget" class="shift small-bottom">
+    <div class="change-balance-holder">
+        <a href="#" class="change-balance"><span class="hrd-edit"></span>изменить общий баланс</a>
+    </div>
+
+    <form action="{{ form.vars.action }}" method="POST" id="bank-account-form">
+
+        <div class="field-holder">
+            {{ form_widget(form.replenishLimit, {
+                'id': "student-balance-replenish-limit",
+                'attr': {
+                    'class': "add-money-field",
+                    'data-rule-required': "true", 'data-msg-required': 'student.replenish_limit.not_blank'|trans({}, "validators"),
+                    'data-mask': "#0,00",
+                    'data-mask-reverse': "true"
+                }
+            }) }}
+
+            {{ form_label(form.replenishLimit) }}
+
+            {{ form_errors(form.replenishLimit) }}
+        </div>
+
+        <div class="field-holder balance-holder">
+            {{ form_widget(form.totalLimit, {
+                'id': "student-balance-total-limit",
+                'attr': {
+                    'data-rule-required': "true", 'data-msg-required': 'student.total_limit.not_blank'|trans({}, "validators"),
+                    'data-mask': "#0,00",
+                    'data-mask-reverse': "true"
+                }
+            }) }}
+
+            {{ form_label(form.totalLimit) }}
+
+            {{ form_errors(form.totalLimit) }}
+        </div>
+
+        <div class="balance-holder-view">
+            <p>
+                <span class="icon hrd-sales">{{ 'student.total_limit.label'|trans({}, 'forms') }}:</span> {{ student.totalLimit }} ₴
+            </p>
+        </div>
+
+        {{ form_widget(form._token) }}
+
+        <button type="submit">
+            <span>{{ 'common.update.label'|trans({}, 'forms') }}</span>
+        </button>
+    </form>
+
+</div>

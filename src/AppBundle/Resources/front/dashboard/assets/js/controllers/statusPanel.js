@@ -12,6 +12,6 @@ export default class StatusPanel{
 		this.el.on("click", $.proxy(this.closePanel, this));
 	}
 	closePanel(e){
-		this.el.removeClass("success-active warning-active error-active info-active");
+		this.el.removeClass("success-active warning-active error-active info-active").find(".inner").removeClass("success-active warning-active error-active info-active");
 	}
 }

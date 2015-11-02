@@ -1,0 +1,22 @@
+{# AppBundle/Resources/views/Dashboard/Common/messages.html.twig #}
+{% if messages.info is defined %}
+    <div class="inner info-holder info-active">
+        <span>{{ messages.info.0 }}</span>
+    </div>
+{% elseif messages.warning is defined %}
+    <div class="inner warning-holder warning-active">
+        <span>{{ messages.warning.0 }}</span>
+    </div>
+{% elseif messages.success is defined %}
+    <div class="inner success-holder success-active">
+        <span>{{ messages.success.0 }}</span>
+    </div>
+{% elseif messages.errors is defined %}
+    <div class="inner error-holder error-active">
+
+        {% for error in messages.errors %}
+            <span>{{ error.0 }}</span>
+        {% endfor %}
+
+    </div>
+{% endif %}

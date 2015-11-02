@@ -200,18 +200,30 @@ a{
 		&.success-holder{
 			background: @successGreenLight;
 			span { color: @successGreenDark; }
+			&.success-active{
+			  	display: block;
+			}
 		}
 		&.warning-holder{
 			background: @warningYellowLight;
 			span { color: @warningYellowDark; }
+			&.warning-active{
+			  	display: block;
+			}
 		}
 		&.error-holder{
 			background: @errorRedLight;
 			span { color: @errorRedDark; }
+			&.error-active{
+				display: block;
+			}
 		}
 		&.info-holder{
 			background: @infoBlueLight;
 			span { color: @infoBlueDark; }
+			&.info-active{
+				display: block;
+			}
 		}
 	}
 	& > .inner.default-holder{ display: block; }
