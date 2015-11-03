@@ -22,6 +22,16 @@ class Messages implements MessagesInterface
         $this->_translator = $translator;
     }
 
+    static public function getMessagesTypes()
+    {
+        return [
+            self::MESSAGES_INFO,
+            self::MESSAGES_WARNING,
+            self::MESSAGES_SUCCESS,
+            self::MESSAGES_ERRORS
+        ];
+    }
+
     public function markCreateSuccess()
     {
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
@@ -69,5 +79,25 @@ class Messages implements MessagesInterface
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
             self::MESSAGES_ERRORS => $errors
         ]);
+    }
+
+    public function getMessages()
+    {
+        $messages = [];
+
+        if( $this->_session->getFlashBag()->has(self::MESSAGES_ROOT) )
+        {
+            foreach( $this->_session->getFlashBag()->get(self::MESSAGES_ROOT) as $messageArray )
+            {
+                foreach($messageArray as $type => $message)
+                {
+                    if( in_array($type, self::getMessagesTypes(), TRUE) ) {
+                        $messages[$type] = $message;
+                    }
+                }
+            }
+        }
+
+        return $messages;
     }
 }

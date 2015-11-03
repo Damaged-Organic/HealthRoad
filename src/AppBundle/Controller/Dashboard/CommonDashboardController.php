@@ -17,6 +17,9 @@ class CommonDashboardController extends Controller
     /** @DI\Inject("app.common.breadcrumbs") */
     private $_breadcrumbs;
 
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
     /** @DI\Inject("app.repository.global") */
     private $_globalRepository;
 
@@ -52,31 +55,15 @@ class CommonDashboardController extends Controller
         ]);
     }
 
-    //TODO: This is utter shit
     public function messagesAction()
     {
-        $fillMessages = function(Session $_session)
-        {
-            $messages = [];
+        $messages = $this->_messages->getMessages();
 
-            if( $_session->getFlashBag()->has('messages') )
-            {
-                foreach( $_session->getFlashBag()->get('messages') as $messageArray ) {
-                    foreach($messageArray as $type => $message) {
-                        $messages[$type] = $message;
-                    }
-                }
-            }
+        if( !$messages )
+            new Response;
 
-            return $messages;
-        };
-
-        $messages = $fillMessages($this->_session);
-
-        return ( $messages )
-            ? $this->render('AppBundle:Dashboard/Common:messages.html.twig', [
-                  'messages' => $messages
-              ])
-            : new Response;
+        return $this->render('AppBundle:Dashboard/Common:messages.html.twig', [
+            'messages' => $messages
+        ]);
     }
 }

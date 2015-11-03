@@ -10,4 +10,6 @@ interface MessagesInterface
     const MESSAGES_WARNING = 'warning';
     const MESSAGES_SUCCESS = 'success';
     const MESSAGES_ERRORS  = 'errors';
+
+    static public function getMessagesTypes();
 }
