@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Product\Product,
@@ -17,6 +19,15 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
 class ProductVendingGroupController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
+
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
 
     /**
      * @Method({"GET"})
@@ -30,13 +41,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
      */
     public function boundedAction($objectId, $objectClass)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+        $productVendingGroup = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
         if( !$productVendingGroup )
             throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
@@ -44,7 +49,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
         if( !$this->isGranted(ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_READ, $productVendingGroup) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $objectId], $_translator->trans('product_vending_group_bounded', [], 'routes'));
+        $this->_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $objectId], $this->_translator->trans('product_vending_group_bounded', [], 'routes'));
 
         switch(TRUE)
         {
@@ -54,12 +59,12 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('product_vending_group_update_bounded',
+                $this->_breadcrumbs->add('product_vending_group_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('vending_machine_read', [], 'routes')
+                    $this->_translator->trans('vending_machine_read', [], 'routes')
                 );
             break;
 
@@ -69,12 +74,12 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('product_vending_group_update_bounded',
+                $this->_breadcrumbs->add('product_vending_group_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('product_read', [], 'routes')
+                    $this->_translator->trans('product_read', [], 'routes')
                 );
             break;
 

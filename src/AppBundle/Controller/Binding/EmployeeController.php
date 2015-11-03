@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Region\Region,
@@ -17,6 +19,15 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
 class EmployeeController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
+
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
 
     /**
      * @Method({"GET"})
@@ -30,13 +41,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
      */
     public function boundedAction($objectId, $objectClass)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+        $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
         if( !$employee )
             throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
@@ -44,7 +49,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(EmployeeVoter::EMPLOYEE_READ, $employee) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId], $_translator->trans('employee_bounded', [], 'routes'));
+        $this->_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId], $this->_translator->trans('employee_bounded', [], 'routes'));
 
         switch(TRUE)
         {
@@ -54,12 +59,12 @@ class EmployeeController extends Controller implements UserRoleListInterface
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('employee_update_bounded',
+                $this->_breadcrumbs->add('employee_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('region_read', [], 'routes')
+                    $this->_translator->trans('region_read', [], 'routes')
                 );
             break;
 
@@ -69,12 +74,12 @@ class EmployeeController extends Controller implements UserRoleListInterface
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('employee_update_bounded',
+                $this->_breadcrumbs->add('employee_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('school_read', [], 'routes')
+                    $this->_translator->trans('school_read', [], 'routes')
                 );
             break;
 

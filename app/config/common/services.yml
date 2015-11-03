@@ -33,6 +33,12 @@ services:
             - [setRouter, [ "@router" ]]
             - [setTranslator, [ "@translator" ]]
 
+    app.common.messages:
+        class: AppBundle\Service\Common\Messages
+        calls:
+            - [setSession, [ "@session" ]]
+            - [setTranslator, [ "@translator" ]]
+
     # Validators
 
     app.validator.uploaded_product_image:

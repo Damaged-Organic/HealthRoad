@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Customer\Customer,
@@ -23,19 +25,30 @@ class StudentController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
 
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.student_boundless_access") */
+    private $_studentBoundlessAccess;
+
     public function showAction($objectClass, $objectId)
     {
-        $_studentBoundlessAccess = $this->get('app.security.student_boundless_access');
-
-        if( !$_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_READ) )
+        if( !$this->_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_READ) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Customer, $objectClass):
-                $object = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
+                $object = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
 
                 if( !$object )
                     throw $this->createNotFoundException("Customer identified by `id` {$objectId} not found");
@@ -73,13 +86,7 @@ class StudentController extends Controller implements UserRoleListInterface
      */
     public function boundedAction($objectId, $objectClass)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+        $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($objectId);
 
         if( !$student )
             throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
@@ -87,7 +94,7 @@ class StudentController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(StudentVoter::STUDENT_READ, $student) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('student_read')->add('student_update', ['id' => $objectId], $_translator->trans('student_bounded', [], 'routes'));
+        $this->_breadcrumbs->add('student_read')->add('student_update', ['id' => $objectId], $this->_translator->trans('student_bounded', [], 'routes'));
 
         switch(TRUE)
         {
@@ -97,12 +104,12 @@ class StudentController extends Controller implements UserRoleListInterface
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('student_update_bounded',
+                $this->_breadcrumbs->add('student_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('nfc_tag_read', [], 'routes')
+                    $this->_translator->trans('nfc_tag_read', [], 'routes')
                 );
             break;
 
@@ -112,12 +119,12 @@ class StudentController extends Controller implements UserRoleListInterface
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('student_update_bounded',
+                $this->_breadcrumbs->add('student_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('product_read_restricted', [], 'routes')
+                    $this->_translator->trans('product_read_restricted', [], 'routes')
                 );
             break;
 
@@ -145,33 +152,25 @@ class StudentController extends Controller implements UserRoleListInterface
      */
     public function chooseAction($objectClass, $objectId)
     {
-        $_studentBoundlessAccess = $this->get('app.security.student_boundless_access');
-
-        if( !$_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_BIND) )
+        if( !$this->_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_BIND) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Customer, $objectClass):
-                $customer = $object = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
+                $customer = $object = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
 
                 if( !$customer )
                     throw $this->createNotFoundException("Customer identified by `id` {$objectId} not found");
 
                 $path = 'customer_update_bounded';
 
-                $_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $objectId])->add('customer_update_bounded',
+                $this->_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $objectId])->add('customer_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => 'region'
                     ],
-                    $_translator->trans('student_read', [], 'routes')
+                    $this->_translator->trans('student_read', [], 'routes')
                 );
             break;
 
@@ -180,9 +179,9 @@ class StudentController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $students = $_manager->getRepository('AppBundle:Student\Student')->findAll();
+        $students = $this->_manager->getRepository('AppBundle:Student\Student')->findAll();
 
-        $_breadcrumbs->add('student_choose', [
+        $this->_breadcrumbs->add('student_choose', [
             'objectId'    => $objectId,
             'objectClass' => $objectClass
         ]);
@@ -206,37 +205,37 @@ class StudentController extends Controller implements UserRoleListInterface
      */
     public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $student = $_manager->getRepository('AppBundle:Student\Student')->find($targetId);
+        $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($targetId);
 
         if( !$student )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(StudentVoter::STUDENT_BIND, $student) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Customer, $objectClass):
-                $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
+                $customer = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
 
                 if( !$customer )
-                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
                 $customer->addStudent($student);
 
-                $_manager->persist($customer);
+                $this->_manager->persist($customer);
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markBindSuccess(
+            $this->_translator->trans('bind.success.student', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }
@@ -253,17 +252,13 @@ class StudentController extends Controller implements UserRoleListInterface
      */
     public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $student = $_manager->getRepository('AppBundle:Student\Student')->find($targetId);
+        $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($targetId);
 
         if( !$student )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(StudentVoter::STUDENT_BIND, $student) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
@@ -272,11 +267,15 @@ class StudentController extends Controller implements UserRoleListInterface
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markUnbindSuccess(
+            $this->_translator->trans('unbind.success.student', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }

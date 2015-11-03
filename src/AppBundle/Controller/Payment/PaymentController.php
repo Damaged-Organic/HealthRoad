@@ -6,9 +6,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Controller\Utility\Traits\FormErrorsTrait,
     AppBundle\Entity\Student\Student,
@@ -17,6 +18,12 @@ use AppBundle\Controller\Utility\Traits\FormErrorsTrait,
 class PaymentController extends Controller
 {
     use FormErrorsTrait;
+
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
 
     public function paymentFormAction(Student $student)
     {
@@ -42,13 +49,7 @@ class PaymentController extends Controller
      */
     public function paymentSubmitAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_session = $this->get('session');
-
-        $_translator = $this->get('translator');
-
-        $student = $_manager->getRepository('AppBundle:Student\Student')->find($id);
+        $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
 
         if( !$student )
             throw $this->createNotFoundException("Student identified by `id` {$id} not found");
@@ -58,9 +59,7 @@ class PaymentController extends Controller
         $form->handleRequest($request);
 
         if( !$form->isValid() ) {
-            $message = [
-                'errors' => $this->getFormErrorMessages($form)
-            ];
+            $this->_messages->markReplenishErrors($this->getFormErrorMessages($form));
         } else {
             if( $form->has('replenishLimit') && $form->get('replenishLimit')->getData() ) {
                 $student->setTotalLimit(
@@ -68,14 +67,10 @@ class PaymentController extends Controller
                 );
             }
 
-            $_manager->flush();
+            $this->_manager->flush();
 
-            $message = [
-                'success' => [$_translator->trans('student_balance.success', [], 'responses')]
-            ];
+            $this->_messages->markReplenishSuccess();
         }
-
-        $_session->getFlashBag()->add('messages', $message);
 
         return new RedirectResponse($request->headers->get('referer'));
     }

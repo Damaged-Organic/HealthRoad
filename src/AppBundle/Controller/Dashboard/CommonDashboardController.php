@@ -2,18 +2,28 @@
 // AppBundle/Controller/Dashboard/CommonDashboardController.php
 namespace AppBundle\Controller\Dashboard;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpFoundation\Session\Session,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use JMS\DiExtraBundle\Annotation as DI;
 
 class CommonDashboardController extends Controller
 {
+    /** @DI\Inject("session") */
+    private $_session;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.repository.global") */
+    private $_globalRepository;
+
     public function breadcrumbsAction()
     {
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         return $this->render('AppBundle:Dashboard/Common:breadcrumbs.html.twig', [
-            'breadcrumbs' => $_breadcrumbs->getBreadcrumbs()
+            'breadcrumbs' => $this->_breadcrumbs->getBreadcrumbs()
         ]);
     }
 
@@ -28,30 +38,28 @@ class CommonDashboardController extends Controller
 
     public function entitiesAction(Request $request)
     {
-        $_globalRepository = $this->get('app.repository.global');
+        $attributes = [
+            'route'      => $request->attributes->get('_route'),
+            'controller' => $request->attributes->get('_controller')
+        ];
 
-        $quantities = $_globalRepository->countEntities();
-
-        $route = $request->attributes->get('_route');
-
-        $controller = $request->attributes->get('_controller');
+        $quantities = $this->_globalRepository->countEntities();
 
         return $this->render('AppBundle:Dashboard/Common:entities.html.twig', [
-            'route'      => $route,
-            'controller' => $controller,
+            'route'      => $attributes['route'],
+            'controller' => $attributes['controller'],
             'quantities' => $quantities
         ]);
     }
 
+    //TODO: This is utter shit
     public function messagesAction()
     {
-        $_session = $this->get('session');
-
-        $fillMessages = function($_session)
+        $fillMessages = function(Session $_session)
         {
             $messages = [];
 
-            if( $this->get('session')->getFlashBag()->has('messages') )
+            if( $_session->getFlashBag()->has('messages') )
             {
                 foreach( $_session->getFlashBag()->get('messages') as $messageArray ) {
                     foreach($messageArray as $type => $message) {
@@ -63,7 +71,7 @@ class CommonDashboardController extends Controller
             return $messages;
         };
 
-        $messages = $fillMessages($_session);
+        $messages = $fillMessages($this->_session);
 
         return ( $messages )
             ? $this->render('AppBundle:Dashboard/Common:messages.html.twig', [

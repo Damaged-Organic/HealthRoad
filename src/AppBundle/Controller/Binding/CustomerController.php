@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Student\Student,
@@ -16,6 +18,15 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
 class CustomerController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
+
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
 
     /**
      * @Method({"GET"})
@@ -29,13 +40,7 @@ class CustomerController extends Controller implements UserRoleListInterface
      */
     public function boundedAction($objectId, $objectClass)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
+        $customer = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($objectId);
 
         if( !$customer )
             throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
@@ -43,7 +48,7 @@ class CustomerController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(CustomerVoter::CUSTOMER_READ, $customer) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $objectId], $_translator->trans('customer_bounded', [], 'routes'));
+        $this->_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $objectId], $this->_translator->trans('customer_bounded', [], 'routes'));
 
         switch(TRUE)
         {
@@ -53,12 +58,12 @@ class CustomerController extends Controller implements UserRoleListInterface
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('customer_update_bounded',
+                $this->_breadcrumbs->add('customer_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('student_read', [], 'routes')
+                    $this->_translator->trans('student_read', [], 'routes')
                 );
             break;
 

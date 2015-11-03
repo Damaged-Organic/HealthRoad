@@ -10,6 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Product\Product,
     AppBundle\Entity\Product\ProductImage,
@@ -19,6 +21,24 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class ProductController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.product_boundless_access") */
+    private $_productBoundlessAccess;
+
+    /** @DI\Inject("app.validator.uploaded_product_image") */
+    private $_uploadedProductImageValidator;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -31,17 +51,9 @@ class ProductController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_productBoundlessAccess = $this->get('app.security.product_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $product = $_manager->getRepository('AppBundle:Product\Product')->find($id);
+            $product = $this->_manager->getRepository('AppBundle:Product\Product')->find($id);
 
             if( !$product )
                 throw $this->createNotFoundException("Product identified by `id` {$id} not found");
@@ -54,19 +66,19 @@ class ProductController extends Controller implements UserRoleListInterface
                 'data' => ['product' => $product]
             ];
 
-            $_breadcrumbs->add('product_read')->add('product_read', ['id' => $id], $_translator->trans('product_view', [], 'routes'));
+            $this->_breadcrumbs->add('product_read')->add('product_read', ['id' => $id], $this->_translator->trans('product_view', [], 'routes'));
         } else {
-            if( !$_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_READ) )
+            if( !$this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $product = $_manager->getRepository('AppBundle:Product\Product')->findAll();
+            $product = $this->_manager->getRepository('AppBundle:Product\Product')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/Product/CRUD:readList.html.twig',
                 'data' => ['products' => $product]
             ];
 
-            $_breadcrumbs->add('product_read');
+            $this->_breadcrumbs->add('product_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -84,18 +96,10 @@ class ProductController extends Controller implements UserRoleListInterface
      */
     public function createAction(Request $request)
     {
-        $_productBoundlessAccess = $this->get('app.security.product_boundless_access');
-
-        if( !$_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE) )
+        if( !$this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $_uploadedProductImageValidator = $this->get('app.validator.uploaded_product_image');
-
-        $productType = new ProductType($_translator, $_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
+        $productType = new ProductType($this->_translator, $this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
 
         $form = $this->createForm($productType, $product = new Product, [
             'action' => $this->generateUrl('product_create')
@@ -103,15 +107,13 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( !($form->isValid() && $_uploadedProductImageValidator->validate($form))  ) {
-            $_breadcrumbs->add('product_read')->add('product_create');
+        if( !($form->isValid() && $this->_uploadedProductImageValidator->validate($form))  ) {
+            $this->_breadcrumbs->add('product_read')->add('product_create');
 
             return $this->render('AppBundle:Entity/Product/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
-
             // TODO: This large logic does not belong to Controller
             if( array_filter($form->getData()->getUploadedProductImages()) )
             {
@@ -124,14 +126,16 @@ class ProductController extends Controller implements UserRoleListInterface
 
                     $product->addProductImage($productImage);
 
-                    $_manager->persist($productImage);
+                    $this->_manager->persist($productImage);
                 }
 
-                $_manager->persist($product);
+                $this->_manager->persist($product);
             }
 
-            $_manager->persist($product);
-            $_manager->flush();
+            $this->_manager->persist($product);
+            $this->_manager->flush();
+
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('product_read');
@@ -155,17 +159,7 @@ class ProductController extends Controller implements UserRoleListInterface
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_productBoundlessAccess = $this->get('app.security.product_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $_uploadedProductImageValidator = $this->get('app.validator.uploaded_product_image');
-
-        $product = $_manager->getRepository('AppBundle:Product\Product')->find($id);
+        $product = $this->_manager->getRepository('AppBundle:Product\Product')->find($id);
 
         if( !$product )
             throw $this->createNotFoundException("Product identified by `id` {$id} not found");
@@ -176,7 +170,7 @@ class ProductController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $productType = new ProductType($_translator, $_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
+        $productType = new ProductType($this->_translator, $this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
 
         $form = $this->createForm($productType, $product, [
             'action' => $this->generateUrl('product_update', ['id' => $id])
@@ -184,7 +178,7 @@ class ProductController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( $form->isValid() && $_uploadedProductImageValidator->validate($form) )
+        if( $form->isValid() && $this->_uploadedProductImageValidator->validate($form) )
         {
             // TODO: This large logic does not belong to Controller
             if( array_filter($form->getData()->getUploadedProductImages()) )
@@ -193,7 +187,7 @@ class ProductController extends Controller implements UserRoleListInterface
                 {
                     $product->removeProductImage($productImage);
 
-                    $_manager->remove($productImage);
+                    $this->_manager->remove($productImage);
                 }
 
                 foreach ($form->getData()->getUploadedProductImages() as $uploadedProductImage)
@@ -205,13 +199,15 @@ class ProductController extends Controller implements UserRoleListInterface
 
                     $product->addProductImage($productImage);
 
-                    $_manager->persist($productImage);
+                    $this->_manager->persist($productImage);
                 }
 
-                $_manager->persist($product);
+                $this->_manager->persist($product);
             }
 
-            $_manager->flush();
+            $this->_manager->flush();
+
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('product_read');
@@ -222,7 +218,7 @@ class ProductController extends Controller implements UserRoleListInterface
             }
         }
 
-        $_breadcrumbs->add('product_read')->add('product_update', ['id' => $id]);
+        $this->_breadcrumbs->add('product_read')->add('product_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Product/CRUD:updateItem.html.twig', [
             'form'    => $form->createView(),
@@ -242,9 +238,7 @@ class ProductController extends Controller implements UserRoleListInterface
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $product = $_manager->getRepository('AppBundle:Product\Product')->find($id);
+        $product = $this->_manager->getRepository('AppBundle:Product\Product')->find($id);
 
         if( !$product )
             throw $this->createNotFoundException("Product identified by `id` {$id} not found");
@@ -252,8 +246,10 @@ class ProductController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(ProductVoter::PRODUCT_DELETE, $product) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($product);
-        $_manager->flush();
+        $this->_manager->remove($product);
+        $this->_manager->flush();
+
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('product_read');
     }

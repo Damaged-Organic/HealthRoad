@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\School\School,
     AppBundle\Form\Type\SchoolType,
@@ -16,6 +18,21 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class SchoolController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.school_boundless_access") */
+    private $_schoolBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -28,17 +45,9 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_schoolBoundlessAccess = $this->get('app.security.school_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $school = $_manager->getRepository('AppBundle:School\School')->find($id);
+            $school = $this->_manager->getRepository('AppBundle:School\School')->find($id);
 
             if( !$school )
                 throw $this->createNotFoundException("School identified by `id` {$id} not found");
@@ -51,19 +60,19 @@ class SchoolController extends Controller implements UserRoleListInterface
                 'data' => ['school' => $school]
             ];
 
-            $_breadcrumbs->add('school_read')->add('school_read', ['id' => $id], $_translator->trans('school_view', [], 'routes'));
+            $this->_breadcrumbs->add('school_read')->add('school_read', ['id' => $id], $this->_translator->trans('school_view', [], 'routes'));
         } else {
-            if( !$_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_READ) )
+            if( !$this->_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $schools = $_manager->getRepository('AppBundle:School\School')->findAll();
+            $schools = $this->_manager->getRepository('AppBundle:School\School')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/School/CRUD:readList.html.twig',
                 'data' => ['schools' => $schools]
             ];
 
-            $_breadcrumbs->add('school_read');
+            $this->_breadcrumbs->add('school_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -81,14 +90,10 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function createAction(Request $request)
     {
-        $_schoolBoundlessAccess = $this->get('app.security.school_boundless_access');
-
-        if( !$_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE) )
+        if( !$this->_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $schoolType = new SchoolType($_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE));
+        $schoolType = new SchoolType($this->_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE));
 
         $form = $this->createForm($schoolType, $school = new School, [
             'action' => $this->generateUrl('school_create')
@@ -97,16 +102,16 @@ class SchoolController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
-            $_breadcrumbs->add('school_read')->add('school_create');
+            $this->_breadcrumbs->add('school_read')->add('school_create');
 
             return $this->render('AppBundle:Entity/School/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
+            $this->_manager->persist($school);
+            $this->_manager->flush();
 
-            $_manager->persist($school);
-            $_manager->flush();
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('school_read');
@@ -130,13 +135,7 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_schoolBoundlessAccess = $this->get('app.security.school_boundless_access');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $school = $_manager->getRepository('AppBundle:School\School')->find($id);
+        $school = $this->_manager->getRepository('AppBundle:School\School')->find($id);
 
         if( !$school )
             throw $this->createNotFoundException("School identified by `id` {$id} not found");
@@ -147,7 +146,7 @@ class SchoolController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $schoolType = new SchoolType($_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE));
+        $schoolType = new SchoolType($this->_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_CREATE));
 
         $form = $this->createForm($schoolType, $school, [
             'action' => $this->generateUrl('school_update', ['id' => $id])
@@ -157,7 +156,9 @@ class SchoolController extends Controller implements UserRoleListInterface
 
         if( $form->isValid() )
         {
-            $_manager->flush();
+            $this->_manager->flush();
+
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('school_read');
@@ -168,7 +169,7 @@ class SchoolController extends Controller implements UserRoleListInterface
             }
         }
 
-        $_breadcrumbs->add('school_read')->add('school_update', ['id' => $id]);
+        $this->_breadcrumbs->add('school_read')->add('school_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/School/CRUD:updateItem.html.twig', [
             'form'   => $form->createView(),
@@ -188,9 +189,7 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $school = $_manager->getRepository('AppBundle:School\School')->find($id);
+        $school = $this->_manager->getRepository('AppBundle:School\School')->find($id);
 
         if( !$school )
             throw $this->createNotFoundException("School identified by `id` {$id} not found");
@@ -198,8 +197,10 @@ class SchoolController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(SchoolVoter::SCHOOL_DELETE, $school) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($school);
-        $_manager->flush();
+        $this->_manager->remove($school);
+        $this->_manager->flush();
+
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('school_read');
     }

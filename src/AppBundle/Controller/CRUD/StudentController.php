@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Student\Student,
     AppBundle\Form\Type\StudentType,
@@ -16,6 +18,21 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class StudentController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.student_boundless_access") */
+    private $_studentBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -28,17 +45,9 @@ class StudentController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_studentBoundlessAccess = $this->get('app.security.student_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $student = $_manager->getRepository('AppBundle:Student\Student')->find($id);
+            $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
 
             if( !$student )
                 throw $this->createNotFoundException("Student identified by `id` {$id} not found");
@@ -51,19 +60,19 @@ class StudentController extends Controller implements UserRoleListInterface
                 'data' => ['student' => $student]
             ];
 
-            $_breadcrumbs->add('student_read')->add('student_read', ['id' => $id], $_translator->trans('student_view', [], 'routes'));
+            $this->_breadcrumbs->add('student_read')->add('student_read', ['id' => $id], $this->_translator->trans('student_view', [], 'routes'));
         } else {
-            if( !$_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_READ) )
+            if( !$this->_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $students = $_manager->getRepository('AppBundle:Student\Student')->findAll();
+            $students = $this->_manager->getRepository('AppBundle:Student\Student')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/Student/CRUD:readList.html.twig',
                 'data' => ['students' => $students]
             ];
 
-            $_breadcrumbs->add('student_read');
+            $this->_breadcrumbs->add('student_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -81,18 +90,12 @@ class StudentController extends Controller implements UserRoleListInterface
      */
     public function createAction(Request $request)
     {
-        $_studentBoundlessAccess = $this->get('app.security.student_boundless_access');
-
-        if( !$_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE) )
+        if( !$this->_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         $studentType = new StudentType(
-            $_translator,
-            $_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE)
+            $this->_translator,
+            $this->_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE)
         );
 
         $form = $this->createForm($studentType, $student = new Student, [
@@ -102,19 +105,19 @@ class StudentController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
-            $_breadcrumbs->add('student_read')->add('student_create');
+            $this->_breadcrumbs->add('student_read')->add('student_create');
 
             return $this->render('AppBundle:Entity/Student/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
-
             // Set employee who created student
             $student->setEmployee($this->getUser());
 
-            $_manager->persist($student);
-            $_manager->flush();
+            $this->_manager->persist($student);
+            $this->_manager->flush();
+
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('student_read');
@@ -138,15 +141,7 @@ class StudentController extends Controller implements UserRoleListInterface
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_studentBoundlessAccess = $this->get('app.security.student_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $student = $_manager->getRepository('AppBundle:Student\Student')->find($id);
+        $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
 
         if( !$student )
             throw $this->createNotFoundException("Student identified by `id` {$id} not found");
@@ -158,8 +153,8 @@ class StudentController extends Controller implements UserRoleListInterface
         }
 
         $studentType = new StudentType(
-            $_translator,
-            $_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE)
+            $this->_translator,
+            $this->_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_CREATE)
         );
 
         $form = $this->createForm($studentType, $student, [
@@ -170,7 +165,9 @@ class StudentController extends Controller implements UserRoleListInterface
 
         if( $form->isValid() )
         {
-            $_manager->flush();
+            $this->_manager->flush();
+
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('student_read');
@@ -181,7 +178,7 @@ class StudentController extends Controller implements UserRoleListInterface
             }
         }
 
-        $_breadcrumbs->add('student_read')->add('student_update', ['id' => $id]);
+        $this->_breadcrumbs->add('student_read')->add('student_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Student/CRUD:updateItem.html.twig', [
             'form'    => $form->createView(),
@@ -201,9 +198,7 @@ class StudentController extends Controller implements UserRoleListInterface
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $student = $_manager->getRepository('AppBundle:Student\Student')->find($id);
+        $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
 
         if( !$student )
             throw $this->createNotFoundException("Student identified by `id` {$id} not found");
@@ -211,8 +206,10 @@ class StudentController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(StudentVoter::STUDENT_DELETE, $student) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($student);
-        $_manager->flush();
+        $this->_manager->remove($student);
+        $this->_manager->flush();
+
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('student_read');
     }

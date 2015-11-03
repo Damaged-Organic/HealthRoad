@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Product\Product,
@@ -16,6 +18,15 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
 class SupplierController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
+
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
 
     /**
      * @Method({"GET"})
@@ -29,13 +40,7 @@ class SupplierController extends Controller implements UserRoleListInterface
      */
     public function boundedAction($objectId, $objectClass)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
+        $supplier = $this->_manager->getRepository('AppBundle:Supplier\Supplier')->find($objectId);
 
         if( !$supplier )
             throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
@@ -43,7 +48,7 @@ class SupplierController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(SupplierVoter::SUPPLIER_READ, $supplier) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('supplier_read')->add('supplier_update', ['id' => $objectId], $_translator->trans('supplier_bounded', [], 'routes'));
+        $this->_breadcrumbs->add('supplier_read')->add('supplier_update', ['id' => $objectId], $this->_translator->trans('supplier_bounded', [], 'routes'));
 
         switch(TRUE)
         {
@@ -53,12 +58,12 @@ class SupplierController extends Controller implements UserRoleListInterface
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('supplier_update_bounded',
+                $this->_breadcrumbs->add('supplier_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('product_read', [], 'routes')
+                    $this->_translator->trans('product_read', [], 'routes')
                 );
             break;
 

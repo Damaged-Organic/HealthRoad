@@ -5,8 +5,10 @@ namespace AppBundle\Controller\CRUD;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\VendingMachine\VendingMachine,
@@ -16,6 +18,21 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class VendingMachineController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.vending_machine_boundless_access") */
+    private $_vendingMachineBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -28,23 +45,9 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_vendingMachineBoundlessAccess = $this->get('app.security.vending_machine_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
-
-            // TODO: Destroy
-            $nfcTags = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAvailableByVendingMachine($vendingMachine);
-            foreach($nfcTags as $nfcTag) {
-                var_dump($nfcTag->getNumber());
-            }
+            $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
 
             if( !$vendingMachine )
                 throw $this->createNotFoundException("Vending Machine identified by `id` {$id} not found");
@@ -57,19 +60,19 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 'data' => ['vendingMachine' => $vendingMachine]
             ];
 
-            $_breadcrumbs->add('vending_machine_read')->add('vending_machine_read', ['id' => $id], $_translator->trans('vending_machine_view', [], 'routes'));
+            $this->_breadcrumbs->add('vending_machine_read')->add('vending_machine_read', ['id' => $id], $this->_translator->trans('vending_machine_view', [], 'routes'));
         } else {
-            if( !$_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_READ) )
+            if( !$this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll();
+            $vendingMachines = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/VendingMachine/CRUD:readList.html.twig',
                 'data' => ['vendingMachines' => $vendingMachines]
             ];
 
-            $_breadcrumbs->add('vending_machine_read');
+            $this->_breadcrumbs->add('vending_machine_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -87,14 +90,10 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function createAction(Request $request)
     {
-        $_vendingMachineBoundlessAccess = $this->get('app.security.vending_machine_boundless_access');
-
-        if( !$_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE) )
+        if( !$this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $vendingMachineType = new VendingMachineType($_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE));
+        $vendingMachineType = new VendingMachineType($this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE));
 
         $form = $this->createForm($vendingMachineType, $vendingMachine = new VendingMachine, [
             'action' => $this->generateUrl('vending_machine_create')
@@ -103,14 +102,12 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
-            $_breadcrumbs->add('vending_machine_read')->add('vending_machine_create');
+            $this->_breadcrumbs->add('vending_machine_read')->add('vending_machine_create');
 
             return $this->render('AppBundle:Entity/VendingMachine/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
-
             $encodedPassword = $this
                 ->get('app.sync.security.password_encoder')
                 ->encodePassword($vendingMachine->getPassword())
@@ -118,8 +115,10 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 
             $vendingMachine->setPassword($encodedPassword);
 
-            $_manager->persist($vendingMachine);
-            $_manager->flush();
+            $this->_manager->persist($vendingMachine);
+            $this->_manager->flush();
+
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('vending_machine_read');
@@ -143,13 +142,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_vendingMachineBoundlessAccess = $this->get('app.security.vending_machine_boundless_access');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
 
         if( !$vendingMachine )
             throw $this->createNotFoundException("Vending Machine identified by `id` {$id} not found");
@@ -160,7 +153,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             ]);
         }
 
-        $vendingMachineType = new VendingMachineType($_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE));
+        $vendingMachineType = new VendingMachineType($this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_CREATE));
 
         $form = $this->createForm($vendingMachineType, $vendingMachine, [
             'action' => $this->generateUrl('vending_machine_update', ['id' => $id])
@@ -180,7 +173,9 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 $vendingMachine->setPassword($encodedPassword);
             }
 
-            $_manager->flush();
+            $this->_manager->flush();
+
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('vending_machine_read');
@@ -191,7 +186,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             }
         }
 
-        $_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $id]);
+        $this->_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/VendingMachine/CRUD:updateItem.html.twig', [
             'form'           => $form->createView(),
@@ -211,9 +206,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
 
         if( !$vendingMachine )
             throw $this->createNotFoundException("Vending Machine identified by `id` {$id} not found");
@@ -221,8 +214,10 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_DELETE, $vendingMachine) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($vendingMachine);
-        $_manager->flush();
+        $this->_manager->remove($vendingMachine);
+        $this->_manager->flush();
+
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('vending_machine_read');
     }

@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\Employee\Employee,
@@ -22,24 +24,35 @@ class RegionController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
 
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.region_boundless_access") */
+    private $_regionBoundlessAccess;
+
     public function showAction($objectClass, $objectId)
     {
-        $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
-
-        if( !$_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_READ) )
+        if( !$this->_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_READ) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $object = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+                $object = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $regions = $_manager->getRepository('AppBundle:Region\Region')->findBy(['employee' => $object]);
+                $regions = $this->_manager->getRepository('AppBundle:Region\Region')->findBy(['employee' => $object]);
 
                 $action = [
                     'path'  => 'region_choose',
@@ -72,13 +85,7 @@ class RegionController extends Controller implements UserRoleListInterface
      */
     public function boundedAction($objectId, $objectClass)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $region = $_manager->getRepository('AppBundle:Region\Region')->find($objectId);
+        $region = $this->_manager->getRepository('AppBundle:Region\Region')->find($objectId);
 
         if( !$region )
             throw $this->createNotFoundException("Region identified by `id` {$objectId} not found");
@@ -86,7 +93,7 @@ class RegionController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(RegionVoter::REGION_READ, $region) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('region_read')->add('region_update', ['id' => $objectId], $_translator->trans('region_bounded', [], 'routes'));
+        $this->_breadcrumbs->add('region_read')->add('region_update', ['id' => $objectId], $this->_translator->trans('region_bounded', [], 'routes'));
 
         switch(TRUE)
         {
@@ -96,12 +103,12 @@ class RegionController extends Controller implements UserRoleListInterface
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('region_update_bounded',
+                $this->_breadcrumbs->add('region_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('settlement_read', [], 'routes')
+                    $this->_translator->trans('settlement_read', [], 'routes')
                 );
             break;
 
@@ -129,21 +136,13 @@ class RegionController extends Controller implements UserRoleListInterface
      */
     public function chooseAction($objectClass, $objectId)
     {
-        $_regionBoundlessAccess = $this->get('app.security.region_boundless_access');
-
-        if( !$_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_BIND) )
+        if( !$this->_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_BIND) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $employee = $object = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+                $employee = $object = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
                 if( !$employee )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
@@ -153,12 +152,12 @@ class RegionController extends Controller implements UserRoleListInterface
 
                 $path = 'employee_update_bounded';
 
-                $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId])->add('employee_update_bounded',
+                $this->_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId])->add('employee_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => 'region'
                     ],
-                    $_translator->trans('region_read', [], 'routes')
+                    $this->_translator->trans('region_read', [], 'routes')
                 );
             break;
 
@@ -167,9 +166,9 @@ class RegionController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $regions = $_manager->getRepository('AppBundle:Region\Region')->findAll();
+        $regions = $this->_manager->getRepository('AppBundle:Region\Region')->findAll();
 
-        $_breadcrumbs->add('region_choose', [
+        $this->_breadcrumbs->add('region_choose', [
             'objectId'    => $objectId,
             'objectClass' => $objectClass
         ]);
@@ -193,40 +192,40 @@ class RegionController extends Controller implements UserRoleListInterface
      */
     public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $region = $_manager->getRepository('AppBundle:Region\Region')->find($targetId);
+        $region = $this->_manager->getRepository('AppBundle:Region\Region')->find($targetId);
 
         if( !$region )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(RegionVoter::REGION_BIND, $region) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+                $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
                 if( !$employee )
-                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
                 if( !$this->isGranted(EmployeeVoter::EMPLOYEE_BIND_REGION, $employee) )
-                    throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+                    throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
                 $employee->addRegion($region);
 
-                $_manager->persist($employee);
+                $this->_manager->persist($employee);
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markBindSuccess(
+            $this->_translator->trans('bind.success.region', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }
@@ -243,17 +242,13 @@ class RegionController extends Controller implements UserRoleListInterface
      */
     public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $region = $_manager->getRepository('AppBundle:Region\Region')->find($targetId);
+        $region = $this->_manager->getRepository('AppBundle:Region\Region')->find($targetId);
 
         if( !$region )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(RegionVoter::REGION_BIND, $region) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
@@ -262,11 +257,15 @@ class RegionController extends Controller implements UserRoleListInterface
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markUnbindSuccess(
+            $this->_translator->trans('unbind.success.region', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }

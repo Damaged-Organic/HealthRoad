@@ -7,8 +7,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 class EmployeeDashboardController extends Controller
 {
+    /** @DI\Inject("security.authorization_checker") */
+    private $_authorizationChecker;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -21,7 +26,7 @@ class EmployeeDashboardController extends Controller
      */
     public function indexAction()
     {
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ) {
+        if( $this->_authorizationChecker->isGranted('ROLE_ADMIN') ) {
             return $this->redirectToRoute('employee_read');
         } else {
             return $this->redirectToRoute('customer_read');

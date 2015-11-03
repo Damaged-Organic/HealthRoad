@@ -8,11 +8,25 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Security\Authorization\Voter\PurchaseVoter;
 
 class PurchaseController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.security.purchase_boundless_access") */
+    private $_purchaseBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -25,17 +39,9 @@ class PurchaseController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_purchaseBoundlessAccess = $this->get('app.security.purchase_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $purchase = $_manager->getRepository('AppBundle:Purchase\Purchase')->find($id);
+            $purchase = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->find($id);
 
             if( !$purchase )
                 throw $this->createNotFoundException("Purchase identified by `id` {$id} not found");
@@ -48,19 +54,19 @@ class PurchaseController extends Controller implements UserRoleListInterface
                 'data' => ['purchase' => $purchase]
             ];
 
-            $_breadcrumbs->add('purchase_read')->add('purchase_read', ['id' => $id], $_translator->trans('purchase_view', [], 'routes'));
+            $this->_breadcrumbs->add('purchase_read')->add('purchase_read', ['id' => $id], $this->_translator->trans('purchase_view', [], 'routes'));
         } else {
-            if( !$_purchaseBoundlessAccess->isGranted(PurchaseBoundlessAccess::PURCHASE_READ) )
+            if( !$this->_purchaseBoundlessAccess->isGranted(PurchaseBoundlessAccess::PURCHASE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $purchases = $_manager->getRepository('AppBundle:Purchase\Purchase')->findAll();
+            $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/Purchase/CRUD:readList.html.twig',
                 'data' => ['purchases' => $purchases]
             ];
 
-            $_breadcrumbs->add('purchase_read');
+            $this->_breadcrumbs->add('purchase_read');
         }
 
         return $this->render($response['view'], $response['data']);

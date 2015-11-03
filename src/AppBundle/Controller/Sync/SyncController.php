@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\Security\Core\Exception\BadCredentialsException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Controller\Utility\Interfaces\Markers\SyncAuthenticationMarkerInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface;
 
@@ -20,6 +22,21 @@ class SyncController extends Controller implements
     SyncAuthenticationMarkerInterface,
     SyncVendingMachineSyncPropertiesInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("app.sync.sync_data_validator") */
+    private $_syncDataValidator;
+
+    /** @DI\Inject("app.sync.sync_data_handler") */
+    private $_syncDataHandler;
+
+    /** @DI\Inject("app.sync.sync_data_builder") */
+    private $_syncDataBuilder;
+
+    /** @DI\Inject("app.sync.sync_data_recorder") */
+    private $_syncDataRecorder;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -32,30 +49,23 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesSync(Request $request, $serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
             'serial' => $serial
         ]);
 
-        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
-        $_syncDataHandler   = $this->get('app.sync.sync_data_handler');
-        $_syncDataBuilder   = $this->get('app.sync.sync_data_builder');
-        $_syncDataRecorder  = $this->get('app.sync.sync_data_recorder');
-
-        if( !($validSyncData = $_syncDataValidator->validateVendingMachineSyncData($request)) )
+        if( !($validSyncData = $this->_syncDataValidator->validateVendingMachineSyncData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
 
-        $vendingMachineSyncData = $_syncDataHandler->handleVendingMachineSyncData($vendingMachine, $validSyncData);
+        $vendingMachineSyncData = $this->_syncDataHandler->handleVendingMachineSyncData($vendingMachine, $validSyncData);
 
         if( !$vendingMachineSyncData )
             throw new NotFoundHttpException('Vending Machine has no synchronization of a given type');
 
-        $syncResponse = $_syncDataBuilder->buildSyncData($vendingMachineSyncData);
+        $syncResponse = $this->_syncDataBuilder->buildSyncData($vendingMachineSyncData);
 
-        $recordMethod = [$_syncDataRecorder, 'recordSyncData'];
+        $recordMethod = [$this->_syncDataRecorder, 'recordSyncData'];
 
-        if( !$_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
+        if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
             throw new BadCredentialsException('Sync response array is missing required data');
 
         return new JsonResponse($syncResponse, 200);
@@ -73,23 +83,18 @@ class SyncController extends Controller implements
      */
     public function getProductsAction($serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
             'serial' => $serial
         ]);
-
-        $_syncDataBuilder  = $this->get('app.sync.sync_data_builder');
-        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
 
         if( !($products = $vendingMachine->getProducts()) )
             throw new NotFoundHttpException('Vending Machine has no linked products');
 
-        $syncResponse = $_syncDataBuilder->buildProductData($products);
+        $syncResponse = $this->_syncDataBuilder->buildProductData($products);
 
-        $recordMethod = [$_syncDataRecorder, 'recordProductData'];
+        $recordMethod = [$this->_syncDataRecorder, 'recordProductData'];
 
-        if( !$_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
+        if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
             throw new BadCredentialsException('Sync response array is missing required data');
 
         return new JsonResponse($syncResponse);
@@ -107,23 +112,18 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesNfcTagsAction($serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
             'serial' => $serial
         ]);
-
-        $_syncDataBuilder  = $this->get('app.sync.sync_data_builder');
-        $_syncDataRecorder = $this->get('app.sync.sync_data_recorder');
 
         if( !($students = $vendingMachine->getStudents()) )
             throw new NotFoundHttpException('Vending Machine has no linked NFC tags');
 
-        $syncResponse = $_syncDataBuilder->buildNfcTagData($students);
+        $syncResponse = $this->_syncDataBuilder->buildNfcTagData($students);
 
-        $recordMethod = [$_syncDataRecorder, 'recordNfcTagData'];
+        $recordMethod = [$this->_syncDataRecorder, 'recordNfcTagData'];
 
-        if( !$_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
+        if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
             throw new BadCredentialsException('Sync response array is missing required data');
 
         return new JsonResponse($syncResponse, 200);
@@ -141,26 +141,20 @@ class SyncController extends Controller implements
      */
     public function putVendingMachines(Request $request, $serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
             'serial' => $serial
         ]);
 
-        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
-        $_syncDataHandler   = $this->get('app.sync.sync_data_handler');
-        $_syncDataRecorder  = $this->get('app.sync.sync_data_recorder');
-
-        if( !($validSyncData = $_syncDataValidator->validateVendingMachineData($request)) )
+        if( !($validSyncData = $this->_syncDataValidator->validateVendingMachineData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
 
-        $_manager->transactional(function($_manager) use($_syncDataHandler, $_syncDataRecorder, $validSyncData, $vendingMachine)
+        $this->_manager->transactional(function($_manager) use($validSyncData, $vendingMachine)
         {
-            $_syncDataHandler->handleVendingMachineData($vendingMachine, $validSyncData);
+            $this->_syncDataHandler->handleVendingMachineData($vendingMachine, $validSyncData);
 
-            $recordMethod = [$_syncDataRecorder, 'recordVendingMachineData'];
+            $recordMethod = [$this->_syncDataRecorder, 'recordVendingMachineData'];
 
-            if (!$_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod))
+            if (!$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod))
                 throw new BadCredentialsException('Sync response array is missing required data');
 
             $_manager->flush();
@@ -181,29 +175,23 @@ class SyncController extends Controller implements
      */
     public function postVendingMachinesPurchasesAction(Request $request, $serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
             'serial' => $serial
         ]);
 
-        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
-        $_syncDataHandler   = $this->get('app.sync.sync_data_handler');
-        $_syncDataRecorder  = $this->get('app.sync.sync_data_recorder');
-
-        if( !($validSyncData = $_syncDataValidator->validatePurchaseData($request)) )
+        if( !($validSyncData = $this->_syncDataValidator->validatePurchaseData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
 
-        if( $_syncDataValidator->validateSyncSequence($vendingMachine, self::VENDING_MACHINE_SYNC_TYPE_PURCHASES, $validSyncData) )
+        if( $this->_syncDataValidator->validateSyncSequence($vendingMachine, self::VENDING_MACHINE_SYNC_TYPE_PURCHASES, $validSyncData) )
             return new Response('Already in sync', 200);
 
-        $_manager->transactional(function($_manager) use($_syncDataHandler, $_syncDataRecorder, $validSyncData, $vendingMachine)
+        $this->_manager->transactional(function($_manager) use($validSyncData, $vendingMachine)
         {
-            $_syncDataHandler->handlePurchaseData($vendingMachine, $validSyncData);
+            $this->_syncDataHandler->handlePurchaseData($vendingMachine, $validSyncData);
 
-            $recordMethod = [$_syncDataRecorder, 'recordPurchaseData'];
+            $recordMethod = [$this->_syncDataRecorder, 'recordPurchaseData'];
 
-            if( !$_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
+            if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
                 throw new BadCredentialsException('Sync response array is missing required data');
 
             $_manager->flush();
@@ -224,26 +212,20 @@ class SyncController extends Controller implements
      */
     public function postVendingMachinesEvents(Request $request, $serial)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
             'serial' => $serial
         ]);
 
-        $_syncDataValidator = $this->get('app.sync.sync_data_validator');
-        $_syncDataHandler   = $this->get('app.sync.sync_data_handler');
-        $_syncDataRecorder  = $this->get('app.sync.sync_data_recorder');
-
-        if( !($validSyncData = $_syncDataValidator->validateEventData($request)) )
+        if( !($validSyncData = $this->_syncDataValidator->validateEventData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
 
-        $_manager->transactional(function($_manager) use($_syncDataHandler, $_syncDataRecorder, $validSyncData, $vendingMachine)
+        $this->_manager->transactional(function($_manager) use($validSyncData, $vendingMachine)
         {
-            $_syncDataHandler->handleVendingMachineEventData($vendingMachine, $validSyncData);
+            $this->_syncDataHandler->handleVendingMachineEventData($vendingMachine, $validSyncData);
 
-            $recordMethod = [$_syncDataRecorder, 'recordVendingMachineEventData'];
+            $recordMethod = [$this->_syncDataRecorder, 'recordVendingMachineEventData'];
 
-            if( !$_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
+            if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
                 throw new BadCredentialsException('Sync response array is missing required data');
 
             $_manager->flush();

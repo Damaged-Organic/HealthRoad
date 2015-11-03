@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Service\Security\NfcTagBoundlessAccess,
@@ -23,19 +25,30 @@ class NfcTagController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
 
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.nfc_tag_boundless_access") */
+    private $_nfcTagBoundlessAccess;
+
     public function showAction($objectClass, $objectId)
     {
-        $_nfcTagBoundlessAccess = $this->get('app.security.nfc_tag_boundless_access');
-
-        if( !$_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_READ) )
+        if( !$this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_READ) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Student, $objectClass):
-                $object = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+                $object = $this->_manager->getRepository('AppBundle:Student\Student')->find($objectId);
 
                 if( !$object )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
@@ -92,33 +105,25 @@ class NfcTagController extends Controller implements UserRoleListInterface
      */
     public function chooseAction($objectClass, $objectId)
     {
-        $_nfcTagBoundlessAccess = $this->get('app.security.nfc_tag_boundless_access');
-
-        if( !$_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_BIND) )
+        if( !$this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_BIND) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Student, $objectClass):
-                $student = $object = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+                $student = $object = $this->_manager->getRepository('AppBundle:Student\Student')->find($objectId);
 
                 if( !$student )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
                 $path = 'student_update_bounded';
 
-                $_breadcrumbs->add('student_read')->add('student_update', ['id' => $objectId])->add('student_update_bounded',
+                $this->_breadcrumbs->add('student_read')->add('student_update', ['id' => $objectId])->add('student_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => 'nfctag'
                     ],
-                    $_translator->trans('nfc_tag_read', [], 'routes')
+                    $this->_translator->trans('nfc_tag_read', [], 'routes')
                 );
             break;
 
@@ -146,9 +151,9 @@ class NfcTagController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $nfcTags = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll();
+        $nfcTags = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll();
 
-        $_breadcrumbs->add('nfc_tag_choose', [
+        $this->_breadcrumbs->add('nfc_tag_choose', [
             'objectId'    => $objectId,
             'objectClass' => $objectClass
         ]);
@@ -172,25 +177,21 @@ class NfcTagController extends Controller implements UserRoleListInterface
      */
     public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($targetId);
+        $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($targetId);
 
         if( !$nfcTag )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(NfcTagVoter::NFC_TAG_BIND, $nfcTag) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Student, $objectClass):
-                $student = $_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+                $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($objectId);
 
                 if( !$student )
-                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
                 /*
                  * TRICKY: had to set NfcTag as the owning side of the oneToOne relationship
@@ -199,7 +200,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
                  * because of the integrity violation; so student's nfcTag relationship should first be
                  * persisted as `NULL` and flushed in order to break that relationship.
                  */
-                $_manager->transactional(function($_manager) use($student, $nfcTag)
+                $this->_manager->transactional(function($_manager) use($student, $nfcTag)
                 {
                     if( $student->getNfcTag() )
                     {
@@ -229,11 +230,15 @@ class NfcTagController extends Controller implements UserRoleListInterface
             */
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markBindSuccess(
+            $this->_translator->trans('bind.success.nfc_tag', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }
@@ -250,17 +255,13 @@ class NfcTagController extends Controller implements UserRoleListInterface
      */
     public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($targetId);
+        $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($targetId);
 
         if( !$nfcTag )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(NfcTagVoter::NFC_TAG_BIND, $nfcTag) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
@@ -273,11 +274,15 @@ class NfcTagController extends Controller implements UserRoleListInterface
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markUnbindSuccess(
+            $this->_translator->trans('unbind.success.nfc_tag', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }

@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Supplier\Supplier,
     AppBundle\Form\Type\SupplierType,
@@ -16,6 +18,21 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class SupplierController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.supplier_boundless_access") */
+    private $_supplierBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -28,17 +45,9 @@ class SupplierController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_supplierBoundlessAccess = $this->get('app.security.supplier_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
+            $supplier = $this->_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
 
             if( !$supplier )
                 throw $this->createNotFoundException("Supplier identified by `id` {$id} not found");
@@ -51,19 +60,19 @@ class SupplierController extends Controller implements UserRoleListInterface
                 'data' => ['supplier' => $supplier]
             ];
 
-            $_breadcrumbs->add('supplier_read')->add('supplier_read', ['id' => $id], $_translator->trans('supplier_view', [], 'routes'));
+            $this->_breadcrumbs->add('supplier_read')->add('supplier_read', ['id' => $id], $this->_translator->trans('supplier_view', [], 'routes'));
         } else {
-            if( !$_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_READ) )
+            if( !$this->_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $suppliers = $_manager->getRepository('AppBundle:Supplier\Supplier')->findAll();
+            $suppliers = $this->_manager->getRepository('AppBundle:Supplier\Supplier')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/Supplier/CRUD:readList.html.twig',
                 'data' => ['suppliers' => $suppliers]
             ];
 
-            $_breadcrumbs->add('supplier_read');
+            $this->_breadcrumbs->add('supplier_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -81,14 +90,10 @@ class SupplierController extends Controller implements UserRoleListInterface
      */
     public function createAction(Request $request)
     {
-        $_supplierBoundlessAccess = $this->get('app.security.supplier_boundless_access');
-
-        if( !$_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE) )
+        if( !$this->_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $supplierType = new SupplierType($_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE));
+        $supplierType = new SupplierType($this->_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE));
 
         $form = $this->createForm($supplierType, $supplier = new Supplier, [
             'validation_groups' => ['Supplier', 'Strict', 'Create'],
@@ -98,16 +103,16 @@ class SupplierController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
-            $_breadcrumbs->add('supplier_read')->add('supplier_create');
+            $this->_breadcrumbs->add('supplier_read')->add('supplier_create');
 
             return $this->render('AppBundle:Entity/Supplier/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
+            $this->_manager->persist($supplier);
+            $this->_manager->flush();
 
-            $_manager->persist($supplier);
-            $_manager->flush();
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('supplier_read');
@@ -131,13 +136,7 @@ class SupplierController extends Controller implements UserRoleListInterface
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_supplierBoundlessAccess = $this->get('app.security.supplier_boundless_access');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
+        $supplier = $this->_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
 
         if( !$supplier )
             throw $this->createNotFoundException("Supplier identified by `id` {$id} not found");
@@ -148,7 +147,7 @@ class SupplierController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $supplierType = new SupplierType($_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE));
+        $supplierType = new SupplierType($this->_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_CREATE));
 
         $form = $this->createForm($supplierType, $supplier, [
             'validation_groups' => ['Supplier', 'Strict', 'Update'],
@@ -159,7 +158,9 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         if( $form->isValid() )
         {
-            $_manager->flush();
+            $this->_manager->flush();
+
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('supplier_read');
@@ -170,7 +171,7 @@ class SupplierController extends Controller implements UserRoleListInterface
             }
         }
 
-        $_breadcrumbs->add('supplier_read')->add('supplier_update', ['id' => $id]);
+        $this->_breadcrumbs->add('supplier_read')->add('supplier_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Supplier/CRUD:updateItem.html.twig', [
             'form'     => $form->createView(),
@@ -190,9 +191,7 @@ class SupplierController extends Controller implements UserRoleListInterface
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $supplier = $_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
+        $supplier = $this->_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
 
         if( !$supplier )
             throw $this->createNotFoundException("Supplier identified by `id` {$id} not found");
@@ -200,8 +199,10 @@ class SupplierController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(SupplierVoter::SUPPLIER_DELETE, $supplier) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($supplier);
-        $_manager->flush();
+        $this->_manager->remove($supplier);
+        $this->_manager->flush();
+
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('supplier_read');
     }

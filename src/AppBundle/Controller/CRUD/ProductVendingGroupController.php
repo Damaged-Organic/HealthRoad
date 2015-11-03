@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Product\ProductVendingGroup,
     AppBundle\Form\Type\ProductVendingGroupType,
@@ -16,6 +18,21 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class ProductVendingGroupController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.product_vending_group_boundless_access") */
+    private $_productVendingGroupBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -28,17 +45,9 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_productVendingGroupBoundlessAccess = $this->get('app.security.product_vending_group_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($id);
+            $productVendingGroup = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($id);
 
             if( !$productVendingGroup )
                 throw $this->createNotFoundException("Product Vending Group identified by `id` {$id} not found");
@@ -51,19 +60,19 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                 'data' => ['productVendingGroup' => $productVendingGroup]
             ];
 
-            $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_read', ['id' => $id], $_translator->trans('product_vending_group_view', [], 'routes'));
+            $this->_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_read', ['id' => $id], $this->_translator->trans('product_vending_group_view', [], 'routes'));
         } else {
-            if( !$_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_READ) )
+            if( !$this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $productVendingGroups = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->findAll();
+            $productVendingGroups = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/ProductVendingGroup/CRUD:readList.html.twig',
                 'data' => ['productVendingGroups' => $productVendingGroups]
             ];
 
-            $_breadcrumbs->add('product_vending_group_read');
+            $this->_breadcrumbs->add('product_vending_group_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -81,14 +90,10 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
      */
     public function createAction(Request $request)
     {
-        $_productVendingGroupBoundlessAccess = $this->get('app.security.product_vending_group_boundless_access');
-
-        if( !$_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE) )
+        if( !$this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $productVendingGroupType = new ProductVendingGroupType($_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
+        $productVendingGroupType = new ProductVendingGroupType($this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
 
         $form = $this->createForm($productVendingGroupType, $productVendingGroup = new ProductVendingGroup, [
             'action' => $this->generateUrl('product_vending_group_create')
@@ -97,16 +102,16 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
-            $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_create');
+            $this->_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_create');
 
             return $this->render('AppBundle:Entity/ProductVendingGroup/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
+            $this->_manager->persist($productVendingGroup);
+            $this->_manager->flush();
 
-            $_manager->persist($productVendingGroup);
-            $_manager->flush();
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('product_vending_group_read');
@@ -130,13 +135,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_productVendingGroupBoundlessAccess = $this->get('app.security.product_vending_group_boundless_access');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($id);
+        $productVendingGroup = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($id);
 
         if( !$productVendingGroup )
             throw $this->createNotFoundException("Product Vending Group identified by `id` {$id} not found");
@@ -147,7 +146,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
             ]);
         }
 
-        $productVendingGroupType = new ProductVendingGroupType($_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
+        $productVendingGroupType = new ProductVendingGroupType($this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
 
         $form = $this->createForm($productVendingGroupType, $productVendingGroup, [
             'action' => $this->generateUrl('product_vending_group_update', ['id' => $id])
@@ -157,7 +156,9 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
 
         if( $form->isValid() )
         {
-            $_manager->flush();
+            $this->_manager->flush();
+
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('product_vending_group_read');
@@ -168,7 +169,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
             }
         }
 
-        $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $id]);
+        $this->_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/ProductVendingGroup/CRUD:updateItem.html.twig', [
             'form'                => $form->createView(),
@@ -188,9 +189,7 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($id);
+        $productVendingGroup = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($id);
 
         if( !$productVendingGroup )
             throw $this->createNotFoundException("Product Vending Group identified by `id` {$id} not found");
@@ -198,8 +197,10 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
         if( !$this->isGranted(ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_DELETE, $productVendingGroup) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($productVendingGroup);
-        $_manager->flush();
+        $this->_manager->remove($productVendingGroup);
+        $this->_manager->flush();
+
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('product_vending_group_read');
     }

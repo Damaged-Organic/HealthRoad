@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Customer\Customer,
     AppBundle\Form\Type\CustomerType,
@@ -16,6 +18,21 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class CustomerController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.customer_boundless_access") */
+    private $_customerBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -28,17 +45,9 @@ class CustomerController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_customerBoundlessAccess = $this->get('app.security.customer_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($id);
+            $customer = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($id);
 
             if( !$customer )
                 throw $this->createNotFoundException("Customer identified by `id` {$id} not found");
@@ -51,19 +60,19 @@ class CustomerController extends Controller implements UserRoleListInterface
                 'data' => ['customer' => $customer]
             ];
 
-            $_breadcrumbs->add('customer_read')->add('customer_read', ['id' => $id], $_translator->trans('customer_view', [], 'routes'));
+            $this->_breadcrumbs->add('customer_read')->add('customer_read', ['id' => $id], $this->_translator->trans('customer_view', [], 'routes'));
         } else {
-            if( !$_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_READ) )
+            if( !$this->_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $customers = $_manager->getRepository('AppBundle:Customer\Customer')->findAll();
+            $customers = $this->_manager->getRepository('AppBundle:Customer\Customer')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/Customer/CRUD:readList.html.twig',
                 'data' => ['customers' => $customers]
             ];
 
-            $_breadcrumbs->add('customer_read');
+            $this->_breadcrumbs->add('customer_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -81,18 +90,12 @@ class CustomerController extends Controller implements UserRoleListInterface
      */
     public function createAction(Request $request)
     {
-        $_customerBoundlessAccess = $this->get('app.security.customer_boundless_access');
-
-        if( !$_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE) )
+        if( !$this->_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         $customerType = new CustomerType(
-            $_translator,
-            $_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE));
+            $this->_translator,
+            $this->_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE));
 
         $form = $this->createForm($customerType, $customer = new Customer, [
             'validation_groups' => ['Customer', 'Strict', 'Create'],
@@ -102,16 +105,12 @@ class CustomerController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
-            $_breadcrumbs->add('customer_read')->add('customer_create');
+            $this->_breadcrumbs->add('customer_read')->add('customer_create');
 
             return $this->render('AppBundle:Entity/Customer/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
-
-            $_session = $this->get('session');
-
             $encodedPassword = $this
                 ->container->get('security.password_encoder')
                 ->encodePassword($customer, $customer->getPassword())
@@ -123,10 +122,10 @@ class CustomerController extends Controller implements UserRoleListInterface
             // Set employee who created customer
             $customer->setEmployee($this->getUser());
 
-            $_manager->persist($customer);
-            $_manager->flush();
+            $this->_manager->persist($customer);
+            $this->_manager->flush();
 
-            $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.create', [], 'responses')]]);
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('customer_read');
@@ -150,15 +149,7 @@ class CustomerController extends Controller implements UserRoleListInterface
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_customerBoundlessAccess = $this->get('app.security.customer_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($id);
+        $customer = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($id);
 
         if( !$customer )
             throw $this->createNotFoundException("Customer identified by `id` {$id} not found");
@@ -170,8 +161,8 @@ class CustomerController extends Controller implements UserRoleListInterface
         }
 
         $customerType = new CustomerType(
-            $_translator,
-            $_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE)
+            $this->_translator,
+            $this->_customerBoundlessAccess->isGranted(CustomerBoundlessAccess::CUSTOMER_CREATE)
         );
 
         $form = $this->createForm($customerType, $customer, [
@@ -183,8 +174,6 @@ class CustomerController extends Controller implements UserRoleListInterface
 
         if( $form->isValid() )
         {
-            $_session = $this->get('session');
-
             if( $form->has('password') && $form->get('password')->getData() )
             {
                 $encodedPassword = $this
@@ -194,9 +183,9 @@ class CustomerController extends Controller implements UserRoleListInterface
                 $customer->setPassword($encodedPassword);
             }
 
-            $_manager->flush();
+            $this->_manager->flush();
 
-            $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.update', [], 'responses')]]);
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('customer_read');
@@ -207,7 +196,7 @@ class CustomerController extends Controller implements UserRoleListInterface
             }
         }
 
-        $_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $id]);
+        $this->_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/Customer/CRUD:updateItem.html.twig', [
             'form'     => $form->createView(),
@@ -227,13 +216,7 @@ class CustomerController extends Controller implements UserRoleListInterface
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_session = $this->get('session');
-
-        $_translator = $this->get('translator');
-
-        $customer = $_manager->getRepository('AppBundle:Customer\Customer')->find($id);
+        $customer = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($id);
 
         if( !$customer )
             throw $this->createNotFoundException("Customer identified by `id` {$id} not found");
@@ -241,10 +224,10 @@ class CustomerController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(CustomerVoter::CUSTOMER_DELETE, $customer) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($customer);
-        $_manager->flush();
+        $this->_manager->remove($customer);
+        $this->_manager->flush();
 
-        $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.delete', [], 'responses')]]);
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('customer_read');
     }

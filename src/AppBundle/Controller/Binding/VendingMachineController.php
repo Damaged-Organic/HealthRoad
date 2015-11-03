@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\School\School,
@@ -27,24 +29,35 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 {
     use ClassOperationsTrait;
 
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.vending_machine_boundless_access") */
+    private $_vendingMachineBoundlessAccess;
+
     public function showAction($objectClass, $objectId)
     {
-        $_vendingMachineBoundlessAccess = $this->get('app.security.vending_machine_boundless_access');
-
-        if( !$_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_READ) )
+        if( !$this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_READ) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new School, $objectClass):
-                $object = $_manager->getRepository('AppBundle:School\School')->find($objectId);
+                $object = $this->_manager->getRepository('AppBundle:School\School')->find($objectId);
 
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['school' => $object]);
+                $vendingMachines = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['school' => $object]);
 
                 $action = [
                     'path'  => 'vending_machine_choose',
@@ -53,12 +66,12 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             break;
 
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $object = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+                $object = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['productVendingGroup' => $object]);
+                $vendingMachines = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['productVendingGroup' => $object]);
 
                 $action = [
                     'path'  => 'vending_machine_choose',
@@ -91,13 +104,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function boundedAction($objectId, $objectClass)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
 
         if( !$vendingMachine )
             throw $this->createNotFoundException("Vending Machine identified by `id` {$objectId} not found");
@@ -105,7 +112,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_READ, $vendingMachine) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $objectId], $_translator->trans('vending_machine_bounded', [], 'routes'));
+        $this->_breadcrumbs->add('vending_machine_read')->add('vending_machine_update', ['id' => $objectId], $this->_translator->trans('vending_machine_bounded', [], 'routes'));
 
         switch(TRUE)
         {
@@ -131,12 +138,12 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('vending_machine_update_bounded',
+                $this->_breadcrumbs->add('vending_machine_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('purchase_read', [], 'routes')
+                    $this->_translator->trans('purchase_read', [], 'routes')
                 );
             break;
 
@@ -146,12 +153,12 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('vending_machine_update_bounded',
+                $this->_breadcrumbs->add('vending_machine_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('vending_machine_event_read', [], 'routes')
+                    $this->_translator->trans('vending_machine_event_read', [], 'routes')
                 );
             break;
 
@@ -161,12 +168,12 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('vending_machine_update_bounded',
+                $this->_breadcrumbs->add('vending_machine_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('vending_machine_load_read', [], 'routes')
+                    $this->_translator->trans('vending_machine_load_read', [], 'routes')
                 );
             break;
 
@@ -194,50 +201,42 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function chooseAction($objectClass, $objectId)
     {
-        $_vendingMachineBoundlessAccess = $this->get('app.security.vending_machine_boundless_access');
-
-        if( !$_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_BIND) )
+        if( !$this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_BIND) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new School, $objectClass):
-                $school = $object = $_manager->getRepository('AppBundle:School\School')->find($objectId);
+                $school = $object = $this->_manager->getRepository('AppBundle:School\School')->find($objectId);
 
                 if( !$school )
                     throw $this->createNotFoundException("School identified by `id` {$objectId} not found");
 
                 $path = 'school_update_bounded';
 
-                $_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId])->add('school_update_bounded',
+                $this->_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId])->add('school_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => 'vendingmachine'
                     ],
-                    $_translator->trans('vending_machine_read', [], 'routes')
+                    $this->_translator->trans('vending_machine_read', [], 'routes')
                 );
             break;
 
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $productVendingGroup = $object = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+                $productVendingGroup = $object = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
                 if( !$productVendingGroup )
                     throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
 
                 $path = 'product_vending_group_update_bounded';
 
-                $_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $objectId])->add('product_vending_group_update_bounded',
+                $this->_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_update', ['id' => $objectId])->add('product_vending_group_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => 'vendingmachine'
                     ],
-                    $_translator->trans('vending_machine_read', [], 'routes')
+                    $this->_translator->trans('vending_machine_read', [], 'routes')
                 );
             break;
 
@@ -246,9 +245,9 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             break;
         }
 
-        $vendingMachines = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll();
+        $vendingMachines = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll();
 
-        $_breadcrumbs->add('vending_machine_choose', [
+        $this->_breadcrumbs->add('vending_machine_choose', [
             'objectId'    => $objectId,
             'objectClass' => $objectClass
         ]);
@@ -272,48 +271,48 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($targetId);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($targetId);
 
         if( !$vendingMachine )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_BIND, $vendingMachine) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new School, $objectClass):
-                $school = $_manager->getRepository('AppBundle:School\School')->find($objectId);
+                $school = $this->_manager->getRepository('AppBundle:School\School')->find($objectId);
 
                 if( !$school )
-                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
                 $school->addVendingMachine($vendingMachine);
 
-                $_manager->persist($school);
+                $this->_manager->persist($school);
             break;
 
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
-                $productVendingGroup = $_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
+                $productVendingGroup = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($objectId);
 
                 if( !$productVendingGroup )
-                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
                 $productVendingGroup->addVendingMachine($vendingMachine);
 
-                $_manager->persist($productVendingGroup);
+                $this->_manager->persist($productVendingGroup);
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markBindSuccess(
+            $this->_translator->trans('bind.success.vending_machine', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }
@@ -330,17 +329,13 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $vendingMachine = $_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($targetId);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($targetId);
 
         if( !$vendingMachine )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_BIND, $vendingMachine) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
@@ -353,11 +348,15 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markUnbindSuccess(
+            $this->_translator->trans('unbind.success.vending_machine', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }

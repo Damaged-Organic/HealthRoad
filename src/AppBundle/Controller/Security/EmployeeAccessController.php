@@ -7,8 +7,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 class EmployeeAccessController extends Controller
 {
+    /** @DI\Inject("security.authorization_checker") */
+    private $_authorizationChecker;
+
+    /** @DI\Inject("security.authentication_utils") */
+    private $_authenticationUtils;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -21,13 +29,11 @@ class EmployeeAccessController extends Controller
      */
     public function loginAction()
     {
-        if( $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( $this->_authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY') ) {
             return $this->redirectToRoute('employee_dashboard');
         }
 
-        $authenticationUtils = $this->get('security.authentication_utils');
-
-        $error = $authenticationUtils->getLastAuthenticationError();
+        $error = $this->_authenticationUtils->getLastAuthenticationError();
 
         return $this->render('AppBundle:Dashboard/Security/Login:employee.html.twig', [
             'error' => $error

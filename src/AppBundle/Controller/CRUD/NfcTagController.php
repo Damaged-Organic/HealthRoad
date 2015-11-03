@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Form\Type\NfcTagType,
@@ -16,6 +18,21 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class NfcTagController extends Controller implements UserRoleListInterface
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.nfc_tag_boundless_access") */
+    private $_nfcTagBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -28,17 +45,9 @@ class NfcTagController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_nfcTagBoundlessAccess = $this->get('app.security.nfc_tag_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
         if( $id )
         {
-            $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
+            $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 
             if( !$nfcTag )
                 throw $this->createNotFoundException("NfcTag identified by `id` {$id} not found");
@@ -51,19 +60,19 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 'data' => ['nfcTag' => $nfcTag]
             ];
 
-            $_breadcrumbs->add('nfc_tag_read')->add('nfc_tag_read', ['id' => $id], $_translator->trans('nfc_tag_view', [], 'routes'));
+            $this->_breadcrumbs->add('nfc_tag_read')->add('nfc_tag_read', ['id' => $id], $this->_translator->trans('nfc_tag_view', [], 'routes'));
         } else {
-            if( !$_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_READ) )
+            if( !$this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $nfcTags = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll();
+            $nfcTags = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll();
 
             $response = [
                 'view' => 'AppBundle:Entity/NfcTag/CRUD:readList.html.twig',
                 'data' => ['nfcTags' => $nfcTags]
             ];
 
-            $_breadcrumbs->add('nfc_tag_read');
+            $this->_breadcrumbs->add('nfc_tag_read');
         }
 
         return $this->render($response['view'], $response['data']);
@@ -81,16 +90,10 @@ class NfcTagController extends Controller implements UserRoleListInterface
      */
     public function createAction(Request $request)
     {
-        $_nfcTagBoundlessAccess = $this->get('app.security.nfc_tag_boundless_access');
-
-        if( !$_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE) )
+        if( !$this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $nfcTagType = new NfcTagType($_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE));
+        $nfcTagType = new NfcTagType($this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE));
 
         $form = $this->createForm($nfcTagType, $nfcTag = new NfcTag, [
             'action' => $this->generateUrl('nfc_tag_create')
@@ -99,20 +102,16 @@ class NfcTagController extends Controller implements UserRoleListInterface
         $form->handleRequest($request);
 
         if( !($form->isValid()) ) {
-            $_breadcrumbs->add('nfc_tag_read')->add('nfc_tag_create');
+            $this->_breadcrumbs->add('nfc_tag_read')->add('nfc_tag_create');
 
             return $this->render('AppBundle:Entity/NfcTag/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
-            $_manager = $this->getDoctrine()->getManager();
+            $this->_manager->persist($nfcTag);
+            $this->_manager->flush();
 
-            $_session = $this->get('session');
-
-            $_manager->persist($nfcTag);
-            $_manager->flush();
-
-            $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.create', [], 'responses')]]);
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('nfc_tag_read');
@@ -136,15 +135,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
      */
     public function updateAction(Request $request, $id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_nfcTagBoundlessAccess = $this->get('app.security.nfc_tag_boundless_access');
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
+        $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 
         if( !$nfcTag )
             throw $this->createNotFoundException("NfcTag identified by `id` {$id} not found");
@@ -155,7 +146,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $nfcTagType = new NfcTagType($_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE));
+        $nfcTagType = new NfcTagType($this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_CREATE));
 
         $form = $this->createForm($nfcTagType, $nfcTag, [
             'action' => $this->generateUrl('nfc_tag_update', ['id' => $id])
@@ -165,11 +156,9 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
         if( $form->isValid() )
         {
-            $_session = $this->get('session');
+            $this->_manager->flush();
 
-            $_manager->flush();
-
-            $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.update', [], 'responses')]]);
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('nfc_tag_read');
@@ -180,7 +169,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
             }
         }
 
-        $_breadcrumbs->add('nfc_tag_read')->add('nfc_tag_update', ['id' => $id]);
+        $this->_breadcrumbs->add('nfc_tag_read')->add('nfc_tag_update', ['id' => $id]);
 
         return $this->render('AppBundle:Entity/NfcTag/CRUD:updateItem.html.twig', [
             'form'   => $form->createView(),
@@ -200,13 +189,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
      */
     public function deleteAction($id)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_session = $this->get('session');
-
-        $_translator = $this->get('translator');
-
-        $nfcTag = $_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
+        $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 
         if( !$nfcTag )
             throw $this->createNotFoundException("NfcTag identified by `id` {$id} not found");
@@ -214,10 +197,10 @@ class NfcTagController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(NfcTagVoter::NFC_TAG_DELETE, $nfcTag) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_manager->remove($nfcTag);
-        $_manager->flush();
+        $this->_manager->remove($nfcTag);
+        $this->_manager->flush();
 
-        $_session->getFlashBag()->add('messages', ['success' => [$_translator->trans('common.success.delete', [], 'responses')]]);
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('nfc_tag_read');
     }

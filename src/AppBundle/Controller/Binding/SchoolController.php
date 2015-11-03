@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\Employee\Employee,
@@ -24,19 +26,30 @@ class SchoolController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
 
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.school_boundless_access") */
+    private $_schoolBoundlessAccess;
+
     public function showAction($objectClass, $objectId)
     {
-        $_schoolBoundlessAccess = $this->get('app.security.school_boundless_access');
-
-        if( !$_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_READ) )
+        if( !$this->_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_READ) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $object = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+                $object = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
@@ -50,12 +63,12 @@ class SchoolController extends Controller implements UserRoleListInterface
             break;
 
             case $this->compareObjectClassNameToString(new Settlement, $objectClass):
-                $object = $_manager->getRepository('AppBundle:Settlement\Settlement')->find($objectId);
+                $object = $this->_manager->getRepository('AppBundle:Settlement\Settlement')->find($objectId);
 
                 if( !$object )
                     throw $this->createNotFoundException("Settlement identified by `id` {$objectId} not found");
 
-                $schools = $_manager->getRepository('AppBundle:School\School')->findBy(['settlement' => $object]);
+                $schools = $this->_manager->getRepository('AppBundle:School\School')->findBy(['settlement' => $object]);
 
                 $action = [
                     'path'  => 'school_choose',
@@ -88,13 +101,7 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function boundedAction($objectId, $objectClass)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $school = $_manager->getRepository('AppBundle:School\School')->find($objectId);
+        $school = $this->_manager->getRepository('AppBundle:School\School')->find($objectId);
 
         if( !$school )
             throw $this->createNotFoundException("School identified by `id` {$objectId} not found");
@@ -102,7 +109,7 @@ class SchoolController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(SchoolVoter::SCHOOL_READ, $school) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId], $_translator->trans('school_bounded', [], 'routes'));
+        $this->_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId], $this->_translator->trans('school_bounded', [], 'routes'));
 
         switch(TRUE)
         {
@@ -112,12 +119,12 @@ class SchoolController extends Controller implements UserRoleListInterface
                     'objectId'    => $objectId
                 ]);
 
-                $_breadcrumbs->add('school_update_bounded',
+                $this->_breadcrumbs->add('school_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $_translator->trans('vending_machine_read', [], 'routes')
+                    $this->_translator->trans('vending_machine_read', [], 'routes')
                 );
             break;
 
@@ -145,21 +152,13 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function chooseAction($objectClass, $objectId)
     {
-        $_schoolBoundlessAccess = $this->get('app.security.school_boundless_access');
-
-        if( !$_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_BIND) )
+        if( !$this->_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_BIND) )
             throw $this->createAccessDeniedException('Access denied');
-
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $employee = $object = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+                $employee = $object = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
                 if( !$employee )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
@@ -169,29 +168,29 @@ class SchoolController extends Controller implements UserRoleListInterface
 
                 $path = 'employee_update_bounded';
 
-                $_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId])->add('employee_update_bounded',
+                $this->_breadcrumbs->add('employee_read')->add('employee_update', ['id' => $objectId])->add('employee_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => 'school'
                     ],
-                    $_translator->trans('school_read', [], 'routes')
+                    $this->_translator->trans('school_read', [], 'routes')
                 );
             break;
 
             case $this->compareObjectClassNameToString(new Settlement, $objectClass):
-                $settlement = $object = $_manager->getRepository('AppBundle:Settlement\Settlement')->find($objectId);
+                $settlement = $object = $this->_manager->getRepository('AppBundle:Settlement\Settlement')->find($objectId);
 
                 if( !$settlement )
                     throw $this->createNotFoundException("Settlement identified by `id` {$objectId} not found");
 
                 $path = 'settlement_update_bounded';
 
-                $_breadcrumbs->add('settlement_read')->add('settlement_update', ['id' => $objectId])->add('settlement_update_bounded',
+                $this->_breadcrumbs->add('settlement_read')->add('settlement_update', ['id' => $objectId])->add('settlement_update_bounded',
                     [
                         'objectId'    => $objectId,
                         'objectClass' => 'school'
                     ],
-                    $_translator->trans('school_read', [], 'routes')
+                    $this->_translator->trans('school_read', [], 'routes')
                 );
             break;
 
@@ -200,9 +199,9 @@ class SchoolController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $schools = $_manager->getRepository('AppBundle:School\School')->findAll();
+        $schools = $this->_manager->getRepository('AppBundle:School\School')->findAll();
 
-        $_breadcrumbs->add('school_choose', [
+        $this->_breadcrumbs->add('school_choose', [
             'objectId'    => $objectId,
             'objectClass' => $objectClass,
         ]);
@@ -226,51 +225,51 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function bindToAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $school = $_manager->getRepository('AppBundle:School\School')->find($targetId);
+        $school = $this->_manager->getRepository('AppBundle:School\School')->find($targetId);
 
         if( !$school )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(SchoolVoter::SCHOOL_BIND, $school) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+                $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
                 if( !$employee )
-                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
                 if( !$this->isGranted(EmployeeVoter::EMPLOYEE_BIND_SCHOOL, $employee) )
-                    throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+                    throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
                 $employee->addSchool($school);
 
-                $_manager->persist($employee);
+                $this->_manager->persist($employee);
             break;
 
             case $this->compareObjectClassNameToString(new Settlement, $objectClass):
-                $settlement = $_manager->getRepository('AppBundle:Settlement\Settlement')->find($objectId);
+                $settlement = $this->_manager->getRepository('AppBundle:Settlement\Settlement')->find($objectId);
 
                 if( !$settlement )
-                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
                 $settlement->addSchool($school);
 
-                $_manager->persist($settlement);
+                $this->_manager->persist($settlement);
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_boundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markBindSuccess(
+            $this->_translator->trans('bind.success.school', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }
@@ -287,29 +286,25 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function unbindFromAction(Request $request, $targetId, $objectClass, $objectId)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_translator = $this->get('translator');
-
-        $school = $_manager->getRepository('AppBundle:School\School')->find($targetId);
+        $school = $this->_manager->getRepository('AppBundle:School\School')->find($targetId);
 
         if( !$school )
-            throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+            throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
         if( !$this->isGranted(SchoolVoter::SCHOOL_BIND, $school) )
-            throw $this->createAccessDeniedException($_translator->trans('common.error.forbidden', [], 'responses'));
+            throw $this->createAccessDeniedException($this->_translator->trans('common.error.forbidden', [], 'responses'));
 
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Employee, $objectClass):
-                $employee = $_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
+                $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($objectId);
 
                 if( !$employee )
-                    throw $this->createNotFoundException($_translator->trans('common.error.not_found', [], 'responses'));
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
 
                 $employee->removeSchool($school);
 
-                $_manager->persist($employee);
+                $this->_manager->persist($employee);
             break;
 
             case $this->compareObjectClassNameToString(new Settlement, $objectClass):
@@ -317,11 +312,15 @@ class SchoolController extends Controller implements UserRoleListInterface
             break;
 
             default:
-                throw new NotAcceptableHttpException($_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
+                throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_unboundalbe', [], 'responses'));
             break;
         }
 
-        $_manager->flush();
+        $this->_manager->flush();
+
+        $this->_messages->markUnbindSuccess(
+            $this->_translator->trans('unbind.success.school', [], 'responses')
+        );
 
         return new RedirectResponse($request->headers->get('referer'));
     }

@@ -8,12 +8,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use AppBundle\Form\Type\SettingType,
     AppBundle\Security\Authorization\Voter\SettingVoter,
     AppBundle\Service\Security\SettingBoundlessAccess;
 
 class SettingController extends Controller
 {
+    /** @DI\Inject("doctrine.orm.entity_manager") */
+    private $_manager;
+
+    /** @DI\Inject("app.common.breadcrumbs") */
+    private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.security.setting_boundless_access") */
+    private $_settingBoundlessAccess;
+
     /**
      * @Method({"GET"})
      * @Route(
@@ -26,23 +40,17 @@ class SettingController extends Controller
      */
     public function readAction()
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_settingBoundlessAccess = $this->get('app.security.setting_boundless_access');
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        if( !$_settingBoundlessAccess->isGranted(SettingBoundlessAccess::SETTING_READ) )
+        if( !$this->_settingBoundlessAccess->isGranted(SettingBoundlessAccess::SETTING_READ) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $setting = $_manager->getRepository('AppBundle:Setting\Setting')->findOne();
+        $setting = $this->_manager->getRepository('AppBundle:Setting\Setting')->findOne();
 
         $response = [
             'view' => 'AppBundle:Entity/Setting/CRUD:readList.html.twig',
             'data' => ['setting' => $setting]
         ];
 
-        $_breadcrumbs->add('setting_read');
+        $this->_breadcrumbs->add('setting_read');
 
         return $this->render($response['view'], $response['data']);
     }
@@ -59,11 +67,7 @@ class SettingController extends Controller
      */
     public function updateAction(Request $request)
     {
-        $_manager = $this->getDoctrine()->getManager();
-
-        $_breadcrumbs = $this->get('app.common.breadcrumbs');
-
-        $setting = $_manager->getRepository('AppBundle:Setting\Setting')->findOne();
+        $setting = $this->_manager->getRepository('AppBundle:Setting\Setting')->findOne();
 
         if( !$setting )
             throw $this->createNotFoundException("Parent Setting object not found");
@@ -79,12 +83,14 @@ class SettingController extends Controller
 
         if( $form->isValid() )
         {
-            $_manager->flush();
+            $this->_manager->flush();
+
+            $this->_messages->markUpdateSuccess();
 
             return $this->redirectToRoute('setting_update');
         }
 
-        $_breadcrumbs->add('setting_read')->add('setting_update');
+        $this->_breadcrumbs->add('setting_read')->add('setting_update');
 
         return $this->render('AppBundle:Entity/Setting/CRUD:updateList.html.twig', [
             'form'    => $form->createView(),

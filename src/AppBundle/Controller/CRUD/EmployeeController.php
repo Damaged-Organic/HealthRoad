@@ -21,14 +21,14 @@ class EmployeeController extends Controller implements UserRoleListInterface
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
-    /** @DI\Inject("session") */
-    private $_session;
-
     /** @DI\Inject("translator") */
     private $_translator;
 
     /** @DI\Inject("app.common.breadcrumbs") */
     private $_breadcrumbs;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
 
     /** @DI\Inject("app.security.employee_boundless_access") */
     private $_employeeBoundlessAccess;
@@ -123,7 +123,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
             $this->_manager->persist($employee);
             $this->_manager->flush();
 
-            $this->_session->getFlashBag()->add('messages', ['success' => [$this->_translator->trans('common.success.create', [], 'responses')]]);
+            $this->_messages->markCreateSuccess();
 
             if( $form->has('create_and_return') && $form->get('create_and_return')->isClicked() ) {
                 return $this->redirectToRoute('employee_read');
@@ -184,7 +184,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
 
             $this->_manager->flush();
 
-            $this->_session->getFlashBag()->add('messages', ['success' => [$this->_translator->trans('common.success.update', [], 'responses')]]);
+            $this->_messages->markUpdateSuccess();
 
             if( $form->has('update_and_return') && $form->get('update_and_return')->isClicked() ) {
                 return $this->redirectToRoute('employee_read');
@@ -226,7 +226,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
         $this->_manager->remove($employee);
         $this->_manager->flush();
 
-        $this->_session->getFlashBag()->add('messages', ['success' => [$this->_translator->trans('common.success.delete', [], 'responses')]]);
+        $this->_messages->markDeleteSuccess();
 
         return $this->redirectToRoute('employee_read');
     }

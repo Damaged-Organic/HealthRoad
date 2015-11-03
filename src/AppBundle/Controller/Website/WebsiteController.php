@@ -5,8 +5,7 @@ namespace AppBundle\Controller\Website;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class WebsiteController extends Controller
 {
@@ -20,7 +19,7 @@ class WebsiteController extends Controller
      *      requirements={"_locale" = "%locale%", "domain" = "%domain%"}
      * )
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         return $this->render('AppBundle:Website/State:index.html.twig');
     }
