@@ -267,3 +267,10 @@ services:
         class: AppBundle\Service\Sync\Security\Authentication
         calls:
             - [setPasswordEncoder, [ "@app.sync.security.password_encoder" ]]
+
+    # Reports
+
+    app.report.builder:
+        class: AppBundle\Service\Report\ReportBuilder
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]

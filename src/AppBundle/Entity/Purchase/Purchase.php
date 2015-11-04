@@ -15,6 +15,8 @@ class Purchase implements SyncPurchasePropertiesInterface
 {
     use IdMapperTrait;
 
+    // TODO: This joined entities will show fuck all if deleted. Need to find the way to preserve info in case of deletion
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", inversedBy="purchases")
      * @ORM\JoinColumn(name="vending_machine_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
@@ -23,7 +25,7 @@ class Purchase implements SyncPurchasePropertiesInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product\Product", inversedBy="purchases")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      */
     protected $product;
 
