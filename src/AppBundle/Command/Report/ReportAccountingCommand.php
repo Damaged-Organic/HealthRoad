@@ -16,12 +16,33 @@ class ReportAccountingCommand extends ContainerAwareCommand
         ;
     }
 
+    //TODO: Add logging in case of error
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $_reportBuilder = $this->getContainer()->get('app.report.builder');
+        $_container = $this->getContainer();
 
-        $accountingData = $_reportBuilder->prepareAccountingData($_reportBuilder->getAccountingData());
+        $_reportBuilder         = $_container->get('app.report.builder');
+        $_reportExcelAccounting = $_container->get('app.report.excel.accounting');
+        $_reportMailer          = $_container->get('app.report.mailer');
 
-        \Doctrine\Common\Util\Debug::dump($accountingData, 2);
+        $accountingData = $_reportBuilder->prepareAccountingData(
+            $_reportBuilder->getAccountingData()
+        );
+
+        if( !$accountingData )
+            return; //Except and log?
+
+        $phpExcelObject = $_reportExcelAccounting->getAccountingReportObject($accountingData);
+
+        if( !$phpExcelObject )
+            return;
+
+        $filePath = $_reportExcelAccounting->savePhpExcelObject($phpExcelObject);
+
+        if( !$filePath )
+            return;
+
+        if( !$_reportMailer->sendReportAccounting($filePath) )
+            return;
     }
 }

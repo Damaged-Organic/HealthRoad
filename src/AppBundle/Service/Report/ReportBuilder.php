@@ -49,4 +49,9 @@ class ReportBuilder
     {
 
     }
+
+    public function prepareLogisticsData()
+    {
+
+    }
 }

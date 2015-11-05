@@ -39,6 +39,11 @@ services:
             - [setSession, [ "@session" ]]
             - [setTranslator, [ "@translator" ]]
 
+    app.common.mailer_shortcut:
+        class: AppBundle\Service\Common\MailerShortcut
+        calls:
+            - [setMailer, [ "@mailer" ]]
+
     # Validators
 
     app.validator.uploaded_product_image:
@@ -274,3 +279,22 @@ services:
         class: AppBundle\Service\Report\ReportBuilder
         calls:
             - [setManager, [ "@doctrine.orm.entity_manager" ]]
+
+    app.report.excel.accounting:
+        class: AppBundle\Service\Report\ReportExcelAccounting
+        calls:
+            - [setRootDirectory, [ "%kernel.root_dir%" ]]
+            - [setPhpExcel, [ "@phpexcel" ]]
+
+    app.report.excel.logistics:
+        class: AppBundle\Service\Report\ReportExcelLogistics
+        calls:
+            - [setRootDirectory, [ "%kernel.root_dir%" ]]
+            - [setPhpExcel, [ "@phpexcel" ]]
+
+    app.report.mailer:
+        class: AppBundle\Service\Report\ReportMailer
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setMailerShortcut, [ "@app.common.mailer_shortcut" ]]
+            - [setEmailParameters, [ "%emails%" ]]

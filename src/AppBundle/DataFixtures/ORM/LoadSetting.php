@@ -43,8 +43,18 @@ class LoadSetting extends AbstractFixture implements OrderedFixtureInterface
 
         $settingEmailForReports = (new SettingString)
             ->setSetting($this->getReference('setting'))
-            ->setName("Электронный адрес для получения отчетов")
-            ->setSettingKey("email_for_reports")
+            ->setName("Электронный адрес для получения отчетов бухгалтерии")
+            ->setSettingKey("email_accounting")
+            ->setSettingValue("some-address@kdz.com.ua")
+        ;
+        $manager->persist($settingEmailForReports);
+
+        // ---
+
+        $settingEmailForReports = (new SettingString)
+            ->setSetting($this->getReference('setting'))
+            ->setName("Электронный адрес для получения отчетов логистики")
+            ->setSettingKey("email_logistics")
             ->setSettingValue("some-address@kdz.com.ua")
         ;
         $manager->persist($settingEmailForReports);
