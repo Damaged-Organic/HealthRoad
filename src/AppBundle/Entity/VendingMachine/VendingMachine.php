@@ -493,6 +493,18 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     }
 
     /**
+     * Set purchases
+     *
+     * @return VendingMachine
+     */
+    public function setPurchases($purchases)
+    {
+        $this->purchases = $purchases;
+
+        return $this;
+    }
+
+    /**
      * Get purchases
      *
      * @return \Doctrine\Common\Collections\Collection

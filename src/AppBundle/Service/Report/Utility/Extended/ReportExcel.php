@@ -35,7 +35,7 @@ class ReportExcel
 
     public function getRootDirectory()
     {
-        return $this->rootDirectory . self::REPORT_DIRECTORY;
+        return $this->rootDirectory . static::REPORT_DIRECTORY;
     }
 
     public function createPhpExcelObject()
@@ -64,16 +64,27 @@ class ReportExcel
     {
         return ( $singleColumn && ($rowStart === $rowEnd) )
             ? $singleColumn . $rowStart
-            : self::COLUMN_START . $rowStart . ":" . self::COLUMN_END . $rowEnd
+            : static::COLUMN_START . $rowStart . ":" . static::COLUMN_END . $rowEnd
         ;
     }
 
-    protected function styleAlignHorizontalCenter($rowStart, $rowEnd)
+    protected function styleAlignHorizontalCenter($rowStart, $rowEnd, $singleColumn = NULL)
     {
         $this->phpExcelObject->getActiveSheet()
-            ->getStyle($this->getPosition($rowStart, $rowEnd))
+            ->getStyle($this->getPosition($rowStart, $rowEnd, $singleColumn))
             ->getAlignment()
             ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+        ;
+
+        return $this;
+    }
+
+    protected function styleAlignHorizontalRight($rowStart, $rowEnd, $singleColumn = NULL)
+    {
+        $this->phpExcelObject->getActiveSheet()
+            ->getStyle($this->getPosition($rowStart, $rowEnd, $singleColumn))
+            ->getAlignment()
+            ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
         ;
 
         return $this;
@@ -90,7 +101,7 @@ class ReportExcel
         return $this;
     }
 
-    protected function styleBorderThick($rowStart, $rowEnd)
+    protected function styleBorderThick($rowStart, $rowEnd, $singleColumn = NULL)
     {
         $style = [
             'borders' => [
@@ -101,14 +112,14 @@ class ReportExcel
         ];
 
         $this->phpExcelObject->getActiveSheet()
-            ->getStyle($this->getPosition($rowStart, $rowEnd))
+            ->getStyle($this->getPosition($rowStart, $rowEnd, $singleColumn))
             ->applyFromArray($style)
         ;
 
         return $this;
     }
 
-    protected function styleBorderThin($rowStart, $rowEnd)
+    protected function styleBorderThin($rowStart, $rowEnd, $singleColumn = NULL)
     {
         $style = [
             'borders' => [
@@ -119,7 +130,7 @@ class ReportExcel
         ];
 
         $this->phpExcelObject->getActiveSheet()
-            ->getStyle($this->getPosition($rowStart, $rowEnd))
+            ->getStyle($this->getPosition($rowStart, $rowEnd, $singleColumn))
             ->applyFromArray($style)
         ;
 
@@ -141,9 +152,7 @@ class ReportExcel
 
     protected function adjustCellWidth()
     {
-        //$this->phpExcelObject->getActiveSheet()->getHighestDataColumn()
-
-        foreach( range(self::COLUMN_START, self::COLUMN_END) as $column )
+        foreach( range(static::COLUMN_START, static::COLUMN_END) as $column )
         {
             $this->phpExcelObject->getActiveSheet()
                 ->getColumnDimension($column)

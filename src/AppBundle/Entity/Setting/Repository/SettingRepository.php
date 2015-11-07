@@ -21,9 +21,11 @@ class SettingRepository extends ExtendedEntityRepository
     public function findSettingBySettingKey($settingKey)
     {
         $query = $this->createQueryBuilder('s')
-            ->select('s, ss')
+            ->select('s, ss, sd')
             ->leftJoin('s.settingsString', 'ss')
+            ->leftJoin('s.settingsDecimal', 'sd')
             ->where('ss.settingKey = :settingKey')
+            ->orWhere('sd.settingKey = :settingKey')
             ->setParameter('settingKey', $settingKey)
             ->setMaxResults(1)
             ->getQuery()
@@ -34,11 +36,19 @@ class SettingRepository extends ExtendedEntityRepository
 
     public function findAccountingEmail()
     {
-        return $this->findSettingBySettingKey('email_accounting')->getSettingsString()[0];
+        return $this->findSettingBySettingKey('email_accounting')
+            ->getSettingsString()[0];
     }
 
     public function findLogisticsEmail()
     {
-        return $this->findSettingBySettingKey('email_logistics')->getSettingsString()[0];
+        return $this->findSettingBySettingKey('email_logistics')
+            ->getSettingsString()[0];
+    }
+
+    public function findVendingMachineReportSumAmount()
+    {
+        return $this->findSettingBySettingKey('vending_machine_report_sum_amount')
+            ->getSettingsDecimal()[0];
     }
 }

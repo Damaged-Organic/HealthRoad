@@ -39,7 +39,7 @@ class ReportExcelAccounting extends ReportExcel
         return $this->phpExcelObject;
     }
 
-    private function setProperties()
+    protected function setProperties()
     {
         $this->phpExcelObject->getProperties()
             ->setCreator("Генератор отчетов системы \"Дорога Здоровья\"")
@@ -50,7 +50,7 @@ class ReportExcelAccounting extends ReportExcel
         ;
     }
 
-    private function buildHeader()
+    protected function buildHeader()
     {
         $this->phpExcelObject->getActiveSheet()
             ->setCellValueByColumnAndRow(0, 1, "Отчет по продажам сети за торговый день")
@@ -68,6 +68,11 @@ class ReportExcelAccounting extends ReportExcel
         ;
 
         $this->styleFontBold(2, 2, 'G');
+    }
+
+    protected function buildBody(array $accountingData)
+    {
+        $yesterdayDate = (new DateTime)->modify('yesterday')->format('m/d/Y');
 
         $this->phpExcelObject->getActiveSheet()
             ->setCellValueByColumnAndRow(0, 4, "№ п/п")
@@ -81,16 +86,12 @@ class ReportExcelAccounting extends ReportExcel
         ;
 
         $this
+            ->styleAlignHorizontalCenter(4, 4)
             ->styleBorderThick(4, 4)
             ->styleFontBold(4, 4)
         ;
-    }
 
-    private function buildBody(array $accountingData)
-    {
         $currentRow = 5;
-
-        $itemCounter = 1;
 
         $purchaseTotal = [
             'amount' => 0,
@@ -108,22 +109,20 @@ class ReportExcelAccounting extends ReportExcel
 
             foreach( $purchases as $purchaseData )
             {
-                $currentPurchase = $purchaseData[0];
+                $currentProduct = $purchaseData[0]->getProduct();
 
                 $this->phpExcelObject->getActiveSheet()
-                    ->setCellValueByColumnAndRow(0, $currentRow, $itemCounter)
-                    ->setCellValueByColumnAndRow(1, $currentRow, $currentPurchase->getSyncPurchasedAt()->format('m/d/Y'))
-                    ->setCellValueByColumnAndRow(2, $currentRow, $currentPurchase->getProduct()->getProductCategory()->getName())
-                    ->setCellValueByColumnAndRow(3, $currentRow, NULL)
-                    ->setCellValueByColumnAndRow(4, $currentRow, $currentPurchase->getProduct()->getNameFull())
+                    ->setCellValueByColumnAndRow(0, $currentRow, $currentProduct->getId())
+                    ->setCellValueByColumnAndRow(1, $currentRow, $yesterdayDate)
+                    ->setCellValueByColumnAndRow(2, $currentRow, $currentProduct->getProductCategory()->getName())
+                    ->setCellValueByColumnAndRow(3, $currentRow, $currentProduct->getCode())
+                    ->setCellValueByColumnAndRow(4, $currentRow, $currentProduct->getNameFull())
                     ->setCellValueByColumnAndRow(5, $currentRow, $purchaseData['purchaseAmount'])
-                    ->setCellValueByColumnAndRow(6, $currentRow, $currentPurchase->getProduct()->getPrice())
+                    ->setCellValueByColumnAndRow(6, $currentRow, $currentProduct->getPrice())
                     ->setCellValueByColumnAndRow(7, $currentRow, $purchaseData['purchaseSum'])
                 ;
 
                 $this->styleBorderThin($currentRow, $currentRow);
-
-                $itemCounter++;
 
                 $currentRow++;
 
@@ -156,7 +155,7 @@ class ReportExcelAccounting extends ReportExcel
         return [$currentRow, $purchaseTotal['amount'], $purchaseTotal['sum']];
     }
 
-    private function buildFooter($currentRow, $purchaseTotalAmount, $purchaseTotalSum)
+    protected function buildFooter($currentRow, $purchaseTotalAmount, $purchaseTotalSum)
     {
         $currentRow++;
 

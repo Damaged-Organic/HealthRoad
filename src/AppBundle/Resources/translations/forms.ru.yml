@@ -267,8 +267,8 @@ product:
         label: Категория
 
     code:
-        label:       Код товара
-        placeholder: Введите код товара
+        label:       Артикул товара
+        placeholder: Введите артикул товара
 
     price:
         label:       Цена

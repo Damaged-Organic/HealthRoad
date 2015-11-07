@@ -107,8 +107,6 @@ class SyncDataHandler implements
             }
         }
 
-        // INSERT
-
         // if purchase array empty will except
         $this->_manager->getRepository('AppBundle:Purchase\Purchase')->rawInsertPurchases($purchasesArray);
 
@@ -124,8 +122,6 @@ class SyncDataHandler implements
 
             $studentsArray[] = ['id' => $nfcTags->get($purchase['code'])->getStudent()->getId(), 'totalLimit' => $totalLimit];
         }
-
-        // UPDATE
 
         // if student array empty will except
         $this->_manager->getRepository('AppBundle:Student\Student')->rawUpdateStudentsTotalLimits($studentsArray);
@@ -152,8 +148,7 @@ class SyncDataHandler implements
             $eventsArray[] = $vendingMachineEvent;
         }
 
-        // INSERT
-
+        // if events empty will except
         $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachineEvent')->rawInsertVendingMachineEvents($eventsArray);
     }
 }

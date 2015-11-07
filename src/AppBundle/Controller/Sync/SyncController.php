@@ -16,10 +16,12 @@ use Symfony\Component\HttpFoundation\Request,
 use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Controller\Utility\Interfaces\Markers\SyncAuthenticationMarkerInterface,
+    AppBundle\Controller\Utility\Interfaces\Markers\SyncLoggingMarkerInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface;
 
 class SyncController extends Controller implements
     SyncAuthenticationMarkerInterface,
+    SyncLoggingMarkerInterface,
     SyncVendingMachineSyncPropertiesInterface
 {
     /** @DI\Inject("doctrine.orm.entity_manager") */

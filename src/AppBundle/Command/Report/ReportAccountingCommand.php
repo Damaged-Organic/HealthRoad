@@ -2,6 +2,8 @@
 // AppBundle/Command/Report/ReportAccountingCommand.php
 namespace AppBundle\Command\Report;
 
+use Exception;
+
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface;
@@ -16,7 +18,6 @@ class ReportAccountingCommand extends ContainerAwareCommand
         ;
     }
 
-    //TODO: Add logging in case of error
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $_container = $this->getContainer();
@@ -25,24 +26,29 @@ class ReportAccountingCommand extends ContainerAwareCommand
         $_reportExcelAccounting = $_container->get('app.report.excel.accounting');
         $_reportMailer          = $_container->get('app.report.mailer');
 
-        $accountingData = $_reportBuilder->prepareAccountingData(
-            $_reportBuilder->getAccountingData()
-        );
+        $accountingData = $_reportBuilder->getAccountingData();
 
-        if( !$accountingData )
-            return; //Except and log?
+        if( $accountingData )
+        {
+            $preparedAccountingData = $_reportBuilder->prepareAccountingData($accountingData);
 
-        $phpExcelObject = $_reportExcelAccounting->getAccountingReportObject($accountingData);
+            if( !$preparedAccountingData )
+                throw new Exception('CODE_1: Failed to prepare accounting data');
 
-        if( !$phpExcelObject )
-            return;
+            $phpExcelObject = $_reportExcelAccounting->getAccountingReportObject($preparedAccountingData);
 
-        $filePath = $_reportExcelAccounting->savePhpExcelObject($phpExcelObject);
+            if( !$phpExcelObject )
+                throw new Exception('CODE_2: Failed to build excel report with accounting data');
 
-        if( !$filePath )
-            return;
+            $filePath = $_reportExcelAccounting->savePhpExcelObject($phpExcelObject);
 
-        if( !$_reportMailer->sendReportAccounting($filePath) )
-            return;
+            if( !$filePath )
+                throw new Exception('CODE_3: Failed to save excel report with accounting data');
+        } else {
+            $filePath = NULL;
+        }
+
+        if (!$_reportMailer->sendReportAccounting($filePath))
+            throw new Exception('CODE_4: Failed to send accounting data report');
     }
 }

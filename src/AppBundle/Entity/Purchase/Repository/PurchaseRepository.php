@@ -7,16 +7,34 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
 
 class PurchaseRepository extends ExtendedEntityRepository
 {
-    public function findGroupedBySchoolByDate($yesterdayDate)
+    public function findByDateGrouped($date)
     {
         $query = $this->createQueryBuilder('p')
             ->select('p, pr, prc, SUM(pr.price) AS purchaseSum, COUNT(pr.id) AS purchaseAmount')
             ->leftJoin('p.product', 'pr')
             ->leftJoin('pr.productCategory', 'prc')
-            ->andWhere('p.syncPurchasedAt > :yesterdayDateStart')
-            ->andWhere('p.syncPurchasedAt < :yesterdayDateEnd')
-            ->setParameter('yesterdayDateStart', "{$yesterdayDate} 00:00:00")
-            ->setParameter('yesterdayDateEnd', "{$yesterdayDate} 23:59:59")
+            ->where('p.syncPurchasedAt > :dateStart')
+            ->andWhere('p.syncPurchasedAt < :dateEnd')
+            ->setParameters([
+                'dateStart' => "{$date} 00:00:00",
+                'dateEnd'   => "{$date} 23:59:59"
+            ])
+            ->groupBy('pr.id')
+            ->getQuery()
+        ;
+
+        return $query->getResult();
+    }
+
+    public function findByLoadDateGrouped()
+    {
+        $query = $this->createQueryBuilder('p')
+            ->select('p, pr, prc, vm, SUM(pr.price) AS purchaseSum, COUNT(pr.id) AS purchaseAmount')
+            ->leftJoin('p.product', 'pr')
+            ->leftJoin('pr.productCategory', 'prc')
+            ->leftJoin('p.vendingMachine', 'vm')
+            ->where('vm.vendingMachineLoadedAt IS NOT NULL')
+            ->andWhere('p.syncPurchasedAt >= vm.vendingMachineLoadedAt')
             ->groupBy('pr.id')
             ->getQuery()
         ;

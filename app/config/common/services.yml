@@ -10,6 +10,20 @@ services:
 
     # Event listeners
 
+    app.exception_listener.report:
+        class: AppBundle\EventListener\Exception\ReportListener
+        calls:
+            - [setLogger, [ "@monolog.logger.report" ]]
+        tags:
+            - { name: kernel.event_listener, event: console.exception, channel: report }
+
+    app.exception_listener.sync:
+        class: AppBundle\EventListener\Exception\SyncListener
+        calls:
+            - [setLogger, [ "@monolog.logger.sync" ]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, channel: sync }
+
     app.listener.sync.authentication:
         class: AppBundle\EventListener\Sync\SyncAuthenticationListener
         calls:
@@ -282,6 +296,12 @@ services:
 
     app.report.excel.accounting:
         class: AppBundle\Service\Report\ReportExcelAccounting
+        calls:
+            - [setRootDirectory, [ "%kernel.root_dir%" ]]
+            - [setPhpExcel, [ "@phpexcel" ]]
+
+    app.report.excel.accounting_logistics:
+        class: AppBundle\Service\Report\ReportExcelAccountingLogistics
         calls:
             - [setRootDirectory, [ "%kernel.root_dir%" ]]
             - [setPhpExcel, [ "@phpexcel" ]]

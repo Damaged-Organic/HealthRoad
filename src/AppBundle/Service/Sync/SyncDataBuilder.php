@@ -92,6 +92,4 @@ class SyncDataBuilder implements SyncDataInterface
 
         return $syncResponse;
     }
-
-
 }

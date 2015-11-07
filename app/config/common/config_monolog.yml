@@ -1,0 +1,22 @@
+# app/config/common/config_monolog.yml
+monolog:
+    channels: ["sync", "report"]
+
+    handlers:
+        main:
+            type:     stream
+            path:     %kernel.root_dir%/%kernel.environment%.log
+            level:    error
+            channels: [!sync, !report]
+
+        sync:
+            type:     stream
+            path:     %kernel.root_dir%/logs/%kernel.environment%.sync.log
+            level:    info
+            channels: [sync]
+
+        report:
+            type:     stream
+            path:     %kernel.root_dir%/logs/%kernel.environment%.report.log
+            level:    info
+            channels: [report]

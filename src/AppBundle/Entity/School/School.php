@@ -547,4 +547,21 @@ class School
     {
         return $this->students;
     }
+
+    /**
+     * Shortcut to get region if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getRegion()
+    {
+        return ( $this->getSettlement() )
+            ? $this->getSettlement()->getRegion()
+            : NULL;
+    }
+
+    public function getFullAddress()
+    {
+        return "{$this->address}, {$this->name}";
+    }
 }
