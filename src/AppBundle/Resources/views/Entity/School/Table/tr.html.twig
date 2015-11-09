@@ -2,7 +2,7 @@
 <td class="small-fixed"><span>{{ school.id }}</span></td>
 <td>
     <span>
-        {{ school.name }}
+        {{ school.name ~ ' ' ~ (( school.pseudoDeleted ) ? '[УДАЛЕНО]') }}
     </span>
 </td>
 <td>

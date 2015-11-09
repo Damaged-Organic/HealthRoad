@@ -9,31 +9,45 @@
 
 {% block action_items_tr %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), student) %}
+    {% if student.pseudoDeleted %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
-            <td class="double-small-fixed edit-holder double-btn">
-                <div class="btn-edit">
-                    <a href="{{ path('student_update', { 'id': student.id }) }}" class="icon hrd-edit"></a>
-                </div>
+            <td class="double-small-fixed edit-holder">
                 <div class="btn-bind binded">
                     <a href="{{ path('student_unbind', { 'targetId': student.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
-                </div>
-            </td>
-        {% else %}
-            <td class="double-small-fixed edit-holder">
-                <div class="btn-edit">
-                    <a href="{{ path('student_update', { 'id': student.id }) }}" class="icon hrd-edit"></a>
                 </div>
             </td>
         {% endif %}
 
     {% else %}
-        <td class="double-small-fixed view-holder">
-            <div class="btn-view">
-                <a href="{{ path('student_read', { 'id': student.id }) }}" class="icon hrd-view"></a>
-            </div>
-        </td>
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_UPDATE'), student) %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BIND'), student) %}
+                <td class="double-small-fixed edit-holder double-btn">
+                    <div class="btn-edit">
+                        <a href="{{ path('student_update', { 'id': student.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                    <div class="btn-bind binded">
+                        <a href="{{ path('student_unbind', { 'targetId': student.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('student_update', { 'id': student.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% else %}
+            <td class="double-small-fixed view-holder">
+                <div class="btn-view">
+                    <a href="{{ path('student_read', { 'id': student.id }) }}" class="icon hrd-view"></a>
+                </div>
+            </td>
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}

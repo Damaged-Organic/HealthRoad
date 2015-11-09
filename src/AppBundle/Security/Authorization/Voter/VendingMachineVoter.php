@@ -30,7 +30,7 @@ class VendingMachineVoter extends ExtendedAbstractVoter implements UserRoleListI
         return ['AppBundle\Entity\VendingMachine\VendingMachine'];
     }
 
-    protected function isGranted($attribute, $school, $user = NULL)
+    protected function isGranted($attribute, $vendingMachine, $user = NULL)
     {
         if (!$user instanceof UserInterface)
             return FALSE;
@@ -38,11 +38,11 @@ class VendingMachineVoter extends ExtendedAbstractVoter implements UserRoleListI
         switch($attribute)
         {
             case self::VENDING_MACHINE_READ:
-                return $this->read($user);
+                return $this->read($vendingMachine, $user);
             break;
 
             case self::VENDING_MACHINE_UPDATE:
-                return $this->update($user);
+                return $this->update($vendingMachine, $user);
             break;
 
             case self::VENDING_MACHINE_DELETE:
@@ -59,16 +59,26 @@ class VendingMachineVoter extends ExtendedAbstractVoter implements UserRoleListI
         }
     }
 
-    protected function read($user = NULL)
+    protected function read($vendingMachine, $user = NULL)
     {
+        if( $vendingMachine->getPseudoDeleted() )
+        {
+            return ( $this->hasRole($user, self::ROLE_ADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
         if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function update($user = NULL)
+    protected function update($vendingMachine, $user = NULL)
     {
+        if( $vendingMachine->getPseudoDeleted() )
+            return FALSE;
+
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 

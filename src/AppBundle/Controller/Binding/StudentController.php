@@ -17,8 +17,10 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\Customer\Customer,
     AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Entity\Product\Product,
+    AppBundle\Entity\School\School,
     AppBundle\Security\Authorization\Voter\StudentVoter,
     AppBundle\Security\Authorization\Voter\CustomerVoter,
+    AppBundle\Security\Authorization\Voter\SchoolVoter,
     AppBundle\Service\Security\StudentBoundlessAccess;
 
 class StudentController extends Controller implements UserRoleListInterface
@@ -58,6 +60,20 @@ class StudentController extends Controller implements UserRoleListInterface
                 $action = [
                     'path'  => 'student_choose',
                     'voter' => CustomerVoter::CUSTOMER_BIND
+                ];
+            break;
+
+            case $this->compareObjectClassNameToString(new School, $objectClass):
+                $object = $this->_manager->getRepository('AppBundle:School\School')->find($objectId);
+
+                if( !$object )
+                    throw $this->createNotFoundException("School identified by `id` {$objectId} not found");
+
+                $students = $object->getStudents();
+
+                $action = [
+                    'path'  => 'student_choose',
+                    'voter' => SchoolVoter::SCHOOL_BIND
                 ];
             break;
 
@@ -168,7 +184,24 @@ class StudentController extends Controller implements UserRoleListInterface
                 $this->_breadcrumbs->add('customer_read')->add('customer_update', ['id' => $objectId])->add('customer_update_bounded',
                     [
                         'objectId'    => $objectId,
-                        'objectClass' => 'region'
+                        'objectClass' => 'student'
+                    ],
+                    $this->_translator->trans('student_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new School, $objectClass):
+                $school = $object = $this->_manager->getRepository('AppBundle:School\School')->find($objectId);
+
+                if( !$school )
+                    throw $this->createNotFoundException("School identified by `id` {$objectId} not found");
+
+                $path = 'school_update_bounded';
+
+                $this->_breadcrumbs->add('school_read')->add('school_update', ['id' => $objectId])->add('school_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => 'student'
                     ],
                     $this->_translator->trans('student_read', [], 'routes')
                 );
@@ -226,6 +259,17 @@ class StudentController extends Controller implements UserRoleListInterface
                 $this->_manager->persist($customer);
             break;
 
+            case $this->compareObjectClassNameToString(new School, $objectClass):
+                $school = $this->_manager->getRepository('AppBundle:School\School')->find($objectId);
+
+                if( !$school )
+                    throw $this->createNotFoundException($this->_translator->trans('common.error.not_found', [], 'responses'));
+
+                $school->addStudent($student);
+
+                $this->_manager->persist($school);
+            break;
+
             default:
                 throw new NotAcceptableHttpException($this->_translator->trans('bind.error.not_boundalbe', [], 'responses'));
             break;
@@ -264,6 +308,10 @@ class StudentController extends Controller implements UserRoleListInterface
         {
             case $this->compareObjectClassNameToString(new Customer, $objectClass):
                 $student->setCustomer(NULL);
+            break;
+
+            case $this->compareObjectClassNameToString(new School, $objectClass):
+                $student->setSchool(NULL);
             break;
 
             default:

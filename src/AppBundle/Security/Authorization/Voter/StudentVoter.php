@@ -40,7 +40,7 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         switch($attribute)
         {
             case self::STUDENT_READ:
-                return $this->read($user);
+                return $this->read($student, $user);
             break;
 
             case self::STUDENT_UPDATE:
@@ -52,7 +52,7 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
             break;
 
             case self::STUDENT_BIND:
-                return $this->bind($student, $user);
+                return $this->bind($user);
             break;
 
             case self::STUDENT_BALANCE_REPLENISH:
@@ -65,8 +65,15 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         }
     }
 
-    protected function read($user = NULL)
+    protected function read($student, $user = NULL)
     {
+        if( $student->getPseudoDeleted() )
+        {
+            return ( $this->hasRole($user, self::ROLE_ADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
         if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
             return TRUE;
 
@@ -75,6 +82,9 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
 
     protected function update($student, $user = NULL)
     {
+        if( $student->getPseudoDeleted() )
+            return FALSE;
+
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
@@ -95,7 +105,8 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
-        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) )
+        {
             return ( $student->getEmployee()->getId() == $user->getId() )
                 ? TRUE
                 : FALSE;
@@ -104,12 +115,13 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         return FALSE;
     }
 
-    protected function bind($student, $user = NULL)
+    protected function bind($user = NULL)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
-        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) )
+        {
             return ( $student->getEmployee()->getId() == $user->getId() )
                 ? TRUE
                 : FALSE;
@@ -120,6 +132,9 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
 
     protected function balanceReplenish($student, $user = NULL)
     {
+        if( $student->getPseudoDeleted() )
+            return FALSE;
+
         if( $user->getRoles()[0]->getRole() === self::ROLE_ACCOUNTANT )
             return TRUE;
 

@@ -197,10 +197,20 @@ class NfcTagController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(NfcTagVoter::NFC_TAG_DELETE, $nfcTag) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $this->_manager->remove($nfcTag);
-        $this->_manager->flush();
+        if( !$nfcTag->getPseudoDeleted() )
+        {
+            $nfcTag->setPseudoDeleted(TRUE);
 
-        $this->_messages->markDeleteSuccess();
+            $this->_manager->flush();
+
+            $this->_messages->markDeleteSuccess();
+        } else {
+            $nfcTag->setPseudoDeleted(FALSE);
+
+            $this->_manager->flush();
+
+            $this->_messages->markUnDeleteSuccess();
+        }
 
         return $this->redirectToRoute('nfc_tag_read');
     }

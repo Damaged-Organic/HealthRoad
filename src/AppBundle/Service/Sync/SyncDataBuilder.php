@@ -39,7 +39,7 @@ class SyncDataBuilder implements SyncDataInterface
         return $syncResponse;
     }
 
-    public function buildProductData(PersistentCollection $products)
+    public function buildProductData($products)
     {
         $data = [];
 
@@ -59,7 +59,7 @@ class SyncDataBuilder implements SyncDataInterface
         return $syncResponse;
     }
 
-    public function buildNfcTagData(PersistentCollection $students)
+    public function buildNfcTagData($students)
     {
         $build = function($nfcTag)
         {

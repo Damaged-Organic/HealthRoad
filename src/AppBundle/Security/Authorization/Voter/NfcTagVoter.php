@@ -30,7 +30,7 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
         return ['AppBundle\Entity\NfcTag\NfcTag'];
     }
 
-    protected function isGranted($attribute, $product, $user = NULL)
+    protected function isGranted($attribute, $nfcTag, $user = NULL)
     {
         if (!$user instanceof UserInterface)
             return FALSE;
@@ -38,37 +38,47 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
         switch($attribute)
         {
             case self::NFC_TAG_READ:
-                return $this->read($user);
-                break;
+                return $this->read($nfcTag, $user);
+            break;
 
             case self::NFC_TAG_UPDATE:
-                return $this->update($user);
-                break;
+                return $this->update($nfcTag, $user);
+            break;
 
             case self::NFC_TAG_DELETE:
                 return $this->delete($user);
-                break;
+            break;
 
             case self::NFC_TAG_BIND:
                 return $this->bind($user);
-                break;
+            break;
 
             default:
                 return FALSE;
-                break;
+            break;
         }
     }
 
-    protected function read($user = NULL)
+    protected function read($nfcTag, $user = NULL)
     {
+        if( $nfcTag->getPseudoDeleted() )
+        {
+            return ( $this->hasRole($user, self::ROLE_ADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
         if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function update($user = NULL)
+    protected function update($nfcTag, $user = NULL)
     {
+        if( $nfcTag->getPseudoDeleted() )
+            return FALSE;
+
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 

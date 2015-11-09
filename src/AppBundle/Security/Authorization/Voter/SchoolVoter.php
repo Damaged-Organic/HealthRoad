@@ -38,11 +38,11 @@ class SchoolVoter extends ExtendedAbstractVoter implements UserRoleListInterface
         switch($attribute)
         {
             case self::SCHOOL_READ:
-                return $this->read($user);
+                return $this->read($school, $user);
             break;
 
             case self::SCHOOL_UPDATE:
-                return $this->update($user);
+                return $this->update($school, $user);
             break;
 
             case self::SCHOOL_DELETE:
@@ -59,16 +59,26 @@ class SchoolVoter extends ExtendedAbstractVoter implements UserRoleListInterface
         }
     }
 
-    protected function read($user = NULL)
+    protected function read($school, $user = NULL)
     {
+        if( $school->getPseudoDeleted() )
+        {
+            return ( $this->hasRole($user, self::ROLE_ADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
         if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function update($user = NULL)
+    protected function update($school, $user = NULL)
     {
+        if( $school->getPseudoDeleted() )
+            return FALSE;
+
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 

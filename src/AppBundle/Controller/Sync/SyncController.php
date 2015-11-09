@@ -89,8 +89,7 @@ class SyncController extends Controller implements
             'serial' => $serial
         ]);
 
-        if( !($products = $vendingMachine->getProducts()) )
-            throw new NotFoundHttpException('Vending Machine has no linked products');
+        $products = $vendingMachine->getProducts();
 
         $syncResponse = $this->_syncDataBuilder->buildProductData($products);
 
@@ -118,8 +117,7 @@ class SyncController extends Controller implements
             'serial' => $serial
         ]);
 
-        if( !($students = $vendingMachine->getStudents()) )
-            throw new NotFoundHttpException('Vending Machine has no linked NFC tags');
+        $students = $vendingMachine->getStudents();
 
         $syncResponse = $this->_syncDataBuilder->buildNfcTagData($students);
 

@@ -46,10 +46,17 @@ class ProductVendingGroup
     protected $name;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $pseudoDeleted;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
+        $this->pseudoDeleted = FALSE;
+
         $this->vendingMachines = new ArrayCollection;
         $this->products        = new ArrayCollection;
     }
@@ -75,6 +82,29 @@ class ProductVendingGroup
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set pseudoDeleted
+     *
+     * @param boolean $pseudoDeleted
+     * @return ProductVendingGroup
+     */
+    public function setPseudoDeleted($pseudoDeleted)
+    {
+        $this->pseudoDeleted = $pseudoDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get pseudoDeleted
+     *
+     * @return boolean
+     */
+    public function getPseudoDeleted()
+    {
+        return $this->pseudoDeleted;
     }
 
     /**

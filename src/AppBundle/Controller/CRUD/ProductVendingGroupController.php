@@ -197,10 +197,20 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
         if( !$this->isGranted(ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_DELETE, $productVendingGroup) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $this->_manager->remove($productVendingGroup);
-        $this->_manager->flush();
+        if( !$productVendingGroup->getPseudoDeleted() )
+        {
+            $productVendingGroup->setPseudoDeleted(TRUE);
 
-        $this->_messages->markDeleteSuccess();
+            $this->_manager->flush();
+
+            $this->_messages->markDeleteSuccess();
+        } else {
+            $productVendingGroup->setPseudoDeleted(FALSE);
+
+            $this->_manager->flush();
+
+            $this->_messages->markUnDeleteSuccess();
+        }
 
         return $this->redirectToRoute('product_vending_group_read');
     }

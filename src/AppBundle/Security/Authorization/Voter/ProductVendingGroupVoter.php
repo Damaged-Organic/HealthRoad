@@ -38,11 +38,11 @@ class ProductVendingGroupVoter extends ExtendedAbstractVoter implements UserRole
         switch($attribute)
         {
             case self::PRODUCT_VENDING_GROUP_READ:
-                return $this->read($user);
+                return $this->read($productVendingGroup, $user);
             break;
 
             case self::PRODUCT_VENDING_GROUP_UPDATE:
-                return $this->update($user);
+                return $this->update($productVendingGroup, $user);
             break;
 
             case self::PRODUCT_VENDING_GROUP_DELETE:
@@ -59,16 +59,26 @@ class ProductVendingGroupVoter extends ExtendedAbstractVoter implements UserRole
         }
     }
 
-    protected function read($user = NULL)
+    protected function read($productVendingGroup, $user = NULL)
     {
+        if( $productVendingGroup->getPseudoDeleted() )
+        {
+            return ( $this->hasRole($user, self::ROLE_ADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
         if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function update($user = NULL)
+    protected function update($productVendingGroup, $user = NULL)
     {
+        if( $productVendingGroup->getPseudoDeleted() )
+            return FALSE;
+
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 

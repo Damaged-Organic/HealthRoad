@@ -2,7 +2,7 @@
 <td class="small-fixed"><span>{{ vendingMachine.id }}</span></td>
 <td>
     <span>
-        {{ vendingMachine.serial }}
+        {{ vendingMachine.serial ~ ' ' ~ (( vendingMachine.pseudoDeleted ) ? '[УДАЛЕНО]') }}
     </span>
 </td>
 <td>

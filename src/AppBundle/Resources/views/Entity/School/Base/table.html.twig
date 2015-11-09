@@ -16,13 +16,17 @@
                     </tr>
 
                     {% for school in schools %}
-                        <tr>
 
-                            {% include 'AppBundle:Entity/School/Table:tr.html.twig' with { 'school': school } only %}
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_READ'), school) %}
+                            <tr>
 
-                            {% block action_items_tr %}{% endblock %}
+                                {% include 'AppBundle:Entity/School/Table:tr.html.twig' with { 'school': school } only %}
 
-                        </tr>
+                                {% block action_items_tr %}{% endblock %}
+
+                            </tr>
+                        {% endif %}
+
                     {% endfor %}
 
                 </table>

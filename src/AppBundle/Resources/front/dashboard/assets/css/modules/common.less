@@ -713,7 +713,8 @@ a{
 .btn-edit,
 .btn-delete,
 .btn-bind,
-.btn-view{
+.btn-view,
+.btn-update{
 	width: 60px;
 	height: 60px;
 	a{
@@ -777,6 +778,14 @@ a{
 			width: 100%;
 			height: auto;
 			font-size: .875em;
+		}
+	}
+}
+.btn-update{
+  	a{
+	  	&:hover {
+		  	background: @green;
+		  	color: @white;
 		}
 	}
 }

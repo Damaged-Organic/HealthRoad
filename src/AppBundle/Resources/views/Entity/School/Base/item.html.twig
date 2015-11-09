@@ -12,6 +12,11 @@
                     {{ 'vending_machine_read'|trans({}, 'routes') }}
                 </a>
             </li>
+            <li {% block active_school_update_bounded_student %}{% endblock %}>
+                <a href="{{ path('school_update_bounded', { 'objectId': school.id, 'objectClass': 'student' }) }}">
+                    {{ 'student_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

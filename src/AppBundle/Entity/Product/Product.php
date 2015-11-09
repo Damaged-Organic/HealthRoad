@@ -240,14 +240,22 @@ class Product implements SyncProductPropertiesInterface
     protected $updatedAt;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $pseudoDeleted;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->productImages        = new ArrayCollection;
-        $this->productVendingGroups = new ArrayCollection;
-        $this->students             = new ArrayCollection;
-        $this->purchases            = new ArrayCollection;
+        $this->pseudoDeleted = FALSE;
+
+        $this->productImages         = new ArrayCollection;
+        $this->uploadedProductImages = new ArrayCollection;
+        $this->productVendingGroups  = new ArrayCollection;
+        $this->students              = new ArrayCollection;
+        $this->purchases             = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -656,6 +664,29 @@ class Product implements SyncProductPropertiesInterface
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set pseudoDeleted
+     *
+     * @param boolean $pseudoDeleted
+     * @return Product
+     */
+    public function setPseudoDeleted($pseudoDeleted)
+    {
+        $this->pseudoDeleted = $pseudoDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get pseudoDeleted
+     *
+     * @return boolean
+     */
+    public function getPseudoDeleted()
+    {
+        return $this->pseudoDeleted;
     }
 
     /**

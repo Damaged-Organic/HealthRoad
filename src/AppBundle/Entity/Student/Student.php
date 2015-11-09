@@ -130,10 +130,17 @@ class Student
     protected $dailyLimit;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $pseudoDeleted;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
+        $this->pseudoDeleted = FALSE;
+
         $this->products = new ArrayCollection;
     }
 
@@ -296,6 +303,29 @@ class Student
     public function getDailyLimit()
     {
         return $this->dailyLimit;
+    }
+
+    /**
+     * Set pseudoDeleted
+     *
+     * @param boolean $pseudoDeleted
+     * @return Student
+     */
+    public function setPseudoDeleted($pseudoDeleted)
+    {
+        $this->pseudoDeleted = $pseudoDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get pseudoDeleted
+     *
+     * @return boolean
+     */
+    public function getPseudoDeleted()
+    {
+        return $this->pseudoDeleted;
     }
 
     /**

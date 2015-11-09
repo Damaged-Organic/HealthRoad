@@ -16,13 +16,17 @@
                     </tr>
 
                     {% for productVendingGroup in productVendingGroups %}
-                        <tr>
 
-                            {% include 'AppBundle:Entity/ProductVendingGroup/Table:tr.html.twig' with { 'productVendingGroup': productVendingGroup } only %}
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_READ'), productVendingGroup) %}
+                            <tr>
 
-                            {% block action_items_tr %}{% endblock %}
+                                {% include 'AppBundle:Entity/ProductVendingGroup/Table:tr.html.twig' with { 'productVendingGroup': productVendingGroup } only %}
 
-                        </tr>
+                                {% block action_items_tr %}{% endblock %}
+
+                            </tr>
+                        {% endif %}
+
                     {% endfor %}
 
                 </table>

@@ -53,6 +53,13 @@ class Messages implements MessagesInterface
         ]);
     }
 
+    public function markUnDeleteSuccess()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_SUCCESS => [$this->_translator->trans('common.success.un_delete', [], 'responses')]
+        ]);
+    }
+
     public function markBindSuccess($message)
     {
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [

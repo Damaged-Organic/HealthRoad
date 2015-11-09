@@ -2,6 +2,6 @@
 <td class="small-fixed"><span>{{ productVendingGroup.id }}</span></td>
 <td>
     <span>
-        {{ productVendingGroup.name }}
+        {{ productVendingGroup.name ~ ' ' ~ (( productVendingGroup.pseudoDeleted ) ? '[УДАЛЕНО]') }}
     </span>
 </td>

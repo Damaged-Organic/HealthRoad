@@ -9,31 +9,43 @@
 
 {% block action_items_tr %}
 
-    <td class="double-small-fixed edit-holder double-btn">
+    {% set isBinded = object.schools.contains(school) %}
 
-        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_UPDATE'), school) %}
-            <div class="btn-edit">
-                <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
-            </div>
-        {% else %}
-            <div class="btn-view">
-                <a href="{{ path('school_read', { 'id': school.id }) }}" class="icon hrd-view"></a>
-            </div>
-        {% endif %}
+    {% set path = ( isBinded ) ? 'school_unbind' : 'school_bind' %}
+
+    {% if school.pseudoDeleted %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
-
-            {% set isBinded = object.schools.contains(school) %}
-
-            <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
-
-                {% set path = ( isBinded ) ? 'school_unbind' : 'school_bind' %}
-
-                <a href="{{ path(path, { 'targetId': school.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
-            </div>
+            <td class="double-small-fixed edit-holder">
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': school.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            </td>
         {% endif %}
 
-    </td>
+    {% else %}
+
+        <td class="double-small-fixed edit-holder double-btn">
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_UPDATE'), school) %}
+                <div class="btn-edit">
+                    <a href="{{ path('school_update', { 'id': school.id }) }}" class="icon hrd-edit"></a>
+                </div>
+            {% else %}
+                <div class="btn-view">
+                    <a href="{{ path('school_read', { 'id': school.id }) }}" class="icon hrd-view"></a>
+                </div>
+            {% endif %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_BIND'), school) %}
+                <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
+                    <a href="{{ path(path, { 'targetId': school.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                </div>
+            {% endif %}
+
+        </td>
+
+    {% endif %}
 
 {% endblock %}
 

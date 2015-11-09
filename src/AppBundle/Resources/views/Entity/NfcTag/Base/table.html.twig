@@ -2,7 +2,6 @@
 {% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/NfcTag/Base:list.html.twig' %}
 
 {% block variable %}
-
     <div class="outer scrollable-holder">
         <div class="inner scrollable">
 
@@ -17,13 +16,17 @@
                     </tr>
 
                     {% for nfcTag in nfcTags %}
-                        <tr>
 
-                            {% include 'AppBundle:Entity/NfcTag/Table:tr.html.twig' with { 'nfcTag': nfcTag } only %}
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_READ'), nfcTag) %}
+                            <tr>
 
-                            {% block action_items_tr %}{% endblock %}
+                                {% include 'AppBundle:Entity/NfcTag/Table:tr.html.twig' with { 'nfcTag': nfcTag } only %}
 
-                        </tr>
+                                {% block action_items_tr %}{% endblock %}
+
+                            </tr>
+                        {% endif %}
+
                     {% endfor %}
 
                 </table>

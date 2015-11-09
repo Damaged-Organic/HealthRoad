@@ -2,7 +2,7 @@
 <td class="small-fixed"><span>{{ nfcTag.id }}</span></td>
 <td>
     <span>
-        {{ nfcTag.number }}
+        {{ nfcTag.number ~ ' ' ~ (( nfcTag.pseudoDeleted ) ? '[УДАЛЕНО]') }}
     </span>
 </td>
 <td>

@@ -214,10 +214,20 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
         if( !$this->isGranted(VendingMachineVoter::VENDING_MACHINE_DELETE, $vendingMachine) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $this->_manager->remove($vendingMachine);
-        $this->_manager->flush();
+        if( !$vendingMachine->getPseudoDeleted() )
+        {
+            $vendingMachine->setPseudoDeleted(TRUE);
 
-        $this->_messages->markDeleteSuccess();
+            $this->_manager->flush();
+
+            $this->_messages->markDeleteSuccess();
+        } else {
+            $vendingMachine->setPseudoDeleted(FALSE);
+
+            $this->_manager->flush();
+
+            $this->_messages->markUnDeleteSuccess();
+        }
 
         return $this->redirectToRoute('vending_machine_read');
     }

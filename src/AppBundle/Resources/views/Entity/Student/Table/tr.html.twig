@@ -2,7 +2,7 @@
 <td class="small-fixed"><span>{{ student.id }}</span></td>
 <td>
     <span>
-        {{ student.fullName }}
+        {{ student.fullName ~ ' ' ~ (( student.pseudoDeleted ) ? '[УДАЛЕНО]') }}
     </span>
 </td>
 <td>

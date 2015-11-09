@@ -23,7 +23,7 @@
     </div>
 </td>
 <td>
-    <a href="{{ path(path, { 'id': product.id }) }}">{{ product.nameShort }}</a>
+    <a href="{{ path(path, { 'id': product.id }) }}">{{ product.nameShort ~ ' ' ~ (( product.pseudoDeleted ) ? '[УДАЛЕНО]') }}</a>
 </td>
 <td>
     <span>

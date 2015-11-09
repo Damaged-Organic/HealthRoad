@@ -9,31 +9,45 @@
 
 {% block action_items_tr %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_UPDATE'), nfcTag) %}
+    {% if nfcTag.pseudoDeleted %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_DELETE'), nfcTag) %}
-            <td class="double-small-fixed edit-holder double-btn">
-                <div class="btn-edit">
-                    <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}" class="icon hrd-edit"></a>
-                </div>
-                <div class="btn-delete">
-                    <a href="{{ path('nfc_tag_delete', { 'id': nfcTag.id }) }}" class="icon hrd-delete"></a>
-                </div>
-            </td>
-        {% else %}
             <td class="double-small-fixed edit-holder">
-                <div class="btn-edit">
-                    <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}" class="icon hrd-edit"></a>
+                <div class="btn-update">
+                    <a href="{{ path('nfc_tag_delete', { 'id': nfcTag.id }) }}" class="icon hrd-update"></a>
                 </div>
             </td>
         {% endif %}
 
     {% else %}
-        <td class="double-small-fixed view-holder">
-            <div class="btn-view">
-                <a href="{{ path('nfc_tag_read', { 'id': nfcTag.id }) }}" class="icon hrd-view"></a>
-            </div>
-        </td>
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_UPDATE'), nfcTag) %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_DELETE'), nfcTag) %}
+                <td class="double-small-fixed edit-holder double-btn">
+                    <div class="btn-edit">
+                        <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                    <div class="btn-delete">
+                        <a href="{{ path('nfc_tag_delete', { 'id': nfcTag.id }) }}" class="icon hrd-delete"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('nfc_tag_update', { 'id': nfcTag.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% else %}
+            <td class="double-small-fixed view-holder">
+                <div class="btn-view">
+                    <a href="{{ path('nfc_tag_read', { 'id': nfcTag.id }) }}" class="icon hrd-view"></a>
+                </div>
+            </td>
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}

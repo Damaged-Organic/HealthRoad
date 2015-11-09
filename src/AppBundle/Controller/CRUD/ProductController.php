@@ -246,10 +246,20 @@ class ProductController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(ProductVoter::PRODUCT_DELETE, $product) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $this->_manager->remove($product);
-        $this->_manager->flush();
+        if( !$product->getPseudoDeleted() )
+        {
+            $product->setPseudoDeleted(TRUE);
 
-        $this->_messages->markDeleteSuccess();
+            $this->_manager->flush();
+
+            $this->_messages->markDeleteSuccess();
+        } else {
+            $product->setPseudoDeleted(FALSE);
+
+            $this->_manager->flush();
+
+            $this->_messages->markUnDeleteSuccess();
+        }
 
         return $this->redirectToRoute('product_read');
     }

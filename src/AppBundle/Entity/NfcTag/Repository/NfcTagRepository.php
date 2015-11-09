@@ -20,4 +20,16 @@ class NfcTagRepository extends ExtendedEntityRepository
 
         return $query->getResult();
     }
+
+    public function findAllIndexedByCode()
+    {
+        $query = $this->_em->createQueryBuilder()
+            ->select('nt')
+            ->from('AppBundle:NfcTag\NfcTag', 'nt', 'nt.code')
+            ->leftJoin('nt.student', 'st')
+            ->getQuery()
+        ;
+
+        return $query->getResult();
+    }
 }

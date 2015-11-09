@@ -9,15 +9,13 @@
 
 {% block action_items_tr %}
 
+    {% set isBinded = object.products.contains(product) %}
+
+    {% set path = ( isBinded ) ? 'product_unbind' : 'product_bind' %}
+
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_BIND'), product) %}
         <td class="small-fixed bind-holder">
-
-            {% set isBinded = object.products.contains(product) %}
-
             <div class="btn-bind {{ ( isBinded ) ? 'binded' : null }}">
-
-                {% set path = ( isBinded ) ? 'product_unbind' : 'product_bind' %}
-
                 <a href="{{ path(path, { 'targetId': product.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
             </div>
         </td>

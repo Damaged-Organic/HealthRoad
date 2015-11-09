@@ -9,31 +9,45 @@
 
 {% block action_items_tr %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), productVendingGroup) %}
+    {% if productVendingGroup.pseudoDeleted %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_DELETE'), productVendingGroup) %}
-            <td class="double-small-fixed edit-holder double-btn">
-                <div class="btn-edit">
-                    <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}" class="icon hrd-edit"></a>
-                </div>
-                <div class="btn-delete">
-                    <a href="{{ path('product_vending_group_delete', { 'id': productVendingGroup.id }) }}" class="icon hrd-delete"></a>
-                </div>
-            </td>
-        {% else %}
             <td class="double-small-fixed edit-holder">
-                <div class="btn-view">
-                    <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}" class="icon hrd-edit"></a>
+                <div class="btn-update">
+                    <a href="{{ path('product_vending_group_delete', { 'id': productVendingGroup.id }) }}" class="icon hrd-update"></a>
                 </div>
             </td>
         {% endif %}
 
     {% else %}
-        <td class="double-small-fixed view-holder">
-            <div class="btn-view">
-                <a href="{{ path('product_vending_group_read', { 'id': productVendingGroup.id }) }}" class="icon hrd-view"></a>
-            </div>
-        </td>
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_UPDATE'), productVendingGroup) %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_DELETE'), productVendingGroup) %}
+                <td class="double-small-fixed edit-holder double-btn">
+                    <div class="btn-edit">
+                        <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                    <div class="btn-delete">
+                        <a href="{{ path('product_vending_group_delete', { 'id': productVendingGroup.id }) }}" class="icon hrd-delete"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-view">
+                        <a href="{{ path('product_vending_group_update', { 'id': productVendingGroup.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% else %}
+            <td class="double-small-fixed view-holder">
+                <div class="btn-view">
+                    <a href="{{ path('product_vending_group_read', { 'id': productVendingGroup.id }) }}" class="icon hrd-view"></a>
+                </div>
+            </td>
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}

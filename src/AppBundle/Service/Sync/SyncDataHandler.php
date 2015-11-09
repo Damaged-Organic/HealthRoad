@@ -68,17 +68,21 @@ class SyncDataHandler implements
 
     public function handlePurchaseData(VendingMachine $vendingMachine, $data)
     {
-        //if products null?
-        $products = $vendingMachine->getProducts();
+        // TODO: This fallback will cause problems, if prices in ProductVendingGroup are different from default
+        if( !($products = $vendingMachine->getProducts()) ) {
+            // Fallback to all available products, could signal problem
+            $products = new ArrayCollection($this->_manager->getRepository('AppBundle:Product\Product')->findAll());
+        }
 
-        //if nfc tags null?
-        $nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAvailableByVendingMachine($vendingMachine));
+        if( !($nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAvailableByVendingMachine($vendingMachine))) ) {
+            // Fallback to all available NFC-tags, could signal problem
+            $nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAllIndexedByCode());
+        }
 
         $purchasesArray = [];
 
         foreach( $data[self::SYNC_DATA][Purchase::getSyncArrayName()] as $value )
         {
-            // TODO: why the fuck you're checking it after validator?
             if( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]) && $products->get($value[Purchase::PURCHASE_PRODUCT_ID]))
             {
                 $purchase = (new Purchase)
@@ -107,24 +111,30 @@ class SyncDataHandler implements
             }
         }
 
-        // if purchase array empty will except
-        $this->_manager->getRepository('AppBundle:Purchase\Purchase')->rawInsertPurchases($purchasesArray);
-
-        $purchasesAggregated = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findSumsByStudentsWithSyncId(
-            $data[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()][0][self::VENDING_MACHINE_SYNC_ID]
-        );
-
-        foreach($purchasesAggregated as $purchase)
+        // When purchases empty?
+        if( $purchasesArray )
         {
-            $totalLimit = $nfcTags->get($purchase['code'])->getStudent()->getTotalLimit();
+            $this->_manager->getRepository('AppBundle:Purchase\Purchase')->rawInsertPurchases($purchasesArray);
 
-            $totalLimit = $totalLimit - $purchase['price_sum'];
+            $purchasesAggregated = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findSumsByStudentsWithSyncId(
+                $data[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()][0][self::VENDING_MACHINE_SYNC_ID]
+            );
 
-            $studentsArray[] = ['id' => $nfcTags->get($purchase['code'])->getStudent()->getId(), 'totalLimit' => $totalLimit];
+            $studentsArray = [];
+
+            foreach ($purchasesAggregated as $purchase) {
+                $totalLimit = $nfcTags->get($purchase['code'])->getStudent()->getTotalLimit();
+
+                $totalLimit = $totalLimit - $purchase['price_sum'];
+
+                $studentsArray[] = ['id' => $nfcTags->get($purchase['code'])->getStudent()->getId(), 'totalLimit' => $totalLimit];
+            }
+
+            // When students empty?
+            if( $studentsArray ) {
+                $this->_manager->getRepository('AppBundle:Student\Student')->rawUpdateStudentsTotalLimits($studentsArray);
+            }
         }
-
-        // if student array empty will except
-        $this->_manager->getRepository('AppBundle:Student\Student')->rawUpdateStudentsTotalLimits($studentsArray);
     }
 
     public function handleVendingMachineEventData(VendingMachine $vendingMachine, $data)

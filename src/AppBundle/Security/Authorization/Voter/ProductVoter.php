@@ -38,11 +38,11 @@ class ProductVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         switch($attribute)
         {
             case self::PRODUCT_READ:
-                return $this->read($user);
+                return $this->read($product, $user);
             break;
 
             case self::PRODUCT_UPDATE:
-                return $this->update($user);
+                return $this->update($product, $user);
             break;
 
             case self::PRODUCT_DELETE:
@@ -59,16 +59,26 @@ class ProductVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         }
     }
 
-    protected function read($user = NULL)
+    protected function read($product, $user = NULL)
     {
+        if( $product->getPseudoDeleted() )
+        {
+            return ( $this->hasRole($user, self::ROLE_ADMIN) )
+                ? TRUE
+                : FALSE;
+        }
+
         if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
             return TRUE;
 
         return FALSE;
     }
 
-    protected function update($user = NULL)
+    protected function update($product, $user = NULL)
     {
+        if( $product->getPseudoDeleted() )
+            return FALSE;
+
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 

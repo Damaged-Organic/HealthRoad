@@ -157,10 +157,17 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     protected $vendingMachineLoadedAt;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $pseudoDeleted;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
+        $this->pseudoDeleted = FALSE;
+
         $this->nfcTags              = new ArrayCollection;
         $this->purchases            = new ArrayCollection;
         $this->vendingMachineSyncs  = new ArrayCollection;
@@ -352,6 +359,29 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     public function getVendingMachineLoadedAt()
     {
         return $this->vendingMachineLoadedAt;
+    }
+
+    /**
+     * Set pseudoDeleted
+     *
+     * @param boolean $pseudoDeleted
+     * @return VendingMachine
+     */
+    public function setPseudoDeleted($pseudoDeleted)
+    {
+        $this->pseudoDeleted = $pseudoDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get pseudoDeleted
+     *
+     * @return boolean
+     */
+    public function getPseudoDeleted()
+    {
+        return $this->pseudoDeleted;
     }
 
     /**
@@ -601,7 +631,7 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     {
         return ( $this->getProductVendingGroup() )
             ? $this->getProductVendingGroup()->getProducts()
-            : NULL;
+            : [];
     }
 
     /**
@@ -613,6 +643,6 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     {
         return ( $this->getSchool() )
             ? $this->getSchool()->getStudents()
-            : NULL;
+            : [];
     }
 }

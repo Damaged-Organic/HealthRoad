@@ -206,10 +206,20 @@ class StudentController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(StudentVoter::STUDENT_DELETE, $student) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $this->_manager->remove($student);
-        $this->_manager->flush();
+        if( !$student->getPseudoDeleted() )
+        {
+            $student->setPseudoDeleted(TRUE);
 
-        $this->_messages->markDeleteSuccess();
+            $this->_manager->flush();
+
+            $this->_messages->markDeleteSuccess();
+        } else {
+            $student->setPseudoDeleted(FALSE);
+
+            $this->_manager->flush();
+
+            $this->_messages->markUnDeleteSuccess();
+        }
 
         return $this->redirectToRoute('student_read');
     }

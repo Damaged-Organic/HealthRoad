@@ -7,6 +7,12 @@
     {% endif %}
 {% endblock %}
 
+{% block active_school_update_bounded_student %}
+    {% if objectClass is same as('student') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
 {% block variable %}
 
     {{ bounded|raw }}

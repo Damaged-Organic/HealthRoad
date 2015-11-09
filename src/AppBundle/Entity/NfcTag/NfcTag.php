@@ -65,10 +65,17 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     protected $code;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $pseudoDeleted;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
+        $this->pseudoDeleted = FALSE;
+
         $this->purchases = new ArrayCollection;
     }
 
@@ -118,6 +125,29 @@ class NfcTag implements SyncNfcTagPropertiesInterface
         return $this->code;
     }
 
+    /**
+     * Set pseudoDeleted
+     *
+     * @param boolean $pseudoDeleted
+     * @return NfcTag
+     */
+    public function setPseudoDeleted($pseudoDeleted)
+    {
+        $this->pseudoDeleted = $pseudoDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get pseudoDeleted
+     *
+     * @return boolean
+     */
+    public function getPseudoDeleted()
+    {
+        return $this->pseudoDeleted;
+    }
+
     #/**
     # * Set vendingMachine
     # *
@@ -155,6 +185,16 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     }
 
     /**
+     * Get student
+     *
+     * @return \AppBundle\Entity\Student\Student
+     */
+    public function getStudent()
+    {
+        return $this->student;
+    }
+
+    /**
      * Add purchase
      *
      * @param \AppBundle\Entity\Purchase\Purchase $purchase
@@ -186,16 +226,6 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     public function getPurchases()
     {
         return $this->purchases;
-    }
-
-    /**
-     * Get student
-     *
-     * @return \AppBundle\Entity\Student\Student
-     */
-    public function getStudent()
-    {
-        return $this->student;
     }
 
     static public function getSyncArrayName()

@@ -16,6 +16,7 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\Settlement\Settlement,
+    AppBundle\Entity\Student\Student,
     AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Security\Authorization\Voter\EmployeeVoter,
     AppBundle\Security\Authorization\Voter\SchoolVoter,
@@ -125,6 +126,21 @@ class SchoolController extends Controller implements UserRoleListInterface
                         'objectClass' => $objectClass
                     ],
                     $this->_translator->trans('vending_machine_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Student:show', [
+                    'objectClass' => $this->getObjectClassName($school),
+                    'objectId'    => $objectId
+                ]);
+
+                $this->_breadcrumbs->add('school_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $this->_translator->trans('student_read', [], 'routes')
                 );
             break;
 

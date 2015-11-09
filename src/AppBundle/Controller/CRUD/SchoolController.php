@@ -197,10 +197,20 @@ class SchoolController extends Controller implements UserRoleListInterface
         if( !$this->isGranted(SchoolVoter::SCHOOL_DELETE, $school) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $this->_manager->remove($school);
-        $this->_manager->flush();
+        if( !$school->getPseudoDeleted() )
+        {
+            $school->setPseudoDeleted(TRUE);
 
-        $this->_messages->markDeleteSuccess();
+            $this->_manager->flush();
+
+            $this->_messages->markDeleteSuccess();
+        } else {
+            $school->setPseudoDeleted(FALSE);
+
+            $this->_manager->flush();
+
+            $this->_messages->markUnDeleteSuccess();
+        }
 
         return $this->redirectToRoute('school_read');
     }

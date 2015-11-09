@@ -9,31 +9,45 @@
 
 {% block action_items_tr %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_UPDATE'), vendingMachine) %}
+    {% if vendingMachine.pseudoDeleted %}
 
         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_BIND'), vendingMachine) %}
-            <td class="double-small-fixed edit-holder double-btn">
-                <div class="btn-edit">
-                    <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}" class="icon hrd-edit"></a>
-                </div>
+            <td class="double-small-fixed edit-holder">
                 <div class="btn-bind binded">
                     <a href="{{ path('vending_machine_unbind', { 'targetId': vendingMachine.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
-                </div>
-            </td>
-        {% else %}
-            <td class="double-small-fixed edit-holder">
-                <div class="btn-edit">
-                    <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}" class="icon hrd-edit"></a>
                 </div>
             </td>
         {% endif %}
 
     {% else %}
-        <td class="double-small-fixed view-holder">
-            <div class="btn-view">
-                <a href="{{ path('vending_machine_read', { 'id': vendingMachine.id }) }}" class="icon hrd-view"></a>
-            </div>
-        </td>
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_UPDATE'), vendingMachine) %}
+
+            {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_BIND'), vendingMachine) %}
+                <td class="double-small-fixed edit-holder double-btn">
+                    <div class="btn-edit">
+                        <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                    <div class="btn-bind binded">
+                        <a href="{{ path('vending_machine_unbind', { 'targetId': vendingMachine.id, 'objectClass': class(object)|lower, 'objectId': object.id }) }}" class="icon hrd-bind"></a>
+                    </div>
+                </td>
+            {% else %}
+                <td class="double-small-fixed edit-holder">
+                    <div class="btn-edit">
+                        <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}" class="icon hrd-edit"></a>
+                    </div>
+                </td>
+            {% endif %}
+
+        {% else %}
+            <td class="double-small-fixed view-holder">
+                <div class="btn-view">
+                    <a href="{{ path('vending_machine_read', { 'id': vendingMachine.id }) }}" class="icon hrd-view"></a>
+                </div>
+            </td>
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}
