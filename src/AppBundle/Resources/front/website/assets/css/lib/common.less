@@ -1,0 +1,802 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500|Kurale&subset=latin,cyrillic);
+@import "reset.less";
+@import "settings.less";
+@import "icons.less";
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	Fonts start								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+h1, h2, h3, h5, h5, h6, p, span, time, a, small{
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: 400;
+	color: @black;
+	outline: none;
+	text-align: center;
+}
+h1, h2, h3{ font-weight: 500; }
+h1{ font-size: 2.25em; }
+h2{ font-size: 1.5em; }
+h3{ font-size: 1.125em; }
+p, a, time{ font-size: 1em; }
+a{ text-decoration: none; }
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	Fonts end								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	layout start							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#page,
+#content,
+.outer,
+.inner,
+.grid,
+.row,
+.col{
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+}
+#page{ min-height: 100%; }
+#content.sticky{ padding-bottom: 120px; }
+#content > .outer.inside{
+	width: 100%;
+	max-width: 1200px;
+	margin: 80px auto;
+	overflow: hidden;
+	&.private{
+		margin: 0 auto;
+	}
+}
+.inner,
+.grid{
+	max-width: 1200px;
+	margin: 0 auto;
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	layout end								 	 			*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	header start							  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#header{
+	background: @white;
+	& > .inner{
+		padding-top: 40px;
+		position: relative;
+		overflow: visible;
+		.logo{
+			width: 220px;
+			height: 210px;
+			position: absolute;
+			top: 20px;
+			left: 0;
+			z-index: 10;
+			background: @white;
+			border: 2px solid @green;
+			box-sizing: border-box;
+			overflow: hidden;
+			img{
+				width: 180px;
+				height: auto;
+				margin: 38px auto 0;
+			}
+		}
+	}
+	.info-holder{
+		width: 100%;
+		height: 60px;
+		margin: 0 auto 30px;
+		padding-left: 240px;
+		box-sizing: border-box;
+		position: relative;
+		overflow: visible;
+		ul{
+			float: right;
+			text-align: right;
+			margin-left: 20px;
+			& > li{
+				line-height: 20px;
+				h3{
+					font-size: 1.125em;
+					text-transform: uppercase;
+				}
+				a{
+					font-weight: 400;
+					transition: all .5s @easing;
+					&:hover{
+						color: @green;
+					}
+				}
+			}
+			&.langs-holder{
+				display: none;
+				width: 40px;
+				float: left;
+				margin: 0;
+				& > li{
+					display: block;
+					width: 40px;
+					height: 20px;
+					a{
+						display: block;
+						width: 100%;
+						height: 100%;
+						position: relative;
+						line-height: 20px;
+						font-weight: 500;
+						text-align: center;
+						text-transform: uppercase;
+						color: @black;
+						&:before{
+							display: block;
+							width: 2px;
+							height: 100%;
+							position: absolute;
+							top: 0;
+							left: 0;
+							content: "";
+							background: @black;
+							transition: all .5s @easing;
+							overflow: hidden;
+						}
+					}
+					&:hover,
+					&.active{
+						a{
+							color: @green;
+							&:before{
+								background: @green;
+							}
+						}
+					}
+				}
+			}
+			&.call-center-holder{
+				& > li a{
+					font-size: 1em;
+					color: @green;
+				}
+			}
+			&.phones-holder{
+				a{
+					span{
+						display: inline-block;
+						vertical-align: top;
+						width: auto;
+						height: auto;
+						font-size: 1.125em;
+						line-height: 20px;
+						margin-right: 10px;
+						color: #ff0000;
+						&:before{
+							display: inherit;
+							vertical-align: inherit;
+							padding-top: 3px;
+						}
+					}
+				}
+				& > li:nth-child(2) a{
+					span{ color: #109dff; }
+				}
+			}
+			&.office-widget{
+				margin: 0 10px 0 10px;
+				& > li{
+					span{
+						font-size: 1em;
+					}
+					a{
+						font-size: .875em;
+						color: @green;
+					}
+					&:first-child span{ font-size: .875em; }
+				}
+			}
+		}
+		.sprtr-v{
+			margin: 0 10px 0;
+			float: right;
+		}
+		.btn-large{
+			display: block;
+			float: right;
+		}
+		.btn-large.square{
+			float: right;
+			a{
+				background: transparent;
+				border: none;
+				line-height: 20px;
+				font-size: .875em;
+				font-weight: normal;
+				color: @green;
+				text-transform: none;
+				border: 2px solid @green;
+				box-sizing: border-box;
+				&:before{
+					display: block;
+					font-size: 1.25em;
+					margin: 11px 0 3px;
+				}
+				&:hover{
+					color: @white;
+					background: @green;
+				}
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	header end								 			 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	menu start								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#toggle-menu{
+	display: none;
+	width: 100%;
+	height: 40px;
+	position: relative;
+	background: @green;
+	overflow: hidden;
+	& > span{
+		display: block;
+		width: 100%;
+		height: 40px;
+		line-height: 40px;
+		font-size: 1em;
+		font-weight: 500;
+		text-transform: uppercase;
+		cursor: pointer;
+		color: @white;
+		overflow: hidden;
+	}
+}
+#menu-holder{
+	width: 100%;
+	height: 60px;
+	background: @green;
+	overflow: hidden;
+	.menu{
+		width: 100%;
+		padding-left: 240px;
+		box-sizing: border-box;
+		overflow: hidden;
+		ul{
+			display: block;
+			width: 100%;
+		}
+		li{
+			display: block;
+			width: 16.66666666666667%;
+			float: left;
+			height: 60px;
+			position: relative;
+			text-align: center;
+			overflow: hidden;
+			a{
+				display: inline-block;
+				height: 60px;
+				line-height: 60px;
+				position: relative;
+				text-transform: uppercase;
+				font-weight: 500;
+				color: @white;
+				transition: all .5s @easing;
+				&:before{
+					display: block;
+					width: 100%;
+					height: 4px;
+					position: absolute;
+					left: 0;
+					bottom: 0;
+					content: "";
+					background: @white;
+					transition: all .5s @easing;
+					transform: translateY(100%);
+					backface-visibility: hidden;
+					overflow: hidden;
+				}
+			}
+			&:hover,
+			&.active{
+				a:before{
+					transform: translateY(0%);
+				}	
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	menu end								 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	navigation start						  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#navigation-holder{
+	width: 240px;
+	height: auto;
+	float: left;
+	border-right: 2px solid @grey;
+	box-sizing: border-box;
+	overflow: hidden;
+	ul, li{
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	ul{
+		margin: 20px 0;
+	}
+	li{
+		a{
+			display: block;
+			width: 100%;
+			padding: 6px 20px 6px 0;
+			text-align: left;
+			transition: all .5s @easing;
+			box-sizing: border-box;
+			&:first-letter{
+				text-transform: uppercase;
+			}
+		}
+		&:hover,
+		&.active{
+			a{
+				color: @green;
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	navigation end							  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	info holder start						  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#content-info-holder{
+	width: ~"calc(100% - 280px)";
+	height: auto;
+	float: left;
+	margin-left: 40px;
+	overflow: hidden;
+	h1, h2, h3{
+		margin-top: 20px;
+		&:first-child{
+			margin-top: 0;
+		}
+	}
+	h1, h2, h3, p, span{
+		text-align: left;
+		font-weight: normal;
+	}
+	*[class^="sprtr"]{
+		margin: 40px 0 20px;
+	}
+	p{ padding-bottom: 20px; }
+	.icons-hor{
+		margin: 20px auto;
+		ul{ text-align: center; }
+		li{
+			display: inline-block;
+			vertical-align: top;
+			white-space: -1;
+			margin-left: -4px;
+			padding: 0 20px;
+			box-sizing: border-box;
+			&:first-child{
+				margin-left: 0;
+			}
+			& > .icon{
+				font-size: 2.25em;
+				color: @green;
+			}
+		}
+	}
+	.list-holder{
+		ul, li{
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+		li{
+			position: relative;
+			margin-bottom: 20px;
+			&:before{
+				display: block;
+				width: 8px;
+				height: 8px;
+				position: absolute;
+				top: 50%;
+				left: 10px;
+				margin-top: -4px;
+				content: "";
+				background: @green;
+				overflow: hidden;
+			}
+			p{
+				padding: 0 20px 0 38px;
+			}
+			.description{
+				display: block;
+				padding: 20px 20px 0 38px;
+			}
+		}
+		&.black{
+			li:before{
+				width: 6px;
+				height: 6px;
+				margin-top: -3px;
+				background: @black;
+			}
+		}
+	}
+	.attention{
+		color: @green;
+		font-weight: 500;
+	}
+	p > strong{
+		font-weight: 500;
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	info holder end							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	footer start							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.pre-footer{
+	display: block;
+	background: @grey;
+	overflow: hidden;
+	.part{
+		width: 25%;
+		float: left;
+		margin: 60px 0;
+		overflow: hidden;
+		h3{
+			text-transform: uppercase;
+		}
+		.sprtr-h{
+			margin: 20px auto;
+		}
+	}
+	.part.contacts{
+		ul{
+			display: block;
+			width: 100%;
+			overflow: hidden;
+		}
+		li{
+			display: block;
+			width: 100%;
+			margin-top: 10px;
+			overflow: hidden;
+		}
+		.item{
+			display: inline-block;
+			font-size: .875em;
+			padding: 5px 20px 0 0;
+			text-align: left;
+		}
+		*[class^="hr"]{
+			display: inline-block;
+			margin-right: 5px;
+			color: @black;
+			font-size: 1.25em;
+		}
+	}
+	.part.navigation{
+		width: 50%;
+		ul,
+		.list-holder{
+			width: 100%;
+			overflow: hidden;
+		}
+		li{
+			display: block;
+			width: 50%;
+			float: left;
+			padding-left: 20px;
+			box-sizing: border-box;
+			overflow: hidden;
+			& > a{
+				line-height: 20px;
+				color: @black;
+				transition: all .5s @easing;
+			}
+			&:hover a{
+				color: @green;
+			}
+		}
+	}
+	.part.entrance{
+		input[type="tel"].error,
+		input[type="password"].error{
+			border: 2px solid @yellowDark;
+			& + label{
+				background: @yellowDark;
+			}
+		}
+	}
+}
+#footer{
+	width: 100%;
+	height: 120px;
+	position: relative;
+	background: @green;
+	overflow: hidden;
+	&.sticky{ margin-top: -120px; }
+	.logo{
+		display: block;
+		width: 300px;
+		float: left;
+	}
+	.social-holder{
+		width: 160px;
+		position: absolute;
+		top: 5px;
+		left: 50%;
+		margin-left: -80px;
+		li{
+			display: block;
+			float: left;
+			a{
+				color: @white;
+				font-size: 1.125em;
+				transition: all .5s @easing;
+				&:hover{
+					color: @black;
+				}
+			}
+		}
+	}
+	.copyright{
+		display: block;
+		width: 100%;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		font-size: .875em;
+		color: @white;
+		padding-bottom: 10px;
+		overflow: hidden;
+	}
+	.developers{
+		width: 300px;
+		float: right;
+		overflow: hidden;
+		p{
+			margin-top: 18px;
+			text-align: right;
+			color: @white;
+			font-size: .875em;
+		}
+		img{
+			margin-top: -10px;
+			width: 160px;
+			float: right;
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	footer end								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	1024 start								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 1024px){
+
+	#header{
+		position: relative;
+		& > .inner{
+			padding-top: 20px;
+			position: relative;
+			overflow: visible;
+			.logo{
+				width: 110px;
+				height: 100px;
+				position: absolute;
+				top: 0;
+				left: 10px;
+				background: @white;
+				border: none;
+				img{
+					width: 90px;
+					height: auto;
+					margin: 18px auto 0;
+				}
+			}
+		}
+		.info-holder{
+			display: block;
+			width: 100%;
+			height: 60px;
+			padding: 0 20px 0 140px;
+			margin: 0 0 20px;
+			float: left;
+		}
+	}
+	
+	#toggle-menu{
+		display: block;
+	}
+
+	#menu-holder{
+		width: 100%;
+		height: 0;
+		position: absolute;
+		top: 140px;
+		left: 0;
+		z-index: 10;
+		background: fade(@black, 90%);
+		transition: all .5s @easing;
+		overflow: hidden;
+		.menu{
+			width: 100%;
+			padding: 0;
+			box-sizing: border-box;
+			backface-visibility: hidden;
+			overflow: hidden;
+			li{
+				width: 100%;
+				float: none;
+				position: relative;
+				text-align: center;
+				a:before{ display: none; }
+				&:hover,
+				&.active{
+					a{ color: @green; }
+				}
+			}
+		}
+		&.active{ height: 360px; }
+	}
+
+	#content > .outer.inside{
+		width: 100%;
+		max-width: 1200px;
+		margin: 20px auto 40px;
+		overflow: hidden;
+		&.private{
+			margin: 0 auto;
+		}
+	}
+
+	#navigation-holder{
+		width: 100%;
+		height: auto;
+		float: none;
+		border: none;
+		padding: 0 40px;
+		box-sizing: border-box;
+		overflow: hidden;
+		ul{
+			margin: 20px 0;
+			border-left: 2px solid @green;
+			box-sizing: border-box;
+			text-align: left;
+		}
+		li{
+			a{
+				display: inline-block;
+				vertical-align: top;
+				width: auto;
+				padding: 5px 20px;
+			}
+		}
+	}
+
+	#content-info-holder{
+		width: 100%;
+		float: none;
+		margin-left: 0;
+		margin-top: 20px;
+		padding: 0 40px;
+		box-sizing: border-box;
+	}
+
+	.pre-footer{ display: none; }
+	#footer{
+		padding: 0 20px;
+		box-sizing: border-box;
+		.logo{
+			width: 200px;
+			margin-top: 24px;
+		}
+		.developers{
+			width: 160px;
+			p{ display: none; }
+			img{
+				width: 100%;
+				margin: 0;
+				float: none;
+				margin-top: 16px;
+			}
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	1024 end 								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	800 start								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 800px){
+
+	#header{
+		.info-holder{
+			ul{
+				&.call-center-holder{ display: none; }
+			}
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	800 end 								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	680 start 								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 680px){
+
+	#header{
+		.info-holder{
+			ul{
+				&.call-center-holder,
+				&.phones-holder{ display: none; }
+			}
+			.sprtr-v{ display: none; }
+		}
+	}
+	
+	#content{
+		&.sticky{
+			padding-bottom: 80px;
+		}
+	}
+
+	#footer{
+		height: 80px;
+		.logo,
+		.developers{
+			display: none;
+		}
+		&.sticky{
+			margin-top: -80px;
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	680 end 								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	520 start 								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 520px){
+
+	#header{
+		.btn-large{
+			width: 180px;
+			a{
+				font-size: 1em;
+			}
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	520 end 								 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

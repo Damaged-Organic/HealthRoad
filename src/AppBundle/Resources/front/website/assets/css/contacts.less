@@ -1,0 +1,181 @@
+@import "lib/common.less";
+@import "lib/forms.less";
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	layout start							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#content-info-holder{
+	.grid{
+		.row{
+			margin-bottom: 20px;
+		}
+		.col{
+			width: 31.88405797101449%;
+			height: auto;
+			float: left;
+			margin-left: 2.173913043478261%;
+			background: transparent;
+			overflow: hidden;
+			&:first-child{
+				margin-left: 0;
+			}
+			h2{
+				text-align: center;
+				padding: 20px;
+			}
+			& > span{
+				display: block;
+				text-align: center;
+				font-size: 1em;
+			}
+			.role{
+				color: darken(@grey, 20%);
+			}
+			.sprtr-h{
+				margin: 20px auto;
+				background: @black;
+			}
+			.icon{
+				display: block;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto 20px;
+				text-align: center;
+				font-size: 2.5em;
+				color: @green;
+				overflow: hidden;
+			}
+			.item{
+				width: 100%;
+				margin-bottom: 20px;
+				text-align: center;
+				overflow: hidden;
+				p{
+					font-size: 1.125em;
+					text-align: center;
+					padding: 0 20px;
+					span{
+						color: @green;
+						font-size: .9em;
+					}
+				}
+				a{
+					font-size: 1.125em;
+				}
+			}
+		}
+		&.staff-holder{
+			.col{
+				margin-bottom: 20px;
+				.sprtr-h{
+					margin: 20px auto 0;
+				}
+				ul > li{
+					display: block;
+					width: 100%;
+					text-align: center;
+					a{
+						font-size: 1.125em;
+					}
+					span{
+						display: block;
+						text-align: center;
+						font-size: 1.5em;
+						padding: 20px 0 10px;
+						overflow: hidden;
+					}
+				}
+			}
+		}
+	}
+	.form-holder{
+		form{ max-width: 100% }
+		.field-area{ margin-bottom: 10px; }
+		label{
+			line-height: 30px;
+			padding: 0;
+		}
+		input{
+			border: 2px solid @grey;
+		}
+		button[type="submit"]{
+			float: right;
+			margin: 20px 0 0;
+			span{
+				text-align: center;
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	layout end								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	800 start								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 800px){
+
+	#content-info-holder{
+		.grid{
+			.col{
+				width: 100%;
+				float: none;
+				margin-left: 0;
+				margin-bottom: 40px;
+				&:first-child{ margin-left: 0; }
+				h2{
+					text-align: left;
+					padding: 20px 0;
+				}
+				.sprtr-h,
+				.icon{
+					display: none;
+				}
+				.item{
+					width: 100%;
+					margin-bottom: 0;
+					text-align: left;
+					p{
+						font-size: 1.125em;
+						text-align: left;
+						padding: 0;
+						line-height: 40px;
+					}
+					a{ line-height: 40px; }
+				}
+			}
+			&.staff-holder{
+				.col{
+					margin-bottom: 20px;
+					.role{
+						text-align: left;
+						margin-bottom: 20px;
+					}
+					ul > li{
+						display: block;
+						width: 100%;
+						text-align: left;
+						margin-bottom: 10px;
+						a{
+							display: inline-block;
+							vertical-align: middle;
+							font-size: 1.125em;
+						}
+						span{
+							display: inline-block;
+							vertical-align: middle;
+							text-align: left;
+							font-size: 1.5em;
+							padding: 0 10px 0 0;
+							overflow: hidden;
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	800 end									  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

@@ -18,18 +18,30 @@
   "author": "CHEERS! Unlimited",
   "license": "ISC",
   "devDependencies": {
+    "glob": "^5.0.15",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.0.2",
     "gulp-concat-css": "^2.2.0",
+    "gulp-exec": "^2.1.2",
     "gulp-imagemin": "^2.3.0",
     "gulp-less": "^3.0.3",
     "gulp-minify-css": "^1.2.1",
     "gulp-notify": "^2.2.0",
-    "gulp-order": "^1.1.1",
     "gulp-rename": "^1.2.2",
     "imagemin-pngquant": "^4.2.0",
-    "jquery": "^2.1.4",
-    "jquery.inputmask": "^3.2.0",
-    "requirejs": "^2.1.20"
+    "jspm": "^0.16.12"
+  },
+  "jspm": {
+    "configFile": "jspm.config.js",
+    "dependencies": {
+      "jquery": "github:components/jquery@^2.1.4",
+      "jquery-mask-plugin": "npm:jquery-mask-plugin@^1.13.4",
+      "jquery-validation": "github:jzaefferer/jquery-validation@^1.14.0"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
   }
 }

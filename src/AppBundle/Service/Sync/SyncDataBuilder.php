@@ -75,9 +75,13 @@ class SyncDataBuilder implements SyncDataInterface
 
         $data = [];
 
-        foreach($students as $student) {
+        foreach($students as $student)
+        {
             if( $student->getNfcTag() )
-                $data[] = $build($student->getNfcTag());
+            {
+                if( !$student->getNfcTag()->getPseudoDeleted() )
+                    $data[] = $build($student->getNfcTag());
+            }
         }
 
         $data = [

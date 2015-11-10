@@ -5,7 +5,8 @@ namespace AppBundle\Controller\Sync;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\JsonResponse,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
@@ -24,6 +25,8 @@ class SyncController extends Controller implements
     SyncLoggingMarkerInterface,
     SyncVendingMachineSyncPropertiesInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -45,6 +48,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/sync",
      *      name = "sync_get_vending_machines_sync",
      *      host = "{domain_sync_v1}",
+     *      schemes = {"https"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -76,6 +80,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/products",
      *      name = "sync_get_vending_machines_products",
      *      host = "{domain_sync_v1}",
+     *      schemes = {"https"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -86,7 +91,7 @@ class SyncController extends Controller implements
             'serial' => $serial
         ]);
 
-        $products = $vendingMachine->getProducts();
+        $products = $this->filterDeleted($vendingMachine->getProducts());
 
         $syncResponse = $this->_syncDataBuilder->buildProductData($products);
 
@@ -104,6 +109,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/nfc_tags",
      *      name = "sync_get_vending_machines_nfc_tags",
      *      host = "{domain_sync_v1}",
+     *      schemes = {"https"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -114,7 +120,7 @@ class SyncController extends Controller implements
             'serial' => $serial
         ]);
 
-        $students = $vendingMachine->getStudents();
+        $students = $this->filterDeleted($vendingMachine->getStudents());
 
         $syncResponse = $this->_syncDataBuilder->buildNfcTagData($students);
 
@@ -132,6 +138,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}",
      *      name = "sync_put_vending_machines",
      *      host = "{domain_sync_v1}",
+     *      schemes = {"https"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -166,6 +173,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/purchases",
      *      name = "sync_post_vending_machines_purchases",
      *      host = "{domain_sync_v1}",
+     *      schemes = {"https"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -203,6 +211,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/events",
      *      name = "sync_post_vending_machines_events",
      *      host = "{domain_sync_v1}",
+     *      schemes = {"https"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
