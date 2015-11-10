@@ -14,64 +14,62 @@
                             <div class="row">
                         {% endif %}
 
-                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_READ'), product) %}
-                            <article class="col product-holder">
-                                <span class="unique-id">{{ product.id }}</span>
-                                <figure>
+                        <article class="col product-holder">
+                            <span class="unique-id">{{ product.id }}</span>
+                            <figure>
 
-                                    {% set path = ( is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) )
-                                            ? 'product_update'
-                                            : 'product_read' %}
+                                {% set path = ( is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) )
+                                        ? 'product_update'
+                                        : 'product_read' %}
 
-                                    {% set image = ( product.productImages.0 is defined )
-                                            ? vich_uploader_asset(product.productImages.0, 'imageProductFile')
-                                            : asset('bundles/app/dashboard/images/no-image.jpg') %}
+                                {% set image = ( product.productImages.0 is defined )
+                                        ? vich_uploader_asset(product.productImages.0, 'imageProductFile')
+                                        : asset('bundles/app/dashboard/images/no-image.jpg') %}
 
-                                    <a href="{{ path(path, { 'id': product.id }) }}">
-                                        <img src="{{ image }}" alt="{{ product.nameShort }}">
-                                    </a>
+                                <a href="{{ path(path, { 'id': product.id }) }}">
+                                    <img src="{{ image }}" alt="{{ product.nameShort }}">
+                                </a>
 
-                                </figure>
-                                <div class="product-info">
-                                    <h2>
-                                        {{ product.nameShort ~ ' ' ~ (( product.pseudoDeleted ) ? '[УДАЛЕНО]') }}
-                                    </h2>
-                                    <p>
-                                        {{ product.nameFull }}
-                                    </p>
-                                    <ul>
-                                        <li>
-                                            <span class="item">
-                                                <span>{{ 'product.code.label'|trans({}, 'forms') }}:</span>
-                                                {{ ( product.code ) ? product.code : '-' }}
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="item">
-                                                <span>{{ 'product.product_category.label'|trans({}, 'forms') }}:</span>
-                                                {{ ( product.productCategory ) ? product.productCategory.name : '-' }}
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="item">
-                                                <span>{{ 'product.supplier.label'|trans({}, 'forms') }}:</span>
-                                                {{ ( product.supplier ) ? product.supplier.name : '-' }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                    <div class="action-holder">
-                                        <div class="price-holder">
-                                            <span>{{ product.price|number_format(2, ',') }} ₴</span>
-                                        </div>
-                                        <div class="buttons-holder">
+                            </figure>
+                            <div class="product-info">
+                                <h2>
+                                    {{ product.nameShort ~ ' ' ~ (( product.pseudoDeleted ) ? '[УДАЛЕНО]') }}
+                                </h2>
+                                <p>
+                                    {{ product.nameFull }}
+                                </p>
+                                <ul>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.code.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.code ) ? product.code : '-' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.product_category.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.productCategory ) ? product.productCategory.name : '-' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="item">
+                                            <span>{{ 'product.supplier.label'|trans({}, 'forms') }}:</span>
+                                            {{ ( product.supplier ) ? product.supplier.name : '-' }}
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div class="action-holder">
+                                    <div class="price-holder">
+                                        <span>{{ product.price|number_format(2, ',') }} ₴</span>
+                                    </div>
+                                    <div class="buttons-holder">
 
-                                            {% block action_items %}{% endblock %}
+                                        {% block action_items %}{% endblock %}
 
-                                        </div>
                                     </div>
                                 </div>
-                            </article>
-                        {% endif %}
+                            </div>
+                        </article>
 
                         {% if loop.last %}
                             </div>

@@ -10,7 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\School\School,
     AppBundle\Form\Type\SchoolType,
     AppBundle\Security\Authorization\Voter\SchoolVoter,
@@ -18,6 +19,8 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class SchoolController extends Controller implements UserRoleListInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -65,7 +68,10 @@ class SchoolController extends Controller implements UserRoleListInterface
             if( !$this->_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $schools = $this->_manager->getRepository('AppBundle:School\School')->findAll();
+            $schools = $this->filterDeletedIfNotGranted(
+                SchoolVoter::SCHOOL_READ,
+                $this->_manager->getRepository('AppBundle:School\School')->findAll()
+            );
 
             $response = [
                 'view' => 'AppBundle:Entity/School/CRUD:readList.html.twig',

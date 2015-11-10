@@ -10,7 +10,8 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Product\Product,
     AppBundle\Entity\VendingMachine\VendingMachine,
@@ -18,7 +19,7 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
 
 class ProductVendingGroupController extends Controller implements UserRoleListInterface
 {
-    use ClassOperationsTrait;
+    use ClassOperationsTrait, EntityFilter;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;

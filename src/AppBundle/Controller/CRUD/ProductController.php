@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Request,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Product\Product,
     AppBundle\Entity\Product\ProductImage,
     AppBundle\Form\Type\ProductType,
@@ -21,6 +22,8 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class ProductController extends Controller implements UserRoleListInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -71,7 +74,10 @@ class ProductController extends Controller implements UserRoleListInterface
             if( !$this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $product = $this->_manager->getRepository('AppBundle:Product\Product')->findAll();
+            $product = $this->filterDeletedIfNotGranted(
+                ProductVoter::PRODUCT_READ,
+                $this->_manager->getRepository('AppBundle:Product\Product')->findAll()
+            );
 
             $response = [
                 'view' => 'AppBundle:Entity/Product/CRUD:readList.html.twig',

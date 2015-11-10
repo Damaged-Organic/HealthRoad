@@ -10,7 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Form\Type\NfcTagType,
     AppBundle\Security\Authorization\Voter\NfcTagVoter,
@@ -18,6 +19,8 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class NfcTagController extends Controller implements UserRoleListInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -65,7 +68,10 @@ class NfcTagController extends Controller implements UserRoleListInterface
             if( !$this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $nfcTags = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll();
+            $nfcTags = $this->filterDeletedIfNotGranted(
+                NfcTagVoter::NFC_TAG_READ,
+                $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll()
+            );
 
             $response = [
                 'view' => 'AppBundle:Entity/NfcTag/CRUD:readList.html.twig',

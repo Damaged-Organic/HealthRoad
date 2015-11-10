@@ -16,17 +16,13 @@
                     </tr>
 
                     {% for student in students %}
+                        <tr>
 
-                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_READ'), student) %}
-                            <tr>
+                            {% include 'AppBundle:Entity/Student/Table:tr.html.twig' with { 'student': student } only %}
 
-                                {% include 'AppBundle:Entity/Student/Table:tr.html.twig' with { 'student': student } only %}
+                            {% block action_items_tr %}{% endblock %}
 
-                                {% block action_items_tr %}{% endblock %}
-
-                            </tr>
-                        {% endif %}
-
+                        </tr>
                     {% endfor %}
 
                 </table>

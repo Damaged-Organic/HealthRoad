@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Request,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\School\School,
     AppBundle\Entity\NfcTag\NfcTag,
@@ -27,7 +28,7 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class VendingMachineController extends Controller implements UserRoleListInterface
 {
-    use ClassOperationsTrait;
+    use ClassOperationsTrait, EntityFilter;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -57,7 +58,10 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $vendingMachines = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['school' => $object]);
+                $vendingMachines = $this->filterDeletedIfNotGranted(
+                    VendingMachineVoter::VENDING_MACHINE_READ,
+                    $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['school' => $object])
+                );
 
                 $action = [
                     'path'  => 'vending_machine_choose',
@@ -71,7 +75,10 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $vendingMachines = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['productVendingGroup' => $object]);
+                $vendingMachines = $this->filterDeletedIfNotGranted(
+                    VendingMachineVoter::VENDING_MACHINE_READ,
+                    $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['productVendingGroup' => $object])
+                );
 
                 $action = [
                     'path'  => 'vending_machine_choose',
@@ -245,7 +252,10 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             break;
         }
 
-        $vendingMachines = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll();
+        $vendingMachines = $this->filterDeletedIfNotGranted(
+            VendingMachineVoter::VENDING_MACHINE_READ,
+            $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll()
+        );
 
         $this->_breadcrumbs->add('vending_machine_choose', [
             'objectId'    => $objectId,

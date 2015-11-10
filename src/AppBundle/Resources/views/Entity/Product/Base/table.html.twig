@@ -16,17 +16,13 @@
                     </tr>
 
                     {% for product in products %}
+                        <tr class="photo-row">
 
-                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_READ'), product) %}
-                            <tr class="photo-row">
+                            {% include 'AppBundle:Entity/Product/Table:tr.html.twig' with { 'product': product } only %}
 
-                                {% include 'AppBundle:Entity/Product/Table:tr.html.twig' with { 'product': product } only %}
+                            {% block action_items_tr %}{% endblock %}
 
-                                {% block action_items_tr %}{% endblock %}
-
-                            </tr>
-                        {% endif %}
-
+                        </tr>
                     {% endfor %}
 
                 </table>

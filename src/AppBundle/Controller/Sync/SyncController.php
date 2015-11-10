@@ -60,9 +60,6 @@ class SyncController extends Controller implements
 
         $vendingMachineSyncData = $this->_syncDataHandler->handleVendingMachineSyncData($vendingMachine, $validSyncData);
 
-        if( !$vendingMachineSyncData )
-            throw new NotFoundHttpException('Vending Machine has no synchronization of a given type');
-
         $syncResponse = $this->_syncDataBuilder->buildSyncData($vendingMachineSyncData);
 
         $recordMethod = [$this->_syncDataRecorder, 'recordSyncData'];

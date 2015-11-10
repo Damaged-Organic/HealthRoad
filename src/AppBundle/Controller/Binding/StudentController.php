@@ -12,7 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Customer\Customer,
     AppBundle\Entity\NfcTag\NfcTag,
@@ -25,7 +26,7 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
 
 class StudentController extends Controller implements UserRoleListInterface
 {
-    use ClassOperationsTrait;
+    use ClassOperationsTrait, EntityFilter;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -55,8 +56,6 @@ class StudentController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Customer identified by `id` {$objectId} not found");
 
-                $students = $object->getStudents();
-
                 $action = [
                     'path'  => 'student_choose',
                     'voter' => CustomerVoter::CUSTOMER_BIND
@@ -69,8 +68,6 @@ class StudentController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("School identified by `id` {$objectId} not found");
 
-                $students = $object->getStudents();
-
                 $action = [
                     'path'  => 'student_choose',
                     'voter' => SchoolVoter::SCHOOL_BIND
@@ -81,6 +78,11 @@ class StudentController extends Controller implements UserRoleListInterface
                 throw new NotAcceptableHttpException("Object not supported");
             break;
         }
+
+        $students = $this->filterDeletedIfNotGranted(
+            StudentVoter::STUDENT_READ,
+            $object->getStudents()
+        );
 
         return $this->render('AppBundle:Entity/Student/Binding:show.html.twig', [
             'standalone' => TRUE,
@@ -212,7 +214,10 @@ class StudentController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $students = $this->_manager->getRepository('AppBundle:Student\Student')->findAll();
+        $students = $this->filterDeletedIfNotGranted(
+            StudentVoter::STUDENT_READ,
+            $this->_manager->getRepository('AppBundle:Student\Student')->findAll()
+        );
 
         $this->_breadcrumbs->add('student_choose', [
             'objectId'    => $objectId,

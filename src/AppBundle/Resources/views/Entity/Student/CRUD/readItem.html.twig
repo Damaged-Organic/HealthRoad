@@ -71,9 +71,13 @@
                 <div class="item value btn-holder">
                     {% if student.school %}
                         <p>{{ student.school.name }}</p>
-                        <div class="btn-view">
-                            <a href="{{ path('student_update', { 'id': student.school.id }) }}" class="icon hrd-view"></a>
-                        </div>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\SchoolVoter::SCHOOL_READ'), student.school) %}
+                            <div class="btn-view">
+                                <a href="{{ path('school_update', { 'id': student.school.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
                     {% else %}
                         <p>-</p>
                     {% endif %}

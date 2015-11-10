@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Request,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\Settlement\Settlement,
@@ -25,7 +26,7 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class SchoolController extends Controller implements UserRoleListInterface
 {
-    use ClassOperationsTrait;
+    use ClassOperationsTrait, EntityFilter;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -55,7 +56,10 @@ class SchoolController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $schools = $object->getSchools();
+                $schools = $this->filterDeletedIfNotGranted(
+                    SchoolVoter::SCHOOL_READ,
+                    $object->getSchools()
+                );
 
                 $action = [
                     'path'  => 'school_choose',
@@ -69,7 +73,10 @@ class SchoolController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Settlement identified by `id` {$objectId} not found");
 
-                $schools = $this->_manager->getRepository('AppBundle:School\School')->findBy(['settlement' => $object]);
+                $schools = $this->filterDeletedIfNotGranted(
+                    SchoolVoter::SCHOOL_READ,
+                    $this->_manager->getRepository('AppBundle:School\School')->findBy(['settlement' => $object])
+                );
 
                 $action = [
                     'path'  => 'school_choose',
@@ -215,7 +222,10 @@ class SchoolController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $schools = $this->_manager->getRepository('AppBundle:School\School')->findAll();
+        $schools = $this->filterDeletedIfNotGranted(
+            SchoolVoter::SCHOOL_READ,
+            $this->_manager->getRepository('AppBundle:School\School')->findAll()
+        );
 
         $this->_breadcrumbs->add('school_choose', [
             'objectId'    => $objectId,

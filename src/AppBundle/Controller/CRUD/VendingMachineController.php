@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\Request,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Form\Type\VendingMachineType,
     AppBundle\Security\Authorization\Voter\VendingMachineVoter,
@@ -18,6 +19,8 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class VendingMachineController extends Controller implements UserRoleListInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -65,7 +68,10 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             if( !$this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $vendingMachines = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll();
+            $vendingMachines = $this->filterDeletedIfNotGranted(
+                VendingMachineVoter::VENDING_MACHINE_READ,
+                $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll()
+            );
 
             $response = [
                 'view' => 'AppBundle:Entity/VendingMachine/CRUD:readList.html.twig',

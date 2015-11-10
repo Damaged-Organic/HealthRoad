@@ -6,7 +6,6 @@ use Doctrine\ORM\PersistentCollection;
 
 use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
     AppBundle\Service\Sync\Utility\Checksum,
-    AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Entity\VendingMachine\VendingMachineSync,
     AppBundle\Entity\Product\Product,
     AppBundle\Entity\NfcTag\NfcTag;

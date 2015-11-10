@@ -10,7 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Product\ProductVendingGroup,
     AppBundle\Form\Type\ProductVendingGroupType,
     AppBundle\Security\Authorization\Voter\ProductVendingGroupVoter,
@@ -18,6 +19,8 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 
 class ProductVendingGroupController extends Controller implements UserRoleListInterface
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -65,7 +68,10 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
             if( !$this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $productVendingGroups = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->findAll();
+            $productVendingGroups = $this->filterDeletedIfNotGranted(
+                ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_READ,
+                $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->findAll()
+            );
 
             $response = [
                 'view' => 'AppBundle:Entity/ProductVendingGroup/CRUD:readList.html.twig',

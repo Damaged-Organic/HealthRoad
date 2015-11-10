@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Request,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Supplier\Supplier,
     AppBundle\Entity\Product\ProductVendingGroup,
@@ -25,7 +26,7 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
 
 class ProductController extends Controller implements UserRoleListInterface
 {
-    use ClassOperationsTrait;
+    use ClassOperationsTrait, EntityFilter;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -55,8 +56,6 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
 
-                $products = $object->getProducts();
-
                 $action = [
                     'path'  => 'product_choose',
                     'voter' => ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_BIND
@@ -68,8 +67,6 @@ class ProductController extends Controller implements UserRoleListInterface
 
                 if( !$object )
                     throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
-
-                $products = $object->getProducts();
 
                 $action = [
                     'path'  => 'product_choose',
@@ -83,8 +80,6 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
-                $products = $object->getProducts();
-
                 $action = [
                     'path'  => 'product_choose',
                     'voter' => StudentVoter::STUDENT_BIND
@@ -95,6 +90,11 @@ class ProductController extends Controller implements UserRoleListInterface
                 throw new NotAcceptableHttpException("Object not supported");
             break;
         }
+
+        $products = $this->filterDeletedIfNotGranted(
+            ProductVoter::PRODUCT_READ,
+            $object->getProducts()
+        );
 
         return $this->render('AppBundle:Entity/Product/Binding:show.html.twig', [
             'standalone'  => TRUE,
@@ -127,7 +127,10 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$productVendingGroup )
                     throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
 
-                $products = $this->_manager->getRepository('AppBundle:Product\Product')->findAll();
+                $products = $this->filterDeletedIfNotGranted(
+                    ProductVoter::PRODUCT_READ,
+                    $this->_manager->getRepository('AppBundle:Product\Product')->findAll()
+                );
 
                 $path = 'product_vending_group_update_bounded';
 
@@ -146,7 +149,10 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$supplier )
                     throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
 
-                $products = $this->_manager->getRepository('AppBundle:Product\Product')->findAll();
+                $products = $this->filterDeletedIfNotGranted(
+                    ProductVoter::PRODUCT_READ,
+                    $this->_manager->getRepository('AppBundle:Product\Product')->findAll()
+                );
 
                 $path = 'supplier_update_bounded';
 
@@ -165,7 +171,10 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$student )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
-                $products = $this->_manager->getRepository('AppBundle:Product\Product')->findAvailableByStudent($student);
+                $products = $this->filterDeletedIfNotGranted(
+                    ProductVoter::PRODUCT_READ,
+                    $this->_manager->getRepository('AppBundle:Product\Product')->findAvailableByStudent($student)
+                );
 
                 $path = 'student_update_bounded';
 

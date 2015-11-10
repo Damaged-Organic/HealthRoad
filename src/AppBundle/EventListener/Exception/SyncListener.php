@@ -21,22 +21,24 @@ class SyncListener
 
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $implementedInterfaces = class_implements(explode('::', $event->getRequest()->attributes->get('_controller'))[0]);
-
-        if( in_array(self::SYNC_MARKER_INTERFACE, $implementedInterfaces, TRUE) )
+        if( strpos($event->getRequest()->attributes->get('_controller'), '::') )
         {
-            $exception = $event->getException();
+            $implementedInterfaces = class_implements(explode('::', $event->getRequest()->attributes->get('_controller'))[0]);
 
-            $message = sprintf(
-                '`%s` [uncaught exception]: throws `%s` (code `%s`) at `%s` line `%s`',
-                get_class($exception),
-                $exception->getMessage(),
-                $exception->getCode(),
-                $exception->getFile(),
-                $exception->getLine()
-            );
+            if (in_array(self::SYNC_MARKER_INTERFACE, $implementedInterfaces, TRUE)) {
+                $exception = $event->getException();
 
-            $this->logger->error($message, ['exception' => $exception]);
+                $message = sprintf(
+                    '`%s` [uncaught exception]: throws `%s` (code `%s`) at `%s` line `%s`',
+                    get_class($exception),
+                    $exception->getMessage(),
+                    $exception->getCode(),
+                    $exception->getFile(),
+                    $exception->getLine()
+                );
+
+                $this->logger->error($message, ['exception' => $exception]);
+            }
         }
     }
 }

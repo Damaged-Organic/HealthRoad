@@ -12,7 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Service\Security\NfcTagBoundlessAccess,
     AppBundle\Security\Authorization\Voter\NfcTagVoter,
@@ -23,7 +24,7 @@ use AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
 
 class NfcTagController extends Controller implements UserRoleListInterface
 {
-    use ClassOperationsTrait;
+    use ClassOperationsTrait, EntityFilter;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -56,7 +57,10 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 /*
                  * TRICKY: single nfcTag object pushed into array in order to be valid for template
                  */
-                $nfcTags = ( $object->getNfcTag() ) ? [$object->getNfcTag()] : NULL;
+                $nfcTags = $this->filterDeletedIfNotGranted(
+                    NfcTagVoter::NFC_TAG_READ,
+                    (( $object->getNfcTag() ) ? [$object->getNfcTag()] : NULL)
+                );
 
                 $action = [
                     'path'  => 'nfc_tag_choose',
@@ -151,7 +155,10 @@ class NfcTagController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $nfcTags = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll();
+        $nfcTags = $this->filterDeletedIfNotGranted(
+            NfcTagVoter::NFC_TAG_READ,
+            $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll()
+        );
 
         $this->_breadcrumbs->add('nfc_tag_choose', [
             'objectId'    => $objectId,

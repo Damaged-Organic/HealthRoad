@@ -16,17 +16,13 @@
                     </tr>
 
                     {% for vendingMachine in vendingMachines %}
+                        <tr>
 
-                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_READ'), vendingMachine) %}
-                            <tr>
+                            {% include 'AppBundle:Entity/VendingMachine/Table:tr.html.twig' with { 'vendingMachine': vendingMachine } only %}
 
-                                {% include 'AppBundle:Entity/VendingMachine/Table:tr.html.twig' with { 'vendingMachine': vendingMachine } only %}
+                            {% block action_items_tr %}{% endblock %}
 
-                                {% block action_items_tr %}{% endblock %}
-
-                            </tr>
-                        {% endif %}
-
+                        </tr>
                     {% endfor %}
 
                 </table>

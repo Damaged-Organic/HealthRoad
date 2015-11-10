@@ -16,17 +16,13 @@
                     </tr>
 
                     {% for nfcTag in nfcTags %}
+                        <tr>
 
-                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_READ'), nfcTag) %}
-                            <tr>
+                            {% include 'AppBundle:Entity/NfcTag/Table:tr.html.twig' with { 'nfcTag': nfcTag } only %}
 
-                                {% include 'AppBundle:Entity/NfcTag/Table:tr.html.twig' with { 'nfcTag': nfcTag } only %}
+                            {% block action_items_tr %}{% endblock %}
 
-                                {% block action_items_tr %}{% endblock %}
-
-                            </tr>
-                        {% endif %}
-
+                        </tr>
                     {% endfor %}
 
                 </table>
