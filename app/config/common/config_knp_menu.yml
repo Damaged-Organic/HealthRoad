@@ -1,0 +1,13 @@
+# app/config/common/config_knp_menu.yml
+services:
+    app.website_menu_builder:
+        class: AppBundle\Menu\WebsiteMenuBuilder
+        calls:
+            - [setFactory, [ "@knp_menu.factory" ]]
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setRequestStack, [ "@request_stack" ]]
+        tags:
+            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+            - { name: knp_menu.menu_builder, method: createOurProjectMenu, alias: our_project }
+            - { name: knp_menu.menu_builder, method: createAboutCompanyMenu, alias: about_company }
+            - { name: knp_menu.menu_builder, method: createContactsMenu, alias: contacts }

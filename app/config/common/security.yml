@@ -58,7 +58,7 @@ security:
                 target: employee_dashboard
 
         customer_office:
-            host: "%domain%"
+            host: "%domain_website%"
 
             anonymous:  ~
             http_basic: ~
@@ -89,10 +89,10 @@ security:
             path:  ^/
             roles: ROLE_EMPLOYEE
         -
-            host:  "%domain%"
+            host:  "%domain_website%"
             path:  ^/customer_office/login
             roles: IS_AUTHENTICATED_ANONYMOUSLY
         -
-            host:  "%domain%"
+            host:  "%domain_website%"
             path:  ^/customer_office
             roles: ROLE_CUSTOMER

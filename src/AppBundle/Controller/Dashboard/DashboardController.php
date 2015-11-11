@@ -1,5 +1,5 @@
 <?php
-// AppBundle/Controller/Dashboard/EmployeeDashboardController.php
+// AppBundle/Controller/Dashboard/DashboardController.php
 namespace AppBundle\Controller\Dashboard;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-class EmployeeDashboardController extends Controller
+class DashboardController extends Controller
 {
     /** @DI\Inject("security.authorization_checker") */
     private $_authorizationChecker;

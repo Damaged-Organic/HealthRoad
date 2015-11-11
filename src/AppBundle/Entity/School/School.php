@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert;
 
 /**
@@ -17,7 +18,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  */
 class School
 {
-    use IdMapperTrait;
+    use IdMapperTrait, PseudoDeleteMapperTrait;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Employee\Employee", mappedBy="schools")
@@ -162,17 +163,10 @@ class School
     protected $emailContact;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $pseudoDeleted;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->pseudoDeleted = FALSE;
-
         $this->employees       = new ArrayCollection;
         $this->vendingMachines = new ArrayCollection;
         $this->students        = new ArrayCollection;
@@ -429,29 +423,6 @@ class School
     public function getEmailContact()
     {
         return $this->emailContact;
-    }
-
-    /**
-     * Set pseudoDeleted
-     *
-     * @param boolean $pseudoDeleted
-     * @return School
-     */
-    public function setPseudoDeleted($pseudoDeleted)
-    {
-        $this->pseudoDeleted = $pseudoDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Get pseudoDeleted
-     *
-     * @return boolean
-     */
-    public function getPseudoDeleted()
-    {
-        return $this->pseudoDeleted;
     }
 
     /**

@@ -1,5 +1,5 @@
 <?php
-// AppBundle/Controller/Office/CustomerOfficeController.php
+// AppBundle/Controller/Office/OfficeController.php
 namespace AppBundle\Controller\Office;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
@@ -7,16 +7,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class CustomerOfficeController extends Controller
+class OfficeController extends Controller
 {
     /**
      * @Method({"GET"})
      * @Route(
      *      "/customer_office",
      *      name="customer_office",
-     *      host="{domain}",
-     *      defaults={"_locale" = "%locale%", "domain" = "%domain%"},
-     *      requirements={"_locale" = "%locale%", "domain" = "%domain%"}
+     *      host="{domain_website}",
+     *      defaults={"_locale" = "%locale%", "domain_website" = "%domain_website%"},
+     *      requirements={"_locale" = "%locale%", "domain_website" = "%domain_website%"}
      * )
      */
     public function indexAction()

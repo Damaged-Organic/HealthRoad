@@ -1,0 +1,78 @@
+{# AppBundle/Resources/views/Website/State/aboutCompany.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% block title %}
+    Дорога Здоров'я
+{% endblock %}
+
+{% block metadata %}
+    <meta name="Description" content="Описание необходимых мета-тегов">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_our_project') }}" />
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/about.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+
+                {{ knp_menu_render('about_company', {'currentClass': 'active'}) }}
+
+            </aside>
+            <section id="content-info-holder">
+                <h1>Нашим дітям – лише здорове харчування</h1>
+                <span class="sprtr-h"></span>
+                <p>Компанія «Дорога здоров'я» створена для впровадження проекту додаткового здорового шкільного харчування через вендингові апарати в навчальних закладах України.</p>
+                <p>Вперше в Україні, ґрунтуючись на досвіді наших Британських колег, ми адаптували та запроваджуємо систему додаткового шкільного харчування за системою «Перекус-Обід-Перекус».</p>
+                <div class="snack-lunch-snack icons-hor">
+                    <ul>
+                        <li>
+                            <figure>
+                                <img src="build/images/first-lunch.jpg" alt="">
+                            </figure>
+                        </li>
+                        <li>
+                            <span class="long-arrow"></span>
+                        </li>
+                        <li>
+                            <figure>
+                                <img src="build/images/lunch.jpg" alt="">
+                            </figure>
+                        </li>
+                        <li>
+                            <span class="long-arrow"></span>
+                        </li>
+                        <li>
+                            <figure>
+                                <img src="build/images/second-lunch.jpg" alt="">
+                            </figure>
+                        </li>
+                    </ul>
+                    <p>Перекус-Обід-Перекус</p>
+                </div>
+                <p>Схема організації додаткового шкільного харчування Перекус-обід-перекус (Snack - Lunch - Snack), дозволяє дітям в будь-який час знаходження в навчальному закладі, отримувати додаткове харчування для відновлення дитячого організму.</p>
+                <h2>Наша головна мета</h2>
+                <span class="sprtr-h"></span>
+                <p>Запровадження системи додаткового здорового шкільного харчування «Перекус-Обід-Перекус» у шкільних навчальних закладах України.</p>
+                <p>Разом з провідними дитячими дієтологами та фахівцями Інстітуту гігієни та медичної екології , ми вводимо в щоденний раціон дітей лише корисні продукти харчування, виключаючи чіпси, фаст-фуд, газовану воду та шоколадні вироби із забороненими консервантами та барвниками.</p>
+                <p>Діти повинні мати можливість харчуватись корисно у будь-який час, знаходячись у школі. Одного лише шкільного обіду не достатньо. Саме тому споживання корисних продуктів та напоїв має бути невід’ємною частиною денного раціону. Впроваджуючи дану систему харчування, ми прививаємо дітям бажання вести здоровий спосіб життя, де корисне харчування займає одне з перших місць.</p>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/about.bundle.min.js') }}"></script>
+{% endblock %}

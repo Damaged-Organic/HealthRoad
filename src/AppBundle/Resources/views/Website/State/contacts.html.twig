@@ -1,0 +1,76 @@
+{# AppBundle/Resources/views/Website/State/contacts.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% block title %}
+    Дорога Здоров'я
+{% endblock %}
+
+{% block metadata %}
+    <meta name="Description" content="Описание необходимых мета-тегов">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_index') }}" />
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/contacts.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+
+                {{ knp_menu_render('contacts', {'currentClass': 'active'}) }}
+
+            </aside>
+            <section id="content-info-holder">
+                <h1>Головний офіс</h1>
+                <span class="sprtr-h"></span>
+                <div class="grid">
+                    <div class="row">
+                        <div class="col">
+                            <h2>Графік роботи</h2>
+                            <span class="sprtr-h"></span>
+                            <span class="icon hr-shedule"></span>
+                            <div class="item">
+                                <p><span>Пн.-Пт.</span> з 9:00 до 18:00</p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h2>Контакта інформація</h2>
+                            <span class="sprtr-h"></span>
+                            <span class="icon hr-phone"></span>
+                            <div class="item">
+                                <a href="tel:+380442353842">+38 (044) 235-3842</a>
+                            </div>
+                            <span class="icon hr-email"></span>
+                            <div class="item">
+                                <a href="mailto:info@kdz.com.ua">info@kdz.com.ua</a>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h2>Для листування</h2>
+                            <span class="sprtr-h"></span>
+                            <span class="icon hr-email"></span>
+                            <div class="item">
+                                <p>01054, м. Київ-54, А/С 12</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/contacts.bundle.min.js') }}"></script>
+{% endblock %}

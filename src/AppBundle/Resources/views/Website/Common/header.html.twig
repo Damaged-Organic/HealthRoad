@@ -1,0 +1,50 @@
+{# AppBundle/Resources/views/Website/Common/header.html.twig #}
+<header id="header">
+    <div class="inner">
+        <div class="logo"><a href="#"><img src="{{ asset('bundles/app/website/images/logo.png') }}" alt="Дорога Здоров'я - здорове шкільне харчування"></a></div>
+        <div class="info-holder">
+            <ul class="langs-holder">
+                <li class="active"><a href="#">ua</a></li>
+                <li><a href="#">ru</a></li>
+            </ul>
+            <div class="btn-large">
+                <a href="#">Вхід для батьків</a>
+            </div>
+            <span class="sprtr-v"></span>
+            <ul class="phones-holder">
+                <li>
+                    <a href="tel:+380449999999"><span class="hr-mtc hr-small"></span>+38 (066) 539 3939</a>
+                </li>
+                <li>
+                    <a href="tel:+380449999999"><span class="hr-kstar hr-small"></span>+38 (068) 539 3939</a>
+                </li>
+                <li>
+                    <a href="tel:+380449999999"><span class="hr-life hr-small"></span>+38 (063) 539 3939</a>
+                </li>
+            </ul>
+            <ul class="call-center-holder">
+                <li>
+                    <h3>Центр Підтримки</h3>
+                </li>
+                <li>
+                    <span>пн-пт: 9:00 - 18:00</span>
+                </li>
+                <li>
+                    <a href="callback.html">зворотній зв'язок</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="toggle-menu">
+        <span>Меню</span>
+    </div>
+    <div id="menu-holder">
+        <div class="inner">
+            <nav class="menu">
+
+                {{ knp_menu_render('main', {'currentClass': 'active'}) }}
+
+            </nav>
+        </div>
+    </div>
+</header>

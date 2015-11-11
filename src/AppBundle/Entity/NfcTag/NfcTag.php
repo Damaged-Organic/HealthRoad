@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert,
     AppBundle\Entity\NfcTag\Utility\Interfaces\SyncNfcTagPropertiesInterface;
 
@@ -21,7 +22,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  */
 class NfcTag implements SyncNfcTagPropertiesInterface
 {
-    use IdMapperTrait;
+    use IdMapperTrait, PseudoDeleteMapperTrait;
 
     #/**
     # * @ORM\ManyToOne(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", inversedBy="nfcTags")
@@ -65,17 +66,10 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     protected $code;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $pseudoDeleted;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->pseudoDeleted = FALSE;
-
         $this->purchases = new ArrayCollection;
     }
 
@@ -123,29 +117,6 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     public function getCode()
     {
         return $this->code;
-    }
-
-    /**
-     * Set pseudoDeleted
-     *
-     * @param boolean $pseudoDeleted
-     * @return NfcTag
-     */
-    public function setPseudoDeleted($pseudoDeleted)
-    {
-        $this->pseudoDeleted = $pseudoDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Get pseudoDeleted
-     *
-     * @return boolean
-     */
-    public function getPseudoDeleted()
-    {
-        return $this->pseudoDeleted;
     }
 
     #/**

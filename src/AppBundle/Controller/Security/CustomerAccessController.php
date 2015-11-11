@@ -22,9 +22,9 @@ class CustomerAccessController extends Controller
      * @Route(
      *      "/customer_office/login",
      *      name="customer_office_login",
-     *      host="{domain}",
-     *      defaults={"_locale" = "%locale%", "domain" = "%domain%"},
-     *      requirements={"_locale" = "%locale%", "domain" = "%domain%"}
+     *      host="{domain_website}",
+     *      defaults={"_locale" = "%locale%", "domain_website" = "%domain_website%"},
+     *      requirements={"_locale" = "%locale%", "domain_website" = "%domain_website%"}
      * )
      */
     public function loginAction()
@@ -45,9 +45,9 @@ class CustomerAccessController extends Controller
      * @Route(
      *      "/customer_office/login_check",
      *      name="customer_office_login_check",
-     *      host="{domain}",
-     *      defaults={"_locale" = "%locale%", "domain" = "%domain%"},
-     *      requirements={"_locale" = "%locale%", "domain" = "%domain%"}
+     *      host="{domain_website}",
+     *      defaults={"_locale" = "%locale%", "domain_website" = "%domain_website%"},
+     *      requirements={"_locale" = "%locale%", "domain_website" = "%domain_website%"}
      * )
      */
     public function loginCheckAction()

@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM,
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert,
     AppBundle\Entity\Product\Utility\Interfaces\SyncProductPropertiesInterface;
 
@@ -27,7 +28,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  */
 class Product implements SyncProductPropertiesInterface
 {
-    use IdMapperTrait;
+    use IdMapperTrait, PseudoDeleteMapperTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product\ProductCategory", inversedBy="products")
@@ -240,19 +241,11 @@ class Product implements SyncProductPropertiesInterface
     protected $updatedAt;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $pseudoDeleted;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->pseudoDeleted = FALSE;
-
         $this->productImages         = new ArrayCollection;
-        $this->uploadedProductImages = new ArrayCollection;
         $this->productVendingGroups  = new ArrayCollection;
         $this->students              = new ArrayCollection;
         $this->purchases             = new ArrayCollection;
@@ -664,29 +657,6 @@ class Product implements SyncProductPropertiesInterface
     public function getUpdatedAt()
     {
         return $this->updatedAt;
-    }
-
-    /**
-     * Set pseudoDeleted
-     *
-     * @param boolean $pseudoDeleted
-     * @return Product
-     */
-    public function setPseudoDeleted($pseudoDeleted)
-    {
-        $this->pseudoDeleted = $pseudoDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Get pseudoDeleted
-     *
-     * @return boolean
-     */
-    public function getPseudoDeleted()
-    {
-        return $this->pseudoDeleted;
     }
 
     /**

@@ -11,8 +11,10 @@ parameters:
     mailer_host:      null
     mailer_user:      null
     mailer_password:  null
+    emails:
+        no_reply: no-reply@boilerplate.dev
     # Domain
-    domain:           boilerplate.dev
+    domain_website:   boilerplate.dev
     domain_dashboard: dashboard.boilerplate.dev
     domain_sync_v1:   sync-v1.boilerplate.dev
     # Developers

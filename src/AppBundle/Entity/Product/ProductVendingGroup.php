@@ -8,7 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
-use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait;
 
 /**
  * @ORM\Table(name="products_vending_groups")
@@ -18,7 +19,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
  */
 class ProductVendingGroup
 {
-    use IdMapperTrait;
+    use IdMapperTrait, PseudoDeleteMapperTrait;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", mappedBy="productVendingGroup")
@@ -46,17 +47,10 @@ class ProductVendingGroup
     protected $name;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $pseudoDeleted;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->pseudoDeleted = FALSE;
-
         $this->vendingMachines = new ArrayCollection;
         $this->products        = new ArrayCollection;
     }
@@ -82,29 +76,6 @@ class ProductVendingGroup
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set pseudoDeleted
-     *
-     * @param boolean $pseudoDeleted
-     * @return ProductVendingGroup
-     */
-    public function setPseudoDeleted($pseudoDeleted)
-    {
-        $this->pseudoDeleted = $pseudoDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Get pseudoDeleted
-     *
-     * @return boolean
-     */
-    public function getPseudoDeleted()
-    {
-        return $this->pseudoDeleted;
     }
 
     /**

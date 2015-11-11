@@ -1,0 +1,106 @@
+{# AppBundle/Resources/views/Website/State/products.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% block title %}
+    Дорога Здоров'я
+{% endblock %}
+
+{% block metadata %}
+    <meta name="Description" content="Описание необходимых мета-тегов">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_index') }}" />
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/products.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+                <ul>
+                    <li class="active"><a href="#">Продукти</a></li>
+                    <li><a href="#">Сік</a></li>
+                    <li><a href="#">Вода</a></li>
+                    <li><a href="#">Фрукти</a></li>
+                    <li><a href="#">Кондитерські вироби</a></li>
+                </ul>
+            </aside>
+            <section id="content-info-holder">
+                <h1>Продукти</h1>
+                <span class="sprtr-h"></span>
+                <div class="grid">
+                    <div class="row">
+                        <article class="col product">
+                            <figure>
+                                <a href="product-item.html">
+                                    <img src="build/images/products/biscuit-chocolate/apricot-pie.jpg" alt="Віденський пиріг | ПАТ «КОНДИТЕРСЬКА ФАБРИКА «ХАРКІВ’ЯНКА»">
+                                </a>
+                            </figure>
+                            <h2>Віденський пиріг</h2>
+                            <div class="price-weight-holder">
+                                <span class="weight">55г</span>
+                                <span class="price">12,50 грн.</span>
+                            </div>
+                            <div class="description">
+                                <p>Пирог из классического песочного теста с начинкой из абрикосового джема.</p>
+                            </div>
+                            <div class="btn-small">
+                                <a href="product-item.html">Детальніше</a>
+                            </div>
+                        </article>
+                        <article class="col product">
+                            <figure>
+                                <a href="product-item.html">
+                                    <img src="build/images/products/biscuit-chocolate/apricot-pie.jpg" alt="Віденський пиріг | ПАТ «КОНДИТЕРСЬКА ФАБРИКА «ХАРКІВ’ЯНКА»">
+                                </a>
+                            </figure>
+                            <h2>Віденський пиріг</h2>
+                            <div class="price-weight-holder">
+                                <span class="weight">55г</span>
+                                <span class="price">12,50 грн.</span>
+                            </div>
+                            <div class="description">
+                                <p>Пирог из классического песочного теста с начинкой из абрикосового джема.</p>
+                            </div>
+                            <div class="btn-small">
+                                <a href="product-item.html">Детальніше</a>
+                            </div>
+                        </article>
+                        <article class="col product">
+                            <figure>
+                                <a href="product-item.html">
+                                    <img src="build/images/products/biscuit-chocolate/apricot-pie.jpg" alt="Віденський пиріг | ПАТ «КОНДИТЕРСЬКА ФАБРИКА «ХАРКІВ’ЯНКА»">
+                                </a>
+                            </figure>
+                            <h2>Віденський пиріг</h2>
+                            <div class="price-weight-holder">
+                                <span class="weight">55г</span>
+                                <span class="price">12,50 грн.</span>
+                            </div>
+                            <div class="description">
+                                <p>Пирог из классического песочного теста с начинкой из абрикосового джема.</p>
+                            </div>
+                            <div class="btn-small">
+                                <a href="product-item.html">Детальніше</a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/products.bundle.min.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,172 @@
+{# AppBundle/Resources/views/Website/State/ourPartners.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% block title %}
+    Дорога Здоров'я
+{% endblock %}
+
+{% block metadata %}
+    <meta name="Description" content="Описание необходимых мета-тегов">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_index') }}" />
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/suppliers.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+                <ul>
+                    <li class="active"><a href="suppliers.html">Наші виробники</a></li>
+                    <li><a href="suppliers-vitmark.html">Вітмарк-Україна</a></li>
+                    <li><a href="suppliers-econia.html">Еконія</a></li>
+                    <li><a href="suppliers-biskvit-shokolad.html">Бісквіт-шоколад</a></li>
+                    <li><a href="suppliers-solodkiy-svit.html">Солодкий світ</a></li>
+                    <li><a href="#">Текмар Словенско</a></li>
+                    <li><a href="suppliers-ramonka.html">Рамонка</a></li>
+                    <li><a href="suppliers-sergio.html">Серджіо</a></li>
+                    <li><a href="suppliers-kvartet.html">Квартет</a></li>
+                </ul>
+            </aside>
+            <section id="content-info-holder">
+                <h1>Наші виробники</h1>
+                <span class="sprtr-h"></span>
+                <div class="grid">
+                    <div class="row">
+                        <article class="col">
+                            <figure>
+                                <img src="build/images/suppliers/vitmark.png" alt="Вітмарк-Україна">
+                            </figure>
+                            <h2>Вітмарк-Україна</h2>
+                            <div class="info">
+                                <p>Компанія Вітмарк-Україна посідає провідні позиції на українському ринку соків та напоїв, а також на ринку дитячого харчування</p>
+                            </div>
+                            <div class="btn-more">
+                                <a href="suppliers-vitmark.html">
+                                    дізнатися більше
+                                </a>
+                            </div>
+                        </article>
+                        <article class="col">
+                            <figure>
+                                <img src="build/images/suppliers/ekoniya.png" alt="Еконія">
+                            </figure>
+                            <h2>Еконія</h2>
+                            <div class="info">
+                                <p>Історія компанії починається в 2001 році, коли було запущене перше місцеве виробництво спеціалізованиї води для дітей від 1 місяця до 6 років в Україні</p>
+                            </div>
+                            <div class="btn-more">
+                                <a href="suppliers-econia.html">
+                                    дізнатися більше
+                                </a>
+                            </div>
+                        </article>
+                        <article class="col">
+                            <figure>
+                                <img src="build/images/suppliers/biskvit-shokolad.png" alt="Харьківська бісквітка фабрика">
+                            </figure>
+                            <h2>Бісквіт-шоколад</h2>
+                            <div class="info">
+                                <p>Фабрика Жоржа Бормана - видатного кондитера, була засновано у 1896 році, коли почалось промислове виробництво в місті Харків.</p>
+                            </div>
+                            <div class="btn-more">
+                                <a href="suppliers-biskvit-shokolad.html">
+                                    дізнатися більше
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="row">
+                        <article class="col">
+                            <figure>
+                                <img src="build/images/suppliers/sladkiy-myr.png" alt="Солодкий світ">
+                            </figure>
+                            <h2>Солодкий світ</h2>
+                            <div class="info">
+                                <p>Кондитерська фабрика «СОЛОДКИЙ СВІТ» - великий український виробник, лідер у ніші виготовлення натуральних солодощів.</p>
+                            </div>
+                            <div class="btn-more">
+                                <a href="suppliers-solodkiy-svit.html">
+                                    дізнатися більше
+                                </a>
+                            </div>
+                        </article>
+                        <article class="col">
+                            <figure>
+                                <img src="build/images/suppliers/tekmar.png" alt="Текмар Словенско">
+                            </figure>
+                            <h2>Текмар Словенско</h2>
+                            <div class="info">
+                                <p>Компанія Tekmar виробляє унікальні батончики мюслі для дієтичного харчування та активного способу життя.</p>
+                            </div>
+                            <div class="btn-more">
+                                <a href="suppliers-solodkiy-svit.html">
+                                    дізнатися більше
+                                </a>
+                            </div>
+                        </article>
+                        <article class="col">
+                            <figure>
+                                <img src="build/images/suppliers/ramonka.png" alt="Рамонка">
+                            </figure>
+                            <h2>Рамонка</h2>
+                            <div class="info">
+                                <p>Асортимент нашої компанії включає більше 50 найменувань традиційних солодощів - козинаки , ірис , драже , мармелад , рахат -лукум та інші вироби.</p>
+                            </div>
+                            <div class="btn-more">
+                                <a href="suppliers-ramonka.html">
+                                    дізнатися більше
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="row">
+                        <article class="col">
+                            <figure>
+                                <img src="build/images/suppliers/sergio.png" alt="Серджіо">
+                            </figure>
+                            <h2>Серджіо</h2>
+                            <div class="info">
+                                <p>Компанія "Серджио" робить якісні сухофрукти TM SERGIО. Мета компанії - виробництво тільки високоякісної натуральної продукції для дітей.</p>
+                            </div>
+                            <div class="btn-more">
+                                <a href="suppliers-sergio.html">
+                                    дізнатися більше
+                                </a>
+                            </div>
+                        </article>
+                        <article class="col">
+                            <figure>
+                                <img src="build/images/suppliers/kvartet.png" alt="Квартет">
+                            </figure>
+                            <h2>Квартет</h2>
+                            <div class="info">
+                                <p>Компанія займалася виключно виготовленням художніх тортів, але потім, сформувався окремий напрям - виготовлення авторських імбирних пряників.</p>
+                            </div>
+                            <div class="btn-more">
+                                <a href="suppliers-kvartet.html">
+                                    дізнатися більше
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/suppliers.bundle.min.js') }}"></script>
+{% endblock %}
