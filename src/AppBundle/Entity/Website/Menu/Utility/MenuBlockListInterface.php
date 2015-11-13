@@ -1,6 +1,6 @@
 <?php
-// AppBundle/Entity/WebsiteMenu/Utility/MenuBlockListInterface.php
-namespace AppBundle\Entity\WebsiteMenu\Utility;
+// AppBundle/Entity/Website/Menu/Utility/MenuBlockListInterface.php
+namespace AppBundle\Entity\Website\Menu\Utility;
 
 interface MenuBlockListInterface
 {

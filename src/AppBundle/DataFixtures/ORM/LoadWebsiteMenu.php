@@ -6,8 +6,8 @@ use Doctrine\Common\DataFixtures\AbstractFixture,
     Doctrine\Common\DataFixtures\OrderedFixtureInterface,
     Doctrine\Common\Persistence\ObjectManager;
 
-use AppBundle\Entity\WebsiteMenu\WebsiteMenu,
-    AppBundle\Entity\WebsiteMenu\Utility\MenuBlockListInterface;
+use AppBundle\Entity\Website\Menu\Menu,
+    AppBundle\Entity\Website\Menu\Utility\MenuBlockListInterface;
 
 class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface, MenuBlockListInterface
 {
@@ -15,7 +15,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
     {
         $manager->persist
         (
-            $websiteMenu_1 = (new WebsiteMenu)
+            $websiteMenu_1 = (new Menu)
                 ->setRoute("website_index")
                 ->setBlock(self::BLOCK_MAIN)
                 ->setTitleShort("Головна")
@@ -23,7 +23,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
 
         $manager->persist
         (
-            $websiteMenu_2 = (new WebsiteMenu)
+            $websiteMenu_2 = (new Menu)
                 ->setRoute("website_our_project")
                 ->setBlock(self::BLOCK_MAIN)
                 ->setTitleShort("Наш проект")
@@ -31,7 +31,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $manager->persist(
-            $websiteMenu_2_1 = (new WebsiteMenu)
+            $websiteMenu_2_1 = (new Menu)
                 ->setRoute("website_how_to_get_card")
                 ->setBlock(self::BLOCK_OUR_PROJECT)
                 ->setTitleShort("Як отримати картку?")
@@ -39,7 +39,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $manager->persist(
-            $websiteMenu_2_2 = (new WebsiteMenu)
+            $websiteMenu_2_2 = (new Menu)
                 ->setRoute("website_how_to_replenish_card")
                 ->setBlock(self::BLOCK_OUR_PROJECT)
                 ->setTitleShort("Як поповнити картку?")
@@ -47,7 +47,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $manager->persist(
-            $websiteMenu_2_3 = (new WebsiteMenu)
+            $websiteMenu_2_3 = (new Menu)
                 ->setRoute("website_how_to_use_vending_machine")
                 ->setBlock(self::BLOCK_OUR_PROJECT)
                 ->setTitleShort("Як користуватись автоматом?")
@@ -55,7 +55,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $manager->persist(
-            $websiteMenu_3 = (new WebsiteMenu)
+            $websiteMenu_3 = (new Menu)
                 ->setRoute("website_about_company")
                 ->setBlock(self::BLOCK_MAIN)
                 ->setTitleShort("Про компанію")
@@ -63,29 +63,55 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $manager->persist(
-            $websiteMenu_4 = (new WebsiteMenu)
+            $websiteMenu_3_1 = (new Menu)
+                ->setRoute("website_news")
+                ->setBlock(self::BLOCK_ABOUT_COMPANY)
+                ->setTitleShort("Новини")
+                ->setTitleFull("Новини")
+        );
+
+        $manager->persist(
+            $websiteMenu_3_2 = (new Menu)
+                ->setRoute("website_promotions")
+                ->setBlock(self::BLOCK_ABOUT_COMPANY)
+                ->setTitleShort("Акції")
+                ->setTitleFull("Акції та пропозиції")
+        );
+
+        $manager->persist(
+            $websiteMenu_3_3 = (new Menu)
+                ->setRoute("website_gallery")
+                ->setBlock(self::BLOCK_ABOUT_COMPANY)
+                ->setTitleShort("Галерея")
+                ->setTitleFull("Галерея")
+        );
+
+        $manager->persist(
+            $websiteMenu_4 = (new Menu)
                 ->setRoute("website_our_partners")
                 ->setBlock(self::BLOCK_MAIN)
                 ->setTitleShort("Наші партнери")
+                ->setTitleFull("Наші партнери")
         );
 
         $manager->persist(
-            $websiteMenu_5 = (new WebsiteMenu)
+            $websiteMenu_5 = (new Menu)
                 ->setRoute("website_products")
                 ->setBlock(self::BLOCK_MAIN)
                 ->setTitleShort("Продукти")
+                ->setTitleFull("Продукти")
         );
 
         $manager->persist(
-            $websiteMenu_6 = (new WebsiteMenu)
+            $websiteMenu_6 = (new Menu)
                 ->setRoute("website_contacts")
                 ->setBlock(self::BLOCK_MAIN)
                 ->setTitleShort("Контакти")
-                ->setTitleFull("Контакти головного офісу")
+                ->setTitleFull("Головний офіс")
         );
 
         $manager->persist(
-            $websiteMenu_6_1 = (new WebsiteMenu)
+            $websiteMenu_6_1 = (new Menu)
                 ->setRoute("website_vending_machines_placement")
                 ->setBlock(self::BLOCK_CONTACTS)
                 ->setTitleShort("Розташування автоматів")
@@ -93,7 +119,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $manager->persist(
-            $websiteMenu_6_2 = (new WebsiteMenu)
+            $websiteMenu_6_2 = (new Menu)
                 ->setRoute("website_vending_machines_suppliers")
                 ->setBlock(self::BLOCK_CONTACTS)
                 ->setTitleShort("Для постачальників")
@@ -101,7 +127,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $manager->persist(
-            $websiteMenu_7 = (new WebsiteMenu)
+            $websiteMenu_7 = (new Menu)
                 ->setRoute("website_feedback")
                 ->setBlock(self::BLOCK_FEEDBACK)
                 ->setTitleShort("Зворотній зв'язок")

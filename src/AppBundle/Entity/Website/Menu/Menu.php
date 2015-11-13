@@ -1,6 +1,6 @@
 <?php
-// AppBundle/Entity/WebsiteMenu/WebsiteMenu.php
-namespace AppBundle\Entity\WebsiteMenu;
+// AppBundle/Entity/Website/Menu/Menu.php
+namespace AppBundle\Entity\Website\Menu;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -10,16 +10,16 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
 
 /**
  * @ORM\Table(name="website_menu")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\WebsiteMenu\Repository\WebsiteMenuRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Website\Menu\Repository\MenuRepository")
  *
  * @UniqueEntity(fields="alias")
  */
-class WebsiteMenu
+class Menu
 {
     use IdMapperTrait;
 
     /**
-     * @ORM\Column(type="string", length=200)
+     * @ORM\Column(type="string", length=200, unique=true)
      */
     protected $route;
 
@@ -43,14 +43,14 @@ class WebsiteMenu
      */
     public function __toString()
     {
-        return $this->getTitleShort();
+        return ( $this->getTitleShort() ) ?: '';
     }
 
     /**
      * Set route
      *
      * @param string $route
-     * @return WebsiteMenu
+     * @return Menu
      */
     public function setRoute($route)
     {
@@ -73,7 +73,7 @@ class WebsiteMenu
      * Set block
      *
      * @param string $block
-     * @return WebsiteMenu
+     * @return Menu
      */
     public function setBlock($block)
     {
@@ -96,7 +96,7 @@ class WebsiteMenu
      * Set titleShort
      *
      * @param string $titleShort
-     * @return WebsiteMenu
+     * @return Menu
      */
     public function setTitleShort($titleShort)
     {
@@ -119,7 +119,7 @@ class WebsiteMenu
      * Set titleFull
      *
      * @param string $titleFull
-     * @return WebsiteMenu
+     * @return Menu
      */
     public function setTitleFull($titleFull)
     {

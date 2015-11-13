@@ -1,0 +1,66 @@
+{# AppBundle/Resources/views/Website/State/contactsPlacement.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ metadata.title }} | {{ 'website.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_vending_machines_placement') }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/contacts.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+
+                {{ knp_menu_render('contacts', {'currentClass': 'active'}) }}
+
+            </aside>
+            <section id="content-info-holder">
+                <h1>Розташування автоматів у школі</h1>
+                <span class="sprtr-h"></span>
+                <div class="grid staff-holder">
+                    <div class="row">
+                        <div class="col">
+                            <h2>{{ contact.title }}</h2>
+                            <span class="role">{{ contact.position }}</span>
+                            <span class="sprtr-h"></span>
+                            <ul>
+                                <li>
+                                    <span class="hr-phone"></span>
+                                    <a href="tel:{{ contact.phoneNumber|replace({ ' ': '', '(': '', ')': '', '-': '' }) }}">{{ contact.phoneNumber }}</a>
+                                </li>
+                                <li>
+                                    <span class="hr-email"></span>
+                                    <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/contacts.bundle.min.js') }}"></script>
+{% endblock %}

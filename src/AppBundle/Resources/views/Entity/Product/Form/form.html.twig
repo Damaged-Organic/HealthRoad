@@ -208,8 +208,28 @@
     </div>
 
     <div class="field-holder">
+        {{ form_widget(form.descriptionShort, {
+            'id': "product-description-short",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product.description_short.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "5", 'data-msg-minlength': 'product.description_short.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "250", 'data-msg-maxlength': 'product.description_short.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.descriptionShort) }}
+
+        {{ form_errors(form.descriptionShort) }}
+    </div>
+
+    <div class="field-holder">
         {{ form_widget(form.description, {
-            'id': "product-description"
+            'id': "product-description",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product.description.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "5", 'data-msg-minlength': 'product.description.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "10000", 'data-msg-maxlength': 'product.description.length.max'|trans({}, "validators")
+            }
         }) }}
 
         {{ form_label(form.description) }}

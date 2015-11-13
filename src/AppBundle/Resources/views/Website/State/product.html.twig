@@ -1,0 +1,109 @@
+{# AppBundle/Resources/views/Website/State/product.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ product.nameShort }} | {{ 'website.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="description" content="{{ product.descriptionShort }}">
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_products', { 'id': product.id, 'slug': product.slug }) }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/products.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky product-holder">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+
+                {{ knp_menu_render('products', {'currentClass': 'active'}) }}
+
+            </aside>
+            <section id="content-info-holder">
+                <div class="carousel-holder">
+                    <div class="carousel">
+
+                        {% if product.productImages.0 is defined %}
+
+                            {% for productImage in product.productImages %}
+                                <div class="slide">
+                                    <figure>
+                                        <img src="{{ vich_uploader_asset(productImage, 'imageProductFile') }}" alt="{{ product.nameShort }}">
+                                    </figure>
+                                </div>
+                            {% endfor %}
+
+                        {% else %}
+                            <div class="slide">
+                                <figure>
+                                    <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}" alt="no-image">
+                                </figure>
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    {% if product.productImages.0 is defined %}
+
+                        <span class="arrow left hr-left-arrow"></span>
+                        <span class="arrow right hr-right-arrow"></span>
+                        <div class="dots-holder">
+
+                            {% for i in 1..product.productImages|length %}
+
+                                {% if loop.first %}
+                                    <span class="dot active"></span>
+                                {% else %}
+                                    <span class="dot"></span>
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+                <div class="info-holder">
+                    <h1>{{ product.nameShort }}</h1>
+                    <span class="sprtr-h"></span>
+                    <p>{{ product.descriptionShort }}</p>
+                    <p>
+                        <span>Склад:</span>
+                        {{ product.description }}
+                    </p>
+                    <p>
+                        <span>Маса нетто:</span>
+                        {{ product.getWeightAndMeasure }}
+                    </p>
+                    <p>
+                        <span>Термін зберігання:</span>
+                        {{ product.shelfLife }}
+                    </p>
+                    <p class="price">
+                        <span>Ціна:</span>
+                        {{ product.price|number_format(2, ',') }} ₴
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/products.bundle.min.js') }}"></script>
+{% endblock %}

@@ -13,17 +13,17 @@ class LoadProductCategory extends AbstractFixture implements OrderedFixtureInter
     public function load(ObjectManager $manager)
     {
         $productCategory_0 = (new ProductCategory)
-            ->setName("Кондитерские изделия")
+            ->setName("Вода")
         ;
         $manager->persist($productCategory_0);
 
         $productCategory_1 = (new ProductCategory)
-            ->setName("Соки")
+            ->setName("Кондитерские изделия")
         ;
         $manager->persist($productCategory_1);
 
         $productCategory_2 = (new ProductCategory)
-            ->setName("Вода")
+            ->setName("Соки")
         ;
         $manager->persist($productCategory_2);
 

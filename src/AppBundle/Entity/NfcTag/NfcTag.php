@@ -46,8 +46,8 @@ class NfcTag implements SyncNfcTagPropertiesInterface
      *
      * @Assert\NotBlank(message="nfc_tag.number.not_blank")
      * @Assert\Regex(
-     *     pattern = "/^[A-Z]{2}[0-9]{6}$/",
-     *     message = "nfc_tag.number.regex"
+     *     pattern="/^[A-Z]{2}[0-9]{6}$/",
+     *     message="nfc_tag.number.regex"
      * )
      */
     protected $number;

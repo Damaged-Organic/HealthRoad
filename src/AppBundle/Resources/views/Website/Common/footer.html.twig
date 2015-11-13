@@ -1,7 +1,9 @@
 {# AppBundle/Resources/views/Website/Common/footer.html.twig #}
 <div class="inner">
     <div class="logo">
-        <a href="#"><img src="{{ asset('bundles/app/website/images/logo-white.png') }}" alt="Дорога Здоров'я"></a>
+        <a href="{{ path('website_index') }}">
+            <img src="{{ asset('bundles/app/website/images/logo-white.png') }}" alt="{{ 'website.title'|trans }}">
+        </a>
     </div>
     <ul class="social-holder">
         <li>

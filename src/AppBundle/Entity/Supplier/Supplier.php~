@@ -8,7 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity,
     Symfony\Component\HttpFoundation\File\File;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -21,6 +22,8 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  *
  * @UniqueEntity(fields="name", message="supplier.name.unique")
  *
+ * @Assert\GroupSequence({"Supplier", "Strict", "Create", "Update"})
+ *
  * @Vich\Uploadable
  */
 class Supplier
@@ -31,6 +34,13 @@ class Supplier
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product\Product", mappedBy="supplier")
      */
     protected $products;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Supplier\SupplierImage", mappedBy="supplier", cascade={"persist", "remove"})
+     */
+    protected $supplierImages;
+
+    protected $uploadedProductImages;
 
     /**
      * @ORM\Column(type="string", length=250, unique=true)
@@ -64,12 +74,18 @@ class Supplier
     protected $description;
 
     /**
+     * @Assert\NotBlank(message="supplier.logo_file.not_blank", groups={"Create"})
+     * @Assert\File(
+     *     maxSize="2M",
+     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg", "image/gif"}
+     * )
+     *
      * @Vich\UploadableField(mapping="supplier_logo", fileNameProperty="logoName")
      */
     protected $logoFile;
 
     /**
-     * @ORM\Column(type="string", length=250)
+     * @ORM\Column(type="string", length=250, nullable=true)
      */
     protected $logoName;
 
@@ -91,17 +107,16 @@ class Supplier
     protected $emailSupplier;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @Assert\Length(
      *      min=2,
-     *      max=250,
+     *      max=500,
      *      minMessage="supplier.name_contact.length.min",
      *      maxMessage="supplier.name_contact.length.max"
      * )
-     *
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}\s]+$/u",
+     *     pattern="/^[a-zA-Z\p{L}-\s]+$/u",
      *     message="common.human_name.regex"
      * )
      */
@@ -155,9 +170,18 @@ class Supplier
     protected $contractDateEnd;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $updatedAt;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->supplierImages = new ArrayCollection;
+        $this->products       = new ArrayCollection;
+    }
 
     /* Vich Uploadable Methods */
 
@@ -473,5 +497,73 @@ class Supplier
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Add products
+     *
+     * @param \AppBundle\Entity\Product\Product $product
+     * @return Supplier
+     */
+    public function addProduct(\AppBundle\Entity\Product\Product $product)
+    {
+        $product->setSupplier($this);
+        $this->products[] = $product;
+
+        return $this;
+    }
+
+    /**
+     * Remove products
+     *
+     * @param \AppBundle\Entity\Product\Product $products
+     */
+    public function removeProduct(\AppBundle\Entity\Product\Product $products)
+    {
+        $this->products->removeElement($products);
+    }
+
+    /**
+     * Get products
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * Add supplierImage
+     *
+     * @param \AppBundle\Entity\Supplier\SupplierImage $supplierImage
+     * @return Supplier
+     */
+    public function addSupplierImage(\AppBundle\Entity\Supplier\SupplierImage $supplierImage)
+    {
+        $supplierImage->setSupplier($this);
+        $this->supplierImages[] = $supplierImage;
+
+        return $this;
+    }
+
+    /**
+     * Remove supplierImages
+     *
+     * @param \AppBundle\Entity\Supplier\SupplierImage $supplierImages
+     */
+    public function removeSupplierImage(\AppBundle\Entity\Supplier\SupplierImage $supplierImages)
+    {
+        $this->supplierImages->removeElement($supplierImages);
+    }
+
+    /**
+     * Get supplierImages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSupplierImages()
+    {
+        return $this->supplierImages;
     }
 }

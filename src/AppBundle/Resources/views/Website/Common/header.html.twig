@@ -1,7 +1,11 @@
 {# AppBundle/Resources/views/Website/Common/header.html.twig #}
 <header id="header">
     <div class="inner">
-        <div class="logo"><a href="#"><img src="{{ asset('bundles/app/website/images/logo.png') }}" alt="Дорога Здоров'я - здорове шкільне харчування"></a></div>
+        <div class="logo">
+            <a href="{{ path('website_index', { '_locale': app.request.locale }) }}">
+                <img src="{{ asset('bundles/app/website/images/logo.png') }}" alt="Дорога Здоров'я - Здорове шкільне харчування">
+            </a>
+        </div>
         <div class="info-holder">
             <ul class="langs-holder">
                 <li class="active"><a href="#">ua</a></li>
@@ -11,28 +15,54 @@
                 <a href="#">Вхід для батьків</a>
             </div>
             <span class="sprtr-v"></span>
+
             <ul class="phones-holder">
-                <li>
-                    <a href="tel:+380449999999"><span class="hr-mtc hr-small"></span>+38 (066) 539 3939</a>
-                </li>
-                <li>
-                    <a href="tel:+380449999999"><span class="hr-kstar hr-small"></span>+38 (068) 539 3939</a>
-                </li>
-                <li>
-                    <a href="tel:+380449999999"><span class="hr-life hr-small"></span>+38 (063) 539 3939</a>
-                </li>
+
+                {% if contacts.support_center_mts %}
+                    <li>
+                        <a href="tel:{{ contacts.support_center_mts.phoneNumber|replace({ ' ': '', '(': '', ')': '', '-': '' }) }}" title="{{ contacts.support_center_mts.title }}">
+                            <span class="hr-mtc hr-small"></span>
+                            {{ contacts.support_center_mts.phoneNumber|replace({ '-': ' ' }) }}
+                        </a>
+                    </li>
+                {%  endif %}
+
+                {% if contacts.support_center_kyivstar %}
+                    <li>
+                        <a href="tel:{{ contacts.support_center_kyivstar.phoneNumber|replace({ ' ': '', '(': '', ')': '', '-': '' }) }}" title="{{ contacts.support_center_kyivstar.title }}">
+                            <span class="hr-kstar hr-small"></span>
+                            {{ contacts.support_center_kyivstar.phoneNumber|replace({ '-': ' ' }) }}
+                        </a>
+                    </li>
+                {%  endif %}
+
+                {% if contacts.support_center_life %}
+                    <li>
+                        <a href="tel:{{ contacts.support_center_life.phoneNumber|replace({ ' ': '', '(': '', ')': '', '-': '' }) }}" title="{{ contacts.support_center_life.title }}">
+                            <span class="hr-life hr-small"></span>
+                            {{ contacts.support_center_life.phoneNumber|replace({ '-': ' ' }) }}
+                        </a>
+                    </li>
+                {%  endif %}
+
             </ul>
-            <ul class="call-center-holder">
-                <li>
-                    <h3>Центр Підтримки</h3>
-                </li>
-                <li>
-                    <span>пн-пт: 9:00 - 18:00</span>
-                </li>
-                <li>
-                    <a href="callback.html">зворотній зв'язок</a>
-                </li>
-            </ul>
+
+            {% if contacts.support_center %}
+
+                <ul class="call-center-holder">
+                    <li>
+                        <h3>{{ contacts.support_center.title }}</h3>
+                    </li>
+                    <li>
+                        <span>пн-пт: {{ contacts.support_center.schedule }}</span>
+                    </li>
+                    <li>
+                        <a href="{{ path('website_feedback', { '_locale': app.request.locale }) }}">зворотній зв'язок</a>
+                    </li>
+                </ul>
+
+            {%  endif %}
+
         </div>
     </div>
     <div id="toggle-menu">

@@ -1,0 +1,68 @@
+{# AppBundle/Resources/views/Website/State/ourPartner.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ supplier.name }} | {{ 'website.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="description" content="{{ supplier.descriptionShort }}">
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_our_partners', { 'id': supplier.id, 'slug': supplier.slug }) }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/suppliers.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+
+                {{ knp_menu_render('our_partners', {'currentClass': 'active'}) }}
+
+            </aside>
+            <section id="content-info-holder" class="supplier-inside">
+                <figure>
+                    <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
+                </figure>
+                <h1>{{ supplier.name }}</h1>
+                <span class="sprtr-h"></span>
+
+                {% if supplier.supplierImages|length %}
+                    <h3>Торгові марки компанії</h3>
+                    <ul class="trade-marks-holder">
+
+                        {% for supplierImage in supplier.supplierImages %}
+                            <li>
+                                <figure>
+                                    <img src="{{ vich_uploader_asset(supplierImage, 'imageSupplierFile') }}" alt="{{ supplier.name }}">
+                                </figure>
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                {% endif %}
+
+                {{ supplier.description|striptags('<p>')|raw }}
+
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/suppliers.bundle.min.js') }}"></script>
+{% endblock %}

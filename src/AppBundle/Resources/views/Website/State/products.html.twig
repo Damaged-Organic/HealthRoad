@@ -1,16 +1,19 @@
 {# AppBundle/Resources/views/Website/State/products.html.twig #}
 {% extends 'AppBundle:Website:layout.html.twig' %}
 
+{% set metadata = getMetadata() %}
+
 {% block title %}
-    Дорога Здоров'я
+    {{ metadata.title }} | {{ 'website.title'|trans }}
 {% endblock %}
 
 {% block metadata %}
-    <meta name="Description" content="Описание необходимых мета-тегов">
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
 {% block locale %}
-    <link rel="canonical" href="{{ url('website_index') }}" />
+    <link rel="canonical" href="{{ url('website_products') }}">
 {% endblock %}
 
 {% block stylesheets %}
@@ -21,74 +24,57 @@
     <main id="content" class="sticky">
         <div class="outer inside">
             <aside id="navigation-holder">
-                <ul>
-                    <li class="active"><a href="#">Продукти</a></li>
-                    <li><a href="#">Сік</a></li>
-                    <li><a href="#">Вода</a></li>
-                    <li><a href="#">Фрукти</a></li>
-                    <li><a href="#">Кондитерські вироби</a></li>
-                </ul>
+
+                {{ knp_menu_render('products', {'currentClass': 'active'}) }}
+
             </aside>
             <section id="content-info-holder">
                 <h1>Продукти</h1>
                 <span class="sprtr-h"></span>
                 <div class="grid">
-                    <div class="row">
+
+                    {% for product in products %}
+
+                        {% if loop.first %}
+                            <div class="row">
+                        {% endif %}
+
+                        {% set image = ( product.productImages.0 is defined )
+                                ? vich_uploader_asset(product.productImages.0, 'imageProductFile')
+                                : asset('bundles/app/dashboard/images/no-image.jpg') %}
+
                         <article class="col product">
                             <figure>
-                                <a href="product-item.html">
-                                    <img src="build/images/products/biscuit-chocolate/apricot-pie.jpg" alt="Віденський пиріг | ПАТ «КОНДИТЕРСЬКА ФАБРИКА «ХАРКІВ’ЯНКА»">
+                                <a href="{{ path('website_products', { 'id': product.id, 'slug': product.slug }) }}">
+                                    <img src="{{ image }}" alt="{{ product.nameShort }}">
                                 </a>
                             </figure>
-                            <h2>Віденський пиріг</h2>
+                            <h2>{{ product.nameShort }}</h2>
                             <div class="price-weight-holder">
-                                <span class="weight">55г</span>
-                                <span class="price">12,50 грн.</span>
+                                <span class="weight">
+                                    {{ product.getWeightAndMeasure }}
+                                </span>
+                                <span class="price">{{ product.price|number_format(2, ',') }} ₴</span>
                             </div>
                             <div class="description">
-                                <p>Пирог из классического песочного теста с начинкой из абрикосового джема.</p>
+                                <p>{{ product.descriptionShort }}</p>
                             </div>
                             <div class="btn-small">
-                                <a href="product-item.html">Детальніше</a>
+                                <a href="{{ path('website_products', { 'id': product.id, 'slug': product.slug }) }}">Детальніше</a>
                             </div>
                         </article>
-                        <article class="col product">
-                            <figure>
-                                <a href="product-item.html">
-                                    <img src="build/images/products/biscuit-chocolate/apricot-pie.jpg" alt="Віденський пиріг | ПАТ «КОНДИТЕРСЬКА ФАБРИКА «ХАРКІВ’ЯНКА»">
-                                </a>
-                            </figure>
-                            <h2>Віденський пиріг</h2>
-                            <div class="price-weight-holder">
-                                <span class="weight">55г</span>
-                                <span class="price">12,50 грн.</span>
+
+                        {% if loop.last %}
                             </div>
-                            <div class="description">
-                                <p>Пирог из классического песочного теста с начинкой из абрикосового джема.</p>
+                        {% elseif loop.index is divisible by(3) %}
                             </div>
-                            <div class="btn-small">
-                                <a href="product-item.html">Детальніше</a>
-                            </div>
-                        </article>
-                        <article class="col product">
-                            <figure>
-                                <a href="product-item.html">
-                                    <img src="build/images/products/biscuit-chocolate/apricot-pie.jpg" alt="Віденський пиріг | ПАТ «КОНДИТЕРСЬКА ФАБРИКА «ХАРКІВ’ЯНКА»">
-                                </a>
-                            </figure>
-                            <h2>Віденський пиріг</h2>
-                            <div class="price-weight-holder">
-                                <span class="weight">55г</span>
-                                <span class="price">12,50 грн.</span>
-                            </div>
-                            <div class="description">
-                                <p>Пирог из классического песочного теста с начинкой из абрикосового джема.</p>
-                            </div>
-                            <div class="btn-small">
-                                <a href="product-item.html">Детальніше</a>
-                            </div>
-                        </article>
-                    </div>
+                            <div class="row">
+                        {% endif %}
+
+                    {% else %}
+                        <p>На жаль, інформация стосовно наших продуктів на даний час відсутня</p>
+                    {% endfor %}
+
                 </div>
             </section>
         </div>

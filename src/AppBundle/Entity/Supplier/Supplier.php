@@ -11,9 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
+use Gedmo\Mapping\Annotation as Gedmo;
+
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\SlugMapper,
     AppBundle\Validator\Constraints as CustomAssert;
 
 /**
@@ -28,12 +31,19 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  */
 class Supplier
 {
-    use IdMapperTrait;
+    use IdMapperTrait, SlugMapper;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product\Product", mappedBy="supplier")
      */
     protected $products;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Supplier\SupplierImage", mappedBy="supplier", cascade={"persist", "remove"})
+     */
+    protected $supplierImages;
+
+    protected $uploadedSupplierImages;
 
     /**
      * @ORM\Column(type="string", length=250, unique=true)
@@ -49,6 +59,17 @@ class Supplier
     protected $name;
 
     /**
+     * @ORM\Column(length=128, unique=true)
+     *
+     * @Gedmo\Slug(
+     *      fields={"name"},
+     *      separator="_",
+     *      style="lower"
+     * )
+     */
+    protected $slug;
+
+    /**
      * @ORM\Column(type="string", length=500)
      *
      * @Assert\NotBlank(message="supplier.name_legal.not_blank")
@@ -62,7 +83,28 @@ class Supplier
     protected $nameLegal;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", length=250)
+     *
+     * @Assert\NotBlank(message="supplier.description_short.not_blank")
+     * @Assert\Length(
+     *      min=5,
+     *      max=250,
+     *      minMessage="supplier.description_short.length.min",
+     *      maxMessage="supplier.description_short.length.max"
+     * )
+     */
+    protected $descriptionShort;
+
+    /**
+     * @ORM\Column(type="text")
+     *
+     * @Assert\NotBlank(message="supplier.description.not_blank")
+     * @Assert\Length(
+     *      min=5,
+     *      max=10000,
+     *      minMessage="supplier.description.length.min",
+     *      maxMessage="supplier.description.length.max"
+     * )
      */
     protected $description;
 
@@ -172,7 +214,8 @@ class Supplier
      */
     public function __construct()
     {
-        $this->products = new ArrayCollection;
+        $this->supplierImages = new ArrayCollection;
+        $this->products       = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -236,6 +279,29 @@ class Supplier
     public function getNameLegal()
     {
         return $this->nameLegal;
+    }
+
+    /**
+     * Set descriptionShort
+     *
+     * @param string $descriptionShort
+     * @return Supplier
+     */
+    public function setDescriptionShort($descriptionShort)
+    {
+        $this->descriptionShort = $descriptionShort;
+
+        return $this;
+    }
+
+    /**
+     * Get descriptionShort
+     *
+     * @return string
+     */
+    public function getDescriptionShort()
+    {
+        return $this->descriptionShort;
     }
 
     /**
@@ -523,5 +589,58 @@ class Supplier
     public function getProducts()
     {
         return $this->products;
+    }
+
+    /**
+     * Add supplierImage
+     *
+     * @param \AppBundle\Entity\Supplier\SupplierImage $supplierImage
+     * @return Supplier
+     */
+    public function addSupplierImage(\AppBundle\Entity\Supplier\SupplierImage $supplierImage)
+    {
+        $supplierImage->setSupplier($this);
+        $this->supplierImages[] = $supplierImage;
+
+        return $this;
+    }
+
+    /**
+     * Remove supplierImages
+     *
+     * @param \AppBundle\Entity\Supplier\SupplierImage $supplierImages
+     */
+    public function removeSupplierImage(\AppBundle\Entity\Supplier\SupplierImage $supplierImages)
+    {
+        $this->supplierImages->removeElement($supplierImages);
+    }
+
+    /**
+     * Get supplierImages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSupplierImages()
+    {
+        return $this->supplierImages;
+    }
+
+    public function addUploadedSupplierImage($image)
+    {
+        $this->uploadedSupplierImages[] = $image;
+
+        return $this;
+    }
+
+    public function removeUploadedSupplierImage($image)
+    {
+        $this->uploadedSupplierImages->removeElement($image);
+
+        return $this;
+    }
+
+    public function getUploadedSupplierImages()
+    {
+        return $this->uploadedSupplierImages;
     }
 }

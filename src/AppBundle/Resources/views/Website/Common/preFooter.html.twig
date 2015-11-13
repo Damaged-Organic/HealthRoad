@@ -1,0 +1,81 @@
+{# AppBundle/Resources/views/Website/Common/preFooter.html.twig #}
+<section class="pre-footer">
+    <div class="inner">
+        <div class="part contacts">
+            <h3>Контакти</h3>
+            <span class="sprtr-h"></span>
+            <ul>
+
+                {% if contacts.support_center %}
+                    <li>
+                        <span class="item">
+                            <span class="hr-pin"></span>
+                            {{ contacts.support_center.mail }}
+                        </span>
+                    </li>
+                {% endif %}
+
+                <li>
+
+                    {% if contacts.support_center_mts %}
+                        <span class="item">
+                            <span class="hr-mtc"></span>
+                            {{ contacts.support_center_mts.phoneNumber }}
+                        </span>
+                    {% endif %}
+
+                    {% if contacts.support_center_kyivstar %}
+                        <span class="item">
+                            <span class="hr-kstar"></span>
+                            {{ contacts.support_center_kyivstar.phoneNumber }}
+                        </span>
+                    {% endif %}
+
+                    {% if contacts.support_center_life %}
+                        <span class="item">
+                            <span class="hr-life"></span>
+                            {{ contacts.support_center_life.phoneNumber }}
+                        </span>
+                    {% endif %}
+
+                </li>
+
+                {% if contacts.support_center %}
+                    <li>
+                        <span class="item">
+                            <span class="hr-email"></span>
+                            {{ contacts.support_center.email }}
+                        </span>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+        <div class="part navigation">
+            <h3>Всі розділи</h3>
+            <span class="sprtr-h"></span>
+            <div class="list-holder">
+
+                {{ knp_menu_render('footer') }}
+
+            </div>
+        </div>
+        <div class="part entrance">
+            <h3>Вхід для батьків</h3>
+            <span class="sprtr-h"></span>
+            <form action="#" method="POST" id="entrance-form">
+                <div class="field-area">
+                    <input type="tel" name="user[phone]" value="" placeholder="+38 (044) 999 9999" id="entrance-user-phone" data-rule-required="true" data-mask="+38 (000) 000-0000">
+                    <label for="entrance-user-phone"><span class="hr-phone"></span></label>
+                </div>
+                <div class="field-area">
+                    <input type="password" name="user[password]" value="" placeholder="ваш пароль" id="entrance-user-password" data-rule-required="true">
+                    <label for="entrance-user-password"><span class="hr-lock"></span></label>
+                </div>
+                <button type="submit">
+                    <span>Увійти</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>

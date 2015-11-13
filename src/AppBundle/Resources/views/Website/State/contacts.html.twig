@@ -1,16 +1,19 @@
 {# AppBundle/Resources/views/Website/State/contacts.html.twig #}
 {% extends 'AppBundle:Website:layout.html.twig' %}
 
+{% set metadata = getMetadata() %}
+
 {% block title %}
-    Дорога Здоров'я
+    {{ metadata.title }} | {{ 'website.title'|trans }}
 {% endblock %}
 
 {% block metadata %}
-    <meta name="Description" content="Описание необходимых мета-тегов">
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
 {% block locale %}
-    <link rel="canonical" href="{{ url('website_index') }}" />
+    <link rel="canonical" href="{{ url('website_contacts') }}">
 {% endblock %}
 
 {% block stylesheets %}
@@ -35,7 +38,10 @@
                             <span class="sprtr-h"></span>
                             <span class="icon hr-shedule"></span>
                             <div class="item">
-                                <p><span>Пн.-Пт.</span> з 9:00 до 18:00</p>
+                                <p>
+                                    <span>Пн.-Пт.</span>
+                                    {{ contact.schedule }}
+                                </p>
                             </div>
                         </div>
                         <div class="col">
@@ -43,11 +49,11 @@
                             <span class="sprtr-h"></span>
                             <span class="icon hr-phone"></span>
                             <div class="item">
-                                <a href="tel:+380442353842">+38 (044) 235-3842</a>
+                                <a href="tel:{{ contact.phoneNumber|replace({ ' ': '', '(': '', ')': '', '-': '' }) }}">{{ contact.phoneNumber }}</a>
                             </div>
                             <span class="icon hr-email"></span>
                             <div class="item">
-                                <a href="mailto:info@kdz.com.ua">info@kdz.com.ua</a>
+                                <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
                             </div>
                         </div>
                         <div class="col">
@@ -55,7 +61,7 @@
                             <span class="sprtr-h"></span>
                             <span class="icon hr-email"></span>
                             <div class="item">
-                                <p>01054, м. Київ-54, А/С 12</p>
+                                <p>{{ contact.mail }}</p>
                             </div>
                         </div>
                     </div>

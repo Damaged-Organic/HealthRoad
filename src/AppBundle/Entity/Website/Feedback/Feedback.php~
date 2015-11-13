@@ -1,0 +1,71 @@
+<?php
+// AppBundle/Entity/Website/Feedback/Feedback.php
+namespace AppBundle\Entity\Website\Feedback;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Validator\Constraints as CustomAssert;
+
+/**
+ * @ORM\Table(name="website_feedbacks")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Website\Feedback\Repository\FeedbackRepository")
+ */
+class Feedback
+{
+    use IdMapperTrait;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    protected $type;
+
+    /**
+     * @ORM\Column(type="string", length=250)
+     *
+     * @Assert\Length(
+     *      min=2,
+     *      max=250,
+     *      minMessage="feedback.name.length_min",
+     *      maxMessage="feedback.name.length_max"
+     * )
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(type="string", length=60)
+     *
+     * @Assert\NotBlank(
+     *      message="feedback.email.not_blank"
+     * )
+     * @Assert\Email(
+     *      message="feedback.email.valid"
+     * )
+     */
+    protected $email;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     *
+     * @CustomAssert\IsPhoneNumberConstraint
+     */
+    // TODO: Different message
+    protected $phoneNumber;
+
+    /**
+     * @ORM\Column(type="text")
+     *
+     * @Assert\NotBlank(
+     *      message="feedback.message.not_blank"
+     * )
+     * @Assert\Length(
+     *      min=5,
+     *      max=1500,
+     *      minMessage="feedback.message.length_min",
+     *      maxMessage="feedback.message.length_max"
+     * )
+     */
+    protected $message;
+}

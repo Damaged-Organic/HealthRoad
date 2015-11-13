@@ -65,6 +65,49 @@
         {% endfor %}
     </div>
 
+    <div class="file-holder">
+        <input type="file" name="{{ form.uploadedSupplierImages.vars.full_name }}[]" value="" id="supplier-image-supplier-file" multiple="multiple">
+
+        <label for="supplier-image-supplier-file">
+            <div class="btn-file">
+                <span class="icon hrd-upload"></span>
+                <span class="text">{{ form.uploadedSupplierImages.vars.label|trans({}, 'forms') }}</span>
+            </div>
+        </label>
+
+        {% if supplier is defined and supplier.supplierImages|length != 0 %}
+            <div class="photo-list-holder active">
+
+                {% for supplierImage in supplier.supplierImages %}
+                    <figure class='photo-holder'>
+                        <img src="{{ vich_uploader_asset(supplierImage, 'imageSupplierFile') }}">
+                        <span class="size">{{ supplierImage.imageSupplierName }}</span>
+                    </figure>
+                {% endfor %}
+
+            </div>
+        {% else %}
+            <div class="photo-list-holder"></div>
+        {% endif %}
+
+        {% for error in form.uploadedSupplierImages.vars.errors %}
+            <span class="error-holder">{{ error.message }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="field-holder">
+        {{ form_widget(form.descriptionShort, {
+            'id': "supplier-description-short",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'supplier.description_short.not_blank'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.descriptionShort) }}
+
+        {{ form_errors(form.descriptionShort) }}
+    </div>
+
     <div class="field-holder">
         {{ form_widget(form.description, {
             'id': "supplier-description",

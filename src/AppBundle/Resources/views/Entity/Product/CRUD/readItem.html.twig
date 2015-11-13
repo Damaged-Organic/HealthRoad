@@ -45,6 +45,22 @@
             </li>
             <li>
                 <div class="item key">
+                    <span>{{ 'product.description_short.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ product.descriptionShort }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
+                    <span>{{ 'product.description.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( product.description ) ?: '-' }}</p>
+                </div>
+            </li>
+            <li>
+                <div class="item key">
                     <span>{{ 'product.product_category.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
@@ -64,14 +80,6 @@
                     {% else %}
                         <p>-</p>
                     {% endif %}
-                </div>
-            </li>
-            <li>
-                <div class="item key">
-                    <span>{{ 'product.description.label'|trans({}, 'forms') }}</span>
-                </div>
-                <div class="item value">
-                    <p>{{ ( product.description ) ?: '-' }}</p>
                 </div>
             </li>
             <li class="photo-list-holder">

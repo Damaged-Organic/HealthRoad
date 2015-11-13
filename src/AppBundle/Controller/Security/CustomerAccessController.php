@@ -23,8 +23,8 @@ class CustomerAccessController extends Controller
      *      "/customer_office/login",
      *      name="customer_office_login",
      *      host="{domain_website}",
-     *      defaults={"_locale" = "%locale%", "domain_website" = "%domain_website%"},
-     *      requirements={"_locale" = "%locale%", "domain_website" = "%domain_website%"}
+     *      defaults={"_locale" = "%locale_website%", "domain_website" = "%domain_website%"},
+     *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%"}
      * )
      */
     public function loginAction()
@@ -46,8 +46,8 @@ class CustomerAccessController extends Controller
      *      "/customer_office/login_check",
      *      name="customer_office_login_check",
      *      host="{domain_website}",
-     *      defaults={"_locale" = "%locale%", "domain_website" = "%domain_website%"},
-     *      requirements={"_locale" = "%locale%", "domain_website" = "%domain_website%"}
+     *      defaults={"_locale" = "%locale_website%", "domain_website" = "%domain_website%"},
+     *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%"}
      * )
      */
     public function loginCheckAction()

@@ -215,12 +215,19 @@ supplier:
         label:       Юридическое имя
         placeholder: Введите юридическое имя производителя
 
+    description_short:
+        label:       Краткое описание
+        placeholder: Введите краткое описание производителя
+
     description:
         label:       Описание
         placeholder: Введите описание производителя
 
     logo_file:
         label: Изображение логотипа
+
+    image_supplier_file:
+        label: Изображения торговых марок
 
     phone_number_supplier:
         label:       Телефон производителя
@@ -274,9 +281,13 @@ product:
         label:       Цена
         placeholder: Введите цену продукта
 
+    description_short:
+        label:       Краткое описание
+        placeholder: Введите краткое описание продукта
+
     description:
-        label:       Описание
-        placeholder: Введите описание продукта
+        label:       Состав
+        placeholder: Введите состав продукта
 
     product_vending_group:
         label: Группа автоматов

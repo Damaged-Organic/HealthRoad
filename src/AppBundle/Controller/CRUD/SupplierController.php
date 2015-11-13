@@ -2,6 +2,8 @@
 // AppBundle/Controller/CRUD/SupplierController.php
 namespace AppBundle\Controller\CRUD;
 
+use DateTime;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -12,6 +14,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Supplier\Supplier,
+    AppBundle\Entity\Supplier\SupplierImage,
     AppBundle\Form\Type\SupplierType,
     AppBundle\Security\Authorization\Voter\SupplierVoter,
     AppBundle\Service\Security\SupplierBoundlessAccess;
@@ -32,6 +35,9 @@ class SupplierController extends Controller implements UserRoleListInterface
 
     /** @DI\Inject("app.security.supplier_boundless_access") */
     private $_supplierBoundlessAccess;
+
+    /** @DI\Inject("app.validator.uploaded_supplier_image") */
+    private $_uploadedSupplierImageValidator;
 
     /**
      * @Method({"GET"})
@@ -102,13 +108,31 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( !($form->isValid()) ) {
+        if( !($form->isValid() && $this->_uploadedSupplierImageValidator->validate($form)) ) {
             $this->_breadcrumbs->add('supplier_read')->add('supplier_create');
 
             return $this->render('AppBundle:Entity/Supplier/CRUD:createItem.html.twig', [
                 'form' => $form->createView()
             ]);
         } else {
+            // TODO: This large logic does not belong to Controller
+            if( array_filter($form->getData()->getUploadedSupplierImages()) )
+            {
+                foreach ($form->getData()->getUploadedSupplierImages() as $uploadedSupplierImage)
+                {
+                    $supplierImage = (new SupplierImage)
+                        ->setImageSupplierFile($uploadedSupplierImage)
+                        ->setUpdatedAt(new DateTime)
+                    ;
+
+                    $supplier->addSupplierImage($supplierImage);
+
+                    $this->_manager->persist($supplierImage);
+                }
+
+                $this->_manager->persist($supplier);
+            }
+
             $this->_manager->persist($supplier);
             $this->_manager->flush();
 
@@ -156,8 +180,33 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         $form->handleRequest($request);
 
-        if( $form->isValid() )
+        if( $form->isValid() && $this->_uploadedSupplierImageValidator->validate($form) )
         {
+            // TODO: This large logic does not belong to Controller
+            if( array_filter($form->getData()->getUploadedSupplierImages()) )
+            {
+                foreach( $supplier->getSupplierImages() as $supplierImage )
+                {
+                    $supplier->removeSupplierImage($supplierImage);
+
+                    $this->_manager->remove($supplierImage);
+                }
+
+                foreach ($form->getData()->getUploadedSupplierImages() as $uploadedSupplierImage)
+                {
+                    $supplierImage = (new SupplierImage)
+                        ->setImageSupplierFile($uploadedSupplierImage)
+                        ->setUpdatedAt(new DateTime)
+                    ;
+
+                    $supplier->addSupplierImage($supplierImage);
+
+                    $this->_manager->persist($supplierImage);
+                }
+
+                $this->_manager->persist($supplier);
+            }
+
             $this->_manager->flush();
 
             $this->_messages->markUpdateSuccess();

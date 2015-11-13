@@ -1,16 +1,19 @@
 {# AppBundle/Resources/views/Website/State/index.html.twig #}
 {% extends 'AppBundle:Website:layout.html.twig' %}
 
+{% set metadata = getMetadata() %}
+
 {% block title %}
-    Дорога Здоров'я
+    {{ 'website.title'|trans }} | {{ metadata.title }}
 {% endblock %}
 
 {% block metadata %}
-    <meta name="Description" content="Описание необходимых мета-тегов">
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
 {% block locale %}
-    <link rel="canonical" href="{{ url('website_index') }}" />
+    <link rel="canonical" href="{{ url('website_index') }}">
 {% endblock %}
 
 {% block stylesheets %}
@@ -90,69 +93,33 @@
                 <h2>Наші продукти</h2>
                 <span class="sprtr-h"></span>
                 <ul class="suppliers">
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/nash-sik.png" alt="Наш сок">
-                            </a>
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/jaffa.png" alt="Jaffa">
-                            </a>
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/teen-team.png" alt="Teen Team">
-                            </a>
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/biskvit-shokolad.png" alt="Бисквит-шоколад">
-                            </a>
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/sladkiy-myr.png" alt="Солодкий світ">
-                            </a>
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/tekmar.png" alt="Текмар">
-                            </a>
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/ramonka.png" alt="Рамонка">
-                            </a>
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/frucfetta.png" alt="Фрук Фетта">
-                            </a>
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <a href="#">
-                                <img src="build/images/suppliers/ginger.png" alt="Джин Джер">
-                            </a>
-                        </figure>
-                    </li>
+
+                    {% for supplier in suppliers %}
+
+                        {% if supplier.supplierImages|length %}
+
+                            {% for supplierImage in supplier.supplierImages %}
+                                <li>
+                                    <figure>
+                                        <a href="#">
+                                            <img src="{{ vich_uploader_asset(supplierImage, 'imageSupplierFile') }}" alt="{{ supplier.name }}">
+                                        </a>
+                                    </figure>
+                                </li>
+                            {% endfor %}
+
+                        {% else %}
+                            <li>
+                                <figure>
+                                    <a href="#">
+                                        <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
+                                    </a>
+                                </figure>
+                            </li>
+                        {% endif %}
+
+                    {% endfor %}
+
                 </ul>
             </div>
         </section>
@@ -166,21 +133,27 @@
                         <span class="sprtr-h"></span>
                         <h3>Як отримати картку або браслет</h3>
                         <p>Браслет або картку «Дорога Здоров’я» Ви можете отримати у будь-який момент поштою, заповнивши нашу анкету у школі, або на сайті нашої компанії.</p>
-                        <a href="project-get-card.html">докладніше<span class="long-arrow"></span></a>
+                        <a href="{{ path('website_how_to_get_card') }}">
+                            докладніше<span class="long-arrow"></span>
+                        </a>
                     </li>
                     <li>
                         <span class="hr-add-money hr-small"></span>
                         <span class="sprtr-h"></span>
                         <h3>Як поповнювати картку або браслет</h3>
                         <p>Поповнити картку або браслет можна у будь-якому відділенні Приват-банку, у  терміналі самообслуговування, кредитною карткою або у будь-якому відділенні Укрпошти.</p>
-                        <a href="project-card-refill.html">докладніше<span class="long-arrow"></span></a>
+                        <a href="{{ path('website_how_to_replenish_card') }}">
+                            докладніше<span class="long-arrow"></span>
+                        </a>
                     </li>
                     <li>
                         <span class="hr-use-hand hr-small"></span>
                         <span class="sprtr-h"></span>
                         <h3>Як користуватись вендінговим автоматом</h3>
                         <p>Достатньо обрати номер потрібного продукта на клавіатурі автомата, прикласти картку або браслет для зняття коштів, та отримати обраний продукт у вікні видачі автомата.</p>
-                        <a href="project-how-to-use-vending-machine.html">докладніше<span class="long-arrow"></span></a>
+                        <a href="{{ path('website_how_to_use_vending_machine') }}">
+                            докладніше<span class="long-arrow"></span>
+                        </a>
                     </li>
                 </ul>
                 <div class="btn-small">
@@ -188,66 +161,9 @@
                 </div>
             </div>
         </section>
-        <section class="pre-footer">
-            <div class="inner">
-                <div class="part contacts">
-                    <h3>Контакти</h3>
-                    <span class="sprtr-h"></span>
-                    <ul>
-                        <li>
-                            <span class="item"><span class="hr-pin"></span>01054, Київ-54, А/С 12</span>
-                        </li>
-                        <li>
-                            <span class="item"><span class="hr-mtc"></span>+38 (066) 539 3939</span>
-                            <span class="item"><span class="hr-kstar"></span>+38 (068) 539 3939</span>
-                            <span class="item"><span class="hr-life"></span>+38 (063) 539 3939</span>
-                        </li>
-                        <li>
-                            <span class="item"><span class="hr-email"></span>info@kdz.com.ua</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="part navigation">
-                    <h3>Всі розділи</h3>
-                    <span class="sprtr-h"></span>
-                    <div class="list-holder">
-                        <ul>
-                            <li><a href="#">Головна</a></li>
-                            <li><a href="#">Наш проект</a></li>
-                            <li><a href="#">Про компанію</a></li>
-                            <li><a href="#">Виробники</a></li>
-                            <li><a href="#">Асортимент продуктів</a></li>
-                            <li><a href="#">Галерея</a></li>
-                            <li><a href="#">Новини</a></li>
-                            <li><a href="#">Як отримати картку?</a></li>
-                            <li><a href="#">Акції та пропозиції</a></li>
-                            <li><a href="#">Як користуватись автоматом?</a></li>
-                            <li><a href="#">Як стати клієнтом?</a></li>
-                            <li><a href="#">Як поповнити картку?</a></li>
-                            <li><a href="#">Стати партнером</a></li>
-                            <li><a href="#">Питання-відповідь</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="part entrance">
-                    <h3>Вхід для батьків</h3>
-                    <span class="sprtr-h"></span>
-                    <form action="#" method="POST" id="entrance-form">
-                        <div class="field-area">
-                            <input type="tel" name="user[phone]" value="" placeholder="+38 (044) 999 9999" id="entrance-user-phone" data-rule-required="true" data-mask="+38 (000) 000-0000">
-                            <label for="entrance-user-phone"><span class="hr-phone"></span></label>
-                        </div>
-                        <div class="field-area">
-                            <input type="password" name="user[password]" value="" placeholder="ваш пароль" id="entrance-user-password" data-rule-required="true">
-                            <label for="entrance-user-password"><span class="hr-lock"></span></label>
-                        </div>
-                        <button type="submit">
-                            <span>Увійти</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </section>
+
+        {{ render(controller('AppBundle:Website/CommonWebsite:preFooter')) }}
+
         <div id="movie-holder">
             <span class="close hr-close"></span>
             <div class="inner"></div>

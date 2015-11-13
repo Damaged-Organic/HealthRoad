@@ -11,9 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
+use Gedmo\Mapping\Annotation as Gedmo;
+
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\SlugMapper,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert,
     AppBundle\Entity\Product\Utility\Interfaces\SyncProductPropertiesInterface;
@@ -28,7 +31,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  */
 class Product implements SyncProductPropertiesInterface
 {
-    use IdMapperTrait, PseudoDeleteMapperTrait;
+    use IdMapperTrait, SlugMapper, PseudoDeleteMapperTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product\ProductCategory", inversedBy="products")
@@ -91,6 +94,17 @@ class Product implements SyncProductPropertiesInterface
     protected $nameShort;
 
     /**
+     * @ORM\Column(length=128, unique=true)
+     *
+     * @Gedmo\Slug(
+     *      fields={"nameShort"},
+     *      separator="_",
+     *      style="lower"
+     * )
+     */
+    protected $slug;
+
+    /**
      * @ORM\Column(type="string", length=100, unique=true)
      *
      * @Assert\NotBlank(message="product.code.not_blank")
@@ -111,7 +125,28 @@ class Product implements SyncProductPropertiesInterface
     protected $price;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", length=250)
+     *
+     * @Assert\NotBlank(message="product.description_short.not_blank")
+     * @Assert\Length(
+     *      min=5,
+     *      max=250,
+     *      minMessage="product.description_short.length.min",
+     *      maxMessage="product.description_short.length.max"
+     * )
+     */
+    protected $descriptionShort;
+
+    /**
+     * @ORM\Column(type="text")
+     *
+     * @Assert\NotBlank(message="product.description.not_blank")
+     * @Assert\Length(
+     *      min=5,
+     *      max=10000,
+     *      minMessage="product.description.length.min",
+     *      maxMessage="product.description.length.max"
+     * )
      */
     protected $description;
 
@@ -245,10 +280,10 @@ class Product implements SyncProductPropertiesInterface
      */
     public function __construct()
     {
-        $this->productImages         = new ArrayCollection;
-        $this->productVendingGroups  = new ArrayCollection;
-        $this->students              = new ArrayCollection;
-        $this->purchases             = new ArrayCollection;
+        $this->productImages        = new ArrayCollection;
+        $this->productVendingGroups = new ArrayCollection;
+        $this->students             = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -358,6 +393,29 @@ class Product implements SyncProductPropertiesInterface
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Set descriptionShort
+     *
+     * @param string $descriptionShort
+     * @return Product
+     */
+    public function setDescriptionShort($descriptionShort)
+    {
+        $this->descriptionShort = $descriptionShort;
+
+        return $this;
+    }
+
+    /**
+     * Get descriptionShort
+     *
+     * @return string
+     */
+    public function getDescriptionShort()
+    {
+        return $this->descriptionShort;
     }
 
     /**
@@ -856,6 +914,13 @@ class Product implements SyncProductPropertiesInterface
     public function getPurchases()
     {
         return $this->purchases;
+    }
+
+    public function getWeightAndMeasure()
+    {
+        return ( $this->weight )
+            ? "{$this->weight} {$this->measurementUnit}"
+            : '-';
     }
 
     static public function getSyncArrayName()

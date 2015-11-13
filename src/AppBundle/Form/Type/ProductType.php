@@ -73,8 +73,13 @@ class ProductType extends AbstractType
                     'accept' => 'image/png, image/jpeg, image/pjpeg, image/gif'
                 ]
             ])
+            ->add('descriptionShort', 'text', [
+                'label' => 'product.description_short.label',
+                'attr'  => [
+                    'placeholder' => 'product.description_short.placeholder'
+                ]
+            ])
             ->add('description', 'textarea', [
-                'required' => FALSE,
                 'label'    => 'product.description.label',
                 'attr'     => [
                     'placeholder' => 'product.description.placeholder'

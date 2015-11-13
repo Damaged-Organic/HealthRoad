@@ -1,0 +1,95 @@
+{# AppBundle/Resources/views/Website/State/contactsSuppliers.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ metadata.title }} | {{ 'website.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_vending_machines_placement') }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/contacts.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+
+                {{ knp_menu_render('contacts', {'currentClass': 'active'}) }}
+
+            </aside>
+            <section id="content-info-holder">
+                <h1>Для постачальників</h1>
+                <span class="sprtr-h"></span>
+                <div class="grid staff-holder">
+                    <div class="row">
+                        <div class="col">
+                            <h2>{{ contact.title }}</h2>
+                            <span class="role">{{ contact.position }}</span>
+                            <span class="sprtr-h"></span>
+                            <ul>
+                                <li>
+                                    <span class="hr-phone"></span>
+                                    <a href="tel:{{ contact.phoneNumber|replace({ ' ': '', '(': '', ')': '', '-': '' }) }}">{{ contact.phoneNumber }}</a>
+                                </li>
+                                <li>
+                                    <span class="hr-email"></span>
+                                    <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-holder">
+                    <h2>Форма підключення постачальників</h2>
+                    <span class="sprtr-h"></span>
+                    <form action="#" method="POST" id="suppliers-form">
+                        <div class="field-area">
+                            <label for="suppliers-title">Назва компанії постачальника</label>
+                            <input type="text" name="suppliers[title]" value="" placeholder="Введіть назву вашої компаніі" id="suppliers-title" data-rule-required="true" data-msg-required="Напевно ви забули ввести назву вашої компанії">
+                        </div>
+                        <div class="field-area">
+                            <label for="suppliers-name">Ваше Ім'я</label>
+                            <input type="text" name="suppliers[name]" value="" placeholder="Введіть ваше ім'я" id="suppliers-name" data-rule-required="true" data-msg-required="Будь ласка, назвіть ваше ім'я">
+                        </div>
+                        <div class="field-area">
+                            <label for="suppliers-email">Електронна пошта</label>
+                            <input type="email" name="suppliers[email]" value="" placeholder="Електронна пошта компанії або менеджера" id="suppliers-email" data-rule-required="true" data-msg-required="Вкажіть електронну пошту для зв'язку з вами" data-rule-email="true" data-msg-email="Це не схоже на елетронну пошту">
+                        </div>
+                        <div class="field-area">
+                            <label for="suppliers-phone">Телефон</label>
+                            <input type="tel" name="suppliers[phone]" value="" placeholder="Номер телефону компанії або менеджера" id="suppliers-phone" data-rule-required="true" data-msg-required="Вкажіть електронну пошту для зв'язку з вами" data-mask="+38 (999) 999-9999">
+                        </div>
+                        <div class="field-area">
+                            <label for="suppliers-message">Повідомлення</label>
+                            <textarea name="suppliers[message]" value="" placeholder="Напишіть нам повідомлення" id="suppliers-message" data-rule-required="true" data-msg-required="Це поле не має бути порожнім"></textarea>
+                        </div>
+                        <button type="submit">
+                            <span>Відправити</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/contacts.bundle.min.js') }}"></script>
+{% endblock %}

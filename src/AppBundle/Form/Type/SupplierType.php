@@ -32,10 +32,24 @@ class SupplierType extends AbstractType
                     'placeholder' => 'supplier.name_legal.placeholder'
                 ]
             ])
+            ->add('descriptionShort', 'text', [
+                'label' => 'supplier.description_short.label',
+                'attr'  => [
+                    'placeholder' => 'supplier.description_short.placeholder'
+                ]
+            ])
             ->add('description', 'textarea', [
                 'label' => 'supplier.description.label',
                 'attr'  => [
                     'placeholder' => 'supplier.description.placeholder'
+                ]
+            ])
+            ->add('uploadedSupplierImages', 'file', [
+                'required' => FALSE,
+                'label'    => 'supplier.image_supplier_file.label',
+                'attr'     => [
+                    'accept'   => 'image/png, image/jpeg, image/pjpeg, image/gif',
+                    'multiple' => TRUE
                 ]
             ])
             ->add('phoneNumberSupplier', 'text', [
@@ -143,7 +157,8 @@ class SupplierType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'         => 'AppBundle\Entity\Supplier\Supplier',
-            'translation_domain' => 'forms'
+            'translation_domain' => 'forms',
+            'cascade_validation' => TRUE,
         ]);
     }
 

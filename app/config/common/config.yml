@@ -8,9 +8,7 @@ imports:
     - { resource: config_vich.yml }
     - { resource: config_jms_di_extra.yml }
     - { resource: config_knp_menu.yml }
-
-parameters:
-    locale: ru
+    - { resource: config_stof.yml }
 
 framework:
     #esi:             ~

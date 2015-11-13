@@ -8,6 +8,15 @@ services:
         tags:
             - { name: twig.extension }
 
+    app.website_metadata_extension:
+        class:  AppBundle\Twig\WebsiteMetadataExtension
+        calls:
+             - [setRequestStack, [ "@request_stack" ]]
+             - [setManager, [ "@doctrine.orm.entity_manager" ]]
+        public: false
+        tags:
+            - { name: twig.extension }
+
     # Event listeners
 
     app.exception_listener.report:
@@ -62,6 +71,12 @@ services:
 
     app.validator.uploaded_product_image:
         class: AppBundle\Service\Validator\UploadedProductImageValidator
+        calls:
+            - [setValidator, [ "@validator" ]]
+            - [setTranslator, [ "@translator" ]]
+
+    app.validator.uploaded_supplier_image:
+        class: AppBundle\Service\Validator\UploadedSupplierImageValidator
         calls:
             - [setValidator, [ "@validator" ]]
             - [setTranslator, [ "@translator" ]]

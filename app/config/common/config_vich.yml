@@ -10,6 +10,13 @@ vich_uploader:
             delete_on_update:   true
             delete_on_remove:   true
 
+        supplier_image:
+            uri_prefix:         /uploads/supplier/images
+            upload_destination: %kernel.root_dir%/../www/uploads/supplier/images
+            namer:              vich_uploader.namer_uniqid
+            delete_on_update:   true
+            delete_on_remove:   true
+
         product_image:
             uri_prefix:         /uploads/product/images
             upload_destination: %kernel.root_dir%/../www/uploads/product/images

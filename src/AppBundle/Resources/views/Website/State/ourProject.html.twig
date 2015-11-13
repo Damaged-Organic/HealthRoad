@@ -1,16 +1,19 @@
 {# AppBundle/Resources/views/Website/State/ourProject.html.twig #}
 {% extends 'AppBundle:Website:layout.html.twig' %}
 
+{% set metadata = getMetadata() %}
+
 {% block title %}
-    Дорога Здоров'я
+    {{ metadata.title }} | {{ 'website.title'|trans }}
 {% endblock %}
 
 {% block metadata %}
-    <meta name="Description" content="Описание необходимых мета-тегов">
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
 {% block locale %}
-    <link rel="canonical" href="{{ url('website_our_project') }}" />
+    <link rel="canonical" href="{{ url('website_our_project') }}">
 {% endblock %}
 
 {% block stylesheets %}
