@@ -1,0 +1,50 @@
+{# AppBundle/Resources/views/Website/Form/feedback.html.twig #}
+{% form_theme form 'AppBundle:Website/Form/Theme:form.html.twig' %}
+
+<div class="form-holder">
+    <h2>Форма зворотного зв'язку</h2>
+    <span class="sprtr-h"></span>
+
+    <form action="{{ form.vars.action }}" method="POST" id="callback-form">
+
+        <div class="field-area">
+            {{ form_label(form.name) }}
+
+            {{ form_widget(form.name) }}
+
+            {{ form_errors(form.name) }}
+        </div>
+
+        <div class="field-area">
+            {{ form_label(form.email) }}
+
+            {{ form_widget(form.email) }}
+
+            {{ form_errors(form.email) }}
+        </div>
+
+        <div class="field-area">
+            {{ form_label(form.phoneNumber) }}
+
+            {{ form_widget(form.phoneNumber) }}
+
+            {{ form_errors(form.phoneNumber) }}
+        </div>
+
+        <div class="field-area">
+            {{ form_label(form.message) }}
+
+            {{ form_widget(form.message) }}
+
+            {{ form_errors(form.message) }}
+        </div>
+
+        {{ form_widget(form._token) }}
+
+        <button type="submit">
+            <span>Відправити</span>
+        </button>
+
+    </form>
+
+</div>

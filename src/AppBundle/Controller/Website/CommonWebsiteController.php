@@ -7,7 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Entity\Website\Contact\Contact;
 
@@ -15,6 +16,9 @@ class CommonWebsiteController extends Controller
 {
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
 
     public function headerAction()
     {
@@ -47,5 +51,17 @@ class CommonWebsiteController extends Controller
     public function footerAction()
     {
         return $this->render('AppBundle:Website/Common:footer.html.twig');
+    }
+
+    public function messagesAction()
+    {
+        $messages = $this->_messages->getMessages();
+
+        if( !$messages )
+            new Response;
+
+        return $this->render('AppBundle:Website/Common:messages.html.twig', [
+            'messages' => $messages
+        ]);
     }
 }

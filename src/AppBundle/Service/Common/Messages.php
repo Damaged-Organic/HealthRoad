@@ -88,6 +88,27 @@ class Messages implements MessagesInterface
         ]);
     }
 
+    public function markWebsiteFeedbackSuccess()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_SUCCESS => [$this->_translator->trans('website.feedback.success', [], 'responses')]
+        ]);
+    }
+
+    public function markWebsiteFeedbackError()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_ERRORS => [$this->_translator->trans('website.feedback.error', [], 'responses')]
+        ]);
+    }
+
+    public function markWebsiteFeedbackErrors(array $errors)
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_ERRORS => $errors
+        ]);
+    }
+
     public function getMessages()
     {
         $messages = [];

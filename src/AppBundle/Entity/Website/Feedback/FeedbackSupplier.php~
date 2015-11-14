@@ -1,5 +1,5 @@
 <?php
-// AppBundle/Entity/Website/Feedback/Feedback.php
+// AppBundle/Entity/Website/Feedback/FeedbackSupplier.php
 namespace AppBundle\Entity\Website\Feedback;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -10,24 +10,39 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert;
 
 /**
- * @ORM\Table(name="website_feedback")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Website\Feedback\Repository\FeedbackRepository")
+ * @ORM\Table(name="website_feedback_supplier")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Website\Feedback\Repository\FeedbackSupplierRepository")
  */
-class Feedback
+class FeedbackSupplier
 {
     use IdMapperTrait;
+
+    /**
+     * @ORM\Column(type="string", length=500)
+     *
+     * @Assert\NotBlank(
+     *      message="website.feedback_supplier.company.not_blank"
+     * )
+     * @Assert\Length(
+     *      min=2,
+     *      max=250,
+     *      minMessage="website.feedback_supplier.company.length.min",
+     *      maxMessage="website.feedback_supplier.company.length.max"
+     * )
+     */
+    protected $company;
 
     /**
      * @ORM\Column(type="string", length=250)
      *
      * @Assert\NotBlank(
-     *      message="website.feedback.name.not_blank"
+     *      message="website.feedback_supplier.name.not_blank"
      * )
      * @Assert\Length(
      *      min=2,
      *      max=250,
-     *      minMessage="website.feedback.name.length.min",
-     *      maxMessage="website.feedback.name.length.max"
+     *      minMessage="website.feedback_supplier.name.length.min",
+     *      maxMessage="website.feedback_supplier.name.length.max"
      * )
      */
     protected $name;
@@ -36,10 +51,10 @@ class Feedback
      * @ORM\Column(type="string", length=60)
      *
      * @Assert\NotBlank(
-     *      message="website.feedback.email.not_blank"
+     *      message="website.feedback_supplier.email.not_blank"
      * )
      * @Assert\Email(
-     *      message="website.feedback.email.valid",
+     *      message="website.feedback_supplier.email.valid",
      *      checkMX=true
      * )
      */
@@ -49,7 +64,7 @@ class Feedback
      * @ORM\Column(type="string", length=20)
      *
      * @Assert\NotBlank(
-     *      message="website.feedback.phone_number.not_blank"
+     *      message="website.feedback_supplier.phone_number.not_blank"
      * )
      * @CustomAssert\IsPhoneNumberConstraint
      */

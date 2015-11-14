@@ -7,13 +7,32 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use AppBundle\Controller\Utility\Traits\FormErrorsTrait,
+    AppBundle\Entity\Website\Feedback\Feedback,
+    AppBundle\Entity\Website\Feedback\FeedbackOrder,
+    AppBundle\Entity\Website\Feedback\FeedbackSupplier,
+    AppBundle\Form\Type\Website\FeedbackType,
+    AppBundle\Form\Type\Website\FeedbackOrderType,
+    AppBundle\Form\Type\Website\FeedbackSupplierType;
 
 class WebsiteController extends Controller
 {
+    use FormErrorsTrait;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
+
+    /** @DI\Inject("translator") */
+    private $_translator;
+
+    /** @DI\Inject("app.common.messages") */
+    private $_messages;
+
+    /** @DI\Inject("app.website.feedback_mailer") */
+    private $_feedbackMailer;
 
     /**
      * @Method({"GET"})
@@ -50,7 +69,7 @@ class WebsiteController extends Controller
     }
 
     /**
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @Route(
      *      "/our_project/how_to_get_card",
      *      name="website_how_to_get_card",
@@ -59,9 +78,34 @@ class WebsiteController extends Controller
      *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%"}
      * )
      */
-    public function howToGetCardAction()
+    public function howToGetCardAction(Request $request)
     {
-        return $this->render('AppBundle:Website/State:ourProject.html.twig');
+        $form = $this->createForm(new FeedbackOrderType($this->_translator), $feedbackOrder = new FeedbackOrder);
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() )
+        {
+            if ($form->isValid()) {
+                $this->_manager->flush();
+
+                if ($this->_feedbackMailer->sendFeedbackOrder($feedbackOrder)) {
+                    $this->_messages->markWebsiteFeedbackSuccess();
+                } else {
+                    $this->_messages->markWebsiteFeedbackError();
+                }
+
+                return $this->redirectToRoute('website_how_to_get_card');
+            } else {
+                $this->_messages->markWebsiteFeedbackErrors(
+                    $this->getFormErrorMessages($form)
+                );
+            }
+        }
+
+        return $this->render('AppBundle:Website/State:howToGetCard.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -76,7 +120,7 @@ class WebsiteController extends Controller
      */
     public function howToReplenishCardAction()
     {
-        return $this->render('AppBundle:Website/State:ourProject.html.twig');
+        return $this->render('AppBundle:Website/State:howToReplenishCard.html.twig');
     }
 
     /**
@@ -91,7 +135,7 @@ class WebsiteController extends Controller
      */
     public function howToUseVendingMachineAction()
     {
-        return $this->render('AppBundle:Website/State:ourProject.html.twig');
+        return $this->render('AppBundle:Website/State:howToUseVendingMachine.html.twig');
     }
 
     /**
@@ -279,7 +323,7 @@ class WebsiteController extends Controller
     }
 
     /**
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @Route(
      *      "/contacts/vending_machines_suppliers",
      *      name="website_vending_machines_suppliers",
@@ -288,7 +332,7 @@ class WebsiteController extends Controller
      *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%"}
      * )
      */
-    public function contactsSuppliersAction()
+    public function contactsSuppliersAction(Request $request)
     {
         $contact = $this->_manager->getRepository('AppBundle:Website\Contact\Contact')->findOneBy([
             'alias' => 'contact_suppliers'
@@ -297,13 +341,37 @@ class WebsiteController extends Controller
         if( !$contact )
             throw $this->createNotFoundException();
 
+        $form = $this->createForm(new FeedbackSupplierType($this->_translator), $feedbackSupplier = new FeedbackSupplier);
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() )
+        {
+            if ($form->isValid()) {
+                $this->_manager->flush();
+
+                if ($this->_feedbackMailer->sendFeedbackSupplier($feedbackSupplier)) {
+                    $this->_messages->markWebsiteFeedbackSuccess();
+                } else {
+                    $this->_messages->markWebsiteFeedbackError();
+                }
+
+                return $this->redirectToRoute('website_vending_machines_suppliers');
+            } else {
+                $this->_messages->markWebsiteFeedbackErrors(
+                    $this->getFormErrorMessages($form)
+                );
+            }
+        }
+
         return $this->render('AppBundle:Website/State:contactsSuppliers.html.twig', [
-            'contact' => $contact
+            'contact' => $contact,
+            'form'    => $form->createView()
         ]);
     }
 
     /**
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @Route(
      *      "/feedback",
      *      name="website_feedback",
@@ -312,8 +380,33 @@ class WebsiteController extends Controller
      *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%"}
      * )
      */
-    public function feedbackAction()
+    public function feedbackAction(Request $request)
     {
-        return $this->render('AppBundle:Website/State:contacts.html.twig');
+        $form = $this->createForm(new FeedbackType($this->_translator), $feedback = new Feedback);
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() )
+        {
+            if ($form->isValid()) {
+                $this->_manager->flush();
+
+                if ($this->_feedbackMailer->sendFeedback($feedback)) {
+                    $this->_messages->markWebsiteFeedbackSuccess();
+                } else {
+                    $this->_messages->markWebsiteFeedbackError();
+                }
+
+                return $this->redirectToRoute('website_feedback');
+            } else {
+                $this->_messages->markWebsiteFeedbackErrors(
+                    $this->getFormErrorMessages($form)
+                );
+            }
+        }
+
+        return $this->render('AppBundle:Website/State:feedback.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-// AppBundle/Entity/Website/Feedback/Feedback.php
+// AppBundle/Entity/Website/Feedback/FeedbackOrder.php
 namespace AppBundle\Entity\Website\Feedback;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -10,10 +10,10 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert;
 
 /**
- * @ORM\Table(name="website_feedback")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Website\Feedback\Repository\FeedbackRepository")
+ * @ORM\Table(name="website_feedback_order")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Website\Feedback\Repository\FeedbackOrderRepository")
  */
-class Feedback
+class FeedbackOrder
 {
     use IdMapperTrait;
 
@@ -74,7 +74,7 @@ class Feedback
      * Set name
      *
      * @param string $name
-     * @return Feedback
+     * @return FeedbackOrder
      */
     public function setName($name)
     {
@@ -97,7 +97,7 @@ class Feedback
      * Set email
      *
      * @param string $email
-     * @return Feedback
+     * @return FeedbackOrder
      */
     public function setEmail($email)
     {
@@ -120,7 +120,7 @@ class Feedback
      * Set phoneNumber
      *
      * @param string $phoneNumber
-     * @return Feedback
+     * @return FeedbackOrder
      */
     public function setPhoneNumber($phoneNumber)
     {
@@ -143,7 +143,7 @@ class Feedback
      * Set message
      *
      * @param string $message
-     * @return Feedback
+     * @return FeedbackOrder
      */
     public function setMessage($message)
     {

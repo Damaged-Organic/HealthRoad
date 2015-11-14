@@ -1,0 +1,59 @@
+{# AppBundle/Resources/views/Website/State/feedback.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ 'website.title'|trans }} | {{ metadata.title }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_feedback') }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/callback.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+                <ul>
+                    <li class="active"><a href="{{ path('website_feedback') }}">Зворотній зв'язок</a></li>
+                </ul>
+            </aside>
+            <section id="content-info-holder">
+                <h1>Ваша думка має значення</h1>
+                <span class="sprtr-h"></span>
+                <p>Шановні Батьки!</p>
+                <p>Перед тим, як відіслати запитання експерту Call Центру, переконайтеся, будь ласка, що не можете знайти необхідних відомостей власноруч. Щоб отримати відповідь на запитання, скориставшись пошуковою системою сайту, яка миттєво віднайде всі сторінки з інформацією на Ваш запит. Для цього введіть, будь ласка, ключові слова в текстове поле пошуку і натисніть "шукати".</p>
+                <p>Ваші питання, побажання, зауваження або коментарі стосовно компанії «Дорога Здоров’я», веб-сайту <strong>www.kdz.com.ua</strong>, надсилайте до експертів Call Центру за допомогою наведеної нижче форми. Ми будемо раді Вам допомогти.</p>
+                <p>Для того щоб отримати відповідь експерта, ОБОВ'ЯЗКОВО вкажіть Ваш e-mail!</p>
+                <p>При повторному зверненні просимо зберігати історію листування. Повторні звернення без історії листування можуть подовжити термін надання відповіді</p>
+                <p><span class="attention">Увага!</span> Перевіряйте Вашу електронну адресу! Від цього залежить можливість відправлення Вам відповіді!</p>
+                <p>Листи розглядаються з 9:00 до 17:30 щодня, окрім вихідних та святкових днів.</p>
+
+                {{ render(controller('AppBundle:Website/CommonWebsite:messages')) }}
+
+                {% include 'AppBundle:Website/Form:feedback.html.twig' with { 'form': form } only %}
+
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/callback.bundle.min.js') }}"></script>
+{% endblock %}

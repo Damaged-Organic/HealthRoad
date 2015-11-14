@@ -333,3 +333,13 @@ services:
             - [setManager, [ "@doctrine.orm.entity_manager" ]]
             - [setMailerShortcut, [ "@app.common.mailer_shortcut" ]]
             - [setEmailParameters, [ "%emails%" ]]
+
+    # Website
+
+    app.website.feedback_mailer:
+        class: AppBundle\Service\Website\FeedbackMailer
+        calls:
+            - [setMailerShortcut, [ "@app.common.mailer_shortcut" ]]
+            - [setTranslator, [ "@translator" ]]
+            - [setTemplating, [ "@templating" ]]
+            - [setEmailParameters, [ "%emails%" ]]

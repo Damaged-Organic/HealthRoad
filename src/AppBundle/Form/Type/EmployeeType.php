@@ -44,7 +44,7 @@ class EmployeeType extends AbstractType
                         $form
                             ->add('username', 'text', [
                                 'label' => 'employee.username.label',
-                                'attr' => [
+                                'attr'  => [
                                     'placeholder' => 'employee.username.placeholder'
                                 ]
                             ])

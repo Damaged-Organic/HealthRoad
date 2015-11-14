@@ -1,0 +1,16 @@
+# AppBundle/Resources/translations/emails.ua.yml
+website:
+    feedback:
+        subject: Повідомлення зворотнього зв’язку
+        body: >
+            Користувач %name% (%email%, %phoneNumber%) надіслав наступне повідомлення:
+
+    feedback_order:
+        subject: Замовлення браслету або картки
+        body: >
+            Користувач %name% (%email%, %phoneNumber%) зробив замовлення з наступним повідомленням:
+
+    feedback_supplier:
+        subject: Пропозиція від постачальника
+        body: >
+            Потенційний постачальник %company% від імені %name% (%email%, %phoneNumber%) зробив пропозицію з наступним повідомленням:

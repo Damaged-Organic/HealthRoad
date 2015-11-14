@@ -1,0 +1,10 @@
+{# AppBundle/Resources/views/Website/Common/messages.html.twig #}
+{% if messages.success is defined %}
+    {{ messages.success.0 }}
+{% elseif messages.errors is defined %}
+
+    {% for error in messages.errors %}
+        <span>{{ error.0 }}</span>
+    {% endfor %}
+
+{% endif %}

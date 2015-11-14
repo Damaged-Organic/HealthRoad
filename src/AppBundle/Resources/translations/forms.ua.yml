@@ -1,0 +1,38 @@
+# AppBundle/Resources/translations/forms.ua.yml
+website:
+    feedback:
+        name:
+            label:       Ваше ім’я
+            placeholder: Введіть ваше ім’я
+
+        email:
+            label:       Електронна пошта
+            placeholder: Введіть адресу електронної пошти
+
+        phone_number:
+            label:       Телефон
+            placeholder: Введіть номер телефону
+
+        message:
+            label:       Повідомлення
+            placeholder: Введіть ваше повідомлення
+
+        submit:
+            label: Відправити
+
+    feedback_supplier:
+        company:
+            label:       Назва компанії постачальника
+            placeholder: Введіть назву компанії постачальника
+
+        name:
+            label:       Ім’я контактної особи
+            placeholder: Введіть ім’я контактної особи
+
+        email:
+            label:       Електронна пошта
+            placeholder: Введіть адресу електронної пошти компанії або менеджера
+
+        phone_number:
+            label:       Телефон
+            placeholder: Введіть номер телефону компанії або менеджера

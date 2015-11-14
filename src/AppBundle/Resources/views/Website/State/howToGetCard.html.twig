@@ -1,0 +1,56 @@
+{# AppBundle/Resources/views/Website/State/howToGetCard.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ metadata.title }} | {{ 'website.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_how_to_get_card') }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/project.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+
+                {{ knp_menu_render('our_project', {'currentClass': 'active'}) }}
+
+            </aside>
+            <section id="content-info-holder" class="advantage">
+                <h1>Як отримати картку або браслет</h1>
+                <span class="sprtr-h"></span>
+                <p>Браслет або картку «Дорога Здоров’я» Ви можете отримати у будь-який момент поштою, заповнивши нашу анкету у школі, або на сайті нашої компанії.</p>
+                <p>Для отримання картки «Дорога Здоров’я», вам необхідно заповнити анкету та підписати угоду користувача (на зворотньому боці). Після цього, Вам достатньо кинути анкету у поштову скриньку, яка знаходиться зліва у самому торговельному автоматі.</p>
+                <p>Після отримання анкети, наша компанія відправить на вказану Вами адресу картку або браслет, інформаційні матеріали та інструкцію про поповнення вашого персонального рахунку. Карточка надійде вам вже активована. Вартість активації у розмірі 19 гривень буде вирахувана з Вашого персонального рахунку після першого поповнення.</p>
+                <p>При заповненні анкети на сайті, Ви отримаєте карточку або браслет за адресою, яка буда вказана у анкеті. Вам потрібно заповнити анкету та підписати електронну угоду користувача. Карточка надійде вам вже активована. Вартість активації у розмірі 19 грн буде вирахувана з Вашого персонального рахунку після першого поповнення.</p>
+
+                {{ render(controller('AppBundle:Website/CommonWebsite:messages')) }}
+
+                {% include 'AppBundle:Website/Form:feedbackOrder.html.twig' with { 'form': form } only %}
+
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/project.bundle.min.js') }}"></script>
+{% endblock %}

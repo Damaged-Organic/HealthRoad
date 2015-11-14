@@ -1,0 +1,19 @@
+{# AppBundle/Resources/views/Website/Form/Theme/form.html.twig #}
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            {% for error in errors %}
+                <span class="server-error">{{ error.message }}</span>
+            {% endfor %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+
+{% block form_label %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <label for="{{ id }}">
+        {{ label|trans({}, 'forms') }}
+    </label>
+{% endblock %}

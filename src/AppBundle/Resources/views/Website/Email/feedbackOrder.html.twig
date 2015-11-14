@@ -1,0 +1,10 @@
+{# AppBundle/Resources/views/Website/Email/feedbackOrder.html.twig #}
+<h2>{{ subject }}</h2>
+<p>
+    {{ 'website.feedback_order.body'|trans({
+            '%name%':        feedbackOrder.name,
+            '%email%':       feedbackOrder.email,
+            '%phoneNumber%': feedbackOrder.phoneNumber
+    }, 'emails') }}
+</p>
+<p>{{ feedbackOrder.message }}</p>

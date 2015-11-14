@@ -1,0 +1,52 @@
+{# AppBundle/Resources/views/Website/State/howToUseVendingMachine.html.twig #}
+{% extends 'AppBundle:Website:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ metadata.title }} | {{ 'website.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('website_how_to_use_vending_machine') }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/project.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content" class="sticky">
+        <div class="outer inside">
+            <aside id="navigation-holder">
+
+                {{ knp_menu_render('our_project', {'currentClass': 'active'}) }}
+
+            </aside>
+            <section id="content-info-holder" class="advantage">
+                <h1>Як користуватися вендінговим автоматом</h1>
+                <span class="sprtr-h"></span>
+                <div class="movie-holder">
+                    <div class="inner">
+                        <iframe src="https://www.youtube.com/embed/LYBjsuwWs_Q" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="sticky">
+        {{ render(controller('AppBundle:Website/CommonWebsite:footer')) }}
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/project.bundle.min.js') }}"></script>
+{% endblock %}
