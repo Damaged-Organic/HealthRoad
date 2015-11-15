@@ -14,3 +14,4 @@ services:
             - { name: knp_menu.menu_builder, method: createProductsMenu, alias: products }
             - { name: knp_menu.menu_builder, method: createContactsMenu, alias: contacts }
             - { name: knp_menu.menu_builder, method: createFooterMenu, alias: footer }
+            - { name: knp_menu.menu_builder, method: createCustomerOfficeMenu, alias: customer_office }

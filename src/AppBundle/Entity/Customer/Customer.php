@@ -432,4 +432,16 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
 
         return "{$this->surname} {$this->name} {$this->patronymic}";
     }
+
+    public function getTotalLimit()
+    {
+        $totalLimit = 0;
+
+        foreach( $this->getStudents() as $student )
+        {
+            $totalLimit = bcadd($totalLimit, $student->getTotalLimit(), 2);
+        }
+
+        return $totalLimit;
+    }
 }

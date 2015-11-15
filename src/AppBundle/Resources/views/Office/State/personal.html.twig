@@ -1,0 +1,82 @@
+{# AppBundle/Resources/views/Office/State/personal.html.twig #}
+{% extends 'AppBundle:Office:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ metadata.title }} | {{ 'customer_office.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('customer_office') }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/personal.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content">
+        <div class="outer private-holder">
+            <aside id="navigation-holder">
+                <div class="outer scrollable-holder">
+                    <div class="inner scrollable">
+
+                        {{ knp_menu_render('customer_office', { 'currentClass': 'active', 'template': 'AppBundle:Website/Menu:knp_menu.html.twig' }) }}
+
+                    </div>
+                </div>
+            </aside>
+            <section id="content-info-holder">
+
+                {{ render(controller('AppBundle:Office/CommonOffice:breadcrumbs', { 'request': app.request })) }}
+
+                <div class="outer scrollable-holder no-action-panel">
+                    <div class="inner scrollable">
+                        <article class="personal-data-holder">
+                            <div class="inner">
+                                <h2>Персональні дані</h2>
+                                <div class="info-holder">
+                                    <h3>{{ customer.fullName }}</h3>
+                                    <div class="col">
+                                        <span><span class="icon hr-coin"></span>Загальний баланс</span>
+                                        <p>{{ customer.totalLimit|number_format(2, ',') }} грн</p>
+                                    </div>
+                                    <div class="col">
+                                        <span><span class="icon hr-phone"></span>Телефон</span>
+                                        <p>{{ customer.phoneNumber }}</p>
+                                    </div>
+                                    <div class="col">
+                                        <span><span class="icon hr-email"></span>Електронна адреса</span>
+                                        <p>{{ customer.email }}</p>
+                                    </div>
+                                </div>
+                                <div class="info-holder kids">
+                                    <h3>Мої діти</h3>
+
+                                    {% for student in customer.students %}
+                                        <div class="col">
+                                            <a href="{{ path('customer_office_students', { 'id': student.id }) }}">
+                                                <span class="icon hr-{{ student.gender }}"></span>
+                                                {{ student.name }}
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/personal.bundle.min.js') }}"></script>
+{% endblock %}

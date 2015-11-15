@@ -1,3 +1,6 @@
 # AppBundle/Resources/translations/messages.ua.yml
 website:
     title: Дорога Здоров'я
+
+customer_office:
+    title: Приватний кабінет - Дорога Здоров'я

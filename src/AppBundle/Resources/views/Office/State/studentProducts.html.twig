@@ -1,0 +1,154 @@
+{# AppBundle/Resources/views/Office/State/studentProducts.html.twig #}
+{% extends 'AppBundle:Office:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ metadata.title }} - {{ student.name }} | {{ 'customer_office.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('customer_office_students_products', { 'id': student.id }) }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/kids.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content">
+        <div class="outer private-holder">
+            <aside id="navigation-holder">
+                <div class="outer scrollable-holder">
+                    <div class="inner scrollable">
+
+                        {{ knp_menu_render('customer_office', { 'currentClass': 'active', 'template': 'AppBundle:Website/Menu:knp_menu.html.twig' }) }}
+
+                    </div>
+                </div>
+            </aside>
+            <section id="content-info-holder" class="kid-products-holder">
+
+                {{ render(controller('AppBundle:Office/CommonOffice:breadcrumbs', { 'request': app.request })) }}
+
+                <div class="action-panel-holder top">
+                    <h2>Сергей: список продуктов</h2>
+                    <p>Отметьте товары которые хотите запретить и сохраните изменения</p>
+                    <div class="categories-panel-holder">
+                        <ul>
+                            <li class="active"><a href="#">Разрешенные</a></li>
+                            <li><a href="#">Запрешенные</a></li>
+                        </ul>
+                    </div>
+                    <button type="submit" for="forbid-products-form">
+                        <span>Сохранить изменения</span>
+                    </button>
+                </div>
+                <div class="outer scrollable-holder">
+                    <div class="inner scrollable">
+                        <div class="grid triple-col">
+                            <h3>Кондитерские изделия</h3>
+                            <span class="sprtr-h"></span>
+                            <div class="row">
+                                <input type="checkbox" name="forbid-product-1" value="" id="forbid-product-1" form="forbid-products-form">
+                                <label for="forbid-product-1" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                                <input type="checkbox" name="forbid-product-2" value="" id="forbid-product-2" form="forbid-products-form">
+                                <label for="forbid-product-2" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                                <input type="checkbox" name="forbid-product-3" value="" id="forbid-product-3" form="forbid-products-form">
+                                <label for="forbid-product-3" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="row">
+                                <input type="checkbox" name="forbid-product-4" value="" id="forbid-product-4" form="forbid-products-form">
+                                <label for="forbid-product-4" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                                <input type="checkbox" name="forbid-product-5" value="" id="forbid-product-5" form="forbid-products-form">
+                                <label for="forbid-product-5" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                                <input type="checkbox" name="forbid-product-6" value="" id="forbid-product-6" form="forbid-products-form">
+                                <label for="forbid-product-6" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="row">
+                                <input type="checkbox" name="forbid-product-7" value="" id="forbid-product-7" form="forbid-products-form">
+                                <label for="forbid-product-7" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                                <input type="checkbox" name="forbid-product-8" value="" id="forbid-product-8" form="forbid-products-form">
+                                <label for="forbid-product-8" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                                <input type="checkbox" name="forbid-product-9" value="" id="forbid-product-9" form="forbid-products-form">
+                                <label for="forbid-product-9" class="col">
+                                    <figure><img src="../build/images/products/biscuit-chocolate/apple-pie.jpg" alt="Buiscuit-Chocolate | apple-pie"></figure>
+                                    <h2>Венский пирог - яблоко</h2>
+                                    <div class="info">
+                                        <span class="weight">125г.</span>
+                                        <span class="price">12,50грн.</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form action="#" method="POST" id="forbid-products-form"></form>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/kids.bundle.min.js') }}"></script>
+{% endblock %}

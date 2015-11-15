@@ -1,0 +1,97 @@
+{# AppBundle/Resources/views/Office/State/students.html.twig #}
+{% extends 'AppBundle:Office:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ metadata.title }} | {{ 'customer_office.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('customer_office_students') }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/kids.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content">
+        <div class="outer private-holder">
+            <aside id="navigation-holder">
+                <div class="outer scrollable-holder">
+                    <div class="inner scrollable">
+
+                        {{ knp_menu_render('customer_office', { 'currentClass': 'active', 'template': 'AppBundle:Website/Menu:knp_menu.html.twig' }) }}
+
+                    </div>
+                </div>
+            </aside>
+            <section id="content-info-holder">
+
+                {{ render(controller('AppBundle:Office/CommonOffice:breadcrumbs', { 'request': app.request })) }}
+
+                <div class="outer scrollable-holder">
+                    <div class="inner scrollable">
+                        {#
+                        <div class="text-holder">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis laborum sequi alias ea enim. Ab voluptas est perferendis illum nesciunt non quaerat voluptatibus, dicta deleniti ratione error fugit, dolor id!</p>
+                        </div>
+                        #}
+                        <div class="grid">
+
+                            {% for student in students %}
+
+                                {% if loop.first %}
+                                    <div class="row">
+                                {% endif %}
+
+                                <article class="col">
+                                    <div class="inner">
+                                        <div class="title-holder">
+                                            <h2><span class="icon hr-{{ student.gender }}"></span>{{ student.name }}</h2>
+                                            <span class="sprtr-h"></span>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><span>Населений пункт: </span>{{ ( student.school ) ? (( student.school.settlement ) ? student.school.settlement.name : '-') : '-' }}</p>
+                                            </li>
+                                            <li>
+                                                <p><span>Школа: </span>{{ ( student.school ) ? student.school.name : '-' }}</p>
+                                            </li>
+                                            <li>
+                                                <p><span>Баланс: </span>{{ student.totalLimit|number_format(2, ',') }} грн</p>
+                                            </li>
+                                            <li>
+                                                <p><span>Денний ліміт: </span>{{ student.dailyLimit|number_format(2, ',') }} грн</p>
+                                            </li>
+                                        </ul>
+                                        <div class="btn-more">
+                                            <a href="{{ path('customer_office_students', { 'id': student.id }) }}">детальніше</a>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                {% if loop.last %}
+                                    </div>
+                                {% elseif loop.index is divisible by(2) %}
+                                    </div>
+                                    <div class="row">
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/kids.bundle.min.js') }}"></script>
+{% endblock %}

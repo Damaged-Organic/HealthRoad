@@ -1,0 +1,102 @@
+{# AppBundle/Resources/views/Office/State/student.html.twig #}
+{% extends 'AppBundle:Office:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+    {{ student.name }} | {{ 'customer_office.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('customer_office_students', { 'id': student.id }) }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/kids.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content">
+        <div class="outer private-holder">
+            <aside id="navigation-holder">
+                <div class="outer scrollable-holder">
+                    <div class="inner scrollable">
+
+                        {{ knp_menu_render('customer_office', { 'currentClass': 'active', 'template': 'AppBundle:Website/Menu:knp_menu.html.twig' }) }}
+
+                    </div>
+                </div>
+            </aside>
+            <section id="content-info-holder">
+
+                {{ render(controller('AppBundle:Office/CommonOffice:breadcrumbs', { 'request': app.request })) }}
+
+                <div class="outer scrollable-holder no-action-panel kid-view">
+                    <div class="inner scrollable">
+                        <article class="personal-data-holder">
+                            <div class="inner">
+                                <h2>Персональні дані дитини</h2>
+                                <h3><span class="icon hr-male"></span>{{ student.name }}</h3>
+                                <div class="info-holder">
+                                    <div class="col">
+                                        <span><span class="icon hr-school"></span>Школа</span>
+                                        <p>{{ ( student.school ) ? student.school.name : '-' }}</p>
+                                    </div>
+                                    <div class="col">
+                                        <span><span class="icon hr-pin"></span>Адреса</span>
+                                        <p>{{ ( student.school ) ? student.school.address : '-' }}</p>
+                                    </div>
+                                </div>
+                                <div class="info-holder">
+                                    <div class="col">
+                                        <span><span class="icon hr-coin"></span>Баланс рахунку</span>
+                                        <p>{{ student.totalLimit|number_format(2, ',') }} грн</p>
+                                    </div>
+                                    <div class="col">
+                                        <span><span class="icon hr-coin"></span>Денний ліміт</span>
+                                        <form action="../php/limit.php" method="POST" id="limit-form">
+                                            <p class="limit-preview" data-currency="грн">{{ student.dailyLimit|number_format(2, ',') }} грн</p>
+                                            <input type="text" name="kid" value="{{ student.dailyLimit|number_format(2, ',') }}" placeholder="0.000,00" id="limit-input" data-mask="#.##0,00" data-mask-reverse="true" data-rule-required="true" data-msg-required="Обязательное поле">
+                                            <button type="submit">
+                                                <span class="icon hr-accept"></span>
+                                            </button>
+                                            <span class="error"></span>
+                                            <div class="loader">
+                                                <span class="dot"></span>
+                                                <span class="dot"></span>
+                                                <span class="dot"></span>
+                                                <span class="dot"></span>
+                                                <span class="dot"></span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="links-holder">
+                                    <a href="{{ path('customer_office_students_purchases', { 'id': student.id }) }}">
+                                        <span class="icon hr-stats"></span>
+                                        Статистика покупок
+                                    </a>
+                                    <a href="{{ path('customer_office_students_products', { 'id': student.id }) }}">
+                                        <span class="icon hr-cart"></span>
+                                        Список продуктів
+                                    </a>
+                                    <div class="btn-small" id="change-limit">
+                                        <span>Змінити денний ліміт</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/kids.bundle.min.js') }}"></script>
+{% endblock %}

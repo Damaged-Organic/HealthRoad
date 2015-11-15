@@ -3,6 +3,14 @@ custom:
     phone_number:
         valid: Це не схоже на коректний номер телефону
 
+customer:
+    authentication:
+        username:
+            not_blank: Будь ласка, введіть ваш номер телефону
+
+        password:
+            not_blank: Будь ласка, введіть ваш пароль
+
 website:
     feedback:
         name:

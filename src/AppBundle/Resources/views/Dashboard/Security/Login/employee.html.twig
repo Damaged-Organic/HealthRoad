@@ -11,16 +11,19 @@
         <div class="field-holder">
             <input type="text" name="_username" value="" id="auth-user-email"
                    placeholder="Введите ваш логин"
-                   data-rule-required="true" data-msg-required="{{ 'employee.authentification.username.not_blank'|trans({}, 'validators') }}">
+                   data-rule-required="true" data-msg-required="{{ 'employee.authentication.username.not_blank'|trans({}, 'validators') }}">
             <label for="auth-user-email"><span class="icon hrd-user"></span></label>
         </div>
+
         <div class="field-holder">
             <input type="password" name="_password" value="" id="auth-user-password"
                    placeholder="Введите ваш пароль"
-                   data-rule-required="true" data-msg-required="{{ 'employee.authentification.password.not_blank'|trans({}, 'validators') }}">
+                   data-rule-required="true" data-msg-required="{{ 'employee.authentication.password.not_blank'|trans({}, 'validators') }}">
             <label for="auth-user-password"><span class="icon hrd-lock"></span></label>
         </div>
+
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
         <button type="submit">
             <span>Войти</span>
         </button>

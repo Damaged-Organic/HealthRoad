@@ -1,0 +1,10 @@
+{# AppBundle/Resources/views/Website/Menu/knp_menu.html.twig #}
+{% extends 'knp_menu.html.twig' %}
+
+{% block linkElement %}
+    {% import _self as knp_menu %}
+    <a href="{{ item.uri }}">
+        <span class="{{ item.extras.iconClass }} hr-small"></span>
+        {{ block('label') }}
+    </a>
+{% endblock %}

@@ -1,0 +1,109 @@
+{# AppBundle/Resources/views/Office/State/studentPurchases.html.twig #}
+{% extends 'AppBundle:Office:layout.html.twig' %}
+
+{% set metadata = getMetadata() %}
+
+{% block title %}
+   {{ metadata.title }} - {{ student.name }} | {{ 'customer_office.title'|trans }}
+{% endblock %}
+
+{% block metadata %}
+    <meta name="robots" content="{{ metadata.robots }}">
+{% endblock %}
+
+{% block locale %}
+    <link rel="canonical" href="{{ url('customer_office_students_purchases', { 'id': student.id }) }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/kids.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main id="content">
+        <div class="outer private-holder">
+            <aside id="navigation-holder">
+                <div class="outer scrollable-holder">
+                    <div class="inner scrollable">
+
+                        {{ knp_menu_render('customer_office', { 'currentClass': 'active', 'template': 'AppBundle:Website/Menu:knp_menu.html.twig' }) }}
+
+                    </div>
+                </div>
+            </aside>
+            <section id="content-info-holder" class="kid-stats-holder">
+
+                {{ render(controller('AppBundle:Office/CommonOffice:breadcrumbs', { 'request': app.request })) }}
+
+                <div class="action-panel-holder top">
+                    <h2>{{ student.name }}: статистика покупок</h2>
+                </div>
+                <div class="outer scrollable-holder">
+                    <div class="inner scrollable">
+                        <div class="table-holder">
+                            <table>
+                                <tr>
+                                    <th>
+                                        <a href="#">Продукт</a>
+                                    </th>
+                                    <th>
+                                        <span>Виробник</span>
+                                    </th>
+                                    <th>
+                                        <a href="#">Дата і час</a>
+                                    </th>
+                                    <th class="small double">
+                                        <span>Ціна</span>
+                                    </th>
+                                </tr>
+
+                                {% for purchase in purchases %}
+                                    <tr>
+                                        <td>
+                                            <span>{{ ( purchase.product ) ? purchase.product.nameShort : '-' }}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{ ( purchase.product ) ? (( purchase.product.supplier ) ? purchase.product.supplier.name : '-') : '-' }}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{ purchase.syncPurchasedAt|date('d.m.Y H:i:s') }}</span>
+                                        </td>
+                                        <td class="small double">
+                                            <span>{{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') ~ ' грн' : '-' }}</span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-panel-holder bottom">
+                    <div id="pagination-holder">
+                        <ul>
+                            <li class="active"><a href="#">1</a></li>
+                            <li>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </li>
+                            <li><a href="#">11</a></li>
+                            <li><a href="#">12</a></li>
+                            <li><a href="#">13</a></li>
+                            <li>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </li>
+                            <li><a href="#">21</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/website/js/kids.bundle.min.js') }}"></script>
+{% endblock %}

@@ -11,9 +11,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class CommonDashboardController extends Controller
 {
-    /** @DI\Inject("session") */
-    private $_session;
-
     /** @DI\Inject("app.common.breadcrumbs") */
     private $_breadcrumbs;
 

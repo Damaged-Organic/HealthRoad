@@ -252,4 +252,27 @@ class WebsiteMenuBuilder implements MenuBlockListInterface
 
         return $menu;
     }
+
+    public function createCustomerOfficeMenu(array $options)
+    {
+        $menu = $this->_factory->createItem('root');
+
+        $items = $this->_manager->getRepository('AppBundle:Website\Menu\Menu')->findBy(['block' => self::BLOCK_OFFICE]);
+
+        $menu->setExtra('currentElement', 'active');
+
+        $currentRoute = $this->_requestStack->getMasterRequest()->attributes->get('_route');
+
+        foreach($items as $item)
+        {
+            $menu->addChild($item->getTitleShort(), ['route' => $item->getRoute()]);
+
+            $menu[$item->getTitleShort()]->setExtra('iconClass', $item->getIconClass());
+
+            if( $item->getRoute() === $currentRoute )
+                $menu[$item->getTitleShort()]->setCurrent(TRUE);
+        }
+
+        return $menu;
+    }
 }

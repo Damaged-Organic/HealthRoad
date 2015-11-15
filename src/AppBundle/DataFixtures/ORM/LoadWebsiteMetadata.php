@@ -134,6 +134,56 @@ class LoadWebsiteMetadata extends AbstractFixture implements OrderedFixtureInter
                 ->setRobots("index, follow")
         );
 
+        // ---
+
+        $manager->persist(
+            $officeMetadata_1 = (new Metadata)
+                ->setRoute("customer_office_login")
+                ->setTitle("Автентифікація")
+                ->setDescription(NULL)
+                ->setRobots("noindex, nofollow, noarchive")
+        );
+
+        $manager->persist(
+            $officeMetadata_2 = (new Metadata)
+                ->setRoute("customer_office")
+                ->setTitle("Персональні дані")
+                ->setDescription(NULL)
+                ->setRobots("noindex, nofollow, noarchive")
+        );
+
+        $manager->persist(
+            $officeMetadata_3 = (new Metadata)
+                ->setRoute("customer_office_students")
+                ->setTitle("Мої діти")
+                ->setDescription(NULL)
+                ->setRobots("noindex, nofollow, noarchive")
+        );
+
+        $manager->persist(
+            $officeMetadata_3_1 = (new Metadata)
+                ->setRoute("customer_office_students_purchases")
+                ->setTitle("Статистика покупок")
+                ->setDescription(NULL)
+                ->setRobots("noindex, nofollow, noarchive")
+        );
+
+        $manager->persist(
+            $officeMetadata_3_2 = (new Metadata)
+                ->setRoute("customer_office_students_products")
+                ->setTitle("Список продуктів")
+                ->setDescription(NULL)
+                ->setRobots("noindex, nofollow, noarchive")
+        );
+
+        $manager->persist(
+            $officeMetadata_4 = (new Metadata)
+                ->setRoute("customer_office_purchases")
+                ->setTitle("Покупки")
+                ->setDescription(NULL)
+                ->setRobots("noindex, nofollow, noarchive")
+        );
+
         $manager->flush();
     }
 

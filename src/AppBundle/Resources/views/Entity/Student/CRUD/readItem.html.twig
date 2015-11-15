@@ -93,7 +93,7 @@
                     <span>{{ 'student.total_limit.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
-                    <p>{{ ( student.totalLimit ) ? student.totalLimit : '-' }}</p>
+                    <p>{{ ( student.totalLimit ) ? student.totalLimit|number_format(2, ',') ~ ' ₴' : '-' }}</p>
                 </div>
             </li>
             <li>
@@ -101,7 +101,7 @@
                     <span>{{ 'student.daily_limit.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
-                    <p>{{ ( student.dailyLimit ) ? student.dailyLimit : '-' }}</p>
+                    <p>{{ ( student.dailyLimit ) ? student.dailyLimit|number_format(2, ',') ~ ' ₴' : '-' }}</p>
                 </div>
             </li>
         </ul>

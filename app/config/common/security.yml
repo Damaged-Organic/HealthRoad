@@ -77,7 +77,7 @@ security:
 
             logout:
                 path:   customer_office_logout
-                target: customer_office
+                target: website_index
 
     access_control:
         -

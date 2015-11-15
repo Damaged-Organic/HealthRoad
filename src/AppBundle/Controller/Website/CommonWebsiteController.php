@@ -2,13 +2,10 @@
 // AppBundle/Controller/Website/CommonWebsiteController.php
 namespace AppBundle\Controller\Website;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
-    Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
-use JMS\DiExtraBundle\Annotation as DI;
-
 use Symfony\Component\HttpFoundation\Response,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Entity\Website\Contact\Contact;
 
