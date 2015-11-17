@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
@@ -41,64 +42,73 @@
                 <div class="outer scrollable-holder">
                     <div class="inner scrollable">
                         <div class="table-holder">
-                            <table>
-                                <tr>
-                                    <th>
-                                        <a href="#">Продукт</a>
-                                    </th>
-                                    <th>
-                                        <span>Виробник</span>
-                                    </th>
-                                    <th>
-                                        <a href="#">Дата і час</a>
-                                    </th>
-                                    <th class="small double">
-                                        <span>Ціна</span>
-                                    </th>
-                                </tr>
 
-                                {% for purchase in purchases %}
+                            {% if purchases %}
+                                <table>
                                     <tr>
-                                        <td>
-                                            <span>{{ ( purchase.product ) ? purchase.product.nameShort : '-' }}</span>
-                                        </td>
-                                        <td>
-                                            <span>{{ ( purchase.product ) ? (( purchase.product.supplier ) ? purchase.product.supplier.name : '-') : '-' }}</span>
-                                        </td>
-                                        <td>
-                                            <span>{{ purchase.syncPurchasedAt|date('d.m.Y H:i:s') }}</span>
-                                        </td>
-                                        <td class="small double">
-                                            <span>{{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') ~ ' грн' : '-' }}</span>
-                                        </td>
+                                        <th>
+                                            <a href="#">Продукт</a>
+                                        </th>
+                                        <th>
+                                            <span>Виробник</span>
+                                        </th>
+                                        <th>
+                                            <a href="#">Дата і час</a>
+                                        </th>
+                                        <th class="small double">
+                                            <span>Ціна</span>
+                                        </th>
                                     </tr>
-                                {% endfor %}
 
-                            </table>
+                                    {% for purchase in purchases %}
+                                        <tr>
+                                            <td>
+                                                <span>{{ ( purchase.product ) ? purchase.product.nameShort : '-' }}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{ ( purchase.product ) ? (( purchase.product.supplier ) ? purchase.product.supplier.name : '-') : '-' }}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{ purchase.syncPurchasedAt|date('d.m.Y H:i:s') }}</span>
+                                            </td>
+                                            <td class="small double">
+                                                <span>{{ ( purchase.product ) ? purchase.product.price|number_format(2, ',') ~ ' грн' : '-' }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </table>
+                            {% else %}
+                                <p>Інформація про покупки на даний час відсутня</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-                <div class="action-panel-holder bottom">
-                    <div id="pagination-holder">
-                        <ul>
-                            <li class="active"><a href="#">1</a></li>
-                            <li>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                            </li>
-                            <li><a href="#">11</a></li>
-                            <li><a href="#">12</a></li>
-                            <li><a href="#">13</a></li>
-                            <li>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                            </li>
-                            <li><a href="#">21</a></li>
-                        </ul>
+
+                {% if purchases %}
+                    <div class="action-panel-holder bottom">
+                        <div id="pagination-holder">
+                            <ul>
+                                <li class="active"><a href="#">1</a></li>
+                                <li>
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                </li>
+                                <li><a href="#">11</a></li>
+                                <li><a href="#">12</a></li>
+                                <li><a href="#">13</a></li>
+                                <li>
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                </li>
+                                <li><a href="#">21</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
+
             </section>
         </div>
     </main>

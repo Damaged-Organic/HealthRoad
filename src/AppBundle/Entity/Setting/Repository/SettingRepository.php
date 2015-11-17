@@ -46,6 +46,12 @@ class SettingRepository extends ExtendedEntityRepository
             ->getSettingsString()[0];
     }
 
+    public function findStudentMinDailyLimit()
+    {
+        return $this->findSettingBySettingKey('student_daily_limit_lower')
+            ->getSettingsDecimal()[0];
+    }
+
     public function findVendingMachineReportSumAmount()
     {
         return $this->findSettingBySettingKey('vending_machine_report_sum_amount')

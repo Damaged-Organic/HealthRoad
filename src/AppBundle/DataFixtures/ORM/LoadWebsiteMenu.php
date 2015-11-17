@@ -18,6 +18,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_1 = (new Menu)
                 ->setRoute("website_index")
                 ->setBlock(self::BLOCK_MAIN)
+                ->setLevel(0)
                 ->setTitleShort("Головна")
         );
 
@@ -26,6 +27,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_2 = (new Menu)
                 ->setRoute("website_our_project")
                 ->setBlock(self::BLOCK_MAIN)
+                ->setLevel(0)
                 ->setTitleShort("Наш проект")
                 ->setTitleFull("Наш проект")
         );
@@ -35,6 +37,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_2_1 = (new Menu)
                 ->setRoute("website_how_to_get_card")
                 ->setBlock(self::BLOCK_OUR_PROJECT)
+                ->setLevel(0)
                 ->setTitleShort("Як отримати картку?")
                 ->setTitleFull("Як отримати картку або браслет")
         );
@@ -44,6 +47,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_2_2 = (new Menu)
                 ->setRoute("website_how_to_replenish_card")
                 ->setBlock(self::BLOCK_OUR_PROJECT)
+                ->setLevel(0)
                 ->setTitleShort("Як поповнити картку?")
                 ->setTitleFull("Як поповнити картку або браслет")
         );
@@ -53,6 +57,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_2_3 = (new Menu)
                 ->setRoute("website_how_to_use_vending_machine")
                 ->setBlock(self::BLOCK_OUR_PROJECT)
+                ->setLevel(0)
                 ->setTitleShort("Як користуватись автоматом?")
                 ->setTitleFull("Як користуватися вендінговим автоматом")
         );
@@ -62,6 +67,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_3 = (new Menu)
                 ->setRoute("website_about_company")
                 ->setBlock(self::BLOCK_MAIN)
+                ->setLevel(0)
                 ->setTitleShort("Про компанію")
                 ->setTitleFull("Про компанію")
         );
@@ -71,6 +77,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_3_1 = (new Menu)
                 ->setRoute("website_news")
                 ->setBlock(self::BLOCK_ABOUT_COMPANY)
+                ->setLevel(0)
                 ->setTitleShort("Новини")
                 ->setTitleFull("Новини")
         );
@@ -80,6 +87,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_3_2 = (new Menu)
                 ->setRoute("website_promotions")
                 ->setBlock(self::BLOCK_ABOUT_COMPANY)
+                ->setLevel(0)
                 ->setTitleShort("Акції")
                 ->setTitleFull("Акції та пропозиції")
         );
@@ -89,6 +97,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_3_3 = (new Menu)
                 ->setRoute("website_gallery")
                 ->setBlock(self::BLOCK_ABOUT_COMPANY)
+                ->setLevel(0)
                 ->setTitleShort("Галерея")
                 ->setTitleFull("Галерея")
         );
@@ -98,6 +107,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_4 = (new Menu)
                 ->setRoute("website_our_partners")
                 ->setBlock(self::BLOCK_MAIN)
+                ->setLevel(0)
                 ->setTitleShort("Наші партнери")
                 ->setTitleFull("Наші партнери")
         );
@@ -107,6 +117,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_5 = (new Menu)
                 ->setRoute("website_products")
                 ->setBlock(self::BLOCK_MAIN)
+                ->setLevel(0)
                 ->setTitleShort("Продукти")
                 ->setTitleFull("Продукти")
         );
@@ -116,6 +127,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_6 = (new Menu)
                 ->setRoute("website_contacts")
                 ->setBlock(self::BLOCK_MAIN)
+                ->setLevel(0)
                 ->setTitleShort("Контакти")
                 ->setTitleFull("Головний офіс")
         );
@@ -125,6 +137,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_6_1 = (new Menu)
                 ->setRoute("website_vending_machines_placement")
                 ->setBlock(self::BLOCK_CONTACTS)
+                ->setLevel(0)
                 ->setTitleShort("Розташування автоматів")
                 ->setTitleFull("Розташування автоматів у школі")
         );
@@ -134,6 +147,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_6_2 = (new Menu)
                 ->setRoute("website_vending_machines_suppliers")
                 ->setBlock(self::BLOCK_CONTACTS)
+                ->setLevel(0)
                 ->setTitleShort("Для постачальників")
                 ->setTitleFull("Для постачальників")
         );
@@ -143,6 +157,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $websiteMenu_7 = (new Menu)
                 ->setRoute("website_feedback")
                 ->setBlock(self::BLOCK_FEEDBACK)
+                ->setLevel(0)
                 ->setTitleShort("Зворотній зв'язок")
         );
 
@@ -153,6 +168,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $officeMenu_1 = (new Menu)
                 ->setRoute("customer_office")
                 ->setBlock(self::BLOCK_OFFICE)
+                ->setLevel(1)
                 ->setTitleShort("Персональні дані")
                 ->setIconClass("hr-personal")
         );
@@ -162,6 +178,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $officeMenu_2 = (new Menu)
                 ->setRoute("customer_office_students")
                 ->setBlock(self::BLOCK_OFFICE)
+                ->setLevel(1)
                 ->setTitleShort("Мої діти")
                 ->setIconClass("hr-girl")
         );
@@ -171,6 +188,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $officeMenu_2_1 = (new Menu)
                 ->setRoute("customer_office_students_purchases")
                 ->setBlock(self::BLOCK_OFFICE_STUDENTS)
+                ->setLevel(1)
                 ->setTitleShort("Статистика покупок")
         );
 
@@ -179,6 +197,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $officeMenu_2_2 = (new Menu)
                 ->setRoute("customer_office_students_products")
                 ->setBlock(self::BLOCK_OFFICE_STUDENTS)
+                ->setLevel(1)
                 ->setTitleShort("Список продуктів")
         );
 
@@ -187,6 +206,7 @@ class LoadWebsiteMenu extends AbstractFixture implements OrderedFixtureInterface
             $officeMenu_3 = (new Menu)
                 ->setRoute("customer_office_purchases")
                 ->setBlock(self::BLOCK_OFFICE)
+                ->setLevel(1)
                 ->setTitleShort("Покупки")
                 ->setIconClass("hr-stats")
         );

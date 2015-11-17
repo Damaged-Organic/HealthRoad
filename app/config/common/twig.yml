@@ -1,6 +1,8 @@
 # app/config/common/twig.yml
 twig:
     globals:
+        developers: "%developers%"
+
         setting_boundless_access:               "@app.security.setting_boundless_access"
         employee_boundless_access:              "@app.security.employee_boundless_access"
         region_boundless_access:                "@app.security.region_boundless_access"

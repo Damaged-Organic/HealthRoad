@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
@@ -58,13 +59,21 @@
                                     </div>
                                     <div class="col">
                                         <span><span class="icon hr-coin"></span>Денний ліміт</span>
-                                        <form action="../php/limit.php" method="POST" id="limit-form">
-                                            <p class="limit-preview" data-currency="грн">{{ student.dailyLimit|number_format(2, ',') }} грн</p>
-                                            <input type="text" name="kid" value="{{ student.dailyLimit|number_format(2, ',') }}" placeholder="0.000,00" id="limit-input" data-mask="#.##0,00" data-mask-reverse="true" data-rule-required="true" data-msg-required="Обязательное поле">
+                                        <form action="{{ path('customer_office_action_daily_limit_update', { 'id': student.id }) }}" method="POST" id="limit-form">
+                                            <p class="limit-preview" data-currency="грн">
+                                                {{ student.dailyLimit|number_format(2, ',') }} грн
+                                            </p>
+                                            <input type="text" name="daily_limit" id="limit-input" value="{{ student.dailyLimit|number_format(2, ',') }}"
+                                                   placeholder="0.000,00"
+                                                   data-rule-required="true" data-msg-required="Введіть ліміт"
+                                                   data-mask="#.##0,00" data-mask-reverse="true">
+
                                             <button type="submit">
                                                 <span class="icon hr-accept"></span>
                                             </button>
+
                                             <span class="error"></span>
+
                                             <div class="loader">
                                                 <span class="dot"></span>
                                                 <span class="dot"></span>
@@ -80,7 +89,7 @@
                                         <span class="icon hr-stats"></span>
                                         Статистика покупок
                                     </a>
-                                    <a href="{{ path('customer_office_students_products', { 'id': student.id }) }}">
+                                    <a href="{{ path('customer_office_students_products', { 'id': student.id, 'permission': 'allowed' }) }}">
                                         <span class="icon hr-cart"></span>
                                         Список продуктів
                                     </a>

@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
@@ -58,13 +59,15 @@
                                 <div class="info-holder kids">
                                     <h3>Мої діти</h3>
 
-                                    {% for student in customer.students %}
+                                    {% for student in students %}
                                         <div class="col">
                                             <a href="{{ path('customer_office_students', { 'id': student.id }) }}">
                                                 <span class="icon hr-{{ student.gender }}"></span>
                                                 {{ student.name }}
                                             </a>
                                         </div>
+                                    {% else %}
+                                        <p>Інформація щодо дітей відсутня</p>
                                     {% endfor %}
 
                                 </div>

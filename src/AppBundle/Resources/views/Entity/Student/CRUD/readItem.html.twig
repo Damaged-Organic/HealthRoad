@@ -5,7 +5,7 @@
 
 {% block data %}
 
-    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_BALANCE_REPLENISH'), student) %}
+    {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_TOTAL_LIMIT_UPDATE'), student) %}
 
         {% if student.nfcTag %}
             <div class="separator-holder">

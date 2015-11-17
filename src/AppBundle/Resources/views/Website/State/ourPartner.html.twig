@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="description" content="{{ supplier.descriptionShort }}">
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}

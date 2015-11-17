@@ -29,6 +29,11 @@ class Menu
     protected $block;
 
     /**
+     * @ORM\Column(type="smallint")
+     */
+    protected $level;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     protected $titleShort;
@@ -141,5 +146,28 @@ class Menu
     public function getTitleFull()
     {
         return $this->titleFull;
+    }
+
+    /**
+     * Set iconClass
+     *
+     * @param string $iconClass
+     * @return Menu
+     */
+    public function setIconClass($iconClass)
+    {
+        $this->iconClass = $iconClass;
+
+        return $this;
+    }
+
+    /**
+     * Get iconClass
+     *
+     * @return string 
+     */
+    public function getIconClass()
+    {
+        return $this->iconClass;
     }
 }

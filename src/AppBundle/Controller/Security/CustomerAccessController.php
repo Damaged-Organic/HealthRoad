@@ -33,10 +33,13 @@ class CustomerAccessController extends Controller
             return $this->redirectToRoute('customer_office');
         }
 
+        $lastUsername = $this->_authenticationUtils->getLastUsername();
+
         $error = $this->_authenticationUtils->getLastAuthenticationError();
 
-        return $this->render('AppBundle:Office/Security/Login:customer.html.twig', [
-            'error' => $error
+        return $this->render('AppBundle:Office/Security:login.html.twig', [
+            'lastUsername' => $lastUsername,
+            'error'        => $error
         ]);
     }
 

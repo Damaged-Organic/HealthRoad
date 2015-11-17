@@ -1,0 +1,30 @@
+{# AppBundle/Resources/views/Public/Security/Login/form.html.twig #}
+<form action="{{ path('customer_office_login_check') }}" method="POST" id="auth-form">
+
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security')|trim('.') }}</div>
+    {% endif %}
+
+    <div class="field-area">
+        <input type="tel" name="_phoneNumber" id="user-phone-number" value="{{ lastUsername }}"
+               placeholder="+38 (099) 999-99-99"
+               data-rule-required="true" data-msg-required="{{ 'customer.authentication.username.not_blank'|trans({}, 'validators') }}"
+               data-mask="+38 (099) 999-99-99"
+               {{ ( app.user ) ? 'disabled' }}>
+        <label for="user-phone-number"><span class="hr-phone"></span></label>
+    </div>
+
+    <div class="field-area">
+        <input type="password" name="_password" id="user-password"
+               placeholder="Ваш пароль"
+               data-rule-required="true" data-msg-required="{{ 'customer.authentication.password.not_blank'|trans({}, 'validators') }}"
+               {{ ( app.user ) ? 'disabled' }}>
+        <label for="user-password"><span class="hr-lock"></span></label>
+    </div>
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    <button type="submit" {{ ( app.user ) ? 'disabled' }}>
+        <span>Увійти</span>
+    </button>
+</form>

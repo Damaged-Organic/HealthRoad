@@ -41,6 +41,20 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
+    app.listener.fallback.ie:
+        class: AppBundle\EventListener\Fallback\IeFallbackListener
+        calls:
+            - [setIeFallbackController, [ "@app.ie_fallback_controller" ]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    # Controller
+
+    app.ie_fallback_controller:
+        class: AppBundle\Controller\Website\IeFallbackController
+        calls:
+            - [setTemplating, [ "@templating" ]]
+
     # Database
 
     app.repository.global:

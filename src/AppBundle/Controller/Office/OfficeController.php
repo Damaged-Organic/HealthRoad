@@ -2,17 +2,23 @@
 // AppBundle/Controller/Office/OfficeController.php
 namespace AppBundle\Controller\Office;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection,
+    Doctrine\Common\Collections\Criteria;
+
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Security\Authorization\Voter\StudentVoter;
 
 class OfficeController extends Controller
 {
+    use EntityFilter;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -45,8 +51,13 @@ class OfficeController extends Controller
         if( !$customer )
             throw $this->createNotFoundException();
 
+        $students = $this->filterDeleted(
+            $customer->getStudents()
+        );
+
         return $this->render('AppBundle:Office/State:personal.html.twig', [
-            'customer' => $customer
+            'customer' => $customer,
+            'students' => $students
         ]);
     }
 
@@ -71,10 +82,16 @@ class OfficeController extends Controller
 
         if( $id )
         {
-            $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
+            $student = $this->_manager->getRepository('AppBundle:Student\Student')->findOneBy([
+                'id'            => $id,
+                'pseudoDeleted' => FALSE
+            ]);
 
             if( !$student )
                 throw $this->createNotFoundException();
+
+            if( !$this->isGranted(StudentVoter::STUDENT_READ_BY_CUSTOMER, $student) )
+                throw $this->createAccessDeniedException();
 
             $this->_breadcrumbs
                 ->add('customer_office_students', [], $menu->getTitleShort())
@@ -86,7 +103,9 @@ class OfficeController extends Controller
                 'data' => ['student' => $student]
             ];
         } else {
-            $students = $this->_manager->getRepository('AppBundle:Student\Student')->findBy(['customer' => $this->getUser()->getId()]);
+            $students = $this->filterDeleted(
+                $this->_manager->getRepository('AppBundle:Student\Student')->findBy(['customer' => $this->getUser()->getId()])
+            );
 
             $this->_breadcrumbs
                 ->add('customer_office', [], $menu->getTitleShort())
@@ -128,10 +147,16 @@ class OfficeController extends Controller
 
         // ---
 
-        $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
+        $student = $this->_manager->getRepository('AppBundle:Student\Student')->findOneBy([
+            'id'            => $id,
+            'pseudoDeleted' => FALSE
+        ]);
 
         if( !$student )
             throw $this->createNotFoundException();
+
+        if( !$this->isGranted(StudentVoter::STUDENT_READ_BY_CUSTOMER, $student) )
+            throw $this->createAccessDeniedException();
 
         $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findBy(
             ['nfcTag' => $student->getNfcTag()->getId()],
@@ -153,15 +178,28 @@ class OfficeController extends Controller
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/customer_office/students/{id}/products",
+     *      "/customer_office/students/{id}/products/{permission}",
      *      name="customer_office_students_products",
      *      host="{domain_website}",
      *      defaults={"_locale" = "%locale_website%", "domain_website" = "%domain_website%"},
-     *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%", "id" = "\d+"}
+     *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%", "id" = "\d+", "permission" = "allowed|restricted"}
      * )
      */
-    public function studentsProductsAction($id)
+    public function studentsProductsAction($id, $permission)
     {
+        $groupProductsByCategory = function($products)
+        {
+            $groupedProducts = [];
+
+            foreach( $products as $product )
+            {
+                if( $product->getProductCategory() )
+                    $groupedProducts[$product->getProductCategory()->getName()][] = $product;
+            }
+
+            return $groupedProducts;
+        };
+
         $menu = $this->_manager->getRepository('AppBundle:Website\Menu\Menu')->findBy([
             'route' => ['customer_office_students', 'customer_office_students_products']
         ]);
@@ -177,19 +215,46 @@ class OfficeController extends Controller
 
         // ---
 
-        $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
+        $student = $this->_manager->getRepository('AppBundle:Student\Student')->findOneBy([
+            'id'            => $id,
+            'pseudoDeleted' => FALSE
+        ]);
 
         if( !$student )
             throw $this->createNotFoundException();
 
+        if( !$this->isGranted(StudentVoter::STUDENT_READ_BY_CUSTOMER, $student) )
+            throw $this->createAccessDeniedException();
+
         $this->_breadcrumbs
             ->add('customer_office_students', [], $menu_1)
             ->add('customer_office_students', ['id' => $student->getId()], $student->getName())
-            ->add('customer_office_students_products', ['id' => $student->getId()], $menu_2)
         ;
 
+        if( $permission === 'allowed' ) {
+            $groupedProducts = $groupProductsByCategory(
+                $this->filterDeleted(
+                    $this->_manager->getRepository('AppBundle:Product\Product')->findAvailableAndAllowedByStudent($student)
+                )
+            );
+
+            $this->_breadcrumbs->add('customer_office_students_products', ['id' => $student->getId(), 'permission' => 'allowed'], $menu_2);
+        } elseif( $permission === 'restricted' ) {
+            $groupedProducts = $groupProductsByCategory(
+                $this->filterDeleted(
+                    $student->getProducts()
+                )
+            );
+
+            $this->_breadcrumbs->add('customer_office_students_products', ['id' => $student->getId(), 'permission' => 'restricted'], $menu_2);
+        } else {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('AppBundle:Office/State:studentProducts.html.twig', [
-            'student' => $student
+            'permission'      => $permission,
+            'student'         => $student,
+            'groupedProducts' => $groupedProducts
         ]);
     }
 
@@ -205,13 +270,15 @@ class OfficeController extends Controller
      */
     public function purchasesAction($id = NULL)
     {
-        $extractNfcTags = function(array $students)
+        //TODO: Horrible, rewrite it for fuck's sake
+
+        $extractNfcTagsFromStudents = function(array $students)
         {
             $nfcTags = [];
 
             foreach($students as $student)
             {
-                if( $student->getNfcTag() )
+                if( $student->getNfcTag() && !$student->getNfcTag()->getPseudoDeleted() )
                     $nfcTags[] = $student->getNfcTag()->getId();
             }
 
@@ -227,16 +294,22 @@ class OfficeController extends Controller
 
         $this->_breadcrumbs->add('customer_office', [], $menu->getTitleShort());
 
-        $students = $this->_manager->getRepository('AppBundle:Student\Student')->findBy(['customer' => $this->getUser()->getId()]);
+        $students = $this->filterDeleted(
+            $this->_manager->getRepository('AppBundle:Student\Student')->findBy(['customer' => $this->getUser()->getId()])
+        );
 
         if( $id )
         {
             $criteria = Criteria::create()->where(Criteria::expr()->in("id", [$id]));
 
-            $nfcTagCondition = (new ArrayCollection($students))->matching($criteria)->first()->getNfcTag()->getId();
+            $first = (new ArrayCollection($students))->matching($criteria)->first();
 
+            if( !$first )
+                throw $this->createNotFoundException();
+
+            $nfcTagCondition = $first->getNfcTag()->getId();
         } else {
-            $nfcTagCondition = $extractNfcTags($students);
+            $nfcTagCondition = $extractNfcTagsFromStudents($students);
         }
 
         $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findBy(

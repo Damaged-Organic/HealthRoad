@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="description" content="{{ metadata.description }}">
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
@@ -88,41 +89,45 @@
                 </div>
             </div>
         </section>
-        <section class="outer suppliers-holder">
-            <div class="inner">
-                <h2>Наші продукти</h2>
-                <span class="sprtr-h"></span>
-                <ul class="suppliers">
 
-                    {% for supplier in suppliers %}
+        {% if suppliers %}
+            <section class="outer suppliers-holder">
+                <div class="inner">
+                    <h2>Наші продукти</h2>
+                    <span class="sprtr-h"></span>
+                    <ul class="suppliers">
 
-                        {% if supplier.supplierImages|length %}
+                        {% for supplier in suppliers %}
 
-                            {% for supplierImage in supplier.supplierImages %}
+                            {% if supplier.supplierImages|length %}
+
+                                {% for supplierImage in supplier.supplierImages %}
+                                    <li>
+                                        <figure>
+                                            <a href="{{ path('website_our_partners', { 'id': supplier.id, 'slug': supplier.slug }) }}">
+                                                <img src="{{ vich_uploader_asset(supplierImage, 'imageSupplierFile') }}" alt="{{ supplier.name }}">
+                                            </a>
+                                        </figure>
+                                    </li>
+                                {% endfor %}
+
+                            {% else %}
                                 <li>
                                     <figure>
-                                        <a href="#">
-                                            <img src="{{ vich_uploader_asset(supplierImage, 'imageSupplierFile') }}" alt="{{ supplier.name }}">
+                                        <a href="{{ path('website_our_partners', { 'id': supplier.id, 'slug': supplier.slug }) }}">
+                                            <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
                                         </a>
                                     </figure>
                                 </li>
-                            {% endfor %}
+                            {% endif %}
 
-                        {% else %}
-                            <li>
-                                <figure>
-                                    <a href="#">
-                                        <img src="{{ vich_uploader_asset(supplier, 'logoFile') }}" alt="{{ supplier.name }}">
-                                    </a>
-                                </figure>
-                            </li>
-                        {% endif %}
+                        {% endfor %}
 
-                    {% endfor %}
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
 
-                </ul>
-            </div>
-        </section>
         <section class="outer questions-holder">
             <div class="inner">
                 <h2>Три кроки до здорового харчування Вашої дитини</h2>

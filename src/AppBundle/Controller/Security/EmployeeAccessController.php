@@ -33,10 +33,13 @@ class EmployeeAccessController extends Controller
             return $this->redirectToRoute('employee_dashboard');
         }
 
+        $lastUsername = $this->_authenticationUtils->getLastUsername();
+
         $error = $this->_authenticationUtils->getLastAuthenticationError();
 
-        return $this->render('AppBundle:Dashboard/Security/Login:employee.html.twig', [
-            'error' => $error
+        return $this->render('AppBundle:Dashboard/Security:login.html.twig', [
+            'lastUsername' => $lastUsername,
+            'error'        => $error
         ]);
     }
 

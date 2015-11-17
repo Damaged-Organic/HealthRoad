@@ -4,10 +4,11 @@
 {% set metadata = getMetadata() %}
 
 {% block title %}
-    {{ 'website.title'|trans }} | {{ metadata.title }}
+    {{ metadata.title }} | {{ 'website.title'|trans }}
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="description" content="{{ metadata.description }}">
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}

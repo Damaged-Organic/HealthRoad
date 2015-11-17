@@ -2,13 +2,14 @@
 // src/AppBundle/EventListener/Sync/SyncAuthenticationListener.php
 namespace AppBundle\EventListener\Sync;
 
-use AppBundle\Service\Sync\Security\Authentication;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
-use AppBundle\Controller\Utility\Interfaces\Markers\SyncAuthenticationMarkerInterface;
+use Doctrine\ORM\EntityManager;
+
+use AppBundle\Service\Sync\Security\Authentication,
+    AppBundle\Controller\Utility\Interfaces\Markers\SyncAuthenticationMarkerInterface;
 
 class SyncAuthenticationListener
 {

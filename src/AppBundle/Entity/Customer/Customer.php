@@ -439,7 +439,8 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
 
         foreach( $this->getStudents() as $student )
         {
-            $totalLimit = bcadd($totalLimit, $student->getTotalLimit(), 2);
+            if( !$student->getPseudoDeleted() )
+                $totalLimit = bcadd($totalLimit, $student->getTotalLimit(), 2);
         }
 
         return $totalLimit;

@@ -18,7 +18,7 @@ class LoadProductCategory extends AbstractFixture implements OrderedFixtureInter
         $manager->persist($productCategory_0);
 
         $productCategory_1 = (new ProductCategory)
-            ->setName("Кондитерские изделия")
+            ->setName("Кондитерські вироби")
         ;
         $manager->persist($productCategory_1);
 
@@ -28,7 +28,7 @@ class LoadProductCategory extends AbstractFixture implements OrderedFixtureInter
         $manager->persist($productCategory_2);
 
         $productCategory_3 = (new ProductCategory)
-            ->setName("Фрукты")
+            ->setName("Фрукти")
         ;
         $manager->persist($productCategory_3);
 

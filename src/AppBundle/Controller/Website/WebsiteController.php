@@ -10,7 +10,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use AppBundle\Controller\Utility\Traits\FormErrorsTrait,
+use AppBundle\Controller\Utility\Traits\EntityFilter,
+    AppBundle\Controller\Utility\Traits\FormErrorsTrait,
     AppBundle\Entity\Website\Feedback\Feedback,
     AppBundle\Entity\Website\Feedback\FeedbackOrder,
     AppBundle\Entity\Website\Feedback\FeedbackSupplier,
@@ -20,7 +21,7 @@ use AppBundle\Controller\Utility\Traits\FormErrorsTrait,
 
 class WebsiteController extends Controller
 {
-    use FormErrorsTrait;
+    use EntityFilter, FormErrorsTrait;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -247,7 +248,10 @@ class WebsiteController extends Controller
     {
         if( $id )
         {
-            $product = $this->_manager->getRepository('AppBundle:Product\Product')->find($id);
+            $product = $this->_manager->getRepository('AppBundle:Product\Product')->findOneBy([
+                'id'            => $id,
+                'pseudoDeleted' => FALSE
+            ]);
 
             if( !$product )
                 throw $this->createNotFoundException();
@@ -258,11 +262,15 @@ class WebsiteController extends Controller
             ];
         } else {
             if( $request->query->has('product_category') ) {
-                $products = $this->_manager->getRepository('AppBundle:Product\Product')->findBy([
-                    'productCategory' => $request->query->get('product_category')
-                ]);
+                $products = $this->filterDeleted(
+                    $this->_manager->getRepository('AppBundle:Product\Product')->findBy([
+                        'productCategory' => $request->query->get('product_category')
+                    ])
+                );
             } else {
-                $products = $this->_manager->getRepository('AppBundle:Product\Product')->findAll();
+                $products = $this->filterDeleted(
+                    $this->_manager->getRepository('AppBundle:Product\Product')->findAll()
+                );
             }
 
             $response = [

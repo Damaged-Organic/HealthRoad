@@ -63,19 +63,9 @@
         <div class="part entrance">
             <h3>Вхід для батьків</h3>
             <span class="sprtr-h"></span>
-            <form action="#" method="POST" id="entrance-form">
-                <div class="field-area">
-                    <input type="tel" name="user[phone]" value="" placeholder="+38 (044) 999 9999" id="entrance-user-phone" data-rule-required="true" data-mask="+38 (000) 000-0000">
-                    <label for="entrance-user-phone"><span class="hr-phone"></span></label>
-                </div>
-                <div class="field-area">
-                    <input type="password" name="user[password]" value="" placeholder="ваш пароль" id="entrance-user-password" data-rule-required="true">
-                    <label for="entrance-user-password"><span class="hr-lock"></span></label>
-                </div>
-                <button type="submit">
-                    <span>Увійти</span>
-                </button>
-            </form>
+
+            {% include 'AppBundle:Office/Security/Login:form.html.twig' with { 'lastUsername': null, 'error': null } only %}
+
         </div>
     </div>
 </section>

@@ -238,7 +238,7 @@ class WebsiteMenuBuilder implements MenuBlockListInterface
     {
         $menu = $this->_factory->createItem('root');
 
-        $items = $this->_manager->getRepository('AppBundle:Website\Menu\Menu')->findAll();
+        $items = $this->_manager->getRepository('AppBundle:Website\Menu\Menu')->findBy(['level' => 0]);
 
         $currentRoute = $this->_requestStack->getMasterRequest()->attributes->get('_route');
 

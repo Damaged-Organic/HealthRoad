@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
@@ -83,6 +84,8 @@
                                     <div class="row">
                                 {% endif %}
 
+                            {% else %}
+                                <p>Інформація щодо дітей відсутня</p>
                             {% endfor %}
                         </div>
                     </div>

@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="description" content="{{ metadata.description }}">
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
@@ -54,7 +55,7 @@
                                 <span class="weight">
                                     {{ product.getWeightAndMeasure }}
                                 </span>
-                                <span class="price">{{ product.price|number_format(2, ',') }} ₴</span>
+                                <span class="price">{{ product.price|number_format(2, ',') }} грн</span>
                             </div>
                             <div class="description">
                                 <p>{{ product.descriptionShort }}</p>
@@ -72,7 +73,7 @@
                         {% endif %}
 
                     {% else %}
-                        <p>На жаль, інформация стосовно наших продуктів на даний час відсутня</p>
+                        <p>На жаль, інформация стосовно продуктів цієї категорії на даний час відсутня</p>
                     {% endfor %}
 
                 </div>

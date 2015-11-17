@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block metadata %}
+    {{ parent() }}
     <meta name="robots" content="{{ metadata.robots }}">
 {% endblock %}
 
@@ -26,7 +27,7 @@
             <h2>для клієнтів компанії</h2>
             <span class="sprtr-h"></span>
 
-            {% block form %}{% endblock %}
+            {% include 'AppBundle:Office/Security/Login:form.html.twig' with { 'lastUsername': lastUsername, 'error': error } only %}
 
         </section>
     </main>

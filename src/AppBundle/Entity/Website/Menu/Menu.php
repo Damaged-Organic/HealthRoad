@@ -29,6 +29,11 @@ class Menu
     protected $block;
 
     /**
+     * @ORM\Column(type="smallint")
+     */
+    protected $level;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     protected $titleShort;
@@ -95,6 +100,29 @@ class Menu
     public function getBlock()
     {
         return $this->block;
+    }
+
+    /**
+     * Set level
+     *
+     * @param integer $level
+     * @return Menu
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return integer
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 
     /**

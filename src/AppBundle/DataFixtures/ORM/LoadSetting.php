@@ -35,7 +35,7 @@ class LoadSetting extends AbstractFixture implements OrderedFixtureInterface
             ->setSetting($this->getReference('setting'))
             ->setName("Сумма продаж трогового автомата для отправки отчета")
             ->setSettingKey("vending_machine_report_sum_amount")
-            ->setSettingValue(600.00)
+            ->setSettingValue(0.00)
         ;
         $manager->persist($settingVendingMachineReportSumAmount);
 
