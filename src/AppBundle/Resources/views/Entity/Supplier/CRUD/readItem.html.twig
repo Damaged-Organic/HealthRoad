@@ -40,7 +40,7 @@
                     <span>{{ 'supplier.description.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
-                    <p>{{ supplier.description }}</p>
+                    <p>{{ supplier.description|striptags }}</p>
                 </div>
             </li>
             <li class="photo-list-holder">
@@ -58,6 +58,24 @@
                             <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}">
                         </figure>
                     {% endif %}
+
+                </div>
+            </li>
+            <li class="photo-list-holder">
+                <div class="item key">
+                    <span>{{ 'supplier.supplier_image_file.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+
+                    {% for supplierImage in supplier.supplierImages %}
+                        <figure>
+                            <img src="{{ vich_uploader_asset(supplierImage, 'imageSupplierFile') }}" alt="{{ supplier.name }}">
+                        </figure>
+                    {% else %}
+                        <figure>
+                            <img src="{{ asset('bundles/app/dashboard/images/no-image.jpg') }}">
+                        </figure>
+                    {% endfor %}
 
                 </div>
             </li>

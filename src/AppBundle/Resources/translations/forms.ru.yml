@@ -226,6 +226,9 @@ supplier:
     logo_file:
         label: Изображение логотипа
 
+    supplier_image_file:
+        label: Торговые марки
+
     image_supplier_file:
         label: Изображения торговых марок
 

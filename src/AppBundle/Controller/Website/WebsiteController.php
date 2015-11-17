@@ -399,7 +399,7 @@ class WebsiteController extends Controller
             if ($form->isValid()) {
                 $this->_manager->flush();
 
-                if ($this->_feedbackMailer->sendFeedback($feedback)) {
+                if( $this->_feedbackMailer->sendFeedback($feedback) ) {
                     $this->_messages->markWebsiteFeedbackSuccess();
                 } else {
                     $this->_messages->markWebsiteFeedbackError();

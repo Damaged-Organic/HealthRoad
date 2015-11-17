@@ -1,10 +1,14 @@
 {# AppBundle/Resources/views/Website/Common/messages.html.twig #}
 {% if messages.success is defined %}
-    {{ messages.success.0 }}
+    <div class="golbal-response-holder success">
+        <span>{{ messages.success.0 }}</span>
+    </div>
 {% elseif messages.errors is defined %}
 
     {% for error in messages.errors %}
-        <span>{{ error.0 }}</span>
+        <div class="golbal-response-holder error">
+          <span>{{ error }}</span>
+        </div>
     {% endfor %}
 
 {% endif %}

@@ -163,6 +163,44 @@ button[type="submit"]{
 		color: @white;
 	}
 }
+
+.golbal-response-holder{
+  width: 300px;
+  height: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  & > span{
+	display: block;
+	text-align: left;
+	padding: 20px;
+  }
+  &.success{
+	background: @greenLight;
+	span{
+	  color: @greenDark;
+	}
+  }
+  &.error{
+	background: @redLight;
+	span{
+	  color: @redDark;
+	}
+  }
+}
+
+.server-error{
+  display: block;
+  width: 100%;
+  font-size: .875em;
+  line-height: 30px;
+  color: @redDark;
+  text-align: left;
+  padding-left: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	forms end								  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
