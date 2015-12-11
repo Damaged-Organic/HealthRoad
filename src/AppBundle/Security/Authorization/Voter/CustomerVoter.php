@@ -71,10 +71,13 @@ class CustomerVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
-        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
-            return ( $customer->getEmployee()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) )
+        {
+            if( $customer->getEmployee() )  {
+                return ($customer->getEmployee()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
         }
 
         return FALSE;
@@ -85,10 +88,13 @@ class CustomerVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
-        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
-            return ( $customer->getEmployee()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) )
+        {
+            if( $customer->getEmployee() ) {
+                return ($customer->getEmployee()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
         }
 
         return FALSE;
@@ -99,10 +105,13 @@ class CustomerVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
         if( $this->hasRole($user, self::ROLE_ADMIN) )
             return TRUE;
 
-        if( $this->hasRole($user, self::ROLE_REGISTRAR) ) {
-            return ( $customer->getEmployee()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
+        if( $this->hasRole($user, self::ROLE_REGISTRAR) )
+        {
+            if( $customer->getEmployee() ) {
+                return ($customer->getEmployee()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
         }
 
         return FALSE;

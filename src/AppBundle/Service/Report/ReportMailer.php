@@ -86,7 +86,7 @@ class ReportMailer
 
         $attachment = NULL;
 
-        if( !$filePath )
+        if( $filePath )
         {
             $email = $email + [
                 'subject' => "Отчет для логистики (" . (new DateTime)->format('m/d/Y') . ")",

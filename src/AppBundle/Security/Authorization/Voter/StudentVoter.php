@@ -126,9 +126,11 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
 
         if( $this->hasRole($user, self::ROLE_REGISTRAR) )
         {
-            return ( $student->getEmployee()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
+            if( $student->getEmployee() ) {
+                return ($student->getEmployee()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
         }
 
         return FALSE;
@@ -141,9 +143,11 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
 
         if( $this->hasRole($user, self::ROLE_REGISTRAR) )
         {
-            return ( $student->getEmployee()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
+            if( $student->getEmployee() ) {
+                return ($student->getEmployee()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
         }
 
         return FALSE;
@@ -164,8 +168,7 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
     {
         if( in_array(self::ROLE_CUSTOMER, $user->getRoles(), TRUE) )
         {
-            if( $student->getCustomer() )
-            {
+            if( $student->getCustomer() ) {
                 return ($student->getCustomer()->getId() == $user->getId())
                     ? TRUE
                     : FALSE;
@@ -179,9 +182,11 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
     {
         if( in_array(self::ROLE_CUSTOMER, $user->getRoles(), TRUE) )
         {
-            return ( $student->getCustomer()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
+            if( $student->getCustomer() ) {
+                return ($student->getCustomer()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
         }
 
         return FALSE;
@@ -191,9 +196,11 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
     {
         if( in_array(self::ROLE_CUSTOMER, $user->getRoles(), TRUE) )
         {
-            return ( $student->getCustomer()->getId() == $user->getId() )
-                ? TRUE
-                : FALSE;
+            if( $student->getCustomer() ) {
+                return ($student->getCustomer()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
         }
 
         return FALSE;

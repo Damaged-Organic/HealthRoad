@@ -79,7 +79,7 @@ class LoadWebsiteContact extends AbstractFixture implements OrderedFixtureInterf
                 ->setTitle("Кирилюк Наталія Олегівна")
                 ->setPosition("начальник відділу логістики")
                 ->setSchedule("")
-                ->setPhoneNumber("+38 (050) 311-97-92")
+                ->setPhoneNumber("+38 (067) 737-77-93")
                 ->setEmail("n.kirilyuk@kdz.com.ua")
                 ->setMail("")
         );

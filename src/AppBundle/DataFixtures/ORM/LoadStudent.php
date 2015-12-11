@@ -14,53 +14,26 @@ class LoadStudent extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $kid_1 = (new Student)
-            ->setEmployee($this->getReference('registronymous'))
-            ->setName("KidName 1")
-            ->setSurname("KidSurname 1")
-            ->setPatronymic("KidPatronymic 1")
-            ->setDateOfBirth(new DateTime)
-            ->setGender('male')
-            ->setTotalLimit(150.00)
-            ->setDailyLimit(50.00)
-        ;
-        $manager->persist($kid_1);
+        for($s = 1; $s <= 13; $s++)
+        {
+            for ($i = 1; $i <= 100; $i++)
+            {
+                $kid_{"{$s}_{$i}"} = (new Student)
+                    ->setSchool($this->getReference("school_{$s}"))
+                    ->setName("Ученик {$i}")
+                    ->setSurname("")
+                    ->setPatronymic("")
+                    ->setDateOfBirth(new DateTime)
+                    ->setGender('male')
+                    ->setTotalLimit(100.00)
+                    ->setDailyLimit(50.00);
+                $manager->persist($kid_{"{$s}_{$i}"});
 
-        // ---
-
-        $kid_2 = (new Student)
-            ->setEmployee($this->getReference('registronymous'))
-            ->setName("KidName 2")
-            ->setSurname("KidSurname 2")
-            ->setPatronymic("KidPatronymic 2")
-            ->setDateOfBirth(new DateTime)
-            ->setGender('female')
-            ->setTotalLimit(140.00)
-            ->setDailyLimit(40.00)
-        ;
-        $manager->persist($kid_2);
-
-        // ---
-
-        $kid_3 = (new Student)
-            ->setEmployee($this->getReference('registronymous'))
-            ->setName("KidName 3")
-            ->setSurname("KidSurname 3")
-            ->setPatronymic("KidPatronymic 3")
-            ->setDateOfBirth(new DateTime)
-            ->setGender('male')
-            ->setTotalLimit(130.00)
-            ->setDailyLimit(30.00)
-        ;
-        $manager->persist($kid_3);
-
-        // ---
+                $this->addReference("kid_{$s}_{$i}", $kid_{"{$s}_{$i}"});
+            }
+        }
 
         $manager->flush();
-
-        $this->addReference('kid_1', $kid_1);
-        $this->addReference('kid_2', $kid_2);
-        $this->addReference('kid_3', $kid_3);
     }
 
     public function getOrder()

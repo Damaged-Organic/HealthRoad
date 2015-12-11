@@ -20,15 +20,15 @@ class FeedbackSupplierType extends AbstractType
     {
         $builder
             ->add('company', 'text', [
-                'label' => 'website.feedback_supplier.name.label',
+                'label' => 'website.feedback_supplier.company.label',
                 'attr' => [
-                    'placeholder'         => 'website.feedback_supplier.name.placeholder',
+                    'placeholder'         => 'website.feedback_supplier.company.placeholder',
                     'data-rule-required'  => 'true',
-                    'data-msg-required'   => $this->_translator->trans('website.feedback_supplier.name.not_blank', [], 'validators'),
+                    'data-msg-required'   => $this->_translator->trans('website.feedback_supplier.company.not_blank', [], 'validators'),
                     'data-rule-minlength' => 2,
-                    'data-msg-minlength'  => $this->_translator->trans('website.feedback_supplier.name.length.min', [], 'validators'),
+                    'data-msg-minlength'  => $this->_translator->trans('website.feedback_supplier.company.length.min', [], 'validators'),
                     'data-rule-maxlength' => 500,
-                    'data-msg-maxlength'  => $this->_translator->trans('website.feedback_supplier.name.length.max', [], 'validators')
+                    'data-msg-maxlength'  => $this->_translator->trans('website.feedback_supplier.company.length.max', [], 'validators')
                 ]
             ])
             ->add('name', 'text', [

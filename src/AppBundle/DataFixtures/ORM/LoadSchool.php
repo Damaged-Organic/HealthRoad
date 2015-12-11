@@ -12,32 +12,19 @@ class LoadSchool extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $school_0 = (new School)
-            ->setSettlement($this->getReference('settlement_0'))
-            ->setName("Лицей 1")
-            ->setAddress("Full address")
-        ;
-        $manager->persist($school_0);
+        for($i = 1; $i <= 13; $i++)
+        {
+            $school_{$i} = (new School)
+                ->setSettlement($this->getReference('settlement_0'))
+                ->setName("Школа №{$i}")
+                ->setAddress("Офис")
+            ;
+            $manager->persist($school_{$i});
 
-        $school_1 = (new School)
-            ->setSettlement($this->getReference('settlement_1'))
-            ->setName("СЗОШ 5")
-            ->setAddress("Full address")
-        ;
-        $manager->persist($school_1);
-
-        $school_2 = (new School)
-            ->setSettlement($this->getReference('settlement_2'))
-            ->setName("СЗОШ 666")
-            ->setAddress("Full address")
-        ;
-        $manager->persist($school_2);
+            $this->addReference("school_{$i}", $school_{$i});
+        }
 
         $manager->flush();
-
-        $this->addReference('school_0', $school_0);
-        $this->addReference('school_1', $school_1);
-        $this->addReference('school_2', $school_2);
     }
 
     public function getOrder()
