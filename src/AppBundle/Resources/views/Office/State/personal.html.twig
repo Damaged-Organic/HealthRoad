@@ -55,6 +55,34 @@
                                         <span><span class="icon hr-email"></span>Електронна адреса</span>
                                         <p>{{ customer.email }}</p>
                                     </div>
+
+                                    <div class="col change-password-holder">
+										<h3>Зміна поточного пароля</h3>
+										<form action="../php/change-password.php" method="POST" id="change-password-form">
+											<div class="response-holder {# success | error #}"></div>
+											<div class="field-area">
+												<label for="old-password">Поточний пароль</label>
+												<input type="password" name="password[old]" value="" placeholder="Введіть ваш поточний пароль" id="old-password" data-rule-required="true" data-msg-required="Не може бути порожним">
+												<!--span class="error-holder">Не може бути порожним</span-->
+											</div>
+											<div class="field-area">
+												<label for="new-password">Новий пароль</label>
+												<input type="password" name="password[new]" value="" placeholder="Введіть новий пароль" id="new-password" data-rule-required="true" data-msg-required="Не може бути порожним">
+												<!--span class="error-holder">Не може бути порожним</span-->
+											</div>
+											<button type="submit">
+												<span>Змінити</span>
+											</button>
+											<div class="loader">
+												<span class="dot"></span>
+												<span class="dot"></span>
+												<span class="dot"></span>
+												<span class="dot"></span>
+												<span class="dot"></span>
+											</div>
+										</form>
+									</div>
+
                                 </div>
                                 <div class="info-holder kids">
                                     <h3>Мої діти</h3>

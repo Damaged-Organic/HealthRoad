@@ -3,6 +3,8 @@
 @import "lib/breadcrumbs.less";
 @import "lib/pagination.less";
 @import "lib/personal-data.less";
+@import "lib/forms.less";
+@import "lib/loader.less";
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	parent start						 	  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -50,6 +52,62 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	parent end							 	  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	change password start				 	  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#content-info-holder{
+	.col.change-password-holder{
+		form{
+			position: relative;
+			overflow: hidden;
+		}
+		.field-area{
+			margin-bottom: 10px;
+			label:not(.error){
+				display: block;
+				margin-bottom: 5px;
+			}
+		}
+		button[type="submit"]{
+			float: left;
+			margin-top: 20px;
+			& > span{
+				text-align: center;
+			}
+		}
+		.loader{
+			top: auto;
+			left: auto;
+			right: 5px;
+			bottom: 5px;
+		}
+		.response-holder{
+			display: none;
+			width: 100%;
+			margin-bottom: 20px;
+			overflow: hidden;
+			& > p{
+				text-align: left;
+				padding: 10px;
+			}
+			&.success{
+				display: block;
+				background: @greenLight;
+				p{ color: @greenDark; }
+			}
+			&.error{
+				display: block;
+				background: @redLight;
+				p{ color: @redDark; }
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	change password end					 	  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	800 start							 	  */
@@ -108,4 +166,3 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	800 end								 	  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-

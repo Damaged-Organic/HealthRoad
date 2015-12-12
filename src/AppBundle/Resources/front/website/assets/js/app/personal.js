@@ -1,9 +1,12 @@
 "use strict";
 
 import $ from "jquery";
-
-window.$ = $;
+import validate from "jquery-validation";
+import PasswordController from "../controllers/passwordController";
 
 $(function(){
+
+    $("form").validate();
+    new PasswordController();
 
 });
