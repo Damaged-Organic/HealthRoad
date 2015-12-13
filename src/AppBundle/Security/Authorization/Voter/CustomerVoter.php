@@ -14,13 +14,16 @@ class CustomerVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
     const CUSTOMER_DELETE = 'customer_delete';
     const CUSTOMER_BIND   = 'customer_bind';
 
+    const CUSTOMER_UPDATE_PASSWORD = 'customer_update_password';
+
     protected function getSupportedAttributes()
     {
         return [
             self::CUSTOMER_READ,
             self::CUSTOMER_UPDATE,
             self::CUSTOMER_DELETE,
-            self::CUSTOMER_BIND
+            self::CUSTOMER_BIND,
+            self::CUSTOMER_UPDATE_PASSWORD
         ];
     }
 
@@ -50,6 +53,10 @@ class CustomerVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
 
             case self::CUSTOMER_BIND:
                 return $this->bind($customer, $user);
+            break;
+
+            case self::CUSTOMER_UPDATE_PASSWORD:
+                return $this->updatePassword($customer, $user);
             break;
 
             default:
@@ -112,6 +119,18 @@ class CustomerVoter extends ExtendedAbstractVoter implements UserRoleListInterfa
                     ? TRUE
                     : FALSE;
             }
+        }
+
+        return FALSE;
+    }
+
+    protected function updatePassword($customer, $user = NULL)
+    {
+        if( in_array(self::ROLE_CUSTOMER, $user->getRoles(), TRUE) )
+        {
+            return ( $customer->getId() == $user->getId() )
+                ? TRUE
+                : FALSE;
         }
 
         return FALSE;

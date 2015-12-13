@@ -99,23 +99,23 @@ class CustomerType extends AbstractType
                 } else {
                     $form
                         ->add('password', 'repeated', [
-                            'required'    => TRUE,
+                            'required'    => FALSE,
                             'first_name'  => "password",
                             'second_name' => "password_confirm",
                             'type'        => "password",
                             'first_options' => [
                                 'label' => 'customer.password.label',
                                 'attr'  => [
-                                    'data-rule-required' => "true",
-                                    'data-msg-required'  => $this->_translator->trans('customer.password.not_blank', [], 'validators'),
+                                    //'data-rule-required' => "true",
+                                    //'data-msg-required'  => $this->_translator->trans('customer.password.not_blank', [], 'validators'),
                                     'placeholder'        => 'customer.password.placeholder'
                                 ]
                             ],
                             'second_options' => [
                                 'label' => 'customer.password_confirm.label',
                                 'attr'  => [
-                                    'data-rule-required' => "true",
-                                    'data-msg-required'  => $this->_translator->trans('customer.password_confirm.not_blank', [], 'validators'),
+                                    //'data-rule-required' => "true",
+                                    //'data-msg-required'  => $this->_translator->trans('customer.password_confirm.not_blank', [], 'validators'),
                                     'placeholder'        => 'customer.password_confirm.placeholder'
                                 ]
                             ]

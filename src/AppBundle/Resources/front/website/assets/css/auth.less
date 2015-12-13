@@ -38,6 +38,23 @@
 		margin: 0 auto 50px;
 	}
 	.field-area{ margin-bottom: 20px; }
+	p.error{
+		color: @redDark;
+		padding: 10px 0;
+		text-align: left;
+		font-weight: normal;
+	}
+	.tip-holder{
+		width: 100%;
+		margin-bottom: 20px;
+		& > p{
+			color: darken(@grey, 40%);
+			text-align: left;
+			span{
+				color: @green;
+			}
+		}
+	}
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	auth end							 	  				*/
@@ -47,7 +64,7 @@
 /*	680 start							 	  				*/
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 @media only screen and (max-width: 680px){
-	
+
 	.auth-holder{
 		width: 94.117648%;
 		position: absolute;
@@ -57,11 +74,9 @@
 		form{
 			width: 90%;
 		}
-	}	
+	}
 
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	680 end							 	  				*/
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-

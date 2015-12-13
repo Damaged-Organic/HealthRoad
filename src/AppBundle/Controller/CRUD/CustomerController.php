@@ -111,6 +111,9 @@ class CustomerController extends Controller implements UserRoleListInterface
                 'form' => $form->createView()
             ]);
         } else {
+            //TODO: KLUDGE: User password is "111111" by default
+            $customer->setPassword('111111');
+
             $encodedPassword = $this
                 ->container->get('security.password_encoder')
                 ->encodePassword($customer, $customer->getPassword())

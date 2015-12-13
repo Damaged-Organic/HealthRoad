@@ -55,7 +55,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * @ORM\Column(type="string", length=64)
      *
-     * @Assert\NotBlank(
+     * Assert\NotBlank(
      *      message="customer.password.not_blank",
      *      groups={"Create"}
      * )
@@ -284,7 +284,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -307,7 +307,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get surname
      *
-     * @return string 
+     * @return string
      */
     public function getSurname()
     {
@@ -330,7 +330,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get patronymic
      *
-     * @return string 
+     * @return string
      */
     public function getPatronymic()
     {
@@ -353,7 +353,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -387,7 +387,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get students
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStudents()
     {
@@ -410,7 +410,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get employee
      *
-     * @return \AppBundle\Entity\Employee\Employee 
+     * @return \AppBundle\Entity\Employee\Employee
      */
     public function getEmployee()
     {

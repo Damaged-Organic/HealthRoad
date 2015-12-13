@@ -58,16 +58,20 @@
 
                                     <div class="col change-password-holder">
 										<h3>Зміна поточного пароля</h3>
-										<form action="../php/change-password.php" method="POST" id="change-password-form">
+										<form action="{{ path('customer_office_action_password_update', { 'id': customer.id }) }}" method="POST" id="change-password-form">
 											<div class="response-holder {# success | error #}"></div>
 											<div class="field-area">
-												<label for="old-password">Поточний пароль</label>
-												<input type="password" name="password[old]" value="" placeholder="Введіть ваш поточний пароль" id="old-password" data-rule-required="true" data-msg-required="Не може бути порожним">
+												<label for="new-password">Новий пароль</label>
+												<input type="password" name="password[new]" value="" placeholder="Введіть новий пароль" id="new-password"
+                                                       data-rule-required="true"
+                                                       data-msg-required="Поле не може бути порожним">
 												<!--span class="error-holder">Не може бути порожним</span-->
 											</div>
-											<div class="field-area">
-												<label for="new-password">Новий пароль</label>
-												<input type="password" name="password[new]" value="" placeholder="Введіть новий пароль" id="new-password" data-rule-required="true" data-msg-required="Не може бути порожним">
+                                            <div class="field-area">
+												<label for="new-password">Повторіть новий пароль</label>
+												<input type="password" name="password[new_repeat]" value="" placeholder="Введіть повтор нового паролю" id="new-password-repeat"
+                                                       data-rule-required="true"
+                                                       data-msg-required="Поле не може бути порожним">
 												<!--span class="error-holder">Не може бути порожним</span-->
 											</div>
 											<button type="submit">

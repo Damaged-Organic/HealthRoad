@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Request,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
-use AppBundle\Security\Authorization\Voter\StudentVoter;
+use AppBundle\Security\Authorization\Voter\StudentVoter,
+    AppBundle\Security\Authorization\Voter\CustomerVoter;
 
 class ActionOfficeController extends Controller
 {
@@ -162,5 +163,67 @@ class ActionOfficeController extends Controller
         return new Response(json_encode([
             'limit' => number_format($dailyLimit, 2, ',', '.')])
         );
+    }
+
+    /**
+     * @Method({"POST"})
+     * @Route(
+     *      "/customer_office/action/password/update_for/{id}",
+     *      name="customer_office_action_password_update",
+     *      host="{domain_website}",
+     *      defaults={"_locale" = "%locale_website%", "domain_website" = "%domain_website%"},
+     *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%", "id" = "\d+"},
+     *      condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function setCustomerPassword(Request $request, $id)
+    {
+        $validateLength = function($password)
+        {
+            return ( strlen($password) >= 6 );
+        };
+
+        $validateEqual = function($password, $passwordRepeat)
+        {
+            return ( $password === $passwordRepeat );
+        };
+
+        $customer = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($id);
+
+        if( !$customer )
+            return new Response('Помилка - користувач не існує', 500);
+
+        if( !$this->isGranted(CustomerVoter::CUSTOMER_UPDATE_PASSWORD, $customer) )
+            return new Response('Помилка - у доступі відмовлено', 500);
+
+        if( $request->request->has('password') )
+        {
+            $passwords = $request->request->get('password');
+
+            if( empty($passwords['new']) || empty($passwords['new_repeat']) )
+                return new Response('Помилка - запит містить невірні дані', 500);
+
+            if( !$validateLength($passwords['new']) )
+                return new Response('Пароль має містити не менш ніж 6 символів', 500);
+
+            if( !$validateLength($passwords['new_repeat']) )
+                return new Response('Пароль та повтор паролю не співпадають', 500);
+
+            $customer->setPassword($passwords['new']);
+
+            $encodedPassword = $this
+                ->container->get('security.password_encoder')
+                ->encodePassword($customer, $customer->getPassword())
+            ;
+
+            $customer->setPassword($encodedPassword);
+
+            $this->_manager->persist($customer);
+            $this->_manager->flush();
+
+            return new Response(json_encode(['message' => 'Ваш пароль успішно змінено!']));
+        } else {
+            return new Response('Помилка - запит містить невірні дані', 500);
+        }
     }
 }
