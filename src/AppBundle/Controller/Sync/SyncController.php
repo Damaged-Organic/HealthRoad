@@ -80,7 +80,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/products",
      *      name = "sync_get_vending_machines_products",
      *      host = "{domain_sync_v1}",
-     *
+     *      schemes = {"https"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )

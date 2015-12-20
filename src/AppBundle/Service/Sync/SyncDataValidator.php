@@ -100,6 +100,12 @@ class SyncDataValidator implements
                 !is_numeric($value[VendingMachineLoad::VENDING_MACHINE_LOAD_PRODUCT_ID]))
                 return FALSE;
 
+            if( empty($value[VendingMachineLoad::VENDING_MACHINE_LOAD_DATETIME]) )
+                return FALSE;
+            $datetimeErrors = count($this->_validator->validate($value[VendingMachineLoad::VENDING_MACHINE_LOAD_DATETIME], $assertDateTime));
+            if( $datetimeErrors !== 0 )
+                return FALSE;
+
             if( !isset($value[VendingMachineLoad::VENDING_MACHINE_LOAD_PRODUCT_QUANTITY]) ||
                 !is_numeric($value[VendingMachineLoad::VENDING_MACHINE_LOAD_PRODUCT_QUANTITY]))
                 return FALSE;

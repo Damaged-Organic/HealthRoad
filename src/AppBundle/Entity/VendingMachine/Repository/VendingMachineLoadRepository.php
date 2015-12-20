@@ -30,6 +30,7 @@ class VendingMachineLoadRepository extends ExtendedEntityRepository
             $queryString .= " (
                 '{$load->getVendingMachine()->getId()}',
                 '{$load->getProductId()}',
+                '{$load->getLoadedAt()}',
                 '{$load->getProductQuantity()}',
                 '{$load->getSpringPosition()}'
             ),";
@@ -41,6 +42,7 @@ class VendingMachineLoadRepository extends ExtendedEntityRepository
             INSERT INTO vending_machines_load (
                 vending_machine_id,
                 product_id,
+                loaded_at,
                 product_quantity,
                 spring_position
             ) VALUES " . $queryString;

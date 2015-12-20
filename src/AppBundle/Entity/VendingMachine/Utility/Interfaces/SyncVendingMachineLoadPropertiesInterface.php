@@ -13,6 +13,7 @@ interface SyncVendingMachineLoadPropertiesInterface
     const VENDING_MACHINE_LOAD_ARRAY = 'fill';
 
     const VENDING_MACHINE_LOAD_PRODUCT_ID       = 'id';
+    const VENDING_MACHINE_LOAD_DATETIME         = 'date-time';
     const VENDING_MACHINE_LOAD_PRODUCT_QUANTITY = 'count';
     const VENDING_MACHINE_LOAD_SPRING_POSITION  = 'position';
 }

@@ -56,11 +56,9 @@ class NfcTag implements SyncNfcTagPropertiesInterface
      * @ORM\Column(type="string", length=32, unique=true)
      *
      * @Assert\NotBlank(message="nfc_tag.code.not_blank")
-     * @Assert\Length(
-     *      min=1,
-     *      max=32,
-     *      minMessage="nfc_tag.code.length.min",
-     *      maxMessage="nfc_tag.code.length.max"
+     * @Assert\Regex(
+     *      pattern="/^[a-z0-9]{1,32}$/",
+     *      message="nfc_tag.code.regex"
      * )
      */
     protected $code;

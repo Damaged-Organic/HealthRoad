@@ -49,6 +49,7 @@ class SyncDataHandler implements
             $vendingMachineLoad = (new VendingMachineLoad)
                 ->setVendingMachine($vendingMachine)
                 ->setProductId($value[VendingMachineLoad::VENDING_MACHINE_LOAD_PRODUCT_ID])
+                ->setLoadedAt($value[VendingMachineLoad::VENDING_MACHINE_LOAD_DATETIME])
                 ->setProductQuantity($value[VendingMachineLoad::VENDING_MACHINE_LOAD_PRODUCT_QUANTITY])
                 ->setSpringPosition($value[VendingMachineLoad::VENDING_MACHINE_LOAD_SPRING_POSITION])
             ;
@@ -83,6 +84,9 @@ class SyncDataHandler implements
 
         foreach( $data[self::SYNC_DATA][Purchase::getSyncArrayName()] as $value )
         {
+            // KLUDGE: set code to lower case (minor TA architecture failure)
+            $value[Purchase::PURCHASE_NFC_CODE] = mb_strtolower($value[Purchase::PURCHASE_NFC_CODE], 'UTF-8');
+
             if( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]) && $products->get($value[Purchase::PURCHASE_PRODUCT_ID]))
             {
                 $purchase = (new Purchase)

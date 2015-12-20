@@ -37,6 +37,11 @@ class VendingMachineLoad implements SyncVendingMachineLoadPropertiesInterface
     protected $springPosition;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $loadedAt;
+
+    /**
      * Set productId
      *
      * @param integer $productId
@@ -52,7 +57,7 @@ class VendingMachineLoad implements SyncVendingMachineLoadPropertiesInterface
     /**
      * Get productId
      *
-     * @return integer 
+     * @return integer
      */
     public function getProductId()
     {
@@ -75,7 +80,7 @@ class VendingMachineLoad implements SyncVendingMachineLoadPropertiesInterface
     /**
      * Get productQuantity
      *
-     * @return integer 
+     * @return integer
      */
     public function getProductQuantity()
     {
@@ -98,7 +103,7 @@ class VendingMachineLoad implements SyncVendingMachineLoadPropertiesInterface
     /**
      * Get springPosition
      *
-     * @return integer 
+     * @return integer
      */
     public function getSpringPosition()
     {
@@ -121,11 +126,34 @@ class VendingMachineLoad implements SyncVendingMachineLoadPropertiesInterface
     /**
      * Get vendingMachine
      *
-     * @return \AppBundle\Entity\VendingMachine\VendingMachine 
+     * @return \AppBundle\Entity\VendingMachine\VendingMachine
      */
     public function getVendingMachine()
     {
         return $this->vendingMachine;
+    }
+
+    /**
+     * Set occurredAt
+     *
+     * @param \DateTime $loadedAt
+     * @return VendingMachineLoad
+     */
+    public function setLoadedAt($loadedAt)
+    {
+        $this->loadedAt = $loadedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get loadedAt
+     *
+     * @return \DateTime
+     */
+    public function getLoadedAt()
+    {
+        return $this->loadedAt;
     }
 
     static public function getSyncArrayName()
