@@ -45,6 +45,10 @@ class SyncDataRecorder implements SyncDataInterface, SyncVendingMachineSyncPrope
             ->setData(json_encode($syncData[self::SYNC_DATA]))
         ;
 
+        // TODO: KLUDGE: Record latest sync date and time for VendingMachine:
+        $vendingMachine->setVendingMachineSyncedAt($vendingMachineSync->getSyncedAt());
+        $this->_manager->persist($vendingMachine);
+
         return $vendingMachineSync;
     }
 

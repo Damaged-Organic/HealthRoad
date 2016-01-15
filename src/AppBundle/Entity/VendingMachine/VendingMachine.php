@@ -158,6 +158,11 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     protected $vendingMachineLoadedAt;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $vendingMachineSyncedAt;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -356,6 +361,29 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     }
 
     /**
+     * Set vendingMachineSyncedAt
+     *
+     * @param \DateTime $vendingMachineSyncedAt
+     * @return VendingMachine
+     */
+    public function setVendingMachineSyncedAt($vendingMachineSyncedAt)
+    {
+        $this->vendingMachineSyncedAt = $vendingMachineSyncedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get vendingMachineSyncedAt
+     *
+     * @return \DateTime
+     */
+    public function getVendingMachineSyncedAt()
+    {
+        return $this->vendingMachineSyncedAt;
+    }
+
+    /**
      * Set school
      *
      * @param \AppBundle\Entity\School\School $school
@@ -462,7 +490,7 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     /**
      * Get vendingMachineSyncs
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getVendingMachineSyncs()
     {
@@ -542,7 +570,7 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     /**
      * Get vendingMachineEvents
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getVendingMachineEvents()
     {

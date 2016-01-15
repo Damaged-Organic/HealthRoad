@@ -12,6 +12,11 @@
 </td>
 <td>
     <span>
+        {{ ( vendingMachine.vendingMachineSyncedAt ) ? vendingMachine.vendingMachineSyncedAt|date('Y-m-d H:i:s') : '-' }}
+    </span>
+</td>
+<td>
+    <span>
         {{ ( vendingMachine.productVendingGroup ) ? vendingMachine.productVendingGroup.name : '-' }}
     </span>
 </td>
