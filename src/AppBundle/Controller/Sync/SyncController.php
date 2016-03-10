@@ -55,9 +55,11 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesSync(Request $request, $serial)
     {
-        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-            'serial' => $serial
-        ]);
+        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        //     'serial' => $serial
+        // ]);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
 
         if( !($validSyncData = $this->_syncDataValidator->validateVendingMachineSyncData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
@@ -87,9 +89,11 @@ class SyncController extends Controller implements
      */
     public function getProductsAction($serial)
     {
-        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-            'serial' => $serial
-        ]);
+        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        //     'serial' => $serial
+        // ]);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
 
         $products = $this->filterDeleted($vendingMachine->getProducts());
 
@@ -116,9 +120,11 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesNfcTagsAction($serial)
     {
-        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-            'serial' => $serial
-        ]);
+        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        //     'serial' => $serial
+        // ]);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
 
         $students = $this->filterDeleted($vendingMachine->getStudents());
 
@@ -145,9 +151,11 @@ class SyncController extends Controller implements
      */
     public function putVendingMachines(Request $request, $serial)
     {
-        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-            'serial' => $serial
-        ]);
+        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        //     'serial' => $serial
+        // ]);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
 
         if( !($validSyncData = $this->_syncDataValidator->validateVendingMachineData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
@@ -180,9 +188,11 @@ class SyncController extends Controller implements
      */
     public function postVendingMachinesPurchasesAction(Request $request, $serial)
     {
-        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-            'serial' => $serial
-        ]);
+        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        //     'serial' => $serial
+        // ]);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
 
         if( !($validSyncData = $this->_syncDataValidator->validatePurchaseData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');
@@ -218,9 +228,11 @@ class SyncController extends Controller implements
      */
     public function postVendingMachinesEvents(Request $request, $serial)
     {
-        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-            'serial' => $serial
-        ]);
+        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
+        //     'serial' => $serial
+        // ]);
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
 
         if( !($validSyncData = $this->_syncDataValidator->validateEventData($request)) )
             throw new BadRequestHttpException('Request contains invalid data');

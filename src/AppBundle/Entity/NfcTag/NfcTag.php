@@ -42,6 +42,11 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     protected $purchases;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\PaymentReceipt", mappedBy="nfcTag")
+     */
+    protected $paymentsReceipts;
+
+    /**
      * @ORM\Column(type="string", length=8, unique=true)
      *
      * @Assert\NotBlank(message="nfc_tag.number.not_blank")
@@ -197,6 +202,40 @@ class NfcTag implements SyncNfcTagPropertiesInterface
         return $this->purchases;
     }
 
+    /**
+     * Add paymentsReceipt
+     *
+     * @param \AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipt
+     * @return NfcTag
+     */
+    public function addPaymentsReceipt(\AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipt)
+    {
+        $paymentsReceipt->setNfcTag($this);
+        $this->paymentsReceipts[] = $paymentsReceipt;
+
+        return $this;
+    }
+
+    /**
+     * Remove paymentsReceipts
+     *
+     * @param \AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipts
+     */
+    public function removePaymentsReceipt(\AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipts)
+    {
+        $this->paymentsReceipts->removeElement($paymentsReceipts);
+    }
+
+    /**
+     * Get paymentsReceipts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPaymentsReceipts()
+    {
+        return $this->paymentsReceipts;
+    }
+
     static public function getSyncArrayName()
     {
         return self::NFC_TAG_ARRAY;
@@ -209,5 +248,28 @@ class NfcTag implements SyncNfcTagPropertiesInterface
             self::NFC_TAG_DAILY_LIMIT => $this->getStudent()->getDailyLimit(),
             self::NFC_TAG_TOTAL_LIMIT => $this->getStudent()->getTotalLimit()
         ];
+    }
+
+    /**
+     * Set pseudoDeleteAt
+     *
+     * @param \DateTime $pseudoDeleteAt
+     * @return NfcTag
+     */
+    public function setPseudoDeleteAt($pseudoDeleteAt)
+    {
+        $this->pseudoDeleteAt = $pseudoDeleteAt;
+
+        return $this;
+    }
+
+    /**
+     * Get pseudoDeleteAt
+     *
+     * @return \DateTime
+     */
+    public function getPseudoDeleteAt()
+    {
+        return $this->pseudoDeleteAt;
     }
 }

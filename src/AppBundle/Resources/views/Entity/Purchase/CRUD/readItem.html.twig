@@ -112,12 +112,12 @@
                     <span>{{ 'purchase.student.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value btn-holder">
-                    {% if purchase.nfcTag and purchase.nfcTag.student %}
-                        <p>{{ purchase.nfcTag.student.fullName }}</p>
+                    {% if purchase.student %}
+                        <p>{{ purchase.student.fullName }}</p>
 
-                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_READ'), purchase.nfcTag.student) %}
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_READ'), purchase.student) %}
                             <div class="btn-view">
-                                <a href="{{ path('student_update', { 'id': purchase.nfcTag.student.id }) }}" class="icon hrd-view"></a>
+                                <a href="{{ path('student_update', { 'id': purchase.student.id }) }}" class="icon hrd-view"></a>
                             </div>
                         {% endif %}
 
@@ -132,10 +132,10 @@
                     <span>{{ 'purchase.customer.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value btn-holder">
-                    {% if purchase.nfcTag and purchase.nfcTag.student and purchase.nfcTag.student.customer %}
-                        <p>{{ purchase.nfcTag.student.customer.fullName }}</p>
+                    {% if purchase.student and purchase.student.customer %}
+                        <p>{{ purchase.student.customer.fullName }}</p>
                         <div class="btn-view">
-                            <a href="{{ path('customer_update', { 'id': purchase.nfcTag.student.customer.id }) }}" class="icon hrd-view"></a>
+                            <a href="{{ path('customer_update', { 'id': purchase.student.customer.id }) }}" class="icon hrd-view"></a>
                         </div>
                     {% else %}
                         <p>-</p>

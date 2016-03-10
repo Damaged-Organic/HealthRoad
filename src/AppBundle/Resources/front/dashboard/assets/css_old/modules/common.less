@@ -1,0 +1,894 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500&subset=latin,cyrillic);
+@import "reset.less";
+@import "settings.less";
+@import "hrd-icons.less";
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	Fonts start								 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+h1, h2, h3, h4, h5, h6, span, p, time, small, a{
+	font-family: "Ubuntu", sans-serif;
+	font-weight: 400;
+	color: @black;
+}
+h1, h2{ font-size: 1.125em; }
+h3{ font-size: 1em; }
+p, a{ font-size: .875em; }
+a{
+	text-decoration: none;
+	outline: none;
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	Fonts end								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	layout start							 					 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#page,
+.outer,
+.inner,
+.grid,
+.row,
+.col{
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+}
+#page{
+	height: 100%;
+	min-height: 100%;
+	background: url("@{images}/bg.jpg") no-repeat 50% 50% fixed;
+	background-size: cover;
+}
+.empty-holder{
+	& > h2{
+		padding-top: 60px;
+		text-align: center;
+		font-weight: 500;
+		text-transform: uppercase;
+	}
+	& > p{
+		padding: 10px 60px 20px;
+		color: @black;
+		text-align: center;
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	layout end								 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	header start											*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#header{
+	width: 100%;
+	max-width: 1600px;
+	height: 60px;
+	margin: 0 auto;
+	background: @black;
+	border-bottom: 1px solid darken(@black, 100%);
+	box-sizing: border-box;
+	overflow: hidden;
+	& > .entitled{
+		width: 340px;
+		height: 60px;
+		float: left;
+		border-right: 1px solid darken(@black, 100%);
+		box-sizing: border-box;
+		overflow: hidden;
+		h1{
+			text-align: left;
+			text-transform: uppercase;
+			padding-left: 20px;
+			color: @green;
+			line-height: 60px;
+		}
+	}
+}
+#toggle-menu-loader{
+	width: 60px;
+	height: 60px;
+	float: left;
+	border-right: 1px solid darken(@black, 100%);
+	box-sizing: border-box;
+	position: relative;
+	overflow: hidden;
+	.inner{
+		display: none;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		overflow: hidden;
+	}
+	.inner.menu-button{
+		display: block;
+		text-align: center;
+		& > a{
+			display: block;
+			width: 100%;
+			height: 100%;
+			font-size: 1.25em;
+			color: @grey;
+			transition: all .5s @easing;
+			&:before{
+				line-height: 60px;
+			}
+		}
+		&:hover{
+			a{ color: @green; }
+		}
+	}
+	.inner.loader{
+		& > .circle{
+			display: block;
+			width: 4px;
+			height: 4px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin: -2px 0 0 -2px;
+			border-radius: 50%;
+			background: @green;
+			transform: rotate(-90deg) translateX(10px) scale(.5);
+			&:nth-child(1){
+				animation: loading 1.5s @easing 0s infinite;
+			}
+			&:nth-child(2){
+				animation: loading 1.5s @easing .1s infinite;
+			}
+			&:nth-child(3){
+				animation: loading 1.5s @easing .2s infinite;
+			}
+			&:nth-child(4){
+				animation: loading 1.5s @easing .3s infinite;
+			}
+			&:nth-child(5){
+				animation: loading 1.5s @easing .4s infinite;
+			}
+		}
+	}
+	&.loading{
+		.inner.loader{ display: block; }
+		.inner.menu-button{ display: none; }
+	}
+}
+#page.menu-active{
+	#toggle-menu-loader .inner.menu-button a{
+		color: @white;
+	}
+}
+@keyframes loading{
+	0% { transform: rotate(-90deg) translateX(10px) scale(.5); }
+	100% { transform: rotate(270deg) translateX(10px) scale(1); }
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	header end								  			*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	status panel start 						  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#status-panel-holder{
+	width: ~"calc(100% - 400px)";
+	height: 60px;
+	float: left;
+	position: relative;
+	overflow: hidden;
+	& > .inner{
+		display: none;
+		width: 100%;
+		height: 60px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		overflow: hidden;
+		span{ font-size: .875em; }
+		&.success-holder,
+		&.warning-holder,
+		&.error-holder,
+		&.info-holder{
+			overflow: hidden;
+			cursor: url("@{images}/close-cursor.png"), auto;
+			span{
+				display: inline-block;
+				line-height: 60px;
+				padding: 0 20px;
+			}
+		}
+		&.success-holder{
+			background: @successGreenLight;
+			span { color: @successGreenDark; }
+			&.success-active{
+			  	display: block;
+			}
+		}
+		&.warning-holder{
+			background: @warningYellowLight;
+			span { color: @warningYellowDark; }
+			&.warning-active{
+			  	display: block;
+			}
+		}
+		&.error-holder{
+			background: @errorRedLight;
+			span { color: @errorRedDark; }
+			&.error-active{
+				display: block;
+			}
+		}
+		&.info-holder{
+			background: @infoBlueLight;
+			span { color: @infoBlueDark; }
+			&.info-active{
+				display: block;
+			}
+		}
+	}
+	& > .inner.default-holder{ display: block; }
+	&.success-active{
+		.inner{ display: none; }
+		.inner.success-holder{ display: block; }
+	}
+	&.warning-active{
+		.inner{ display: none; }
+		.inner.warning-holder{ display: block; }
+	}
+	&.error-active{
+		.inner{ display: none; }
+		.inner.error-holder{ display: block; }
+	}
+	&.info-active{
+		.inner{ display: none; }
+		.inner.info-holder{ display: block; }
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	status panel end 						 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	breadcrumbs start										 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#breadcrumbs-holder{
+	width: ~"calc(100% - 300px)";
+	height: 60px;
+	float: left;
+	overflow: hidden;
+	ul{
+		display: block;
+		width: 100%;
+		height: 100%;
+		text-align: left;
+		padding-left: 15px;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+	li{
+		display: inline-block;
+		vertical-align: top;
+		line-height: 60px;
+		margin-left: 5px;
+		&:after{
+			display: inline-block;
+			vertical-align: middle;
+			width: 0;
+			border-top: 4px solid transparent;
+			border-bottom: 4px solid transparent;
+			border-left: 6px solid darken(@black, 100%);
+			content: "";
+			margin-left: 10px;
+			overflow: hidden;
+		}
+		&:last-child:after{
+			display: none;
+		}
+	}
+	a{
+		display: inline-block;
+		color: @grey;
+		transition: all .5s @easing;
+		&:hover{
+			color: @white;
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	breadcrumbs end 						  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	office widget start 					  					*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#office-widget{
+	width: 300px;
+	height: 60px;
+	float: left;
+	overflow: hidden;
+	& > .inner{
+		height: 100%;
+		float: right;
+		a{
+			display: block;
+			height: 60px;
+		}
+		&.entrance{
+			width: 160px;
+			margin-right: 20px;
+			.text{
+				display: block;
+				width: 100%;
+				height: 30px;
+				padding-top: 10px;
+				text-align: right;
+				font-size: 1em;
+				color: @green;
+				box-sizing: border-box;
+				overflow: hidden;
+				&.role{
+					color: @grey;
+					padding: 0 0 10px 0;
+				}
+			}
+		}
+		&.logout,
+		&.settings{
+			width: 60px;
+			border-left: 1px solid darken(@black, 100%);
+			box-sizing: border-box;
+			a{
+				font-size: 1.25em;
+				text-align: center;
+				color: @grey;
+				transition: all .5s @easing;
+				&:before{
+					display: inline-block;
+					line-height: 60px;
+				}
+				&:hover{
+					color: @white;
+				}
+			}
+			&.active{
+				a{ color: @white; }
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	office widget end 						 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	menu start 								 			 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#navigation-holder{
+	width: 400px;
+	height: 100%;
+	float: left;
+	background: transparent;
+	border-right: 1px solid darken(@black, 100%);
+	box-sizing: border-box;
+	transition: all .5s @easing;
+	overflow: hidden;
+	& > .inner{
+		width: 100%;
+		height: 100%;
+		min-height: 100%;
+		background: fade(@black, 85%);
+		padding-right: 20px;
+		overflow: auto;
+		overflow-x: hidden;
+	}
+}
+
+#menu-holder{
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	ul{
+		display: block;
+		width: 100%;
+		overflow: hidden;
+	}
+	li{
+		display: block;
+		width: 100%;
+		height: 60px;
+		border-bottom: 1px solid darken(@black, 100%);
+		box-sizing: border-box;
+		overflow: hidden;
+		& > a{
+			display: block;
+			width: 100%;
+			height: 60px;
+			position: relative;
+			&:before{
+				display: block;
+				width: 60px;
+				height: 20px;
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				border-radius: 5px;
+				background: @black;
+				content: attr(data-count);
+				color: @white;
+				text-align: center;
+				line-height: 20px;
+				font-size: .875em;
+				transition: all .25s @easing;
+				transform: scale(1);
+				overflow: hidden;
+			}
+			span{
+				display: inline-block;
+				color: @white;
+				line-height: 60px;
+				text-align: left;
+				font-size: 1.125em;
+				padding-left: 20px;
+				transition: all .5s @easing;
+			}
+			.icon{
+				display: block;
+				width: 60px;
+				height: 60px;
+				float: left;
+				padding-left: 0;
+				text-align: center;
+				font-size: 1.25em;
+				border-right: 1px solid darken(@black, 100%);
+				box-sizing: border-box;
+				overflow: hidden;
+				&:before{
+					line-height: 60px;
+				}
+			}
+		}
+		&.sprtr-h{
+			display: block;
+			height: 4px;
+			background: linear-gradient(-125deg, @grey, lighten(@grey, 5%));
+			overflow: hidden;
+			
+		}
+		&:hover,
+		&.active{
+			a{
+				span{
+					color: @green;
+				}
+			}
+		}
+	}
+}
+
+#page.menu-active{
+	#info-holder{ width: ~"calc(100% - 60px)"; }
+	#navigation-holder{ width: 60px; }
+	#menu-holder ul li a:before{
+		transform: scale(0);
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	menu end 								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	content start 							 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#content{
+	width: 100%;
+	max-width: 1600px;
+	height: ~"calc(100% - 60px)";
+	margin: 0 auto;
+	overflow: hidden;
+}
+#info-holder{
+	width: ~"calc(100% - 400px)";
+	height: 100%;
+	float: left;
+	background: @white;
+	position: relative;
+	transition: all .5s @easing;
+	overflow: hidden;
+	.outer.scrollable-holder{
+		width: 100%;
+		height: 100%;
+		padding: 81px 0 81px 20px;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+	.inner.scrollable{
+		width: 100%;
+		height: 100%;
+		min-height: 100%;
+		padding-right: 20px;
+		overflow: auto;
+	}
+	& > .top-info-panel,
+	& > .bottom-info-panel{
+		width: 100%;
+		height: 60px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background: @black;
+		overflow: hidden;
+	}
+	& > .top-info-panel{
+		border-bottom: 1px solid darken(@black, 100%);
+	}
+	& > .bottom-info-panel{
+		border-top: 1px solid darken(@black, 100%);
+		top: auto;
+		bottom: 0;
+	}
+}
+.categories-list-holder{
+	width: 100%;
+	height: 60px;
+	overflow: hidden;
+	li{
+		display: inline-block;
+		width: auto;
+		height: 60px;
+		float: left;
+		overflow: hidden;
+		& > a{
+			display: block;
+			line-height: 60px;
+			padding: 0 20px;
+			color: @white;
+			text-align: center;
+			box-sizing: border-box;
+			transition: all .5s @easing;
+			border-right: 1px solid darken(@black, 100%);
+		}
+		&:hover,
+		&.active{
+			a{ background: @green; }
+		}
+	}
+}
+#action-holder{
+	width: ~"calc(100% - 420px)";
+	height: 60px;
+	float: left;
+	overflow: hidden;
+	&.edit{
+		width: 100%;
+		float: none;
+	}
+	.btn-add{
+		a{ border-right: 1px solid darken(@black, 100%); }
+	}
+	&.manage-holder{
+		width: 100%;
+		form{
+			width: ~"calc(100%)";
+			float: left;
+		}
+		.btn-delete,
+		.btn-connect{
+			float: left;
+			a{
+				border-right: 1px solid darken(@black, 100%);	
+			}
+		}
+	}
+}
+#read-data-holder{
+  	ul, li{
+		display: block;
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+	}
+	li{
+		margin-bottom: 20px;
+		.item{
+			width: 240px;
+			float: left;
+			text-align: left;
+			overflow: hidden;
+			&.key{
+				span{
+					display: block;
+					padding: 20px;
+					color: @white;
+					font-size: .875em;
+					background: @black;
+					box-sizing: border-box;
+				}
+			}
+			&.value{
+				width: ~"calc(100% - 240px)";
+				p{
+					padding: 20px;
+				}
+			  	&.btn-holder{
+				  	p{
+					  	display: inline-block;
+					  	padding-right: 60px;
+					}
+				  	*[class^="btn"]{
+					  	float: right;
+					  	&.padded{
+						  	padding-right: 15px;
+						}
+					  	a, span{
+						  	background: @black;
+						  	color: @white;
+						  	&:hover{
+								background: @white;
+								color: @black;
+							}
+						}
+					}
+				}
+			}
+		}
+		&.photo-list-holder{
+			.item{
+				width: 240px;
+				height: 140px;
+				&.key{
+					span{
+						background: @black;
+						line-height: 140px;
+						padding: 0 0 0 20px;
+					}
+				}
+				&.value{
+					width: ~"calc(100% - 260px)";
+					height: auto;
+					padding: 0;
+					margin-left: 20px;
+					figure{
+						width: auto;
+						height: 140px;
+						float: left;
+						margin: 0 20px 20px 0;
+						border: 1px solid darken(@black, 100%);
+						box-sizing: border-box;
+						overflow: hidden;
+						img{
+							width: auto;
+							height: 100%;
+						}
+					}
+				}
+			}		
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	content end 							 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	buttons start 							 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+*[class^="btn"]{
+	width: 180px;
+	height: 60px;
+	position: relative;
+	overflow: hidden;
+	& > a{
+		display: block;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
+		text-align: center;
+		line-height: 60px;
+		background: @black;
+		color: @white;
+		transition: all .5s @easing;
+		box-sizing: border-box;
+		overflow: hidden;
+		span.icon{
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 10px;
+			color: inherit;
+		}
+		&:hover{
+			background: @green;
+		}
+	}
+}
+.btn-add,
+.btn-save{
+	&.back{
+		width: 300px;
+		a{
+			background: @grey;
+			&:hover{ background: @green; }
+		}
+	}
+}
+.btn-edit,
+.btn-delete,
+.btn-bind,
+.btn-view,
+.btn-update{
+	width: 60px;
+	height: 60px;
+	a{
+		background: @white;
+		color: @black;
+		&:hover{
+			background: @black;
+			color: @white;
+		}
+	}
+}
+.btn-delete{
+	& > a{
+		font-size: 1.125em;
+		&:before{ line-height: 60px; }
+		&:hover{ background: @errorRedDark; }
+	}
+	&.black{
+		a{
+			background: @black;
+			color: @white;
+			&:hover{ background: @errorRedDark; }
+		}
+	}
+}
+.btn-connect{
+	display: inline-block;
+	& > a{
+		display: inline-block;
+		padding: 0 20px;
+	}
+}
+.btn-bind{
+	&.binded{
+		& > a{
+			background: @green;
+			color: @white;
+			&:hover{
+				background: @white;
+				color: @green;
+			}
+		}
+	}
+}
+.btn-file{
+	width: 100%;
+	height: 100px;
+	margin: 20px auto;
+	span{
+		display: block;
+		width: 60px;
+		height: 60px;
+		margin: 0 auto;
+		background: @black;
+		color: @white;
+		text-align: center;
+		font-size: 3em;
+		transition: all .5s @easing;
+		overflow: hidden;
+		&.text{
+			width: 100%;
+			height: auto;
+			font-size: .875em;
+		}
+	}
+}
+.btn-update{
+  	a{
+	  	&:hover {
+		  	background: @green;
+		  	color: @white;
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	buttons end 							  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	icons start 							  					*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.icon{
+	font-size: 1.125em;
+	&:before{
+		display: inline-block;
+		line-height: 60px;
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	icons end 								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	sprtr start 								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.sprtr-h{
+	display: block;
+	width: 100%;
+	height: 4px;
+	background: @green;
+	overflow: hidden;
+}
+.separator-holder{
+	width: 100%;
+	position: relative;
+	background: transparent;
+	margin: 0 0 20px;
+	overflow: hidden;
+	&.shift{
+		&.small-top{ margin-top: 20px; }
+		&.large-top{ margin-top: 40px; }
+		&.extra-large-top{ margin-top: 60px; }
+		&.small-bottom{ margin-bottom: 20px; }
+		&.large-bottom{ margin-bottom: 40px; }
+		&.extra-large-bottom{ margin-bottom: 60px; }
+	}
+	h2{
+		padding: 20px;
+		color: @grey;
+	}
+	&:before{
+		display: block;
+		width: 4px;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		content: "";
+		background: @green;
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	sprtr end 								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	adaptive start 					 		  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 1280px){
+
+	#header{
+		& > .entitled{ display: none; }
+	}
+
+	#toggle-menu-loader{
+		.inner.menu-button{
+			& > a{ pointer-events: none; }
+			&:hover{
+				a{ color: @grey; }
+			}
+		}
+	}
+	#page.menu-active{
+		#toggle-menu-loader .inner.menu-button a{ color: @grey; }
+	}
+
+	#navigation-holder{ width: 60px; }
+
+	#menu-holder{
+		li{
+			& > a{
+				&:before,
+				span{ display: none; }
+				.icon{ display: block; }
+			}
+		}
+	}
+
+	#info-holder,
+	#status-panel-holder{
+		width: ~"calc(100% - 60px)";
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	adaptive end 							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

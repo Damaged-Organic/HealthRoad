@@ -28,7 +28,8 @@ class GlobalRepository
               (SELECT COUNT(id) FROM products_vending_groups) AS productsVendingGroups,
               (SELECT COUNT(id) FROM suppliers) AS suppliers,
               (SELECT COUNT(id) FROM products) AS products,
-              (SELECT COUNT(id) FROM purchases) AS purchases
+              (SELECT COUNT(id) FROM purchases) AS purchases,
+              (SELECT COUNT(id) FROM payments_receipts) AS paymentsReceipts
         ";
 
         $statement = $this->_connection->prepare($query);

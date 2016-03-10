@@ -2,7 +2,6 @@
 // AppBundle/Controller/CRUD/PurchaseController.php
 namespace AppBundle\Controller\CRUD;
 
-use AppBundle\Service\Security\PurchaseBoundlessAccess;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -11,7 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Security\Authorization\Voter\PurchaseVoter;
+    AppBundle\Security\Authorization\Voter\PurchaseVoter,
+    AppBundle\Service\Security\PurchaseBoundlessAccess;
 
 class PurchaseController extends Controller implements UserRoleListInterface
 {
@@ -59,7 +59,7 @@ class PurchaseController extends Controller implements UserRoleListInterface
             if( !$this->_purchaseBoundlessAccess->isGranted(PurchaseBoundlessAccess::PURCHASE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findAll();
+            $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findBy([], ['syncPurchasedAt' => 'DESC']);
 
             $response = [
                 'view' => 'AppBundle:Entity/Purchase/CRUD:readList.html.twig',

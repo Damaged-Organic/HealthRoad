@@ -7,6 +7,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
+use Psr\Log\LoggerInterface;
+
 use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachinePropertiesInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface,
@@ -24,10 +26,16 @@ class SyncDataHandler implements
     SyncVendingMachineLoadPropertiesInterface
 {
     private $_manager;
+    private $_logger;
 
     public function setManager(EntityManager $manager)
     {
         $this->_manager = $manager;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->_logger = $logger;
     }
 
     public function handleVendingMachineSyncData($vendingMachine, $data)
@@ -76,7 +84,7 @@ class SyncDataHandler implements
         }
 
         if( !($nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAvailableByVendingMachine($vendingMachine))) ) {
-            // Fallback to all available NFC-tags, could signal problem
+            // Fallback to all available NFC tags, could signal problem
             $nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAllIndexedByCode());
         }
 
@@ -111,7 +119,20 @@ class SyncDataHandler implements
                         ($nfcTags->get($value[Purchase::PURCHASE_NFC_CODE])) ? $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]) : NULL
                     );
 
+                // TRICKY: Setting NFC Tag and Student separately, to preserve purchase history
+                // in case if persisted NFC Tag is [unbinded from / binded to other] Student
+                $purchase
+                    ->setStudent(
+                        ($nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]))
+                            ? (( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE])->getStudent() ) ? $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE])->getStudent() : NULL)
+                            : NULL
+                    )
+                ;
+
                 $purchasesArray[] = $purchase;
+            } else {
+                //Logging value that somehow (!) contains wrong bindings
+                $this->_logger->warning("SyncDataHandler: VM `" . $vendingMachine->getSerial() . "` posted contradictory NfcTag `code` or Product `id`:" . json_encode($value));
             }
         }
 
@@ -121,17 +142,25 @@ class SyncDataHandler implements
             $this->_manager->getRepository('AppBundle:Purchase\Purchase')->rawInsertPurchases($purchasesArray);
 
             $purchasesAggregated = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findSumsByStudentsWithSyncId(
+                $vendingMachine,
                 $data[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()][0][self::VENDING_MACHINE_SYNC_ID]
             );
 
             $studentsArray = [];
 
-            foreach ($purchasesAggregated as $purchase) {
-                $totalLimit = $nfcTags->get($purchase['code'])->getStudent()->getTotalLimit();
+            foreach( $purchasesAggregated as $purchase )
+            {
+                if( $nfcTags->get($purchase['code'])->getStudent() )
+                {
+                    $totalLimit = $nfcTags->get($purchase['code'])->getStudent()->getTotalLimit();
 
-                $totalLimit = $totalLimit - $purchase['price_sum'];
+                    $totalLimit = $totalLimit - $purchase['price_sum'];
 
-                $studentsArray[] = ['id' => $nfcTags->get($purchase['code'])->getStudent()->getId(), 'totalLimit' => $totalLimit];
+                    $studentsArray[] = ['id' => $nfcTags->get($purchase['code'])->getStudent()->getId(), 'totalLimit' => $totalLimit];
+                } else {
+                    //Logging NfcTag that somehow (!) is not binded to Student
+                    $this->_logger->warning("SyncDataHandler: VM `" . $vendingMachine->getSerial() . "` posted unbinded NfcTag `code`:" . $nfcTags->get($purchase['code'])->getCode());
+                }
             }
 
             // When students empty?

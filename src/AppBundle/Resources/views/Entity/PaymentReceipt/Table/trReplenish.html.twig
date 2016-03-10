@@ -1,0 +1,49 @@
+{# AppBundle/Resources/views/Entity/PaymentReceipt/Table/trReplenish.html.twig #}
+<td>
+    <span>
+        {{ ( paymentReceipt.receiptNumber ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.receiptDate ) ? paymentReceipt.receiptDate|date('Y-m-d H:i:s') : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.nfcTagNumber ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.payerFullName ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.paymentAmount ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.paymentComission ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.profit ) ?: '-' }}
+    </span>
+</td>
+<td>
+    {% if paymentReceipt.status == constant('AppBundle\\Service\\Payment\\Utility\\PaymentReceiptFileInterface::RECEIPT_VALID') %}
+        {% set statusClass = 'ready' %}
+    {% elseif paymentReceipt.status == constant('AppBundle\\Service\\Payment\\Utility\\PaymentReceiptFileInterface::RECEIPT_INVALID') %}
+        {% set statusClass = 'declined' %}
+    {% else %}
+        {% set statusClass = 'pending' %}
+    {% endif %}
+
+    <span class="status {{ statusClass }}">
+        {{ ( paymentReceipt.status ) ? ('payment_receipt.status.' ~ paymentReceipt.status)|trans({}, 'forms') : '-' }}
+    </span>
+</td>

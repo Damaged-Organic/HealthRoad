@@ -1,0 +1,53 @@
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*  registry payment widget start             */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#registry-payment-widget{
+    width: ~"calc(100% - 20px)";
+    height: auto;
+    margin-bottom: 20px;
+    background: @black;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    & > form{
+        padding-right: 0;
+    }
+    .file-holder{
+        width: ~"calc(100% - 200px)";
+        float: left;
+        margin-bottom: 0;
+    }
+    .file-preview-holder{
+        width: ~"calc(100% - 240px)";
+        height: 140px;
+        float: left;
+        padding-left: 20px;
+        box-sizing: border-box;
+        overflow: hidden;
+        & > p,
+        & > time{
+            color: @white;
+            text-align: left;
+            padding-bottom: 10px;
+        }
+        p{
+            font-size: 1.125em;
+        }
+        time,
+        span{
+            display: block;
+        }
+        & > .size{
+            font-size: .875em;
+            color: @grey;
+        }
+    }
+    button[type="submit"]{
+        float: left;
+        border: 1px solid darken(@black, 20%);
+        margin-top: 80px;
+    }
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*  registry payment widget end               */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

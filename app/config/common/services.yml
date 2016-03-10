@@ -62,6 +62,41 @@ services:
         calls:
             - [setConnection, [ "@database_connection" ]]
 
+    # Payment
+
+    app.payment.receipt.storage:
+        class: AppBundle\Service\Payment\PaymentReceiptStorage
+        calls:
+            - [setRedis, [ "@snc_redis.default" ]]
+            - [setSecurityContext, [ "@security.context" ]]
+
+    app.payment.receipt.parser:
+        class: AppBundle\Service\Payment\PaymentReceiptParser
+
+    app.payment.receipt.validator:
+        class: AppBundle\Service\Payment\PaymentReceiptValidator
+        calls:
+            - [setValidator, [ "@validator" ]]
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+
+    app.payment.receipt.manager:
+        class: AppBundle\Service\Payment\PaymentReceiptManager
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+
+    app.payment.liq_pay:
+        class: LiqPay
+        arguments:
+            - "%liq_pay.key.public%"
+            - "%liq_pay.key.private%"
+
+    app.payment.liq_pay.manager:
+        class: AppBundle\Service\Payment\PaymentLiqPayManager
+        calls:
+            - [setRouter, ["@router"]]
+            - [setLiqPay, ["@app.payment.liq_pay"]]
+            - [setLiqPayKeys, ["%liq_pay.key.public%", "%liq_pay.key.private%"]]
+
     # Common
 
     app.common.breadcrumbs:
@@ -204,6 +239,14 @@ services:
         tags:
             - { name: security.voter }
 
+    app.voter_payment_receipt:
+        class:  AppBundle\Security\Authorization\Voter\PaymentReceiptVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
     # Security services
 
     app.security.setting_boundless_access:
@@ -281,6 +324,11 @@ services:
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 
+    app.security.payment_receipt_boundless_access:
+        class: AppBundle\Service\Security\PaymentReceiptBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
     # Sync
 
     app.sync.utility.checksum:
@@ -297,6 +345,9 @@ services:
         class: AppBundle\Service\Sync\SyncDataHandler
         calls:
             - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setLogger, [ "@logger" ]]
+        tags:
+            - { name: monolog.logger, channel: sync }
 
     app.sync.sync_data_builder:
         class: AppBundle\Service\Sync\SyncDataBuilder

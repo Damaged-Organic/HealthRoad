@@ -1,0 +1,41 @@
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*  liquidpay widget start                    */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#liquidpay-widget{
+    margin-top: 20px;
+    padding-left: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    & > .inner{
+        width: 100%;
+        background: @grey;
+        overflow: hidden;
+        h2{
+            padding: 20px;
+            background: #e6e6e6;
+            border-bottom: 2px solid #5bba46;
+            box-sizing: border-box;
+        }
+        & > form{
+            max-width: 100%;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+            .field-area{
+                width: ~"calc(100% - 200px)";
+                float: left;
+                margin: 0px 20px 0 0;
+            }
+            button[type="submit"]{
+                float: left;
+                span{
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*  liquidpay widget end                      */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

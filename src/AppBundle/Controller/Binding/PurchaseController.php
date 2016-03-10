@@ -13,6 +13,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Entity\VendingMachine\VendingMachine,
+    AppBundle\Entity\Student\Student,
     AppBundle\Service\Security\PurchaseBoundlessAccess;
 
 class PurchaseController extends Controller implements UserRoleListInterface
@@ -36,7 +37,16 @@ class PurchaseController extends Controller implements UserRoleListInterface
                 $object = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($objectId);
 
                 if( !$object )
-                    throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
+                    throw $this->createNotFoundException("Vending Machine identified by `id` {$objectId} not found");
+
+                $purchases = $object->getPurchases();
+            break;
+
+            case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $object = $this->_manager->getRepository('AppBundle:Student\Student')->find($objectId);
+
+                if( !$object )
+                    throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
                 $purchases = $object->getPurchases();
             break;

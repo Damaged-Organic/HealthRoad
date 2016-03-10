@@ -5,6 +5,8 @@ namespace AppBundle\Entity\Purchase\Repository;
 use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
     AppBundle\Entity\Purchase\Purchase;
 
+use AppBundle\Entity\VendingMachine\VendingMachine;
+
 class PurchaseRepository extends ExtendedEntityRepository
 {
     public function findByDateGrouped($date)
@@ -42,14 +44,18 @@ class PurchaseRepository extends ExtendedEntityRepository
         return $query->getResult();
     }
 
-    public function findSumsByStudentsWithSyncId($syncId)
+    public function findSumsByStudentsWithSyncId(VendingMachine $vendingMachine, $syncId)
     {
         $query = $this->createQueryBuilder('p')
             ->select('nt.code, SUM(pr.price) as price_sum')
             ->leftJoin('p.nfcTag', 'nt')
             ->leftJoin('p.product', 'pr')
-            ->where('p.vendingMachineSyncId = :syncId')
-            ->setParameter('syncId', $syncId)
+            ->where('p.vendingMachine = :vendingMachine')
+            ->andWhere('p.vendingMachineSyncId = :syncId')
+            ->setParameters([
+                'vendingMachine' => $vendingMachine,
+                'syncId'         => $syncId
+            ])
             ->groupBy('nt.code')
             ->getQuery()
         ;
@@ -60,27 +66,31 @@ class PurchaseRepository extends ExtendedEntityRepository
     public function rawInsertPurchases(array $purchasesArray)
     {
         $queryString = '';
+        $queryArgs   = [];
 
         foreach( $purchasesArray as $purchase )
         {
             if( $purchase instanceof Purchase )
             {
-                $queryString .= " (
-                    '{$purchase->getVendingMachine()->getId()}',
-                    '{$purchase->getProduct()->getId()}',
-                    '{$purchase->getNfcTag()->getId()}',
-                    '{$purchase->getSyncPurchaseId()}',
-                    '{$purchase->getSyncNfcTagCode()}',
-                    '{$purchase->getSyncProductId()}',
-                    '{$purchase->getSyncProductPrice()}',
-                    '{$purchase->getSyncPurchasedAt()->format('Y-m-d H:i:s')}',
-                    '{$purchase->getVendingMachineSerial()}',
-                    '{$purchase->getVendingMachineSyncId()}'
-                ),";
+                $queryString .= "(" . substr(str_repeat("?,", 11), 0, -1) . "),";
+
+                $queryArgs = array_merge($queryArgs, [
+                    $purchase->getVendingMachine()->getId(),
+                    $purchase->getProduct()->getId(),
+                    $purchase->getNfcTag()->getId(),
+                    $purchase->getStudent()->getId(),
+                    $purchase->getSyncPurchaseId(),
+                    $purchase->getSyncNfcTagCode(),
+                    $purchase->getSyncProductId(),
+                    $purchase->getSyncProductPrice(),
+                    $purchase->getSyncPurchasedAt()->format('Y-m-d H:i:s'),
+                    $purchase->getVendingMachineSerial(),
+                    $purchase->getVendingMachineSyncId()
+                ]);
             }
         }
 
-        if( !$queryString )
+        if( !$queryArgs )
             return;
 
         $queryString = substr($queryString, 0, -1);
@@ -90,6 +100,7 @@ class PurchaseRepository extends ExtendedEntityRepository
                 vending_machine_id,
                 product_id,
                 nfc_tag_id,
+                student_id,
                 sync_purchase_id,
                 sync_nfc_tag_code,
                 sync_product_id,
@@ -102,6 +113,6 @@ class PurchaseRepository extends ExtendedEntityRepository
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($queryString);
 
-        $stmt->execute();
+        $stmt->execute($queryArgs);
     }
 }

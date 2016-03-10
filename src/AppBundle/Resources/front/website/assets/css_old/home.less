@@ -1,0 +1,578 @@
+@import "lib/common.less";
+@import "lib/forms.less";
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	layout start							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.outer{
+	& > .inner{
+		margin-top: 60px;
+		h2{
+			text-transform: uppercase;
+			text-align: center;
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	layout end								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	intro start								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.outer.intro-holder{
+	width: 100%;
+	position: relative;
+	.slider{
+		display: block;
+	}
+	& > .inner{
+		height: auto;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		z-index: 5;
+		margin-top: 0;
+		transform: translateX(-50%) translateY(-50%);
+		backface-visibility: hidden;
+		overflow: hidden;
+		.entitled{
+			width: 500px;
+			float: right;
+			overflow: hidden;
+		}
+		h1{
+			font-family: 'Kurale', serif;
+			background: fade(@white, 80%);
+			font-size: 3.75em;
+			text-align: center;
+			padding: 0 20px 5px;
+			color: @green;
+		}
+		h2{
+			font-size: 1.125em;
+			text-transform: uppercase;
+			text-align: right;
+			color: @white;
+			padding: 5px 30px;
+			background: fade(@green, 80%);
+		}
+		.btn-more{
+			display: none;
+			margin-top: 20px;
+			float: right;
+			.long-arrow{
+				margin-left: 5px;
+			}
+			.text{
+				color: @green;
+			}
+			&:hover{
+				.text{ color: @white; }
+				.long-arrow{
+					&:before{ background: @white; }
+					&:after{ border-left: 6px solid @white; }
+					transform: translateX(10px);
+				}
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	intro end								  				*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	project start							 				 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.outer.project-holder{
+	p{
+		padding-bottom: 20px;
+	}
+	.benefits-holder{
+		width: 100%;
+		margin: 40px 0;
+		overflow: hidden;
+		ul{
+		  display: block;
+		  width: 100%;
+		  overflow: hidden;
+		}
+		li{
+		  display: block;
+		  width: 32.22222222222222%;
+		  height: auto;
+		  float: left;
+		  box-sizing: border-box;
+		  overflow: hidden;
+		  &:nth-child(2){
+			margin: 0 1.666666666666667%;
+		  }
+		  figure{
+			display: block;
+			width: 100%;
+			position: relative;
+			overflow: hidden;
+			&:after{
+			  display: block;
+			  width: 100%;
+			  height: 100%;
+			  position: absolute;
+			  top: 0;
+			  left: 0;
+			  content: "";
+			  background: fade(@black, 55%);
+			  overflow: hidden;
+			}
+			img{
+			  width: 100%;
+			  height: 100%;
+			  transition: all 3s @easing;
+			  transform: scale(1);
+			}
+		  }
+		  &:hover figure > img{
+			transform: scale(1.15);
+		  }
+		  .inner{
+			width: 100%;
+			.icon{
+			  display: block;
+			  width: 40px;
+			  height: 40px;
+			  margin: 0 auto;
+			  text-align: center;
+			  line-height: 40px;
+			  font-size: 2.5em;
+			  color: @black;
+			  margin-top: 90px;
+			}
+			.sprtr-h{
+			  margin: 40px auto 20px;
+			  background: @green;
+			}
+		  }
+		}
+		.sprtr-h{
+		  margin-top: 20px;
+		  background: @black;
+		}
+		p{
+		  padding: 0 20px;
+		}
+	}
+}
+#watch-movie{
+	width: 800px;
+	height: auto;
+	margin: 60px auto;
+	a{
+		display: block;
+		width: 100%;
+		font-size: 1em;
+		position: relative;
+		text-align: center;
+		overflow: hidden;
+	}
+	span{
+		display: inline-block;
+		vertical-align: middle;
+		text-transform: uppercase;
+		font-size: 1.5em;
+		color: @green;
+	}
+	span.text{
+		line-height: 40px;
+		padding-left: 20px;
+	}
+	span.hr-play{
+		display: inline-block;
+		vertical-align: middle;
+		width: 40px;
+		height: 40px;
+		font-size: 2.5em;
+		animation: pulse 2s @easing 0s infinite;
+		&:before{
+			display: block;
+		}
+	}
+}
+@keyframes pulse{
+	0% { transform: scale(1); }
+	50% { transform: scale(1.1); }
+	100% { transform: scale(1); }
+}
+#movie-holder{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 20;
+	background: fade(@black, 90%);
+	opacity: 0;
+	visibility: hidden;
+	overflow: hidden;
+	& > .inner{
+		width: 800px;
+		height: 450px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		-webkit-overflow-scrolling: touch;
+		opacity: 0;
+		transition: all .25s @easing;
+		box-sizing: border-box;
+		overflow: hidden;
+		& > iframe{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			border: none;
+			overflow: hidden;
+		}
+	}
+	& > .close{
+		display: block;
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		cursor: pointer;
+		color: @white;
+		font-size: 2em;
+		transition: all .5s @easing;
+		&:hover{
+			color: @green;
+		}
+	}
+	&.active{
+		opacity: 1;
+		visibility: visible;
+		transition: all .5s @easing;
+		& > .inner{
+			opacity: 1;
+			transition: all .25s @easing .25s;
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	project end								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	suppliers start							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.outer.suppliers-holder{
+	background: @grey;
+	.inner{
+		max-width: 100%;
+	}
+	.suppliers{
+		width: 100%;
+		margin: 20px auto;
+		text-align: center;
+		li{
+			display: inline-block;
+			vertical-align: middle;
+			width: 120px;
+			height: auto;
+			position: relative;
+			margin-bottom: 40px;
+			figure{
+				display: block;
+				width: 100%;
+				height: auto;
+				position: relative;
+				transition: all .5s @easing;
+				transform: scale(1);
+				opacity: .75;
+				backface-visibility: hidden;
+				&:hover{
+					transform: scale(1.25);
+					opacity: 1;
+				}
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	suppliers end							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	questions start							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.outer.questions-holder{
+	margin-bottom: 60px;
+	.sprtr-h{
+		margin-bottom: 40px;
+	}
+	.questions{
+		overflow: hidden;
+		li{
+			display: block;
+			width: 33.3%;
+			float: left;
+			text-align: right;	
+		}
+		*[class^="hr"]{
+			color: @black;
+			font-size: 3em;
+			padding-bottom: 10px;
+		}
+		.sprtr-h{
+			background: @black;
+			margin: 20px auto;
+		}
+		h3{
+			font-size: 1em;
+			text-transform: uppercase;
+			margin-bottom: 10px;
+		}
+		p{
+			padding: 0 20px;
+			text-align: center;
+		}
+		a{
+			display: inline-block;
+			margin: 20px 20px 0 0;
+			color: @green;
+			& > .long-arrow{
+				margin-left: 10px;
+				transition: all .5s ease;
+				transform: translateX(0px);
+			}
+			&:hover{
+				.long-arrow{
+					transform: translateX(10px);
+				}
+			}
+		}
+	}
+	.btn-small{
+		display: none;
+		margin: 60px auto;
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	questions end							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	1024 start								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 1024px){
+
+	.outer.intro-holder{
+		& > .inner{
+			.entitled{
+				margin: 0 auto;
+				float: none;
+			}
+		}
+	}
+
+	.outer.project-holder{
+		p{
+			padding: 0 20px 20px;
+		}
+		.benefits-holder{
+			padding: 0 20px;
+			box-sizing: border-box;
+			li{
+				.inner{
+					.sprtr-h{
+						margin: 40px auto 20px;
+					}
+				}
+			}
+		}
+	}
+	#watch-movie{ width: 100%; }
+
+	.outer.suppliers-holder{
+		.suppliers li{
+			width: 100px;
+		}
+	}
+
+	.outer.questions-holder{
+		.questions{
+			li{
+				width: 100%;
+				float: none;
+				margin-bottom: 40px;
+				text-align: center;
+			}
+			p{ padding: 0 80px; }
+			a{ margin: 20px 0 0 0; }
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	intro 1024 end							  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	800 start								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 800px){
+
+	.outer.project-holder{
+		h2{
+			padding: 0 20px;
+		}
+		p{
+			padding: 0 40px 20px;
+		}
+		.benefits-holder{
+			display: none;
+		}
+	}
+
+	.outer.project-holder{
+		.inner{
+			margin-top: 40px;
+		}
+	}
+	
+	#watch-movie{
+		margin: 40px auto 60px;
+		span{ font-size: 1.25em; }
+		span.hr-play{
+			font-size: 2em;
+			&:before{ margin-top: 4px; }
+		}
+	}
+
+	.outer.suppliers-holder{
+		.suppliers{
+			padding: 0 40px;
+			box-sizing: border-box;
+			li{
+				display: inline-block;
+				vertical-align: middle;
+				width: 16%;
+				padding: 10px;
+				margin: 0;
+				height: auto;
+				position: relative;
+			}
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	800 end 								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	680 start								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 680px){
+	
+	.outer.intro-holder{
+		display: none;
+	}
+
+	#watch-movie{
+		margin: 40px auto 60px;
+		span.text{
+			padding-left: 0;
+			font-size: 1em;
+		}
+		span.hr-play{
+			display: block;
+			vertical-align: none;
+			font-size: 2.5em;
+			margin-bottom: 10px;
+		}
+	}
+
+	#movie-holder{
+		& > .inner{
+			width: 100%;
+			height: 0;
+			padding-bottom: 56.25%;
+			position: absolute;
+			top: 50%;
+			left: 0%;
+			transform: translateX(0%) translateY(-50%);
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	680 end 								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	520 start 								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@media only screen and (max-width: 520px){
+
+	.outer.project-holder{
+		.inner{
+			p{
+				padding: 0 20px 20px;
+			}
+		}
+	}
+
+	#watch-movie{
+		margin: 40px auto 60px;
+		span.text{
+			display: none;
+		}
+		span.hr-play{
+			display: block;
+			width: 60px;
+			height: 60px;
+			vertical-align: none;
+			font-size: 3.75em;
+			margin-bottom: 10px;
+		}
+	}
+
+	.outer.suppliers-holder{
+		.suppliers{
+			padding: 0 20px;
+			margin-bottom: 20px;
+			box-sizing: border-box;
+			overflow: hidden;
+			li{
+				display: block;
+				vertical-align: none;
+				width: 33%;
+				height: auto;
+				float: left;
+				padding: 10px;
+				margin: 0;
+				position: relative;
+				box-sizing: border-box;
+				overflow: hidden;
+			}
+		}
+	}
+
+	.outer.questions-holder{
+		h2{ padding: 0 20px; }
+		.questions{
+			li{
+				p{
+					padding: 0 20px;
+				}
+			}
+		}
+	}
+
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	520 end 								  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

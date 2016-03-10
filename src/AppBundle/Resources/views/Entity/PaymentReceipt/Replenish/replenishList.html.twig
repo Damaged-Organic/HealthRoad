@@ -1,0 +1,24 @@
+{# AppBundle/Resources/views/Entity/PaymentReceipt/Replenish/replenishList.html.twig #}
+{% extends 'AppBundle:Entity/PaymentReceipt/Base:tableReplenish.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active">
+                <a href="{{ path('payment_receipt_replenish_check') }}">
+                    Все
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block action_button %}
+    <div id="action-holder" class="manage-holder">
+        <div class="btn-add right">
+            <a href="{{ path('payment_receipt_replenish_persist') }}">
+    			Зачислить
+    		</a>
+        </div>
+    </div>
+{% endblock %}

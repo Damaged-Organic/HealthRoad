@@ -14,7 +14,8 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
     const STUDENT_DELETE = 'student_delete';
     const STUDENT_BIND   = 'student_bind';
 
-    const STUDENT_TOTAL_LIMIT_UPDATE = 'student_total_limit_update';
+    const STUDENT_TOTAL_LIMIT_UPDATE    = 'student_total_limit_update';
+    const STUDENT_TOTAL_LIMIT_REPLENISH = 'student_total_limit_replenish';
 
     const STUDENT_READ_BY_CUSTOMER   = 'student_read_by_customer';
     const STUDENT_BIND_PRODUCT       = 'student_bind_product';
@@ -28,6 +29,7 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
             self::STUDENT_DELETE,
             self::STUDENT_BIND,
             self::STUDENT_TOTAL_LIMIT_UPDATE,
+            self::STUDENT_TOTAL_LIMIT_REPLENISH,
             self::STUDENT_READ_BY_CUSTOMER,
             self::STUDENT_BIND_PRODUCT,
             self::STUDENT_UPDATE_DAILY_LIMIT
@@ -63,7 +65,11 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
             break;
 
             case self::STUDENT_TOTAL_LIMIT_UPDATE:
-                return $this->balanceReplenish($student, $user);
+                return $this->totalLimitUpdate($student, $user);
+            break;
+
+            case self::STUDENT_TOTAL_LIMIT_REPLENISH:
+                return $this->totalLimitReplenish($student, $user);
             break;
 
             case self::STUDENT_READ_BY_CUSTOMER:
@@ -153,13 +159,30 @@ class StudentVoter extends ExtendedAbstractVoter implements UserRoleListInterfac
         return FALSE;
     }
 
-    protected function balanceReplenish($student, $user = NULL)
+    protected function totalLimitUpdate($student, $user = NULL)
     {
         if( $student->getPseudoDeleted() )
             return FALSE;
 
         if( $user->getRoles()[0]->getRole() === self::ROLE_ACCOUNTANT )
             return TRUE;
+
+        return FALSE;
+    }
+
+    protected function totalLimitReplenish($student, $user = NULL)
+    {
+        if( $student->getPseudoDeleted() )
+            return FALSE;
+
+        if( in_array(self::ROLE_CUSTOMER, $user->getRoles(), TRUE) )
+        {
+            if( $student->getCustomer() ) {
+                return ($student->getCustomer()->getId() == $user->getId())
+                    ? TRUE
+                    : FALSE;
+            }
+        }
 
         return FALSE;
     }

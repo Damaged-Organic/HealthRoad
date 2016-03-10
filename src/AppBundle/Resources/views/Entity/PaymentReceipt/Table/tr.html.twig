@@ -1,0 +1,37 @@
+{# AppBundle/Resources/views/Entity/PaymentReceipt/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ paymentReceipt.id }}</span></td>
+<td>
+    <span>
+        {{ ( paymentReceipt.receiptNumber ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.receiptDate ) ? paymentReceipt.receiptDate|date('Y-m-d H:i:s') : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.nfcTagNumber ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.payerFullName ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.paymentAmount ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.paymentComission ) ?: '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( paymentReceipt.profit ) ?: '-' }}
+    </span>
+</td>

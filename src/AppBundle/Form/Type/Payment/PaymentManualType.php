@@ -1,14 +1,14 @@
 <?php
-// AppBundle/Form/Type/Payment/StudentBalanceType.php
+// AppBundle/Form/Type/Payment/PaymentManualType.php
 namespace AppBundle\Form\Type\Payment;
 
 use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilderInterface,
-    Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
+    Symfony\Component\OptionsResolver\OptionsResolver,
+    Symfony\Component\Form\FormEvent,
+    Symfony\Component\Form\FormEvents;
 
-class StudentBalanceType extends AbstractType
+class PaymentManualType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -60,6 +60,6 @@ class StudentBalanceType extends AbstractType
 
     public function getName()
     {
-        return 'student_balance';
+        return 'payment_replenish_manual';
     }
 }

@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/PaymentLiqPay/Form/transferForm.html.twig #}
+<form method="POST" action="{{ formAction }}" accept-charset="utf-8" id="liqPayForm">
+    <input type="hidden" name="data" value="{{ formData }}">
+    <input type="hidden" name="signature" value="{{ formSignature }}">
+</form>
+
+<script>
+    function submitForm() {
+        document.getElementById('liqPayForm').submit();
+    }
+    window.onload = submitForm;
+</script>

@@ -13,6 +13,9 @@ common:
     update:
         label: Сохранить
 
+    check:
+        label: Проверить
+
     update_and_return:
         label: Сохранить и вернуться
 
@@ -424,3 +427,60 @@ purchase:
 
         product_price:
             label: Цена продукта
+
+payment_receipt:
+    receipt_number:
+        label: Номер платежного поручения
+
+    receipt_date:
+        label: Дата платежного поручения
+
+    document_number:
+        label: Номер документа
+
+    operational_date:
+        label: Операционный день
+
+    nfc_tag_number:
+        label: Номер NFC-метки
+
+    student:
+        label: Ученик
+
+    payer_full_name:
+        label: ФИО плательщика
+
+    payment_purpose:
+        label: Назначение платежа
+
+    payment_amount:
+        label: Принятая сумма
+
+    payment_comission:
+        label: Комиссия с получателя
+
+    payment_numbers:
+        label: Количество платежей
+
+    payment_amount_total:
+        label: Общая сумма
+
+    payment_comission_total:
+        label: Комиссия банка
+
+    result_amount:
+        label: Перечислено всего
+
+    profit:
+        label: Перечислено
+
+    payment_receipt_file:
+        label:       Файл выписки из реестра
+        placeholder: Выберите файл выписки из реестра в формате CSV
+
+    status:
+        valid:    Готов к зачислению
+        exists:   Обработан ранее
+        mismatch: NFC-метка не существует
+        unbinded: NFC-метка не привязана
+        invalid:  Невалиден

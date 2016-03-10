@@ -1,0 +1,27 @@
+{# AppBundle/Resources/views/Entity/PaymentReceipt/Form/paymentReceiptReplenish.html.twig #}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<div id="registry-payment-widget">
+	<form action="{{ form.vars.action }}" method="POST" enctype="multipart/form-data" id="registry-upload-form" class="file-preview">
+		<div class="file-holder">
+            {{ form_widget(form.paymentReceiptFile, {
+                'id': "file-upload-registry"
+            }) }}
+			<label for="file-upload-registry">
+				<div class="btn-file">
+					<span class="icon hrd-upload"></span>
+					<span class="text">{{ form.paymentReceiptFile.vars.label|trans({}, 'forms') }}</span>
+				</div>
+			</label>
+			<div class="file-preview-holder">
+				<p>Загрузите файл выписки из реестра для предварительной проверки</p>
+			</div>
+		</div>
+
+        {{ form_widget(form._token) }}
+
+		<button type="submit" class="btn-save">
+			<span>{{ 'common.check.label'|trans({}, 'forms') }}</span>
+		</button>
+	</form>
+</div>

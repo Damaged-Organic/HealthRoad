@@ -13,6 +13,18 @@
     {% endif %}
 {% endblock %}
 
+{% block active_student_update_bounded_purchase %}
+    {% if objectClass is same as('purchase') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_student_update_bounded_payment_receipt %}
+    {% if objectClass is same as('paymentreceipt') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
 {% block variable %}
 
     {{ bounded|raw }}

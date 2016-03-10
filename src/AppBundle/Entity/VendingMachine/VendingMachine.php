@@ -48,16 +48,19 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineEvent", mappedBy="vendingMachine")
+     * @ORM\OrderBy({"occurredAt"="DESC"})
      */
     protected $vendingMachineEvents;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\VendingMachine\VendingMachineLoad", mappedBy="vendingMachine")
+     * @ORM\OrderBy({"loadedAt"="DESC"})
      */
     protected $vendingMachineLoad;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="vendingMachine")
+     * @ORM\OrderBy({"syncPurchasedAt"="DESC"})
      */
     protected $purchases;
 

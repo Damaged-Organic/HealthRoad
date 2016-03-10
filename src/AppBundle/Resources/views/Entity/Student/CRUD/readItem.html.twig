@@ -12,7 +12,7 @@
                 <h2>Пополнение баланса ученика ({{ ( student.nfcTag.number ) }})</h2>
             </div>
 
-            {{ render(controller('AppBundle:Payment/Payment:paymentForm', { 'student': student })) }}
+            {{ render(controller('AppBundle:Payment/PaymentManual:paymentManualReplenishForm', { 'student': student })) }}
         {% endif %}
 
     {% endif %}

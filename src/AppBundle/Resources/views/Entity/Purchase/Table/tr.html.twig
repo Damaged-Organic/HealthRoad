@@ -22,7 +22,7 @@
 </td>
 <td>
     <span>
-        {{ ( purchase.nfcTag ) ? (( purchase.nfcTag.student ) ? purchase.nfcTag.student.fullName : '-' ) : '-' }}
+        {{ ( purchase.student ) ? purchase.student.fullName : '-' }}
     </span>
 </td>
 <td>

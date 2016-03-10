@@ -99,6 +99,25 @@
                                 </div>
                             </div>
                         </article>
+                        <section id="liquidpay-widget">
+							<div class="inner">
+								<h2>Поповнення рахунку за допомогою LiqPay</h2>
+								<form action="{{ path('payment_liq_pay_replenish_submit', { 'id': student.id }) }}" method="POST" id="liquidpay-form">
+									<div class="field-area">
+										<input type="text" name="replenish_amount" id="liquidpay-money" value=""
+                                               placeholder="Введите сумму пополнения"
+                                               data-rule-required="true" data-msg-required="Введіть суму поповнення"
+                                               data-mask="#.##0,00" data-mask-reverse="true">
+                                        <!-- <span class="server-error">
+		                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente minima voluptatum
+										</span> -->
+									</div>
+									<button type="submit">
+										<span>Поповнити</span>
+									</button>
+								</form>
+							</div>
+						</section>
                     </div>
                 </div>
             </section>

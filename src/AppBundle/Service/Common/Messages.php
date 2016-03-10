@@ -74,14 +74,42 @@ class Messages implements MessagesInterface
         ]);
     }
 
-    public function markReplenishSuccess()
+    public function markPaymentManualReplenishSuccess()
     {
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
-            self::MESSAGES_SUCCESS => [$this->_translator->trans('student_balance.success', [], 'responses')]
+            self::MESSAGES_SUCCESS => [$this->_translator->trans('payment.manual.replenish.success', [], 'responses')]
         ]);
     }
 
-    public function markReplenishErrors(array $errors)
+    public function markPaymentManualReplenishErrors(array $errors)
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_ERRORS => $errors
+        ]);
+    }
+
+    public function markPaymentReceiptCheckSuccess()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_SUCCESS => [$this->_translator->trans('payment.receipt.check.success', [], 'responses')]
+        ]);
+    }
+
+    public function markPaymentReceiptCheckErrors(array $errors)
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_ERRORS => $errors
+        ]);
+    }
+
+    public function markPaymentReceiptReplenishSuccess()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_SUCCESS => [$this->_translator->trans('payment.receipt.replenish.success', [], 'responses')]
+        ]);
+    }
+
+    public function markPaymentReceiptReplenishErrors(array $errors)
     {
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
             self::MESSAGES_ERRORS => $errors

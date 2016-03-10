@@ -1,0 +1,39 @@
+{# AppBundle/Resources/views/Entity/PaymentReceipt/layout.html.twig #}
+{% extends 'AppBundle:Dashboard/State:index.html.twig' %}
+
+{% block title %}
+    {{ 'payment_receipt_read'|trans({}, 'routes') }} | {{ 'dashboard.title'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/dashboard/css/paymentReceipt.bundle.min.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="outer" id="info-holder">
+        <div class="top-info-panel">
+
+            {% block action_top %}{% endblock %}
+
+        </div>
+
+        {% block variable %}
+            <div class="outer scrollable-holder">
+                <div class="inner scrollable">
+
+                    {% block data %}{% endblock %}
+
+                </div>
+            </div>
+            <div class="bottom-info-panel">
+
+                {% block action_bottom %}{% endblock %}
+
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/app/dashboard/js/paymentReceipt.bundle.min.js') }}"></script>
+{% endblock %}

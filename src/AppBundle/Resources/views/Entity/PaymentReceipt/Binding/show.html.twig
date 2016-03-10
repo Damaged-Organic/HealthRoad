@@ -1,0 +1,18 @@
+{# src/AppBundle/Resources/views/Entity/PaymentReceipt/Binding/show.html.twig #}
+{% extends 'AppBundle:Entity/PaymentReceipt/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    <td class="double-small-fixed view-holder">
+        <div class="btn-view">
+            <a href="{{ path('payment_receipt_read', { 'id': paymentReceipt.id }) }}" class="icon hrd-view"></a>
+        </div>
+    </td>
+
+{% endblock %}

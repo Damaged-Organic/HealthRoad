@@ -1,0 +1,45 @@
+{# AppBundle/Resources/views/Entity/PaymentReceipt/Base/tableReplenish.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/PaymentReceipt/Base:list.html.twig' %}
+
+{% block variable %}
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+
+            <div class="ready-to-load">
+				<p>Файл проверен. Количество оплат выписки из реестра, которые будут зачислены: {{ paymentReceiptsValid }} (всего обработано: {{ paymentReceiptsTotal }})</p>
+			</div>
+
+            {% if paymentReceipts|length %}
+                <table>
+                    <tr>
+
+                        {% include 'AppBundle:Entity/PaymentReceipt/Table:thReplenish.html.twig' %}
+
+                        {% block action_items_th %}{% endblock %}
+
+                    </tr>
+
+                    {% for paymentReceipt in paymentReceipts %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/PaymentReceipt/Table:trReplenish.html.twig' with { 'paymentReceipt': paymentReceipt } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                <div class="empty-holder">
+                    <h2>{{ 'dashboard.table.empty.title'|trans }}</h2>
+                    <p>{{ 'dashboard.table.empty.text_load'|trans }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+    </div>
+{% endblock %}

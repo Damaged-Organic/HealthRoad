@@ -36,6 +36,12 @@ class Purchase implements SyncPurchasePropertiesInterface
     protected $nfcTag;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Student\Student", inversedBy="purchases")
+     * @ORM\JoinColumn(name="student_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    protected $student;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $syncPurchaseId;
@@ -86,7 +92,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get syncPurchaseId
      *
-     * @return integer 
+     * @return integer
      */
     public function getSyncPurchaseId()
     {
@@ -109,7 +115,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get syncNfcTagCode
      *
-     * @return string 
+     * @return string
      */
     public function getSyncNfcTagCode()
     {
@@ -132,7 +138,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get syncProductId
      *
-     * @return integer 
+     * @return integer
      */
     public function getSyncProductId()
     {
@@ -155,7 +161,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get syncProductPrice
      *
-     * @return string 
+     * @return string
      */
     public function getSyncProductPrice()
     {
@@ -178,7 +184,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get syncPurchasedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getSyncPurchasedAt()
     {
@@ -201,7 +207,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get vendingMachineSerial
      *
-     * @return string 
+     * @return string
      */
     public function getVendingMachineSerial()
     {
@@ -224,7 +230,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get vendingMachineSyncId
      *
-     * @return string 
+     * @return string
      */
     public function getVendingMachineSyncId()
     {
@@ -247,7 +253,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get vendingMachine
      *
-     * @return \AppBundle\Entity\VendingMachine\VendingMachine 
+     * @return \AppBundle\Entity\VendingMachine\VendingMachine
      */
     public function getVendingMachine()
     {
@@ -270,7 +276,7 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get product
      *
-     * @return \AppBundle\Entity\Product\Product 
+     * @return \AppBundle\Entity\Product\Product
      */
     public function getProduct()
     {
@@ -293,11 +299,34 @@ class Purchase implements SyncPurchasePropertiesInterface
     /**
      * Get nfcTag
      *
-     * @return \AppBundle\Entity\NfcTag\NfcTag 
+     * @return \AppBundle\Entity\NfcTag\NfcTag
      */
     public function getNfcTag()
     {
         return $this->nfcTag;
+    }
+
+    /**
+     * Set student
+     *
+     * @param \AppBundle\Entity\Student\Student $student
+     * @return Purchase
+     */
+    public function setStudent(\AppBundle\Entity\Student\Student $student = null)
+    {
+        $this->student = $student;
+
+        return $this;
+    }
+
+    /**
+     * Get student
+     *
+     * @return \AppBundle\Entity\Student\Student
+     */
+    public function getStudent()
+    {
+        return $this->student;
     }
 
     static public function getSyncArrayName()

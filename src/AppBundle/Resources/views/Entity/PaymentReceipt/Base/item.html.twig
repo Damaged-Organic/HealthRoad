@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/PaymentReceipt/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/PaymentReceipt:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_payment_receipt_update %}{% endblock %}>
+                <a href="{{ path('payment_receipt_read', { 'id': paymentReceipt.id }) }}">Данные</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

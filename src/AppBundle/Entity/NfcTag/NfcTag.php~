@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert,
     AppBundle\Entity\NfcTag\Utility\Interfaces\SyncNfcTagPropertiesInterface;
 
@@ -17,16 +18,17 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  * @ORM\Entity(repositoryClass="AppBundle\Entity\NfcTag\Repository\NfcTagRepository")
  *
  * @UniqueEntity(fields="number", message="nfc_tag.number.unique")
+ * @UniqueEntity(fields="code", message="nfc_tag.code.unique")
  */
 class NfcTag implements SyncNfcTagPropertiesInterface
 {
-    use IdMapperTrait;
+    use IdMapperTrait, PseudoDeleteMapperTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", inversedBy="nfcTags")
-     * @ORM\JoinColumn(name="vending_machine_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $vendingMachine;
+    #/**
+    # * @ORM\ManyToOne(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", inversedBy="nfcTags")
+    # * @ORM\JoinColumn(name="vending_machine_id", referencedColumnName="id", onDelete="SET NULL")
+    # */
+    #protected $vendingMachine;
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Student\Student", inversedBy="nfcTag")
@@ -40,27 +42,39 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     protected $purchases;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\PaymentReceipt", mappedBy="nfcTag")
+     */
+    protected $paymentsReceipts;
+
+    /**
      * @ORM\Column(type="string", length=8, unique=true)
      *
+     * @Assert\NotBlank(message="nfc_tag.number.not_blank")
      * @Assert\Regex(
-     *     pattern = "/^[A-Z]{2}[0-9]{6}$/",
-     *     message = "nfc_tag.number.regex"
+     *     pattern="/^[A-Z]{2}[0-9]{6}$/",
+     *     message="nfc_tag.number.regex"
      * )
      */
     protected $number;
 
     /**
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="string", length=32, unique=true)
      *
      * @Assert\NotBlank(message="nfc_tag.code.not_blank")
-     * @Assert\Length(
-     *      min=1,
-     *      max=32,
-     *      minMessage="nfc_tag.code.length.min",
-     *      maxMessage="nfc_tag.code.length.max"
+     * @Assert\Regex(
+     *      pattern="/^[a-z0-9]{1,32}$/",
+     *      message="nfc_tag.code.regex"
      * )
      */
     protected $code;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->purchases = new ArrayCollection;
+    }
 
     /**
      * Set number
@@ -78,7 +92,7 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     /**
      * Get number
      *
-     * @return string 
+     * @return string
      */
     public function getNumber()
     {
@@ -101,35 +115,35 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
         return $this->code;
     }
 
-    /**
-     * Set vendingMachine
-     *
-     * @param \AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine
-     * @return NfcTag
-     */
-    public function setVendingMachine(\AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine = null)
-    {
-        $this->vendingMachine = $vendingMachine;
+    #/**
+    # * Set vendingMachine
+    # *
+    # * @param \AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine
+    # * @return NfcTag
+    # */
+    #public function setVendingMachine(\AppBundle\Entity\VendingMachine\VendingMachine $vendingMachine = null)
+    #{
+    #    $this->vendingMachine = $vendingMachine;
+    #
+    #    return $this;
+    #}
 
-        return $this;
-    }
-
-    /**
-     * Get vendingMachine
-     *
-     * @return \AppBundle\Entity\VendingMachine\VendingMachine 
-     */
-    public function getVendingMachine()
-    {
-        return $this->vendingMachine;
-    }
+    #/**
+    # * Get vendingMachine
+    # *
+    # * @return \AppBundle\Entity\VendingMachine\VendingMachine
+    # */
+    #public function getVendingMachine()
+    #{
+    #    return $this->vendingMachine;
+    #}
 
     /**
      * Set student
@@ -147,11 +161,45 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     /**
      * Get student
      *
-     * @return \AppBundle\Entity\Student\Student 
+     * @return \AppBundle\Entity\Student\Student
      */
     public function getStudent()
     {
         return $this->student;
+    }
+
+    /**
+     * Add purchase
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchase
+     * @return NfcTag
+     */
+    public function addPurchase(\AppBundle\Entity\Purchase\Purchase $purchase)
+    {
+        $purchase->setNfcTag($this);
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchases
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchases
+     */
+    public function removePurchase(\AppBundle\Entity\Purchase\Purchase $purchases)
+    {
+        $this->purchases->removeElement($purchases);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
     }
 
     static public function getSyncArrayName()

@@ -5,10 +5,13 @@ import mask from "jquery-mask-plugin";
 import validate from "jquery-validation";
 import LimitController from "../controllers/limitController";
 
-window.$ = $;
-
 $(function(){
 
-	new LimitController();
 	$("form").validate();
+	new LimitController();
+
+	$("form").on("submit", function(e){
+		if(!$(this).valid()) e.preventDefault();
+	});
+
 });

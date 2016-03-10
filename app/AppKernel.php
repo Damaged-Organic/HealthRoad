@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new Snc\RedisBundle\SncRedisBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

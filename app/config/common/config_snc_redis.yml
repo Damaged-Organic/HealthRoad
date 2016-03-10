@@ -1,0 +1,13 @@
+# app/config/common/config_snc_redis.yml
+snc_redis:
+    clients:
+        default:
+            type:  predis
+            alias: default
+            dsn:   redis://localhost
+            options:
+                profile: 2.8
+
+    session:
+        client: default
+        ttl:    1800

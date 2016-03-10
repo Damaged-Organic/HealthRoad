@@ -16,9 +16,11 @@ use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Customer\Customer,
+    AppBundle\Entity\School\School,
     AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Entity\Product\Product,
-    AppBundle\Entity\School\School,
+    AppBundle\Entity\Purchase\Purchase,
+    AppBundle\Entity\Payment\PaymentReceipt,
     AppBundle\Security\Authorization\Voter\StudentVoter,
     AppBundle\Security\Authorization\Voter\CustomerVoter,
     AppBundle\Security\Authorization\Voter\SchoolVoter,
@@ -143,6 +145,36 @@ class StudentController extends Controller implements UserRoleListInterface
                         'objectClass' => $objectClass
                     ],
                     $this->_translator->trans('product_read_restricted', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new Purchase, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Purchase:show', [
+                    'objectClass' => $this->getObjectClassName($student),
+                    'objectId'    => $objectId
+                ]);
+
+                $this->_breadcrumbs->add('student_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $this->_translator->trans('purchase_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new PaymentReceipt, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\PaymentReceipt:show', [
+                    'objectClass' => $this->getObjectClassName($student),
+                    'objectId'    => $objectId
+                ]);
+
+                $this->_breadcrumbs->add('student_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $this->_translator->trans('payment_receipt_read', [], 'routes')
                 );
             break;
 

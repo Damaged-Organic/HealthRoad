@@ -1,0 +1,181 @@
+{# AppBundle/Resources/views/Entity/PaymentReceipt/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/PaymentReceipt/Base:item.html.twig' %}
+
+{% block active_payment_receipt_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Данные выписки</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.receipt_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.receiptNumber ) ?: '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.receipt_date.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.receiptDate ) ? paymentReceipt.receiptDate|date('Y-m-d H:i:s') : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.document_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.documentNumber ) ?: '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.operational_date.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.operationalDate ) ? paymentReceipt.operationalDate|date('Y-m-d H:i:s') : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.nfc_tag_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if paymentReceipt.nfcTag %}
+                        <p>{{ paymentReceipt.nfcTag.number }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_READ'), paymentReceipt.nfcTag) %}
+                            <div class="btn-view">
+                                <a href="{{ path('nfc_tag_update', { 'id': paymentReceipt.nfcTag.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>{{ paymentReceipt.nfcTagNumber }}</p>
+                    {% endif %}
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.student.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if paymentReceipt.student %}
+                        <p>{{ paymentReceipt.student.fullName }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_READ'), paymentReceipt.student) %}
+                            <div class="btn-view">
+                                <a href="{{ path('student_update', { 'id': paymentReceipt.student.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.payer_full_name.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.payerFullName ) ?: '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.payment_purpose.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.paymentPurpose ) ?: '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Перечисленные средства</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.payment_amount.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.paymentAmount ) ? paymentReceipt.paymentAmount|number_format(2, ',') : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.payment_comission.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.paymentComission ) ? paymentReceipt.paymentComission|number_format(2, ',') : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.profit.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.profit ) ? paymentReceipt.profit|number_format(2, ',') : '-' }}</p>
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Общие данные о перечислениях по поручению {{ paymentReceipt.receiptNumber }}</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.payment_numbers.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.paymentNumbers ) ?: '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.payment_amount_total.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.paymentAmountTotal ) ? paymentReceipt.paymentAmountTotal|number_format(2, ',') : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.payment_comission_total.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.paymentComissionTotal ) ? paymentReceipt.paymentComissionTotal|number_format(2, ',') : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'payment_receipt.result_amount.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( paymentReceipt.resultAmount ) ? paymentReceipt.resultAmount|number_format(2, ',') : '-' }}</p>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+{% endblock %}

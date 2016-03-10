@@ -12,11 +12,11 @@ class SyncListener
 {
     const SYNC_MARKER_INTERFACE = 'AppBundle\Controller\Utility\Interfaces\Markers\SyncAuthenticationMarkerInterface';
 
-    private $logger;
+    private $_logger;
 
     public function setLogger(LoggerInterface $logger)
     {
-        $this->logger = $logger;
+        $this->_logger = $logger;
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -25,7 +25,7 @@ class SyncListener
         {
             $implementedInterfaces = class_implements(explode('::', $event->getRequest()->attributes->get('_controller'))[0]);
 
-            if (in_array(self::SYNC_MARKER_INTERFACE, $implementedInterfaces, TRUE)) {
+            if( in_array(self::SYNC_MARKER_INTERFACE, $implementedInterfaces, TRUE) ) {
                 $exception = $event->getException();
 
                 $message = sprintf(
@@ -37,7 +37,7 @@ class SyncListener
                     $exception->getLine()
                 );
 
-                $this->logger->error($message, ['exception' => $exception]);
+                $this->_logger->error($message, ['exception' => $exception]);
             }
         }
     }

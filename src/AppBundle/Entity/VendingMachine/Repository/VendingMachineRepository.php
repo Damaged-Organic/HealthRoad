@@ -6,6 +6,22 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
 class VendingMachineRepository extends ExtendedEntityRepository
 {
+    public function findOneBySerialPrefetchRelated($serial)
+    {
+        $query = $this->createQueryBuilder('vm')
+            ->select('vm, s, st, nt, p')
+            ->leftJoin('vm.school', 's')
+            ->leftJoin('s.students', 'st')
+            ->leftJoin('st.nfcTag', 'nt')
+            ->leftJoin('st.products', 'p')
+            ->where('vm.serial = :serial')
+            ->setParameter(':serial', $serial)
+            ->getQuery()
+        ;
+
+        return $query->getSingleResult();
+    }
+
     public function findReadyByPurchaseSum($sum)
     {
         $query = $this->createQueryBuilder('vm')

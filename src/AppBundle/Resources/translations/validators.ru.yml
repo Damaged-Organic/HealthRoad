@@ -12,6 +12,9 @@ custom:
     decimal:
         valid: Это не похоже на корректное десятичное значение
 
+    nfc_tag_number:
+        valid: Это не похоже на корректное значение номера NFC-метки
+
 common:
     human_name:
         length:
@@ -373,3 +376,9 @@ student:
 
     school:
         invalid_massage: Для ученика должна быть указана школа
+
+payment_receipt:
+    payment_receipt_file:
+        not_blank:  Должен быть выбран файл выписки
+        max_size:   Максимальный размер файла выписки не должен превышать 50 МБ
+        mime_types: Необходимо выбрать файл выписки в формате CSV

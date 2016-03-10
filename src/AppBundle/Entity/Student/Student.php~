@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert;
 
 /**
@@ -17,11 +18,11 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  */
 class Student
 {
-    use IdMapperTrait;
+    use IdMapperTrait, PseudoDeleteMapperTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\Employee", inversedBy="students")
-     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $employee;
 
@@ -47,6 +48,16 @@ class Student
      * @ORM\JoinTable(name="students_products")
      */
     protected $products;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="student")
+     */
+    protected $purchases;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\PaymentReceipt", mappedBy="student")
+     */
+    protected $paymentsReceipts;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -130,6 +141,14 @@ class Student
     protected $dailyLimit;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->products = new ArrayCollection;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
@@ -145,7 +164,7 @@ class Student
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -168,7 +187,7 @@ class Student
     /**
      * Get surname
      *
-     * @return string 
+     * @return string
      */
     public function getSurname()
     {
@@ -191,7 +210,7 @@ class Student
     /**
      * Get patronymic
      *
-     * @return string 
+     * @return string
      */
     public function getPatronymic()
     {
@@ -214,7 +233,7 @@ class Student
     /**
      * Get gender
      *
-     * @return string 
+     * @return string
      */
     public function getGender()
     {
@@ -237,7 +256,7 @@ class Student
     /**
      * Get dateOfBirth
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDateOfBirth()
     {
@@ -283,7 +302,7 @@ class Student
     /**
      * Get dailyLimit
      *
-     * @return string 
+     * @return string
      */
     public function getDailyLimit()
     {
@@ -306,7 +325,7 @@ class Student
     /**
      * Get employee
      *
-     * @return \AppBundle\Entity\Employee\Employee 
+     * @return \AppBundle\Entity\Employee\Employee
      */
     public function getEmployee()
     {
@@ -329,7 +348,7 @@ class Student
     /**
      * Get school
      *
-     * @return \AppBundle\Entity\School\School 
+     * @return \AppBundle\Entity\School\School
      */
     public function getSchool()
     {
@@ -352,7 +371,7 @@ class Student
     /**
      * Get customer
      *
-     * @return \AppBundle\Entity\Customer\Customer 
+     * @return \AppBundle\Entity\Customer\Customer
      */
     public function getCustomer()
     {
@@ -375,10 +394,73 @@ class Student
     /**
      * Get nfcTag
      *
-     * @return \AppBundle\Entity\NfcTag\NfcTag 
+     * @return \AppBundle\Entity\NfcTag\NfcTag
      */
     public function getNfcTag()
     {
         return $this->nfcTag;
+    }
+
+    /**
+     * Add product
+     *
+     * @param \AppBundle\Entity\Product\Product $product
+     * @return Student
+     */
+    public function addProduct(\AppBundle\Entity\Product\Product $product)
+    {
+        $product->addStudent($this);
+        $this->products[] = $product;
+
+        return $this;
+    }
+
+    /**
+     * Remove products
+     *
+     * @param \AppBundle\Entity\Product\Product $products
+     */
+    public function removeProduct(\AppBundle\Entity\Product\Product $products)
+    {
+        $this->products->removeElement($products);
+    }
+
+    /**
+     * Get products
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * Shortcut to get products if possible
+     *
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    public function getRestrictedProducts()
+    {
+        if( $this->getNfcTag() )
+        {
+            if( $this->getNfcTag()->getVendingMachine() )
+            {
+                if( $this->getNfcTag()->getVendingMachine()->getProductVendingGroup() )
+                {
+                    return $this->getNfcTag()->getVendingMachine()->getProductVendingGroup()->getProducts();
+                }
+            }
+        }
+
+        return NULL;
+    }
+
+    public function getFullName()
+    {
+        if( !$this->patronymic && !$this->name && !$this->surname )
+            return NULL;
+
+        return "{$this->surname} {$this->name} {$this->patronymic}";
     }
 }

@@ -50,6 +50,18 @@ class Student
     protected $products;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase\Purchase", mappedBy="student")
+     * @ORM\OrderBy({"syncPurchasedAt"="DESC"})
+     */
+    protected $purchases;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\PaymentReceipt", mappedBy="student")
+     * @ORM\OrderBy({"receiptDate"="DESC"})
+     */
+    protected $paymentsReceipts;
+
+    /**
      * @ORM\Column(type="string", length=100)
      *
      * @Assert\Length(
@@ -154,7 +166,7 @@ class Student
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -177,7 +189,7 @@ class Student
     /**
      * Get surname
      *
-     * @return string 
+     * @return string
      */
     public function getSurname()
     {
@@ -200,7 +212,7 @@ class Student
     /**
      * Get patronymic
      *
-     * @return string 
+     * @return string
      */
     public function getPatronymic()
     {
@@ -223,7 +235,7 @@ class Student
     /**
      * Get gender
      *
-     * @return string 
+     * @return string
      */
     public function getGender()
     {
@@ -246,7 +258,7 @@ class Student
     /**
      * Get dateOfBirth
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDateOfBirth()
     {
@@ -292,7 +304,7 @@ class Student
     /**
      * Get dailyLimit
      *
-     * @return string 
+     * @return string
      */
     public function getDailyLimit()
     {
@@ -315,7 +327,7 @@ class Student
     /**
      * Get employee
      *
-     * @return \AppBundle\Entity\Employee\Employee 
+     * @return \AppBundle\Entity\Employee\Employee
      */
     public function getEmployee()
     {
@@ -338,7 +350,7 @@ class Student
     /**
      * Get school
      *
-     * @return \AppBundle\Entity\School\School 
+     * @return \AppBundle\Entity\School\School
      */
     public function getSchool()
     {
@@ -361,7 +373,7 @@ class Student
     /**
      * Get customer
      *
-     * @return \AppBundle\Entity\Customer\Customer 
+     * @return \AppBundle\Entity\Customer\Customer
      */
     public function getCustomer()
     {
@@ -384,7 +396,7 @@ class Student
     /**
      * Get nfcTag
      *
-     * @return \AppBundle\Entity\NfcTag\NfcTag 
+     * @return \AppBundle\Entity\NfcTag\NfcTag
      */
     public function getNfcTag()
     {
@@ -418,11 +430,79 @@ class Student
     /**
      * Get products
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getProducts()
     {
         return $this->products;
+    }
+
+    /**
+     * Add purchase
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchase
+     * @return Student
+     */
+    public function addPurchase(\AppBundle\Entity\Purchase\Purchase $purchase)
+    {
+        $purchase->setStudent($this);
+        $this->purchases[] = $purchases;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchases
+     *
+     * @param \AppBundle\Entity\Purchase\Purchase $purchases
+     */
+    public function removePurchase(\AppBundle\Entity\Purchase\Purchase $purchases)
+    {
+        $this->purchases->removeElement($purchases);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
+
+    /**
+     * Add paymentsReceipt
+     *
+     * @param \AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipt
+     * @return Student
+     */
+    public function addPaymentsReceipt(\AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipt)
+    {
+        $paymentsReceipt->setStudent($this);
+        $this->paymentsReceipts[] = $paymentsReceipt;
+
+        return $this;
+    }
+
+    /**
+     * Remove paymentsReceipts
+     *
+     * @param \AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipts
+     */
+    public function removePaymentsReceipt(\AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipts)
+    {
+        $this->paymentsReceipts->removeElement($paymentsReceipts);
+    }
+
+    /**
+     * Get paymentsReceipts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPaymentsReceipts()
+    {
+        return $this->paymentsReceipts;
     }
 
     /**
@@ -452,5 +532,28 @@ class Student
             return NULL;
 
         return "{$this->surname} {$this->name} {$this->patronymic}";
+    }
+
+    /**
+     * Set pseudoDeleteAt
+     *
+     * @param \DateTime $pseudoDeleteAt
+     * @return Student
+     */
+    public function setPseudoDeleteAt($pseudoDeleteAt)
+    {
+        $this->pseudoDeleteAt = $pseudoDeleteAt;
+
+        return $this;
+    }
+
+    /**
+     * Get pseudoDeleteAt
+     *
+     * @return \DateTime
+     */
+    public function getPseudoDeleteAt()
+    {
+        return $this->pseudoDeleteAt;
     }
 }

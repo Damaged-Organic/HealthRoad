@@ -9,12 +9,22 @@ class StudentRepository extends ExtendedEntityRepository
     public function rawUpdateStudentsTotalLimits(array $studentsArray)
     {
         $queryStringWhen = $queryStringIds = '';
+        $queryArgs = [];
 
         foreach( $studentsArray as $student )
         {
-            $queryStringWhen .= " WHEN {$student['id']} THEN '{$student['totalLimit']}' ";
-            $queryStringIds  .= "{$student['id']},";
+            $queryStringWhen .= " WHEN ? THEN ? ";
+            $queryStringIds  .= "?,";
+
+            $queryArgs = array_merge($queryArgs, [
+                $student['id'],
+                $student['totalLimit'],
+                $student['id']
+            ]);
         }
+
+        if( !$queryArgs )
+            return;
 
         $queryStringIds = substr($queryStringIds, 0, -1);
 
@@ -27,6 +37,6 @@ class StudentRepository extends ExtendedEntityRepository
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($queryString);
 
-        $stmt->execute();
+        $stmt->execute($queryArgs);
     }
 }

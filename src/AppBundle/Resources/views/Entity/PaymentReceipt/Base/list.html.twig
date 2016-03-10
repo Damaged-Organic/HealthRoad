@@ -1,0 +1,10 @@
+{# src/AppBundle/Resources/views/Entity/PaymentReceipt/Base/list.html.twig #}
+{% extends 'AppBundle:Entity/PaymentReceipt:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li class="active"><a href="{{ path('payment_receipt_read') }}">Все</a></li>
+        </ul>
+    </div>
+{% endblock %}
