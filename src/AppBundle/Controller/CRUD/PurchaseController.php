@@ -54,19 +54,26 @@ class PurchaseController extends Controller implements UserRoleListInterface
                 'data' => ['purchase' => $purchase]
             ];
 
-            $this->_breadcrumbs->add('purchase_read')->add('purchase_read', ['id' => $id], $this->_translator->trans('purchase_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('purchase_read')
+                ->add('purchase_read', [], $this->_translator->trans('purchase_product_read', [], 'routes'))
+                ->add('purchase_read', ['id' => $id], $this->_translator->trans('purchase_product_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_purchaseBoundlessAccess->isGranted(PurchaseBoundlessAccess::PURCHASE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findBy([], ['syncPurchasedAt' => 'DESC']);
+            $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findAllDesc();
 
             $response = [
                 'view' => 'AppBundle:Entity/Purchase/CRUD:readList.html.twig',
                 'data' => ['purchases' => $purchases]
             ];
 
-            $this->_breadcrumbs->add('purchase_read');
+            $this->_breadcrumbs
+                ->add('purchase_read')
+                ->add('purchase_read', [], $this->_translator->trans('purchase_product_read', [], 'routes'))
+            ;
         }
 
         return $this->render($response['view'], $response['data']);

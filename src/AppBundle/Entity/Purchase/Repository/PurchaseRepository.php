@@ -9,6 +9,20 @@ use AppBundle\Entity\VendingMachine\VendingMachine;
 
 class PurchaseRepository extends ExtendedEntityRepository
 {
+    public function findAllDesc()
+    {
+        $query = $this->createQueryBuilder('p')
+            ->select('p, pr, nt, st')
+            ->leftJoin('p.product', 'pr')
+            ->leftJoin('p.student', 'st')
+            ->leftJoin('p.nfcTag', 'nt')
+            ->orderBy('p.syncPurchasedAt', 'DESC')
+            ->getQuery()
+        ;
+
+        return $query->getResult();
+    }
+
     public function findByDateGrouped($date)
     {
         $query = $this->createQueryBuilder('p')

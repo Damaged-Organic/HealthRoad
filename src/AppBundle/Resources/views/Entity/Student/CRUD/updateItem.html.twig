@@ -5,6 +5,18 @@
 
 {% block data %}
 
+    {% if student.nfcTag %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_ACTIVATE'), student.nfcTag) %}
+            <div class="separator-holder">
+                <h2>Активация NFC-метки ученика ({{ ( student.nfcTag.number ) }})</h2>
+            </div>
+
+            {{ render(controller('AppBundle:Activation/ActivationNfcTag:activationNfcTagWidget', { 'nfcTag': student.nfcTag })) }}
+        {% endif %}
+
+    {% endif %}
+
     {% include 'AppBundle:Entity/Student/Form:form.html.twig' with { 'form': form, 'student': student } only %}
 
     {% if student.customer|length %}

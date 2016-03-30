@@ -49,6 +49,9 @@ class PaymentReceiptController extends Controller implements PaymentReceiptFileI
     /** @DI\Inject("app.payment.receipt.storage") */
     private $_paymentReceiptStorage;
 
+    /** @DI\Inject("app.purchase_service.manager") */
+    private $_purchaseServiceManager;
+
     /** @DI\Inject("app.security.payment_receipt_boundless_access") */
     private $_paymentReceiptBoundlessAccess;
 
@@ -87,8 +90,12 @@ class PaymentReceiptController extends Controller implements PaymentReceiptFileI
          } else {
              $receiptFile = $paymentReceiptFile->getPaymentReceiptFile();
 
-             if( !($receipt = $this->_paymentReceiptParser->parseReceiptFile($receiptFile)) ) {
-                 $this->_messages->markPaymentReceiptCheckErrors(['parsing problem']);
+             $receipt = $this->_paymentReceiptParser->parseReceiptFile($receiptFile);
+
+             if( !$this->_paymentReceiptParser->checkReceiptFileFieldsCount($receipt) ) {
+                 $this->_messages->markPaymentReceiptCheckErrors([
+                     [$this->_translator->trans('payment.receipt.parse.error', [], 'responses')]
+                 ]);
              } else {
                  $receipt = $this->_paymentReceiptParser->standardizeReceipt($receipt);
 
@@ -186,10 +193,18 @@ class PaymentReceiptController extends Controller implements PaymentReceiptFileI
         {
             $paymentReceipts = $this->_paymentReceiptManager->findAndSetRelatedEntities($paymentReceipts);
 
+            $settingNfcTagActivationFee = $this->_manager->getRepository('AppBundle:Setting\Setting')
+                ->findNfcTagActivationFee();
+
             // One-pass transaction to persist PaymentReceipt and Student (with replenished balance)
-            $this->_manager->transactional(function($_manager) use($paymentReceipts) {
+            $this->_manager->transactional(function($_manager) use($paymentReceipts, $settingNfcTagActivationFee) {
                 $this->_manager->getRepository('AppBundle:Payment\PaymentReceipt')->rawInsertPaymentReceipts($paymentReceipts);
+
+                // Replenish each student balance
                 $this->_paymentReceiptManager->replenishStudentsTotalLimit($paymentReceipts);
+
+                // Activate each student NFC Tag if inactive, charge activation fee and record
+                $this->_purchaseServiceManager->purchaseActivationNfcTagFromPaymentReceipts($paymentReceipts, $settingNfcTagActivationFee);
             });
 
             $this->_messages->markPaymentReceiptReplenishSuccess();

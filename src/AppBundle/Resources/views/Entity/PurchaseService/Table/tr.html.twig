@@ -1,0 +1,27 @@
+{# src/AppBundle/Resources/views/Entity/PurchaseService/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ purchaseService.id }}</span></td>
+<td>
+    <span>
+        {{ purchaseService.purchasedAt|date('Y-m-d H:i:s') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ purchaseService.item }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( purchaseService.nfcTag ) ? purchaseService.nfcTag.number : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( purchaseService.student ) ? purchaseService.student.fullName : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ purchaseService.price|number_format(2, ',') }}
+    </span>
+</td>

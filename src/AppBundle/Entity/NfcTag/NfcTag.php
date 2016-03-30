@@ -2,6 +2,8 @@
 // AppBundle/Entity/NfcTag/NfcTag.php
 namespace AppBundle\Entity\NfcTag;
 
+use DateTime;
+
 use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -42,6 +44,11 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     protected $purchases;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\PurchaseService\PurchaseService", mappedBy="nfcTag")
+     */
+    protected $purchasesService;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\PaymentReceipt", mappedBy="nfcTag")
      */
     protected $paymentsReceipts;
@@ -67,6 +74,16 @@ class NfcTag implements SyncNfcTagPropertiesInterface
      * )
      */
     protected $code;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isActivated = FALSE;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $activatedAt;
 
     /**
      * Constructor
@@ -120,6 +137,52 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Set isActivated
+     *
+     * @param string $isActivated
+     * @return NfcTag
+     */
+    public function setIsActivated($isActivated)
+    {
+        $this->isActivated = $isActivated;
+
+        return $this;
+    }
+
+    /**
+     * Get isActivated
+     *
+     * @return string
+     */
+    public function getIsActivated()
+    {
+        return $this->isActivated;
+    }
+
+    /**
+     * Set activatedAt
+     *
+     * @param string $activatedAt
+     * @return NfcTag
+     */
+    public function setActivatedAt($activatedAt)
+    {
+        $this->activatedAt = $activatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get activatedAt
+     *
+     * @return string
+     */
+    public function getActivatedAt()
+    {
+        return $this->activatedAt;
     }
 
     #/**
@@ -203,6 +266,40 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     }
 
     /**
+     * Add purchasesService
+     *
+     * @param \AppBundle\Entity\PurchaseService\PurchaseService $purchasesService
+     * @return NfcTag
+     */
+    public function addPurchasesService(\AppBundle\Entity\PurchaseService\PurchaseService $purchasesService)
+    {
+        $purchasesService->setNfcTag($this);
+        $this->purchasesService[] = $purchasesService;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchasesService
+     *
+     * @param \AppBundle\Entity\PurchaseService\PurchaseService $purchasesService
+     */
+    public function removePurchasesService(\AppBundle\Entity\PurchaseService\PurchaseService $purchasesService)
+    {
+        $this->purchasesService->removeElement($purchasesService);
+    }
+
+    /**
+     * Get purchasesService
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchasesService()
+    {
+        return $this->purchasesService;
+    }
+
+    /**
      * Add paymentsReceipt
      *
      * @param \AppBundle\Entity\Payment\PaymentReceipt $paymentsReceipt
@@ -234,6 +331,34 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     public function getPaymentsReceipts()
     {
         return $this->paymentsReceipts;
+    }
+
+    /**
+     * NFC Tag activation
+     */
+    public function activate()
+    {
+        if( $this->getIsActivated() === TRUE )
+            return;
+
+        $this
+            ->setIsActivated(TRUE)
+            ->setActivatedAt(new DateTime)
+        ;
+    }
+
+    /**
+     * NFC Tag deactivation
+     */
+    public function deactivate()
+    {
+        if( $this->getIsActivated() === FALSE )
+            return;
+
+        $this
+            ->setIsActivated(FALSE)
+            ->setActivatedAt(NULL)
+        ;
     }
 
     static public function getSyncArrayName()

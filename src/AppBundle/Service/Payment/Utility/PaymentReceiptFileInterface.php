@@ -4,6 +4,8 @@ namespace AppBundle\Service\Payment\Utility;
 
 interface PaymentReceiptFileInterface
 {
+    const RECEIPT_FIELDS_COUNT = 13;
+
     const RECEIPT_FIELD_NFC_TAG_NUMBER   = 6;
     const RECEIPT_FIELD_PROFIT_AMOUNT    = 7;
     const RECEIPT_FIELD_PROFIT_COMISSION = 8;

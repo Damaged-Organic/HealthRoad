@@ -17,6 +17,20 @@ class PaymentReceiptParser implements PaymentReceiptFileInterface
         return ( file_exists($ordersFile) ) ? array_map($parser, file($ordersFile)) : NULL;
     }
 
+    public function checkReceiptFileFieldsCount(array $receipt)
+    {
+        if( !$receipt )
+            return FALSE;
+
+        foreach( $receipt as $entry )
+        {
+            if( count($entry) !== self::RECEIPT_FIELDS_COUNT )
+                return FALSE;
+        }
+
+        return TRUE;
+    }
+
     public function standardizeReceipt(array $orders)
     {
         array_shift($orders);

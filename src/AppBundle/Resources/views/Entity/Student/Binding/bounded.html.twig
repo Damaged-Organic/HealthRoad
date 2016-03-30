@@ -13,8 +13,14 @@
     {% endif %}
 {% endblock %}
 
-{% block active_student_update_bounded_purchase %}
+{% block active_student_update_bounded_purchase_product %}
     {% if objectClass is same as('purchase') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block active_student_update_bounded_purchase_service %}
+    {% if objectClass is same as('purchaseservice') %}
         {{ 'class="active"' }}
     {% endif %}
 {% endblock %}

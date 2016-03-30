@@ -97,6 +97,14 @@ services:
             - [setLiqPay, ["@app.payment.liq_pay"]]
             - [setLiqPayKeys, ["%liq_pay.key.public%", "%liq_pay.key.private%"]]
 
+    # Purchase
+
+    app.purchase_service.manager:
+        class: AppBundle\Service\PurchaseService\PurchaseServiceManager
+        calls:
+            - [setManager, [ "@doctrine.orm.entity_manager" ]]
+            - [setTranslator, [ "@translator" ]]
+
     # Common
 
     app.common.breadcrumbs:
@@ -239,6 +247,14 @@ services:
         tags:
             - { name: security.voter }
 
+    app.voter_purchase_service:
+        class:  AppBundle\Security\Authorization\Voter\PurchaseServiceVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
     app.voter_payment_receipt:
         class:  AppBundle\Security\Authorization\Voter\PaymentReceiptVoter
         public: false
@@ -321,6 +337,11 @@ services:
 
     app.security.purchase_boundless_access:
         class: AppBundle\Service\Security\PurchaseBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.purchase_service_boundless_access:
+        class: AppBundle\Service\Security\PurchaseServiceBoundlessAccess
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 

@@ -19,6 +19,9 @@ common:
     update_and_return:
         label: Сохранить и вернуться
 
+    activate:
+        label: Активировать
+
 employee:
     username:
         label:       Логин
@@ -208,6 +211,9 @@ nfc_tag:
     code:
         label:       Код
         placeholder: Введите код
+
+    activation_fee:
+        label: Учитывать стоимость активации NFC-метки (%activation_fee% ₴)
 
 supplier:
     name:
@@ -427,6 +433,22 @@ purchase:
 
         product_price:
             label: Цена продукта
+
+purchase_service:
+    item:
+        label: Наименование сервиса
+
+    price:
+        label: Цена сервиса
+
+    purchased_at:
+        label: Дата и время продажи
+
+    nfc_tag:
+        label: NFC-метка
+
+    student:
+        label: Ученик
 
 payment_receipt:
     receipt_number:

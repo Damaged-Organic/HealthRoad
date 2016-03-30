@@ -12,7 +12,7 @@ class LoadNfcTag extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        for($s = 1; $s <= 13; $s++)
+        for($s = 1; $s <= 1; $s++)
         {
             for ($i = 1; $i <= 100; $i++)
             {

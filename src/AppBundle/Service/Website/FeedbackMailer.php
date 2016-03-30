@@ -2,13 +2,13 @@
 // AppBundle/Service/Website/FeedbackMailer.php
 namespace AppBundle\Service\Website;
 
-use AppBundle\Entity\Website\Feedback\Feedback;
-use AppBundle\Entity\Website\Feedback\FeedbackOrder;
-use AppBundle\Entity\Website\Feedback\FeedbackSupplier;
-use AppBundle\Service\Common\MailerShortcut;
+use AppBundle\Entity\Website\Feedback\Feedback,
+    AppBundle\Entity\Website\Feedback\FeedbackOrder,
+    AppBundle\Entity\Website\Feedback\FeedbackSupplier,
+    AppBundle\Service\Common\MailerShortcut;
 
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine,
+    Symfony\Component\Translation\TranslatorInterface;
 
 class FeedbackMailer
 {

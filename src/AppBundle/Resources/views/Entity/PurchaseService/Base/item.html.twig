@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/PurchaseService/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/PurchaseService:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_purchase_service_update %}{% endblock %}>
+                <a href="{{ path('purchase_service_read', { 'id': purchaseService.id }) }}">Данные</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

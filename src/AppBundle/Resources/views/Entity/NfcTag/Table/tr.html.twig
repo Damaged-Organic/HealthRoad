@@ -1,9 +1,23 @@
 {# AppBundle/Resources/views/Entity/NfcTag/Table/tr.html.twig #}
 <td class="small-fixed"><span>{{ nfcTag.id }}</span></td>
 <td>
-    <span>
-        {{ nfcTag.number ~ ' ' ~ (( nfcTag.pseudoDeleted ) ? '[УДАЛЕНО]') }}
-    </span>
+    {% set nfcTagNumber = nfcTag.number ~ ' ' ~ (( nfcTag.pseudoDeleted ) ? '[УДАЛЕНО]') %}
+
+    {% if nfcTag.student %}
+        {% if nfcTag.isActivated %}
+            {% set statusClass = 'ready' %}
+        {% else %}
+            {% set statusClass = 'pending' %}
+        {% endif %}
+
+        <span class="status {{ statusClass }}">
+            {{ nfcTagNumber }}
+        </span>
+    {% else %}
+        <span>
+            {{ nfcTagNumber }}
+        </span>
+    {% endif %}
 </td>
 <td>
     <span>

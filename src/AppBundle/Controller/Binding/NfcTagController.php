@@ -219,6 +219,8 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
                     $nfcTag->setStudent($student);
 
+                    $nfcTag->deactivate();
+
                     $_manager->persist($nfcTag);
                 });
             break;
@@ -273,6 +275,8 @@ class NfcTagController extends Controller implements UserRoleListInterface
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new Student, $objectClass):
+                $nfcTag->deactivate();
+
                 $nfcTag->setStudent(NULL);
             break;
 

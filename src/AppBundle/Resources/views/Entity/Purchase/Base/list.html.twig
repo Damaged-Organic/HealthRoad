@@ -4,7 +4,10 @@
 {% block action_top %}
     <div class="inner categories-list-holder">
         <ul>
-            <li class="active"><a href="{{ path('purchase_read') }}">Все</a></li>
+            <li class="active"><a href="{{ path('purchase_read') }}">Продукты</a></li>
+        </ul>
+        <ul>
+            <li><a href="{{ path('purchase_service_read') }}">Услуги</a></li>
         </ul>
     </div>
 {% endblock %}

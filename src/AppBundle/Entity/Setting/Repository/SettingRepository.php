@@ -34,16 +34,10 @@ class SettingRepository extends ExtendedEntityRepository
         return $query->getSingleResult();
     }
 
-    public function findAccountingEmail()
+    public function findNfcTagActivationFee()
     {
-        return $this->findSettingBySettingKey('email_accounting')
-            ->getSettingsString()[0];
-    }
-
-    public function findLogisticsEmail()
-    {
-        return $this->findSettingBySettingKey('email_logistics')
-            ->getSettingsString()[0];
+        return $this->findSettingBySettingKey('nfc_tag_activation_fee')
+            ->getSettingsDecimal()[0];
     }
 
     public function findStudentMinDailyLimit()
@@ -56,5 +50,17 @@ class SettingRepository extends ExtendedEntityRepository
     {
         return $this->findSettingBySettingKey('vending_machine_report_sum_amount')
             ->getSettingsDecimal()[0];
+    }
+
+    public function findAccountingEmail()
+    {
+        return $this->findSettingBySettingKey('email_accounting')
+            ->getSettingsString()[0];
+    }
+
+    public function findLogisticsEmail()
+    {
+        return $this->findSettingBySettingKey('email_logistics')
+            ->getSettingsString()[0];
     }
 }

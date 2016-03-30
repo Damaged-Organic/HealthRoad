@@ -1,5 +1,5 @@
 <?php
-// AppBundle/Controller/Binding/PurchaseController.php
+// src/AppBundle/Controller/Binding/PurchaseController.php
 namespace AppBundle\Controller\Binding;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,

@@ -86,6 +86,12 @@ student_choose:  Привязать ученика
 purchase_read: Продажи
 purchase_view: Просмотр продажи
 
+purchase_product_read: Продажи продуктов
+purchase_product_view: Просмотр продажи продукта
+
+purchase_service_read: Продажи услуг
+purchase_service_view: Просмотр продажи услуги
+
 payment_receipt_read:            Оплаты по реестру
 payment_receipt_view:            Просмотр оплаты по реестру
 payment_receipt_replenish_check: Проверка оплат по реестру

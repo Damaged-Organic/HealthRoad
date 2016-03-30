@@ -23,6 +23,14 @@ class LoadSetting extends AbstractFixture implements OrderedFixtureInterface
 
         // ---
 
+        $settingNfcTagActivationFee = (new SettingDecimal)
+            ->setSetting($this->getReference('setting'))
+            ->setName("Стоимость активации NFC-метки")
+            ->setSettingKey("nfc_tag_activation_fee")
+            ->setSettingValue(19.00)
+        ;
+        $manager->persist($settingNfcTagActivationFee);
+
         $settingStudentLowerDailyLimit = (new SettingDecimal)
             ->setSetting($this->getReference('setting'))
             ->setName("Нижний дневной лимит для ученика")
@@ -48,8 +56,6 @@ class LoadSetting extends AbstractFixture implements OrderedFixtureInterface
             ->setSettingValue("some-address@kdz.com.ua")
         ;
         $manager->persist($settingEmailForReports);
-
-        // ---
 
         $settingEmailForReports = (new SettingString)
             ->setSetting($this->getReference('setting'))

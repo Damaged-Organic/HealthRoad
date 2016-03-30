@@ -15,13 +15,16 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
 
     const NFC_TAG_BIND   = "nfc_tag_bind";
 
+    const NFC_TAG_ACTIVATE = "nfc_tag_activate";
+
     protected function getSupportedAttributes()
     {
         return [
             self::NFC_TAG_READ,
             self::NFC_TAG_UPDATE,
             self::NFC_TAG_DELETE,
-            self::NFC_TAG_BIND
+            self::NFC_TAG_BIND,
+            self::NFC_TAG_ACTIVATE
         ];
     }
 
@@ -51,6 +54,10 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
 
             case self::NFC_TAG_BIND:
                 return $this->bind($user);
+            break;
+
+            case self::NFC_TAG_ACTIVATE:
+                return $this->activate($nfcTag, $user);
             break;
 
             default:
@@ -96,6 +103,20 @@ class NfcTagVoter extends ExtendedAbstractVoter implements UserRoleListInterface
     protected function bind($user)
     {
         if( $this->hasRole($user, self::ROLE_ADMIN) )
+            return TRUE;
+
+        return FALSE;
+    }
+
+    public function activate($nfcTag, $user)
+    {
+        if( $nfcTag->getPseudoDeleted() )
+            return FALSE;
+
+        if( !$nfcTag->getStudent() )
+            return FALSE;
+
+        if( $this->hasRole($user, self::ROLE_EMPLOYEE) )
             return TRUE;
 
         return FALSE;

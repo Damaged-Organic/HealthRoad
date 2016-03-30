@@ -11,9 +11,19 @@
     </span>
 </td>
 <td>
-    <span>
-        {{ ( student.nfcTag ) ? student.nfcTag.number  : '-'  }}
-    </span>
+    {% if student.nfcTag %}
+        {% if student.nfcTag.isActivated %}
+            {% set statusClass = 'ready' %}
+        {% else %}
+            {% set statusClass = 'pending' %}
+        {% endif %}
+
+        <span class="status {{ statusClass }}">
+            {{ student.nfcTag.number }}
+        </span>
+    {% else %}
+        <span>-</span>
+    {% endif %}
 </td>
 <td>
     <span>

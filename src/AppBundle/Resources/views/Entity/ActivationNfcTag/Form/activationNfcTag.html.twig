@@ -1,0 +1,25 @@
+{# src/AppBundle/Resources/views/Entity/ActivationNfcTag/Form/activationNfcTag.html.twig #}
+{% form_theme form 'AppBundle:Dashboard/Form/Theme:form.html.twig' %}
+
+<form action="{{ form.vars.action }}" method="POST">
+
+    <p>
+        NFC-метка не активирована
+    </p>
+
+    {{ form_widget(form.activationFee, {
+        'attr': {
+            'checked': 'checked',
+            'style':   'display:block'
+        }
+    }) }}
+
+    {{ form_label(form.activationFee) }}
+
+    {{ form_widget(form._token) }}
+
+    <button type="submit">
+        <span>{{ 'common.activate.label'|trans({}, 'forms') }}</span>
+    </button>
+
+</form>

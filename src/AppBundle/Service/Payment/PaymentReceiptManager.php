@@ -22,11 +22,13 @@ class PaymentReceiptManager implements PaymentReceiptFileInterface
         {
             if( $orders[$id][self::RECEIPT_FIELD_STATUS] == self::RECEIPT_VALID )
             {
-                $orders[$id][self::RECEIPT_FIELD_PROFIT] = bcsub(
-                    $entry[self::RECEIPT_FIELD_PROFIT_AMOUNT],
-                    $entry[self::RECEIPT_FIELD_PROFIT_COMISSION],
-                    2
-                );
+                // $orders[$id][self::RECEIPT_FIELD_PROFIT] = bcsub(
+                //     $entry[self::RECEIPT_FIELD_PROFIT_AMOUNT],
+                //     $entry[self::RECEIPT_FIELD_PROFIT_COMISSION],
+                //     2
+                // );
+
+                $orders[$id][self::RECEIPT_FIELD_PROFIT] = $entry[self::RECEIPT_FIELD_PROFIT_AMOUNT];
             }
         }
 
@@ -62,7 +64,7 @@ class PaymentReceiptManager implements PaymentReceiptFileInterface
             $student = $paymentReceipt->getStudent();
 
             $student->setTotalLimit(
-                bcadd($student->getTotalLimit(), $paymentReceipt->getPaymentAmount(), 2)
+                bcadd($student->getTotalLimit(), $paymentReceipt->getProfit(), 2)
             );
 
             $this->_manager->persist($student);

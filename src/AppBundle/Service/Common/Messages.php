@@ -32,6 +32,28 @@ class Messages implements MessagesInterface
         ];
     }
 
+    public function getMessages()
+    {
+        $messages = [];
+
+        if( $this->_session->getFlashBag()->has(self::MESSAGES_ROOT) )
+        {
+            foreach( $this->_session->getFlashBag()->get(self::MESSAGES_ROOT) as $messageArray )
+            {
+                foreach($messageArray as $type => $message)
+                {
+                    if( in_array($type, self::getMessagesTypes(), TRUE) ) {
+                        $messages[$type] = $message;
+                    }
+                }
+            }
+        }
+
+        return $messages;
+    }
+
+    // CRUD
+
     public function markCreateSuccess()
     {
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
@@ -73,6 +95,8 @@ class Messages implements MessagesInterface
             self::MESSAGES_SUCCESS => [$message]
         ]);
     }
+
+    // Payment
 
     public function markPaymentManualReplenishSuccess()
     {
@@ -116,6 +140,31 @@ class Messages implements MessagesInterface
         ]);
     }
 
+    // Activation
+
+    public function markActivationNfcTagSuccess()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_SUCCESS => [$this->_translator->trans('activation.nfc_tag.success', [], 'responses')]
+        ]);
+    }
+
+    public function markActivationNfcTagWarning()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_WARNING => [$this->_translator->trans('activation.nfc_tag.warning', [], 'responses')]
+        ]);
+    }
+
+    public function markActivationNfcTagErrors(array $errors)
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_ERRORS => $errors
+        ]);
+    }
+
+    // Website
+
     public function markWebsiteFeedbackSuccess()
     {
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
@@ -135,25 +184,5 @@ class Messages implements MessagesInterface
         $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
             self::MESSAGES_ERRORS => $errors
         ]);
-    }
-
-    public function getMessages()
-    {
-        $messages = [];
-
-        if( $this->_session->getFlashBag()->has(self::MESSAGES_ROOT) )
-        {
-            foreach( $this->_session->getFlashBag()->get(self::MESSAGES_ROOT) as $messageArray )
-            {
-                foreach($messageArray as $type => $message)
-                {
-                    if( in_array($type, self::getMessagesTypes(), TRUE) ) {
-                        $messages[$type] = $message;
-                    }
-                }
-            }
-        }
-
-        return $messages;
     }
 }

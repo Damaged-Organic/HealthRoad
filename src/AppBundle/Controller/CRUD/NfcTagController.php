@@ -53,7 +53,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
             $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 
             if( !$nfcTag )
-                throw $this->createNotFoundException("NfcTag identified by `id` {$id} not found");
+                throw $this->createNotFoundException("Nfc Tag identified by `id` {$id} not found");
 
             if( !$this->isGranted(NfcTagVoter::NFC_TAG_READ, $nfcTag) )
                 throw $this->createAccessDeniedException('Access denied');
@@ -144,7 +144,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
         $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 
         if( !$nfcTag )
-            throw $this->createNotFoundException("NfcTag identified by `id` {$id} not found");
+            throw $this->createNotFoundException("Nfc Tag identified by `id` {$id} not found");
 
         if( !$this->isGranted(NfcTagVoter::NFC_TAG_UPDATE, $nfcTag) ) {
             return $this->redirectToRoute('nfc_tag_read', [
@@ -198,7 +198,7 @@ class NfcTagController extends Controller implements UserRoleListInterface
         $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
 
         if( !$nfcTag )
-            throw $this->createNotFoundException("NfcTag identified by `id` {$id} not found");
+            throw $this->createNotFoundException("Nfc Tag identified by `id` {$id} not found");
 
         if( !$this->isGranted(NfcTagVoter::NFC_TAG_DELETE, $nfcTag) )
             throw $this->createAccessDeniedException('Access denied');

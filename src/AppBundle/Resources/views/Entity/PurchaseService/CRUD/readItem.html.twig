@@ -1,0 +1,83 @@
+{# src/AppBundle/Resources/views/Entity/PurchaseService/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/PurchaseService/Base:item.html.twig' %}
+
+{% block active_purchase_service_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Данные продажи услуги</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase_service.purchased_at.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ purchaseService.purchasedAt|date('Y-m-d H:i:s') }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase_service.item.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ purchaseService.item }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase_service.price.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ purchaseService.price|number_format(2, ',') }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase_service.nfc_tag.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if purchaseService.nfcTag %}
+                        <p>{{ purchaseService.nfcTag.number }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_READ'), purchaseService.nfcTag) %}
+                            <div class="btn-view padded">
+                                <a href="{{ path('nfc_tag_update', { 'id': purchaseService.nfcTag.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'purchase_service.student.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if purchaseService.student %}
+                        <p>{{ purchaseService.student.fullName }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_READ'), purchaseService.student) %}
+                            <div class="btn-view padded">
+                                <a href="{{ path('student_update', { 'id': purchaseService.student.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+
+        </ul>
+    </div>
+{% endblock %}

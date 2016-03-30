@@ -93,7 +93,10 @@ class EmployeeController extends Controller implements UserRoleListInterface
         if( !$this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $employeeType = new EmployeeType($this->_translator, $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE));
+        $employeeType = new EmployeeType(
+            $this->_translator,
+            $this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_CREATE)
+        );
 
         $form = $this->createForm($employeeType, $employee = new Employee, [
             'validation_groups' => ['Employee', 'Strict', 'Create'],

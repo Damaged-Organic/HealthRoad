@@ -66,7 +66,10 @@
                 <span class="text">{{ 'product_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
-        <li {{ ( 'PurchaseController' in controller ) ? 'class="active"' : null }} title="{{ 'purchase_read'|trans({}, 'routes') }}">
+
+        {% set purchaseClass = ( 'PurchaseController' in controller or 'PurchaseServiceController' in controller ) ? 'class=active' : null %}
+
+        <li {{ purchaseClass }} title="{{ 'purchase_read'|trans({}, 'routes') }}">
             <a href="{{ path('purchase_read') }}" data-count="{{ quantities.purchases }}">
                 <span class="icon hrd-sales"></span>
                 <span class="text">{{ 'purchase_read'|trans({}, 'routes') }}</span>

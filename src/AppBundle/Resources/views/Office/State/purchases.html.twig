@@ -42,7 +42,11 @@
                     {% if students %}
                         <div class="categories-panel-holder">
                             <ul>
-                                <li {{ ( not app.request.get('id') ) ? 'class="active"' }}>
+                                <li {{ ( app.request.get('type') == 'service' ) ? 'class="active"' }}>
+                                    <a href="{{ path('customer_office_purchases', {'type': 'service'}) }}">Послуги</a>
+                                </li>
+
+                                <li {{ ( not app.request.get('id') and not app.request.get('type') ) ? 'class="active"' }}>
                                     <a href="{{ path('customer_office_purchases') }}">Усі</a>
                                 </li>
 
@@ -101,6 +105,41 @@
                                     {% endfor %}
 
                                 </table>
+                            {% elseif purchasesService %}
+                                <table>
+                                    <tr>
+                                        <th>
+                                            <a href="#">Ім’я дитини</a>
+                                        </th>
+                                        <th>
+                                            <span>Послуга</span>
+                                        </th>
+                                        <th>
+                                            <a href="#">Дата і час</a>
+                                        </th>
+                                        <th>
+                                            <a href="#">Ціна</a>
+                                        </th>
+                                    </tr>
+
+                                    {% for purchaseService in purchasesService %}
+                                        <tr>
+                                            <td>
+                                                <span>{{ ( purchaseService.student ) ? purchaseService.student.name : '-' }}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{ purchaseService.item }}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{ purchaseService.purchasedAt|date('d.m.Y H:i:s') }}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{ purchaseService.price|number_format(2, ',') ~ ' грн' }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </table>
                             {% else %}
                                 <p class="empty">Інформація про покупки на даний час відсутня</p>
                             {% endif %}
@@ -135,8 +174,4 @@
             </section>
         </div>
     </main>
-{% endblock %}
-
-{% block javascripts %}
-    <script src="{{ asset('bundles/app/website/js/stats.bundle.min.js') }}"></script>
 {% endblock %}

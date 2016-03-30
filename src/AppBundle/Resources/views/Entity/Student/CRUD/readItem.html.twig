@@ -5,16 +5,28 @@
 
 {% block data %}
 
+    {% if student.nfcTag %}
+
+        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_ACTIVATE'), student.nfcTag) %}
+            <div class="separator-holder">
+                <h2>Активация NFC-метки ученика ({{ ( student.nfcTag.number ) }})</h2>
+            </div>
+
+            {{ render(controller('AppBundle:Activation/ActivationNfcTag:activationNfcTagWidget', { 'nfcTag': student.nfcTag })) }}
+        {% endif %}
+
+    {% endif %}
+
     {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_TOTAL_LIMIT_UPDATE'), student) %}
 
         {% if student.nfcTag %}
             <div class="separator-holder">
-                <h2>Пополнение баланса ученика ({{ ( student.nfcTag.number ) }})</h2>
+                <h2>Пополнение баланса ученика</h2>
             </div>
 
             {{ render(controller('AppBundle:Payment/PaymentManual:paymentManualReplenishForm', { 'student': student })) }}
         {% endif %}
-
+        
     {% endif %}
 
     <div id="read-data-holder">

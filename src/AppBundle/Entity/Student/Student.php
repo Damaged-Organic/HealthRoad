@@ -56,6 +56,12 @@ class Student
     protected $purchases;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\PurchaseService\PurchaseService", mappedBy="student")
+     * @ORM\OrderBy({"purchasedAt"="DESC"})
+     */
+    protected $purchasesService;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\PaymentReceipt", mappedBy="student")
      * @ORM\OrderBy({"receiptDate"="DESC"})
      */
@@ -469,6 +475,40 @@ class Student
     public function getPurchases()
     {
         return $this->purchases;
+    }
+
+    /**
+     * Add purchasesService
+     *
+     * @param \AppBundle\Entity\PurchaseService\PurchaseService $purchasesService
+     * @return Student
+     */
+    public function addPurchasesService(\AppBundle\Entity\PurchaseService\PurchaseService $purchasesService)
+    {
+        $purchasesService->setStudent($this);
+        $this->purchasesService[] = $purchasesService;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchasesService
+     *
+     * @param \AppBundle\Entity\PurchaseService\PurchaseService $purchasesService
+     */
+    public function removePurchasesService(\AppBundle\Entity\PurchaseService\PurchaseService $purchasesService)
+    {
+        $this->purchasesService->removeElement($purchasesService);
+    }
+
+    /**
+     * Get purchasesService
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchasesService()
+    {
+        return $this->purchasesService;
     }
 
     /**

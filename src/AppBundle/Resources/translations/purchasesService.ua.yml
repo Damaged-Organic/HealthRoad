@@ -1,0 +1,5 @@
+# src/AppBundle/Resources/translations/purchasesService.ua.yml
+item:
+    nfc_tag:
+        activation: >
+            Активація нової картки або браслета

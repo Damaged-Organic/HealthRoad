@@ -5,7 +5,8 @@ namespace AppBundle\Controller\Office;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request;
 
 use Doctrine\Common\Collections\ArrayCollection,
     Doctrine\Common\Collections\Criteria;
@@ -268,7 +269,7 @@ class OfficeController extends Controller
      *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%", "id" = "\d+"}
      * )
      */
-    public function purchasesAction($id = NULL)
+    public function purchasesAction(Request $request, $id = NULL)
     {
         //TODO: Horrible, rewrite it for fuck's sake
 
@@ -285,6 +286,17 @@ class OfficeController extends Controller
             return $nfcTags;
         };
 
+        $extractIdsFromStudents = function(array $students)
+        {
+            $ids = [];
+
+            foreach($students as $student) {
+                $ids[] = $student->getId();
+            }
+
+            return $ids;
+        };
+
         $menu = $this->_manager->getRepository('AppBundle:Website\Menu\Menu')->findOneBy([
             'route' => ['customer_office_purchases']
         ]);
@@ -298,28 +310,41 @@ class OfficeController extends Controller
             $this->_manager->getRepository('AppBundle:Student\Student')->findBy(['customer' => $this->getUser()->getId()])
         );
 
-        if( $id )
+        $purchasesService = $purchases = [];
+
+        if( $request->query->get('type') == 'service' )
         {
-            $criteria = Criteria::create()->where(Criteria::expr()->in("id", [$id]));
+            $idsCondition = $extractIdsFromStudents($students);
 
-            $first = (new ArrayCollection($students))->matching($criteria)->first();
-
-            if( !$first )
-                throw $this->createNotFoundException();
-
-            $nfcTagCondition = $first->getNfcTag()->getId();
+            $purchasesService = $this->_manager->getRepository('AppBundle:PurchaseService\PurchaseService')->findBy(
+                ['student' => $idsCondition],
+                ['purchasedAt' => 'DESC']
+            );
         } else {
-            $nfcTagCondition = $extractNfcTagsFromStudents($students);
+            if( $id )
+            {
+                $criteria = Criteria::create()->where(Criteria::expr()->in("id", [$id]));
+
+                $first = (new ArrayCollection($students))->matching($criteria)->first();
+
+                if( !$first )
+                    throw $this->createNotFoundException();
+
+                $nfcTagCondition = $first->getNfcTag()->getId();
+            } else {
+                $nfcTagCondition = $extractNfcTagsFromStudents($students);
+            }
+
+            $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findBy(
+                ['nfcTag' => $nfcTagCondition],
+                ['syncPurchasedAt' => 'DESC']
+            );
         }
 
-        $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findBy(
-            ['nfcTag' => $nfcTagCondition],
-            ['syncPurchasedAt' => 'DESC']
-        );
-
         return $this->render('AppBundle:Office/State:purchases.html.twig', [
-            'students'  => $students,
-            'purchases' => $purchases
+            'students'         => $students,
+            'purchases'        => $purchases,
+            'purchasesService' => $purchasesService
         ]);
     }
 }

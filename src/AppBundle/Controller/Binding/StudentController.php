@@ -20,6 +20,7 @@ use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Entity\Product\Product,
     AppBundle\Entity\Purchase\Purchase,
+    AppBundle\Entity\PurchaseService\PurchaseService,
     AppBundle\Entity\Payment\PaymentReceipt,
     AppBundle\Security\Authorization\Voter\StudentVoter,
     AppBundle\Security\Authorization\Voter\CustomerVoter,
@@ -159,7 +160,22 @@ class StudentController extends Controller implements UserRoleListInterface
                         'objectId'    => $objectId,
                         'objectClass' => $objectClass
                     ],
-                    $this->_translator->trans('purchase_read', [], 'routes')
+                    $this->_translator->trans('purchase_product_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new PurchaseService, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\PurchaseService:show', [
+                    'objectClass' => $this->getObjectClassName($student),
+                    'objectId'    => $objectId
+                ]);
+
+                $this->_breadcrumbs->add('student_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $this->_translator->trans('purchase_service_read', [], 'routes')
                 );
             break;
 

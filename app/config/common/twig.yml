@@ -18,4 +18,5 @@ twig:
         customer_boundless_access:              "@app.security.customer_boundless_access"
         student_boundless_access:               "@app.security.student_boundless_access"
         purchase_boundless_access:              "@app.security.purchase_boundless_access"
+        purchase_service_boundless_access:      "@app.security.purchase_service_boundless_access"
         payment_receipt_boundless_access:       "@app.security.payment_receipt_boundless_access"

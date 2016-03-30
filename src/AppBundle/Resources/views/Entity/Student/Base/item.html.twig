@@ -17,9 +17,14 @@
                     {{ 'product_read_restricted'|trans({}, 'routes') }}
                 </a>
             </li>
-            <li {% block active_student_update_bounded_purchase %}{% endblock %}>
+            <li {% block active_student_update_bounded_purchase_product %}{% endblock %}>
                 <a href="{{ path('student_update_bounded', { 'objectId': student.id, 'objectClass': 'purchase' }) }}">
-                    {{ 'purchase_read'|trans({}, 'routes') }}
+                    {{ 'purchase_product_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+            <li {% block active_student_update_bounded_purchase_service %}{% endblock %}>
+                <a href="{{ path('student_update_bounded', { 'objectId': student.id, 'objectClass': 'purchaseservice' }) }}">
+                    {{ 'purchase_service_read'|trans({}, 'routes') }}
                 </a>
             </li>
             <li {% block active_student_update_bounded_payment_receipt %}{% endblock %}>
