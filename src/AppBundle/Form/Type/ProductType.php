@@ -37,6 +37,12 @@ class ProductType extends AbstractType
                     'placeholder' => 'product.name_short.placeholder'
                 ]
             ])
+            ->add('nameNotification', 'text', [
+                'label' => 'product.name_notification.label',
+                'attr'  => [
+                    'placeholder' => 'product.name_notification.placeholder'
+                ]
+            ])
             ->add('code', 'text', [
                 'label' => 'product.code.label',
                 'attr'  => [

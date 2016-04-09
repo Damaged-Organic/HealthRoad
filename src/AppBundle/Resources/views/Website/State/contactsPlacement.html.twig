@@ -39,10 +39,12 @@
                             <span class="role">{{ contact.position }}</span>
                             <span class="sprtr-h"></span>
                             <ul>
-                                <li>
-                                    <span class="hr-phone"></span>
-                                    <a href="tel:{{ contact.phoneNumber|replace({ ' ': '', '(': '', ')': '', '-': '' }) }}">{{ contact.phoneNumber }}</a>
-                                </li>
+                                {% if contact.phoneNumber %}
+                                    <li>
+                                        <span class="hr-phone"></span>
+                                        <a href="tel:{{ contact.phoneNumber|replace({ ' ': '', '(': '', ')': '', '-': '' }) }}">{{ contact.phoneNumber }}</a>
+                                    </li>
+                                {% endif %}
                                 <li>
                                     <span class="hr-email"></span>
                                     <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>

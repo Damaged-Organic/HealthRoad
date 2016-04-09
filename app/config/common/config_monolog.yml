@@ -1,13 +1,13 @@
 # app/config/common/config_monolog.yml
 monolog:
-    channels: ["sync", "report"]
+    channels: ["sync", "report", "notification"]
 
     handlers:
         main:
             type:     stream
             path:     %kernel.root_dir%/%kernel.environment%.log
             level:    error
-            channels: [!sync, !report]
+            channels: [!sync, !report, !notification]
 
         sync:
             type:     stream
@@ -20,3 +20,9 @@ monolog:
             path:     %kernel.root_dir%/logs/%kernel.environment%.report.log
             level:    info
             channels: [report]
+
+        notification:
+            type:     stream
+            path:     %kernel.root_dir%/logs/%kernel.environment%.notification.log
+            level:    info
+            channels: [notification]

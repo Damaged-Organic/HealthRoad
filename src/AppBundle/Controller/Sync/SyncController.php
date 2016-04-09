@@ -2,6 +2,8 @@
 // AppBundle/Controller/Sync/SyncController.php
 namespace AppBundle\Controller\Sync;
 
+use Exception;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -11,6 +13,7 @@ use AppBundle\Controller\Utility\Traits\EntityFilter,
     Symfony\Component\HttpFoundation\JsonResponse,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     Symfony\Component\HttpKernel\Exception\BadRequestHttpException,
+    Symfony\Component\HttpKernel\Exception\FatalErrorException,
     Symfony\Component\Security\Core\Exception\BadCredentialsException,
     Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -18,7 +21,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 use AppBundle\Controller\Utility\Interfaces\Markers\SyncAuthenticationMarkerInterface,
     AppBundle\Controller\Utility\Interfaces\Markers\SyncLoggingMarkerInterface,
-    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface;
+    AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface,
+    AppBundle\Event\PostVendingMachinesPurchasesEvent;
 
 class SyncController extends Controller implements
     SyncAuthenticationMarkerInterface,
@@ -26,6 +30,9 @@ class SyncController extends Controller implements
     SyncVendingMachineSyncPropertiesInterface
 {
     use EntityFilter;
+
+    /** @DI\Inject("event_dispatcher") */
+    protected $_dispatcher;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -200,17 +207,29 @@ class SyncController extends Controller implements
         if( $this->_syncDataValidator->validateSyncSequence($vendingMachine, self::VENDING_MACHINE_SYNC_TYPE_PURCHASES, $validSyncData) )
             return new Response('Already in sync', 200);
 
-        $this->_manager->transactional(function($_manager) use($validSyncData, $vendingMachine)
-        {
-            $this->_syncDataHandler->handlePurchaseData($vendingMachine, $validSyncData);
+        $this->_manager->getConnection()->beginTransaction();
+
+        try{
+            $vendingMachineSyncId = $this->_syncDataHandler->handlePurchaseData($vendingMachine, $validSyncData);
 
             $recordMethod = [$this->_syncDataRecorder, 'recordPurchaseData'];
 
             if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
                 throw new BadCredentialsException('Sync response array is missing required data');
 
-            $_manager->flush();
-        });
+            $this->_manager->flush();
+            $this->_manager->clear();
+
+            $this->_manager->getConnection()->commit();
+        }catch( Exception $e ){
+            $this->_manager->getConnection()->rollback();
+
+            throw new FatalErrorException('Database Error');
+        }
+
+        // Send notifications
+        $postVendingMachinesPurchasesEvent = new PostVendingMachinesPurchasesEvent($vendingMachine, $vendingMachineSyncId);
+        $this->_dispatcher->dispatch('app.event.post_vending_machines_purchases.after', $postVendingMachinesPurchasesEvent);
 
         return new JsonResponse(NULL, 200);
     }

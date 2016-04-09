@@ -28,6 +28,8 @@ class ReportExcelLogistics extends ReportExcel
 
         foreach($logisticsData as $key => $vendingMachine)
         {
+            $this->phpExcelObject->createSheet($key);
+
             $this->phpExcelObject->setActiveSheetIndex($key);
 
             $this->buildHeader($vendingMachine['object']);
@@ -45,8 +47,9 @@ class ReportExcelLogistics extends ReportExcel
             ;
 
             $title = ( $vendingMachine['object']->getSchool() )
-                ? $vendingMachine['object']->getSchool()->getFullAddress()
-                : "Лист {$key}";
+                ? mb_substr($vendingMachine['object']->getSchool()->getFullAddress(), 0, 31, 'UTF-8')
+                : "Лист {$key}"
+            ;
 
             $this->phpExcelObject->getActiveSheet()->setTitle($title);
         }

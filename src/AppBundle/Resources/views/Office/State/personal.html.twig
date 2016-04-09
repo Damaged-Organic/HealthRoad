@@ -56,6 +56,47 @@
                                         <p>{{ customer.email }}</p>
                                     </div>
 
+                                    {% if customer.customerNotificationSetting %}
+                                        <div class="col notification-holder">
+                                            <h3>Повідомлення</h3>
+                                            <form action="{{ path('customer_office_action_notification_setting_update', { 'id': customer.id }) }}" method="POST" id="notification-form">
+                                                <span class="cancel-all">Скасувати всі</span>
+                                                <div class="response-holder"></div>
+                                                <div class="field-area">
+                                                    <input type="checkbox" name="customer_notification_setting[smsOnSync]" value="" id="check1" {{ ( customer.customerNotificationSetting.smsOnSync ) ? 'checked' }}>
+                                                    <label for="check1">
+                                                        <span class="radio"></span>
+                                                        <span class="text">СМС після кожної покупки</span>
+                                                    </label>
+                                                </div>
+                                                <div class="field-area">
+                                                    <input type="checkbox" name="customer_notification_setting[smsOnDayEnd]" value="" id="check2" {{ ( customer.customerNotificationSetting.smsOnDayEnd ) ? 'checked' }}>
+                                                    <label for="check2">
+                                                        <span class="radio"></span>
+                                                        <span class="text">СМС про покупки у кінці дня</span>
+                                                    </label>
+                                                </div>
+                                                <div class="field-area">
+                                                    <input type="checkbox" name="customer_notification_setting[emailOnSync]" value="" id="check3" {{ ( customer.customerNotificationSetting.emailOnSync ) ? 'checked' }}>
+                                                    <label for="check3">
+                                                        <span class="radio"></span>
+                                                        <span class="text">E-mail після кожної покупки</span>
+                                                    </label>
+                                                </div>
+                                                <div class="field-area">
+                                                    <input type="checkbox" name="customer_notification_setting[emailOnDayEnd]" value="" id="check4" {{ ( customer.customerNotificationSetting.emailOnDayEnd ) ? 'checked' }}>
+                                                    <label for="check4">
+                                                        <span class="radio"></span>
+                                                        <span class="text">E-mail про покупки у кінці дня</span>
+                                                    </label>
+                                                </div>
+                                                <button type="submit">
+                                                    <span>Застосувати</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    {% endif %}
+
                                     <div class="col change-password-holder">
 										<h3>Зміна поточного пароля</h3>
 										<form action="{{ path('customer_office_action_password_update', { 'id': customer.id }) }}" method="POST" id="change-password-form">

@@ -50,20 +50,18 @@
     {% endif %}
 
     {% if form.isEnabled is defined %}
-        {% if form.isEnabled is defined %}
-            <div class="field-holder trpl-field">
-                <div class="field">
-                    {{ form_widget(form.isEnabled, {
-                        'id': "customer-is-enabled"
-                    }) }}
+        <div class="field-holder trpl-field">
+            <div class="field">
+                {{ form_widget(form.isEnabled, {
+                    'id': "customer-is-enabled"
+                }) }}
 
-                    <label for="customer-is-enabled">
-                        <span class="radio"></span>
-                        <span class="text">{{ form.isEnabled.vars.label|trans({}, 'forms') }}</span>
-                    </label>
-                </div>
+                <label for="customer-is-enabled">
+                    <span class="radio"></span>
+                    <span class="text">{{ form.isEnabled.vars.label|trans({}, 'forms') }}</span>
+                </label>
             </div>
-        {% endif %}
+        </div>
     {% endif %}
 
     <div class="separator-holder">
@@ -126,6 +124,56 @@
         {{ form_label(form.email) }}
 
         {{ form_errors(form.email) }}
+    </div>
+
+    <div class="separator-holder">
+        <h2>Уведомления</h2>
+    </div>
+
+    <div class="field-holder trpl-field">
+        <div class="field">
+            {{ form_widget(form.customerNotificationSetting.smsOnSync, {
+                'id': "customer-notification-setting-sms-on-sync"
+            }) }}
+
+            <label for="customer-notification-setting-sms-on-sync">
+                <span class="radio"></span>
+                <span class="text">{{ form.customerNotificationSetting.smsOnSync.vars.label|trans({}, 'forms') }}</span>
+            </label>
+        </div>
+        <div class="field">
+            {{ form_widget(form.customerNotificationSetting.smsOnDayEnd, {
+                'id': "customer-notification-setting-sms-on-day-end"
+            }) }}
+
+            <label for="customer-notification-setting-sms-on-day-end">
+                <span class="radio"></span>
+                <span class="text">{{ form.customerNotificationSetting.smsOnDayEnd.vars.label|trans({}, 'forms') }}</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="field-holder trpl-field">
+        <div class="field">
+            {{ form_widget(form.customerNotificationSetting.emailOnSync, {
+                'id': "customer-notification-setting-email-on-sync"
+            }) }}
+
+            <label for="customer-notification-setting-email-on-sync">
+                <span class="radio"></span>
+                <span class="text">{{ form.customerNotificationSetting.emailOnSync.vars.label|trans({}, 'forms') }}</span>
+            </label>
+        </div>
+        <div class="field">
+            {{ form_widget(form.customerNotificationSetting.emailOnDayEnd, {
+                'id': "customer-notification-setting-email-on-day-end"
+            }) }}
+
+            <label for="customer-notification-setting-email-on-day-end">
+                <span class="radio"></span>
+                <span class="text">{{ form.customerNotificationSetting.emailOnDayEnd.vars.label|trans({}, 'forms') }}</span>
+            </label>
+        </div>
     </div>
 
     {{ form_widget(form._token) }}

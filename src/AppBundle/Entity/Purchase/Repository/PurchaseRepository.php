@@ -17,6 +17,7 @@ class PurchaseRepository extends ExtendedEntityRepository
             ->leftJoin('p.student', 'st')
             ->leftJoin('p.nfcTag', 'nt')
             ->orderBy('p.syncPurchasedAt', 'DESC')
+            ->setMaxResults(5000)
             ->getQuery()
         ;
 
@@ -29,7 +30,7 @@ class PurchaseRepository extends ExtendedEntityRepository
             ->select('p, pr, prc, SUM(pr.price) AS purchaseSum, COUNT(pr.id) AS purchaseAmount')
             ->leftJoin('p.product', 'pr')
             ->leftJoin('pr.productCategory', 'prc')
-            ->where('p.syncPurchasedAt > :dateStart')
+            ->where('p.syncPurchasedAt >= :dateStart')
             ->andWhere('p.syncPurchasedAt < :dateEnd')
             ->setParameters([
                 'dateStart' => "{$date} 00:00:00",

@@ -11,7 +11,8 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Student\Student,
     AppBundle\Entity\Setting\SettingDecimal,
     AppBundle\Entity\PurchaseService\PurchaseService,
-    AppBundle\Entity\Payment\PaymentReceipt;
+    AppBundle\Entity\Payment\PaymentReceipt,
+    AppBundle\Model\Notification\Notification;
 
 class PurchaseServiceManager
 {
@@ -32,6 +33,8 @@ class PurchaseServiceManager
     {
         return new PurchaseService;
     }
+
+    # NFC Tag activation
 
     public function validateStatusActivationNfcTag(Student $student)
     {
@@ -119,5 +122,78 @@ class PurchaseServiceManager
     private function getActivationNfcTagItem()
     {
         return $this->_translator->trans('item.nfc_tag.activation', [], 'purchasesService', 'ua');
+    }
+
+    # SMS sending
+
+    public function validateStudentBalanceForSms(Student $student, SettingDecimal $settingStudentWarningLimit)
+    {
+        $compare = bccomp($student->getTotalLimit(), $settingStudentWarningLimit->getSettingValue(), 2);
+
+        return $compare === 1;
+    }
+
+    public function purchaseNotificationMessages(array $notifications, SettingDecimal $settingSmsExchangeRate)
+    {
+        foreach( $notifications as $notification )
+        {
+            if( !($notification instanceof Notification) )
+                return;
+
+            if( $this->processNotification($notification, $settingSmsExchangeRate) )
+            {
+                $this->recordNotification($notification, $settingSmsExchangeRate);
+            }
+        }
+
+        $this->_manager->flush();
+    }
+
+    public function processNotification(Notification $notification, SettingDecimal $settingSmsExchangeRate)
+    {
+        if( !$notification->getStudent() )
+            return FALSE;
+
+        $price = bcmul($notification->getPrice(), $settingSmsExchangeRate->getSettingValue(), 2);
+
+        if( !$price )
+            return FALSE;
+
+        $notification->getStudent()->setTotalLimit(
+            bcsub($notification->getStudent()->getTotalLimit(), $price, 2)
+        );
+
+        $this->_manager->persist($notification->getStudent());
+
+        return TRUE;
+    }
+
+    public function recordNotification(Notification $notification, SettingDecimal $settingSmsExchangeRate)
+    {
+        if( !$notification->getStudent() )
+            return FALSE;
+
+        if( !$notification->getStudent()->getNfcTag() )
+            return FALSE;
+
+        $item  = $this->getNotificationMessageItem();
+        $price = bcmul($notification->getPrice(), $settingSmsExchangeRate->getSettingValue(), 2);
+
+        $purchaseService = $this->getPurchaseService();
+
+        $purchaseService
+            ->setStudent($notification->getStudent())
+            ->setNfcTag($notification->getStudent()->getNfcTag())
+            ->setItem($item)
+            ->setPrice($price)
+            ->setPurchasedAt(new DateTime)
+        ;
+
+        $this->_manager->persist($purchaseService);
+    }
+
+    private function getNotificationMessageItem()
+    {
+        return $this->_translator->trans('item.notification.message', [], 'purchasesService', 'ua');
     }
 }

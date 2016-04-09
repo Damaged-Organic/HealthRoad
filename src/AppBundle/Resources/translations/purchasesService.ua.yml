@@ -3,3 +3,7 @@ item:
     nfc_tag:
         activation: >
             Активація нової картки або браслета
+
+    notification:
+        message: >
+            СМС повідомлення про покупки

@@ -1,0 +1,25 @@
+sms:
+    on_sync: >-
+        %time%, %student%, отримано: %purchases%. Залишок: %balance%грн
+
+    on_day_end: >-
+        %date%, %student%, отримано: %purchases%. Залишок: %balance%грн
+
+    purchase: >-
+        %product%, %price%грн
+
+    warning: >-
+        На Вашому балансі менше %setting_student_warning_limit%грн (%student%).
+
+email:
+    subject: >-
+        %datetime%, Повідомлення про покупки клієнта компанії "Дорога Здоров’я"
+
+    on_sync: >-
+        %time%, %student%, отримано: %purchases%. Залишок: %balance%грн
+
+    on_day_end: >-
+        %date%, %student%, отримано: %purchases%. Залишок: %balance%грн
+
+    purchase: >-
+        %product%, %price%грн

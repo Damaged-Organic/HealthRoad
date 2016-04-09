@@ -92,6 +92,30 @@ input[type=email]{
 input[type="radio"],
 input[type="checkbox"]{
 	display: none;
+	& + label{
+		display: block;
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		span{
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.radio{
+			width: 24px;
+			height: 24px;
+			margin-right: 10px;
+			border: 2px solid @black;
+			cursor: pointer;
+			transition: all .5s @easing;
+			box-sizing: border-box;
+		}
+	}
+	&:checked + label{
+		.radio{
+			background: @green;
+		}
+	}
 }
 
 textarea{

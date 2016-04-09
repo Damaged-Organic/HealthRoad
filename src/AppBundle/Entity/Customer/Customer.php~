@@ -21,7 +21,7 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
  *
  * @UniqueEntity(fields="phoneNumber", message="customer.phone_number.unique")
  *
- * @Assert\GroupSequence({"Employee", "Strict", "Create", "Update"})
+ * @Assert\GroupSequence({"Customer", "Strict", "Create", "Update"})
  */
 class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializable
 {
@@ -29,7 +29,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Employee\Employee", inversedBy="customers")
-     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $employee;
 
@@ -37,6 +37,11 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Student\Student", mappedBy="customer")
      */
     protected $students;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\CustomerNotificationSetting\CustomerNotificationSetting", mappedBy="customer")
+     */
+    protected $customerNotificationSetting;
 
     protected $username;
 
@@ -55,9 +60,13 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * @ORM\Column(type="string", length=64)
      *
-     * @Assert\NotBlank(
+     * Assert\NotBlank(
      *      message="customer.password.not_blank",
      *      groups={"Create"}
+     * )
+     * @Assert\Length(
+     *      min=6,
+     *      minMessage="customer.password.length.min",
      * )
      */
     protected $password;
@@ -74,7 +83,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     protected $isEnabled;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100)
      *
      * @Assert\Length(
      *      min=2,
@@ -90,7 +99,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100)
      *
      * @Assert\Length(
      *      min=2,
@@ -106,7 +115,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     protected $surname;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100)
      *
      * @Assert\Length(
      *      min=2,
@@ -280,7 +289,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -303,7 +312,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get surname
      *
-     * @return string 
+     * @return string
      */
     public function getSurname()
     {
@@ -326,7 +335,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get patronymic
      *
-     * @return string 
+     * @return string
      */
     public function getPatronymic()
     {
@@ -349,19 +358,11 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * @Assert\True(message="customer.password.legal", groups={"Strict"})
-     */
-    public function isPasswordLegal()
-    {
-        return ($this->password !== $this->phoneNumber);
     }
 
     /**
@@ -391,12 +392,62 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     /**
      * Get students
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStudents()
     {
         return $this->students;
     }
 
+    /**
+     * Set employee
+     *
+     * @param \AppBundle\Entity\Employee\Employee $employee
+     * @return Customer
+     */
+    public function setEmployee(\AppBundle\Entity\Employee\Employee $employee)
+    {
+        $this->employee = $employee;
 
+        return $this;
+    }
+
+    /**
+     * Get employee
+     *
+     * @return \AppBundle\Entity\Employee\Employee
+     */
+    public function getEmployee()
+    {
+        return $this->employee;
+    }
+
+    /**
+     * @Assert\True(message="customer.password.legal", groups={"Strict"})
+     */
+    public function isPasswordLegal()
+    {
+        return ($this->password !== $this->phoneNumber);
+    }
+
+    public function getFullName()
+    {
+        if( !$this->patronymic && !$this->name && !$this->surname )
+            return NULL;
+
+        return "{$this->surname} {$this->name} {$this->patronymic}";
+    }
+
+    public function getTotalLimit()
+    {
+        $totalLimit = 0;
+
+        foreach( $this->getStudents() as $student )
+        {
+            if( !$student->getPseudoDeleted() )
+                $totalLimit = bcadd($totalLimit, $student->getTotalLimit(), 2);
+        }
+
+        return $totalLimit;
+    }
 }

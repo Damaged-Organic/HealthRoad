@@ -39,6 +39,22 @@ class LoadSetting extends AbstractFixture implements OrderedFixtureInterface
         ;
         $manager->persist($settingStudentLowerDailyLimit);
 
+        $settingStudentWarningLimit = (new SettingDecimal)
+            ->setSetting($this->getReference('setting'))
+            ->setName("Лимит ученика для отправки предупреждения")
+            ->setSettingKey("student_warning_limit")
+            ->setSettingValue(10.00)
+        ;
+        $manager->persist($settingStudentWarningLimit);
+
+        $settingSmsExchangeRate = (new SettingDecimal)
+            ->setSetting($this->getReference('setting'))
+            ->setName("Курс конвертации для отправки предупреждения")
+            ->setSettingKey("sms_exchange_rate")
+            ->setSettingValue(26.30)
+        ;
+        $manager->persist($settingSmsExchangeRate);
+
         $settingVendingMachineReportSumAmount = (new SettingDecimal)
             ->setSetting($this->getReference('setting'))
             ->setName("Сумма продаж трогового автомата для отправки отчета")

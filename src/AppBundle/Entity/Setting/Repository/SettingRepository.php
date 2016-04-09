@@ -46,6 +46,18 @@ class SettingRepository extends ExtendedEntityRepository
             ->getSettingsDecimal()[0];
     }
 
+    public function findStudentWarningLimit()
+    {
+        return $this->findSettingBySettingKey('student_warning_limit')
+            ->getSettingsDecimal()[0];
+    }
+
+    public function findSmsExchangeRate()
+    {
+        return $this->findSettingBySettingKey('sms_exchange_rate')
+            ->getSettingsDecimal()[0];
+    }
+
     public function findVendingMachineReportSumAmount()
     {
         return $this->findSettingBySettingKey('vending_machine_report_sum_amount')

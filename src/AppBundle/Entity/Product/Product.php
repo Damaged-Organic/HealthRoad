@@ -94,6 +94,19 @@ class Product implements SyncProductPropertiesInterface
     protected $nameShort;
 
     /**
+     * @ORM\Column(type="string", length=100)
+     *
+     * @Assert\NotBlank(message="product.name_notification.not_blank")
+     * @Assert\Length(
+     *      min=2,
+     *      max=50,
+     *      minMessage="product.name_notification.length.min",
+     *      maxMessage="product.name_notification.length.max"
+     * )
+     */
+    protected $nameNotification;
+
+    /**
      * @ORM\Column(length=128, unique=true)
      *
      * @Gedmo\Slug(
@@ -319,7 +332,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get nameFull
      *
-     * @return string 
+     * @return string
      */
     public function getNameFull()
     {
@@ -342,11 +355,34 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get nameShort
      *
-     * @return string 
+     * @return string
      */
     public function getNameShort()
     {
         return $this->nameShort;
+    }
+
+    /**
+     * Set nameNotification
+     *
+     * @param string $nameNotification
+     * @return Product
+     */
+    public function setNameNotification($nameNotification)
+    {
+        $this->nameNotification = $nameNotification;
+
+        return $this;
+    }
+
+    /**
+     * Get nameNotification
+     *
+     * @return string
+     */
+    public function getNameNotification()
+    {
+        return $this->nameNotification;
     }
 
     /**
@@ -365,7 +401,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -388,7 +424,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get price
      *
-     * @return string 
+     * @return string
      */
     public function getPrice()
     {
@@ -457,7 +493,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get imageCertificateName
      *
-     * @return string 
+     * @return string
      */
     public function getImageCertificateName()
     {
@@ -549,7 +585,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get calories
      *
-     * @return integer 
+     * @return integer
      */
     public function getCalories()
     {
@@ -572,7 +608,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get shelfLife
      *
-     * @return string 
+     * @return string
      */
     public function getShelfLife()
     {
@@ -595,7 +631,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get storageTemperatureMin
      *
-     * @return integer 
+     * @return integer
      */
     public function getStorageTemperatureMin()
     {
@@ -664,7 +700,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get measurementUnit
      *
-     * @return string 
+     * @return string
      */
     public function getMeasurementUnit()
     {
@@ -687,7 +723,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get amountInBox
      *
-     * @return integer 
+     * @return integer
      */
     public function getAmountInBox()
     {
@@ -710,7 +746,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -733,7 +769,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get productCategory
      *
-     * @return \AppBundle\Entity\Product\ProductCategory 
+     * @return \AppBundle\Entity\Product\ProductCategory
      */
     public function getProductCategory()
     {
@@ -809,7 +845,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get supplier
      *
-     * @return \AppBundle\Entity\Supplier\Supplier 
+     * @return \AppBundle\Entity\Supplier\Supplier
      */
     public function getSupplier()
     {
@@ -842,7 +878,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get productVendingGroups
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getProductVendingGroups()
     {
@@ -875,7 +911,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get students
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStudents()
     {

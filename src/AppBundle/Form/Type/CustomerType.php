@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\OptionsResolver\OptionsResolver,
     Symfony\Component\Translation\TranslatorInterface;
 
+use AppBundle\Form\Type\CustomerNotificationSettingType;
+
 class CustomerType extends AbstractType
 {
     private $_translator;
@@ -56,6 +58,7 @@ class CustomerType extends AbstractType
                     'placeholder' => 'customer.email.placeholder'
                 ]
             ])
+            ->add('customerNotificationSetting', new CustomerNotificationSettingType())
         ;
 
         $builder

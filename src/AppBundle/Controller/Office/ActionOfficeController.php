@@ -168,6 +168,50 @@ class ActionOfficeController extends Controller
     /**
      * @Method({"POST"})
      * @Route(
+     *      "/customer_office/action/notification_setting/update_for/{id}",
+     *      name="customer_office_action_notification_setting_update",
+     *      host="{domain_website}",
+     *      defaults={"_locale" = "%locale_website%", "domain_website" = "%domain_website%"},
+     *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%", "id" = "\d+"},
+     * )
+     */
+    public function setCustomerNotificationSetting(Request $request, $id)
+    {
+        $customer = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($id);
+
+        if( !$customer )
+            throw $this->createNotFoundException();
+
+        if( !$customer->getCustomerNotificationSetting() )
+            throw $this->createNotFoundException();
+
+        $customerNotificationSetting = $request->request->get('customer_notification_setting');
+
+        $customer->getCustomerNotificationSetting()->setSmsOnSync(
+            isset($customerNotificationSetting['smsOnSync'])
+        );
+
+        $customer->getCustomerNotificationSetting()->setSmsOnDayEnd(
+            isset($customerNotificationSetting['smsOnDayEnd'])
+        );
+
+        $customer->getCustomerNotificationSetting()->setEmailOnSync(
+            isset($customerNotificationSetting['emailOnSync'])
+        );
+
+        $customer->getCustomerNotificationSetting()->setEmailOnDayEnd(
+            isset($customerNotificationSetting['emailOnDayEnd'])
+        );
+
+        $this->_manager->persist($customer);
+        $this->_manager->flush();
+
+        return $this->redirectToRoute('customer_office');
+    }
+
+    /**
+     * @Method({"POST"})
+     * @Route(
      *      "/customer_office/action/password/update_for/{id}",
      *      name="customer_office_action_password_update",
      *      host="{domain_website}",

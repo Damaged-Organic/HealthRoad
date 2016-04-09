@@ -4,7 +4,8 @@ namespace AppBundle\Service\Common;
 
 use Swift_Mailer,
     Swift_Message,
-    Swift_Attachment;
+    Swift_Attachment,
+    Swift_Validate;
 
 class MailerShortcut
 {
@@ -44,5 +45,10 @@ class MailerShortcut
         }
 
         return $message;
+    }
+
+    public function validateEmail($email)
+    {
+        return Swift_Validate::email($email);
     }
 }

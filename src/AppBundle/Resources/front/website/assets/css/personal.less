@@ -14,7 +14,10 @@
 		margin-top: -30px;
 	}
 	.personal-data-holder{
-		.inner{ padding-bottom: 0; }
+		.inner{
+			padding-bottom: 0;
+			margin-bottom: 20px;
+		}
 		.info-holder{
 			width: 50%;
 			float: left;
@@ -106,6 +109,34 @@
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	change password end					 	  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	notification start					 	  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#content-info-holder{
+	.col.notification-holder{
+		span.cancel-all{
+			display: block;
+			padding: 0 0 20px;
+			font-weight: normal;
+			cursor: pointer;
+			transition: all .5s @easing;
+			text-decoration: underline;
+			&:hover{
+				color: @green;
+			}
+		}
+		form{
+			button[type="submit"]{
+				float: left;
+				span{ text-align: center; }
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	notification end					 	  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 

@@ -154,7 +154,7 @@ class SyncDataHandler implements
                 {
                     $totalLimit = $nfcTags->get($purchase['code'])->getStudent()->getTotalLimit();
 
-                    $totalLimit = $totalLimit - $purchase['price_sum'];
+                    $totalLimit = bcsub($totalLimit, $purchase['price_sum'], 2);
 
                     $studentsArray[] = ['id' => $nfcTags->get($purchase['code'])->getStudent()->getId(), 'totalLimit' => $totalLimit];
                 } else {
@@ -168,6 +168,8 @@ class SyncDataHandler implements
                 $this->_manager->getRepository('AppBundle:Student\Student')->rawUpdateStudentsTotalLimits($studentsArray);
             }
         }
+
+        return $data[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()][0][self::VENDING_MACHINE_SYNC_ID];
     }
 
     public function handleVendingMachineEventData(VendingMachine $vendingMachine, $data)

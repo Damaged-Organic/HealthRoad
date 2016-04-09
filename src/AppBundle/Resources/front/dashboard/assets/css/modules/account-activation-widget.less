@@ -1,0 +1,56 @@
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	account activation start				  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#account-activation-widget{
+    width: 100%;
+    height: auto;
+    border: 1px solid darken(@black, 20%);
+    box-sizing: border-box;
+    background: @black;
+    margin-bottom: 20px;
+    overflow: hidden;
+    .active-holder{
+        display: block;
+        width: 300px;
+        height: auto;
+        border-right: 1px solid darken(@black, 20%);
+        border-bottom: 1px solid darken(@black, 20%);
+        box-sizing: border-box;
+        text-align: center;
+        overflow: hidden;
+        span{
+            display: inline-block;
+            padding: 10px 20px;
+            color: @grey;
+            font-size: .875em;
+            overflow: hidden;
+        }
+        &.active{
+            background: @successGreenDark;
+            span{ color: @white; }
+        }
+    }
+    & > form{
+        padding: 20px;
+        box-sizing: border-box;
+        .field-holder{
+            width: ~"calc(100% - 220px)";
+            float: left;
+            margin: 0;
+            span.text{
+                color: @white;
+            }
+        }
+        button[type="submit"]{
+            float: right;
+            margin: 0 0 0 20px;
+        }
+    }
+    & > p{
+        padding: 20px;
+        color: @white;
+    }
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	account activation end	     			  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

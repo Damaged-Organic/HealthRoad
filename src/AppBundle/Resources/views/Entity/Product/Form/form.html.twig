@@ -38,6 +38,21 @@
     </div>
 
     <div class="field-holder">
+        {{ form_widget(form.nameNotification, {
+            'id': "product-name-notification",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product.name_notification.not_blank'|trans({}, "validators"),
+                'data-rule-minlength': "2", 'data-msg-minlength': 'product.name_notification.length.min'|trans({}, "validators"),
+                'data-rule-maxlength': "50", 'data-msg-maxlength': 'product.name_notification.length.max'|trans({}, "validators")
+            }
+        }) }}
+
+        {{ form_label(form.nameNotification) }}
+
+        {{ form_errors(form.nameNotification) }}
+    </div>
+
+    <div class="field-holder">
         {{ form_widget(form.code, {
             'id': "product-code",
             'attr': {

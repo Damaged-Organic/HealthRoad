@@ -1,0 +1,64 @@
+<?php
+// src/AppBundle/Entity/Customer/CustomerNotificationSetting.php
+namespace AppBundle\Entity\Customer;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait;
+
+/**
+ * @ORM\Table(name="customers_notification_settings")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Customer\Repository\CustomerNotificationSettingRepository")
+ */
+class CustomerNotificationSetting
+{
+    use IdMapperTrait;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Customer\Customer", inversedBy="customerNotificationSetting", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
+     */
+    protected $customer;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @Assert\Type(
+     *     type="bool",
+     *     message="common.boolean.valid"
+     * )
+     */
+    protected $smsOnSync = FALSE;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @Assert\Type(
+     *     type="bool",
+     *     message="common.boolean.valid"
+     * )
+     */
+    protected $smsOnDayEnd = TRUE;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @Assert\Type(
+     *     type="bool",
+     *     message="common.boolean.valid"
+     * )
+     */
+    protected $emailOnSync = FALSE;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @Assert\Type(
+     *     type="bool",
+     *     message="common.boolean.valid"
+     * )
+     */
+    protected $emailOnDayEnd = TRUE;
+}

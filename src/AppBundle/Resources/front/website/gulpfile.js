@@ -40,7 +40,7 @@ gulp.task("css", function(){
 		fileName;
 
 	files.map(function(entryFile){
-		
+
 		fileName = entryFile.match(/\w+(?=\.less)/)[0];
 
 		return gulp.src(entryFile)

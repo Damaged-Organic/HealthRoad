@@ -13,7 +13,8 @@ use Doctrine\ORM\Mapping as ORM,
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
-    AppBundle\Validator\Constraints as CustomAssert;
+    AppBundle\Validator\Constraints as CustomAssert,
+    AppBundle\Entity\Customer\CustomerNotificationSetting;
 
 /**
  * @ORM\Table(name="customers")
@@ -37,6 +38,12 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Student\Student", mappedBy="customer")
      */
     protected $students;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Customer\CustomerNotificationSetting", inversedBy="customer", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="customer_notification_setting_id", referencedColumnName="id")
+     */
+    protected $customerNotificationSetting;
 
     protected $username;
 
@@ -142,6 +149,9 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
         $this
             ->setIsEnabled(TRUE)
         ;
+
+        // For automatic creation of the related entity
+        $this->setCustomerNotificationSetting(new CustomerNotificationSetting);
     }
 
     public function getUsername()
@@ -415,6 +425,29 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
     public function getEmployee()
     {
         return $this->employee;
+    }
+
+    /**
+     * Set customerNotificationSetting
+     *
+     * @param \AppBundle\Entity\Customer\CustomerNotificationSetting $customerNotificationSetting
+     * @return Customer
+     */
+    public function setCustomerNotificationSetting(\AppBundle\Entity\Customer\CustomerNotificationSetting $customerNotificationSetting = null)
+    {
+        $this->customerNotificationSetting = $customerNotificationSetting;
+
+        return $this;
+    }
+
+    /**
+     * Get customerNotificationSetting
+     *
+     * @return \AppBundle\Entity\Customer\CustomerNotificationSetting
+     */
+    public function getCustomerNotificationSetting()
+    {
+        return $this->customerNotificationSetting;
     }
 
     /**

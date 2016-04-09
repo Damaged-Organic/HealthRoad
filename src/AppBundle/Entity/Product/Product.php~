@@ -11,9 +11,13 @@ use Symfony\Component\Validator\Constraints as Assert,
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
+use Gedmo\Mapping\Annotation as Gedmo;
+
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\SlugMapper,
+    AppBundle\Entity\Utility\Traits\DoctrineMapping\PseudoDeleteMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert,
     AppBundle\Entity\Product\Utility\Interfaces\SyncProductPropertiesInterface;
 
@@ -27,7 +31,7 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
  */
 class Product implements SyncProductPropertiesInterface
 {
-    use IdMapperTrait;
+    use IdMapperTrait, SlugMapper, PseudoDeleteMapperTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product\ProductCategory", inversedBy="products")
@@ -90,6 +94,30 @@ class Product implements SyncProductPropertiesInterface
     protected $nameShort;
 
     /**
+     * @ORM\Column(type="string", length=100)
+     *
+     * @Assert\NotBlank(message="product.name_notification.not_blank")
+     * @Assert\Length(
+     *      min=2,
+     *      max=50,
+     *      minMessage="product.name_notification.length.min",
+     *      maxMessage="product.name_notification.length.max"
+     * )
+     */
+    protected $nameNotification;
+
+    /**
+     * @ORM\Column(length=128, unique=true)
+     *
+     * @Gedmo\Slug(
+     *      fields={"nameShort"},
+     *      separator="_",
+     *      style="lower"
+     * )
+     */
+    protected $slug;
+
+    /**
      * @ORM\Column(type="string", length=100, unique=true)
      *
      * @Assert\NotBlank(message="product.code.not_blank")
@@ -110,7 +138,28 @@ class Product implements SyncProductPropertiesInterface
     protected $price;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", length=250)
+     *
+     * @Assert\NotBlank(message="product.description_short.not_blank")
+     * @Assert\Length(
+     *      min=5,
+     *      max=250,
+     *      minMessage="product.description_short.length.min",
+     *      maxMessage="product.description_short.length.max"
+     * )
+     */
+    protected $descriptionShort;
+
+    /**
+     * @ORM\Column(type="text")
+     *
+     * @Assert\NotBlank(message="product.description.not_blank")
+     * @Assert\Length(
+     *      min=5,
+     *      max=10000,
+     *      minMessage="product.description.length.min",
+     *      maxMessage="product.description.length.max"
+     * )
      */
     protected $description;
 
@@ -128,18 +177,6 @@ class Product implements SyncProductPropertiesInterface
      * @ORM\Column(type="string", length=250, nullable=true)
      */
     protected $imageCertificateName;
-
-    /**
-     * @ORM\Column(type="string", length=250, nullable=true)
-     *
-     * @Assert\Length(
-     *      min=2,
-     *      max=250,
-     *      minMessage="product.manufacturer.length.min",
-     *      maxMessage="product.manufacturer.length.max"
-     * )
-     */
-    protected $manufacturer;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -256,11 +293,10 @@ class Product implements SyncProductPropertiesInterface
      */
     public function __construct()
     {
-        $this->productImages         = new ArrayCollection;
-        $this->uploadedProductImages = new ArrayCollection;
-        $this->productVendingGroups  = new ArrayCollection;
-        $this->students              = new ArrayCollection;
-        $this->purchases             = new ArrayCollection;
+        $this->productImages        = new ArrayCollection;
+        $this->productVendingGroups = new ArrayCollection;
+        $this->students             = new ArrayCollection;
+        $this->purchases            = new ArrayCollection;
     }
 
     /* Vich Uploadable Methods */
@@ -296,7 +332,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get nameFull
      *
-     * @return string 
+     * @return string
      */
     public function getNameFull()
     {
@@ -319,7 +355,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get nameShort
      *
-     * @return string 
+     * @return string
      */
     public function getNameShort()
     {
@@ -342,7 +378,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -365,11 +401,57 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get price
      *
-     * @return string 
+     * @return string
      */
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Set descriptionShort
+     *
+     * @param string $descriptionShort
+     * @return Product
+     */
+    public function setDescriptionShort($descriptionShort)
+    {
+        $this->descriptionShort = $descriptionShort;
+
+        return $this;
+    }
+
+    /**
+     * Get descriptionShort
+     *
+     * @return string
+     */
+    public function getDescriptionShort()
+    {
+        return $this->descriptionShort;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Product
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -388,34 +470,11 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get imageCertificateName
      *
-     * @return string 
+     * @return string
      */
     public function getImageCertificateName()
     {
         return $this->imageCertificateName;
-    }
-
-    /**
-     * Set manufacturer
-     *
-     * @param string $manufacturer
-     * @return Product
-     */
-    public function setManufacturer($manufacturer)
-    {
-        $this->manufacturer = $manufacturer;
-
-        return $this;
-    }
-
-    /**
-     * Get manufacturer
-     *
-     * @return string 
-     */
-    public function getManufacturer()
-    {
-        return $this->manufacturer;
     }
 
     /**
@@ -503,7 +562,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get calories
      *
-     * @return integer 
+     * @return integer
      */
     public function getCalories()
     {
@@ -526,7 +585,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get shelfLife
      *
-     * @return string 
+     * @return string
      */
     public function getShelfLife()
     {
@@ -549,7 +608,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get storageTemperatureMin
      *
-     * @return integer 
+     * @return integer
      */
     public function getStorageTemperatureMin()
     {
@@ -618,7 +677,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get measurementUnit
      *
-     * @return string 
+     * @return string
      */
     public function getMeasurementUnit()
     {
@@ -641,7 +700,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get amountInBox
      *
-     * @return integer 
+     * @return integer
      */
     public function getAmountInBox()
     {
@@ -664,7 +723,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -687,7 +746,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get productCategory
      *
-     * @return \AppBundle\Entity\Product\ProductCategory 
+     * @return \AppBundle\Entity\Product\ProductCategory
      */
     public function getProductCategory()
     {
@@ -763,7 +822,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get supplier
      *
-     * @return \AppBundle\Entity\Supplier\Supplier 
+     * @return \AppBundle\Entity\Supplier\Supplier
      */
     public function getSupplier()
     {
@@ -796,7 +855,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get productVendingGroups
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getProductVendingGroups()
     {
@@ -829,7 +888,7 @@ class Product implements SyncProductPropertiesInterface
     /**
      * Get students
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStudents()
     {
@@ -868,6 +927,13 @@ class Product implements SyncProductPropertiesInterface
     public function getPurchases()
     {
         return $this->purchases;
+    }
+
+    public function getWeightAndMeasure()
+    {
+        return ( $this->weight )
+            ? "{$this->weight} {$this->measurementUnit}"
+            : '-';
     }
 
     static public function getSyncArrayName()

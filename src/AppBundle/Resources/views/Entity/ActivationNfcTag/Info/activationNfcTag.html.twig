@@ -1,7 +1,7 @@
 {# src/AppBundle/Resources/views/Entity/ActivationNfcTag/Info/activationNfcTag.html.twig #}
-<p>
-    NFC-метка активирована
-</p>
-<p>
-    NFC-метка была активирована {{ nfcTag.activatedAt|date('d-m-Y') }}, в {{ nfcTag.activatedAt|date('H:i') }}
-</p>
+<div id="account-activation-widget">
+    <div class="active-holder active">
+        <span>NFC-метка активирована</span>
+    </div>
+    <p> NFC-метка была активирована {{ nfcTag.activatedAt|date('d-m-Y') }}, в {{ nfcTag.activatedAt|date('H:i') }}</p>
+</div>

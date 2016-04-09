@@ -74,6 +74,11 @@ class ReportBuilder
         {
             $purchases = [];
 
+            // This happens when VM is ready by purchase sum but haven't got
+            // purchases after load date
+            if( empty($readyByLoadDate[$vendingMachine[0]->getId()]) )
+                continue;
+
             foreach( $readyByLoadDate[$vendingMachine[0]->getId()]->getPurchases() as $purchase)
             {
                 if( $purchase->getProduct() instanceof Product )

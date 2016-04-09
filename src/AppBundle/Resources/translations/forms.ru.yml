@@ -97,6 +97,19 @@ customer:
         label:       Подтверждение пароля
         placeholder: Введите пароль для подтверждения
 
+customer_notification_setting:
+    sms_on_sync:
+        label: Отдельный СМС при каждой продаже
+
+    sms_on_day_end:
+        label: Общий СМС о продажах в конце дня
+
+    email_on_sync:
+        label: Отдельный E-mail при каждой продаже
+
+    email_on_day_end:
+        label: Общий E-mail о продажах в конце дня
+
 region:
     name:
         label:       Название
@@ -281,6 +294,10 @@ product:
     name_short:
         label:       Краткое наименование
         placeholder: Введите краткое наименование
+
+    name_notification:
+        label:       Наименование для СМС
+        placeholder: Введите наименование для оповещений
 
     product_category:
         label: Категория
