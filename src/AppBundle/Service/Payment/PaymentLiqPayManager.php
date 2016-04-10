@@ -13,7 +13,7 @@ use AppBundle\Entity\Student\Student;
 class PaymentLiqPayManager
 {
     const LIQ_PAY_VERSION = 3;
-    const LIQ_PAY_SANDBOX = 1;
+    const LIQ_PAY_SANDBOX = 0;
 
     private $_router;
 

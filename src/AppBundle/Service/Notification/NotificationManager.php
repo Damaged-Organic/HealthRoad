@@ -257,8 +257,8 @@ class NotificationManager
         {
             $emailMessageList = $this->_notificationBuilder->buildNotificationsByTemplateOnSyncEmail($emailList);
 
-            // if( $emailMessageList )
-            //     $this->_notificationSender->sendEmailMessageList($emailMessageList);
+            if( $emailMessageList )
+                $this->_notificationSender->sendEmailMessageList($emailMessageList);
         }
 
         return $chargedNotifications;
@@ -285,8 +285,8 @@ class NotificationManager
         {
             $emailMessageList = $this->_notificationBuilder->buildNotificationsByTemplateOnDayEndEmail($emailList);
 
-            // if( $emailMessageList )
-            //     $this->_notificationSender->sendEmailMessageList($emailMessageList);
+            if( $emailMessageList )
+                $this->_notificationSender->sendEmailMessageList($emailMessageList);
         }
 
         return $chargedNotifications;

@@ -49,7 +49,7 @@ class LoadSetting extends AbstractFixture implements OrderedFixtureInterface
 
         $settingSmsExchangeRate = (new SettingDecimal)
             ->setSetting($this->getReference('setting'))
-            ->setName("Курс конвертации для отправки предупреждения")
+            ->setName("Курс конвертации для отправки уведомлений")
             ->setSettingKey("sms_exchange_rate")
             ->setSettingValue(26.30)
         ;
