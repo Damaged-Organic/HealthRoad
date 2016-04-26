@@ -57,6 +57,48 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	change personal start				 	  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#content-info-holder{
+	#personal-form{
+		position: relative;
+		button[type="submit"]{
+			margin: 20px 0 0;
+			span{ text-align: center; }
+		}
+		.loader{
+			top: auto;
+			left: auto;
+			right: 5px;
+			bottom: 5px;
+		}
+		.response-holder{
+			display: none;
+			width: 100%;
+			margin-bottom: 20px;
+			overflow: hidden;
+			p{
+				padding: 10px;
+				text-align: left;
+			}
+			&.success{
+				display: block;
+				background: @greenLight;
+				p{ color: @greenDark; }
+			}
+			&.error{
+				display: block;
+				background: @redLight;
+				p{ color: @redDark; }
+			}
+		}
+	}
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*	change personal end	     			 	  */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*	change password start				 	  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 #content-info-holder{
@@ -128,6 +170,11 @@
 			}
 		}
 		form{
+			& > p{
+				margin: 0 0 20px;
+				font-size: 1.125em;
+				& > span{ color: @green; }
+			}
 			button[type="submit"]{
 				float: left;
 				span{ text-align: center; }

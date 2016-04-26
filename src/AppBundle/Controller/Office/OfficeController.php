@@ -94,6 +94,14 @@ class OfficeController extends Controller
             if( !$this->isGranted(StudentVoter::STUDENT_READ_BY_CUSTOMER, $student) )
                 throw $this->createAccessDeniedException();
 
+            $settingNfcTagActivationFee = $this->_manager->getRepository('AppBundle:Setting\Setting')
+                ->findNfcTagActivationFee()
+                ->getSettingValue()
+            ;
+
+            if( !$settingNfcTagActivationFee )
+                throw $this->createNotFoundException();
+
             $this->_breadcrumbs
                 ->add('customer_office_students', [], $menu->getTitleShort())
                 ->add('customer_office_students', ['id' => $student->getId()], $student->getName())
@@ -101,7 +109,10 @@ class OfficeController extends Controller
 
             $response = [
                 'view' => 'AppBundle:Office/State:student.html.twig',
-                'data' => ['student' => $student]
+                'data' => [
+                    'student'                    => $student,
+                    'settingNfcTagActivationFee' => $settingNfcTagActivationFee
+                ]
             ];
         } else {
             $students = $this->filterDeleted(

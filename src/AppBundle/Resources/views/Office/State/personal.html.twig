@@ -53,7 +53,22 @@
                                     </div>
                                     <div class="col">
                                         <span><span class="icon hr-email"></span>Електронна адреса</span>
-                                        <p>{{ customer.email }}</p>
+                                        <form action="{{ path('customer_office_action_personal_data_update', { 'id': customer.id }) }}" method="POST" id="personal-form">
+                                            <div class="response-holder"></div>
+                                            <input type="email" name="personal_data[email]" value="{{ customer.email }}"
+                                                   data-rule-required="true" data-msg-required="Обов'язкове поле"
+                                                   data-rule-email="true" data-msg-email="Це не схоже на справжній e-mail">
+                                            <button type="submit">
+                                                <span>Змінити</span>
+                                            </button>
+                                            <div class="loader">
+												<span class="dot"></span>
+												<span class="dot"></span>
+												<span class="dot"></span>
+												<span class="dot"></span>
+												<span class="dot"></span>
+											</div>
+                                        </form>
                                     </div>
 
                                     {% if customer.customerNotificationSetting %}
@@ -90,6 +105,9 @@
                                                         <span class="text">E-mail про покупки у кінці дня</span>
                                                     </label>
                                                 </div>
+                                                <p>
+                                                    <span>Увага!</span> При активації послуги СМС-інформування з балансу знімається вартість у розмірі <span>0,27 грн</span> за <span>1 СМС</span>
+                                                </p>
                                                 <button type="submit">
                                                     <span>Застосувати</span>
                                                 </button>
@@ -100,20 +118,18 @@
                                     <div class="col change-password-holder">
 										<h3>Зміна поточного пароля</h3>
 										<form action="{{ path('customer_office_action_password_update', { 'id': customer.id }) }}" method="POST" id="change-password-form">
-											<div class="response-holder {# success | error #}"></div>
+											<div class="response-holder"></div>
 											<div class="field-area">
 												<label for="new-password">Новий пароль</label>
 												<input type="password" name="password[new]" value="" placeholder="Введіть новий пароль" id="new-password"
                                                        data-rule-required="true"
                                                        data-msg-required="Поле не може бути порожним">
-												<!--span class="error-holder">Не може бути порожним</span-->
 											</div>
                                             <div class="field-area">
 												<label for="new-password">Повторіть новий пароль</label>
 												<input type="password" name="password[new_repeat]" value="" placeholder="Введіть повтор нового паролю" id="new-password-repeat"
                                                        data-rule-required="true"
                                                        data-msg-required="Поле не може бути порожним">
-												<!--span class="error-holder">Не може бути порожним</span-->
 											</div>
 											<button type="submit">
 												<span>Змінити</span>

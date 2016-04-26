@@ -22,13 +22,40 @@
             padding: 20px;
             box-sizing: border-box;
             overflow: hidden;
+            & > ul{
+                display: block;
+                width: 100%;
+                height: auto;
+                margin-bottom: 10px;
+                overflow: hidden;
+                li{
+                    display: block;
+                    margin-bottom: 10px;
+                    position: relative;
+                    &:before{
+                        display: block;
+                        width: 6px;
+                        height: 6px;
+                        position: absolute;
+                        top: 50%;
+                        left: 0;
+                        margin-top: -3px;
+                        background: @green;
+                        content: "";
+                        overflow: hidden;
+                    }
+                    p{
+                        padding: 0 0 0 16px;
+                        & > span{ color: @green;}
+                    }
+                }
+            }
             .field-area{
-                width: ~"calc(100% - 200px)";
-                float: left;
+                width: 100%;
                 margin: 0px 20px 0 0;
             }
             button[type="submit"]{
-                float: left;
+                margin: 20px 0 0;
                 span{
                     text-align: center;
                 }

@@ -270,4 +270,51 @@ class ActionOfficeController extends Controller
             return new Response('Помилка - запит містить невірні дані', 500);
         }
     }
+
+    /**
+     * @Method({"POST"})
+     * @Route(
+     *      "/customer_office/action/personal_data/update_for/{id}",
+     *      name="customer_office_action_personal_data_update",
+     *      host="{domain_website}",
+     *      defaults={"_locale" = "%locale_website%", "domain_website" = "%domain_website%"},
+     *      requirements={"_locale" = "%locale_website%|ru", "domain_website" = "%domain_website%", "id" = "\d+"},
+     *      condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function setCustomerPersonalData(Request $request, $id)
+    {
+        $validateEmail = function($email)
+        {
+            return filter_var($email, FILTER_VALIDATE_EMAIL);
+        };
+
+        $customer = $this->_manager->getRepository('AppBundle:Customer\Customer')->find($id);
+
+        if( !$customer )
+            return new Response('Помилка - користувач не існує', 500);
+
+        if( !$this->isGranted(CustomerVoter::CUSTOMER_UPDATE_PASSWORD, $customer) )
+            return new Response('Помилка - у доступі відмовлено', 500);
+
+        if( $request->request->has('personal_data') )
+        {
+            $personalData = $request->request->get('personal_data');
+
+            if( empty($personalData['email']) )
+                return new Response('Помилка - запит містить невірні дані', 500);
+
+            if( !$validateEmail($personalData['email']) )
+                return new Response('Це не схоже на справжній e-mail', 500);
+
+            $customer->setEmail($personalData['email']);
+
+            $this->_manager->persist($customer);
+            $this->_manager->flush();
+        } else {
+            return new Response('Помилка - запит містить невірні дані', 500);
+        }
+
+        return new Response(json_encode(['message' => 'Вашу електронну адресу успішно змінено!']));
+    }
 }

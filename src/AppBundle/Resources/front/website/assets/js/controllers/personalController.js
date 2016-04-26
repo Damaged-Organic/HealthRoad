@@ -1,12 +1,12 @@
 "use strict";
 
-import PasswordService from "../services/passwordService";
+import PersonalService from "../services/personalService";
 
 let isLoading = false;
 
-export default class PasswordController{
+export default class PersonalController{
     constructor(){
-        this.el = $("#change-password-form");
+        this.el = $("#personal-form");
         this.loader = this.el.find(".loader");
         this.responseHolder = this.el.find(".response-holder");
         this._UIevents();
@@ -24,16 +24,16 @@ export default class PasswordController{
         this.loader.addClass("active");
         this.responseHolder.removeClass("success error");
 
-        PasswordService
+        PersonalService
             .change(url, formData)
             .done((response) => {
                 response = JSON.parse(response);
 
+                console.log(response);
+
                 this.responseHolder
                     .addClass("success")
                     .html(`<p>${ response.message }</p>`);
-
-                this.el[0].reset();
             })
             .fail((error) => {
                this.responseHolder
