@@ -1,5 +1,5 @@
 <?php
-// src/AppBundle/Entity/Setting/SettingDecimalType.php
+// src/AppBundle/Entity/Setting/SettingDecimal.php
 namespace AppBundle\Entity\Setting;
 
 use Symfony\Component\Validator\Constraints as Assert,
@@ -60,7 +60,7 @@ class SettingDecimal
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -83,7 +83,7 @@ class SettingDecimal
     /**
      * Get settingKey
      *
-     * @return string 
+     * @return string
      */
     public function getSettingKey()
     {
@@ -106,7 +106,7 @@ class SettingDecimal
     /**
      * Get settingValue
      *
-     * @return string 
+     * @return string
      */
     public function getSettingValue()
     {
@@ -129,7 +129,7 @@ class SettingDecimal
     /**
      * Get setting
      *
-     * @return \AppBundle\Entity\Setting\Setting 
+     * @return \AppBundle\Entity\Setting\Setting
      */
     public function getSetting()
     {
