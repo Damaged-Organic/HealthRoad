@@ -5,16 +5,20 @@ namespace AppBundle\Controller\Binding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\RedirectResponse,
-    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
+    AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Entity\School\School,
     AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Entity\Purchase\Purchase,
@@ -30,6 +34,9 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
 {
     use ClassOperationsTrait, EntityFilter;
 
+    /** @DI\Inject("request_stack") */
+    private $_requestStack;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -42,6 +49,15 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.vending_machine_boundless_access") */
     private $_vendingMachineBoundlessAccess;
 
@@ -49,6 +65,25 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
     {
         if( !$this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_READ) )
             throw $this->createAccessDeniedException('Access denied');
+
+        $route          = $this->_requestStack->getMasterRequest()->get('_route');
+        $routeArguments = [
+            'objectId'    => $objectId,
+            'objectClass' => $this->getObjectClassNameLower(new VendingMachine)
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute($route, $routeArguments);
+        }
 
         switch(TRUE)
         {
@@ -58,10 +93,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $vendingMachines = $this->filterDeletedIfNotGranted(
-                    VendingMachineVoter::VENDING_MACHINE_READ,
-                    $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['school' => $object])
-                );
+                $this->_entityResultsManager->setFindArgument(['school' => $object]);
 
                 $action = [
                     'path'  => 'vending_machine_choose',
@@ -75,10 +107,7 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $vendingMachines = $this->filterDeletedIfNotGranted(
-                    VendingMachineVoter::VENDING_MACHINE_READ,
-                    $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findBy(['productVendingGroup' => $object])
-                );
+                $this->_entityResultsManager->setFindArgument(['productVendingGroup' => $object]);
 
                 $action = [
                     'path'  => 'vending_machine_choose',
@@ -90,6 +119,17 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                 throw new NotAcceptableHttpException("Object not supported");
             break;
         }
+
+        $vendingMachines = $this->_entityResultsManager->findRecords(
+            $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+        );
+
+        if( $vendingMachines === FALSE )
+            return $this->redirectToRoute($route, $routeArguments);
+
+        $vendingMachines = $this->filterDeletedIfNotGranted(
+            VendingMachineVoter::VENDING_MACHINE_READ, $vendingMachines
+        );
 
         return $this->render('AppBundle:Entity/VendingMachine/Binding:show.html.twig', [
             'standalone'      => TRUE,
@@ -252,15 +292,36 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             break;
         }
 
-        $vendingMachines = $this->filterDeletedIfNotGranted(
-            VendingMachineVoter::VENDING_MACHINE_READ,
-            $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll()
-        );
-
-        $this->_breadcrumbs->add('vending_machine_choose', [
+        $routeArguments = [
             'objectId'    => $objectId,
             'objectClass' => $objectClass
-        ]);
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute('vending_machine_choose', $routeArguments);
+        }
+
+        $vendingMachines = $this->_entityResultsManager->findRecords(
+            $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+        );
+
+        if( $vendingMachines === FALSE )
+            return $this->redirectToRoute('vending_machine_choose', $routeArguments);
+
+        $vendingMachines = $this->filterDeletedIfNotGranted(
+            VendingMachineVoter::VENDING_MACHINE_READ, $vendingMachines
+        );
+
+        $this->_breadcrumbs->add('vending_machine_choose', $routeArguments);
 
         return $this->render('AppBundle:Entity/VendingMachine/Binding:choose.html.twig', [
             'path'            => $path,

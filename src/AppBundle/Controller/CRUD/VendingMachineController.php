@@ -5,10 +5,14 @@ namespace AppBundle\Controller\CRUD;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
@@ -33,6 +37,15 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.vending_machine_boundless_access") */
     private $_vendingMachineBoundlessAccess;
 
@@ -48,9 +61,11 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine');
+
         if( $id )
         {
-            $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->find($id);
+            $vendingMachine = $repository->find($id);
 
             if( !$vendingMachine )
                 throw $this->createNotFoundException("Vending Machine identified by `id` {$id} not found");
@@ -68,9 +83,24 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
             if( !$this->_vendingMachineBoundlessAccess->isGranted(VendingMachineBoundlessAccess::VENDING_MACHINE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('vending_machine_read');
+            }
+
+            $vendingMachines = $this->_entityResultsManager->findRecords($repository);
+
+            if( $vendingMachines === FALSE )
+                return $this->redirectToRoute('vending_machine_read');
+
             $vendingMachines = $this->filterDeletedIfNotGranted(
-                VendingMachineVoter::VENDING_MACHINE_READ,
-                $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findAll()
+                VendingMachineVoter::VENDING_MACHINE_READ, $vendingMachines
             );
 
             $response = [

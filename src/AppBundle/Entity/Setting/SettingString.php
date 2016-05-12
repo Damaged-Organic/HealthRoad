@@ -22,7 +22,7 @@ class SettingString
     use IdMapperTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Setting\Setting", inversedBy="SettingString")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Setting\Setting", inversedBy="settingsString")
      * @ORM\JoinColumn(name="setting_id", referencedColumnName="id")
      */
     protected $setting;
@@ -66,7 +66,7 @@ class SettingString
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -89,7 +89,7 @@ class SettingString
     /**
      * Get settingKey
      *
-     * @return string 
+     * @return string
      */
     public function getSettingKey()
     {
@@ -112,7 +112,7 @@ class SettingString
     /**
      * Get settingValue
      *
-     * @return string 
+     * @return string
      */
     public function getSettingValue()
     {
@@ -135,7 +135,7 @@ class SettingString
     /**
      * Get setting
      *
-     * @return \AppBundle\Entity\Setting\Setting 
+     * @return \AppBundle\Entity\Setting\Setting
      */
     public function getSetting()
     {

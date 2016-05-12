@@ -175,6 +175,25 @@ class Employee implements AdvancedUserInterface, Serializable
         ;
     }
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getUsername(),
+            $this->getName(),
+            $this->getSurname(),
+            $this->getPatronymic(),
+            $this->getEmail(),
+            $this->getPhoneNumber(),
+            $this->getEmployeeGroup()->getName(),
+        ];
+
+        if( $this->getEmployeeGroup() ) {
+            $searchProperties[] = $this->getEmployeeGroup()->getName();
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set username
      *
@@ -370,7 +389,7 @@ class Employee implements AdvancedUserInterface, Serializable
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -393,7 +412,7 @@ class Employee implements AdvancedUserInterface, Serializable
     /**
      * Get phoneNumber
      *
-     * @return string 
+     * @return string
      */
     public function getPhoneNumber()
     {
@@ -416,7 +435,7 @@ class Employee implements AdvancedUserInterface, Serializable
     /**
      * Get skypeName
      *
-     * @return string 
+     * @return string
      */
     public function getSkypeName()
     {
@@ -540,7 +559,7 @@ class Employee implements AdvancedUserInterface, Serializable
     /**
      * Get customers
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCustomers()
     {
@@ -573,7 +592,7 @@ class Employee implements AdvancedUserInterface, Serializable
     /**
      * Get students
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStudents()
     {

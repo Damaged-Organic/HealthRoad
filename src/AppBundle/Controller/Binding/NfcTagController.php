@@ -12,15 +12,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
+
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Service\Security\NfcTagBoundlessAccess,
-    AppBundle\Security\Authorization\Voter\NfcTagVoter,
-    AppBundle\Entity\VendingMachine\VendingMachine,
+    AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Entity\Student\Student,
+    AppBundle\Entity\VendingMachine\VendingMachine,
+    AppBundle\Security\Authorization\Voter\NfcTagVoter,
     AppBundle\Security\Authorization\Voter\StudentVoter,
-    AppBundle\Security\Authorization\Voter\VendingMachineVoter;
+    AppBundle\Security\Authorization\Voter\VendingMachineVoter,
+    AppBundle\Service\Security\NfcTagBoundlessAccess;
 
 class NfcTagController extends Controller implements UserRoleListInterface
 {
@@ -37,6 +41,15 @@ class NfcTagController extends Controller implements UserRoleListInterface
 
     /** @DI\Inject("app.common.messages") */
     private $_messages;
+
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
 
     /** @DI\Inject("app.security.nfc_tag_boundless_access") */
     private $_nfcTagBoundlessAccess;
@@ -155,15 +168,36 @@ class NfcTagController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $nfcTags = $this->filterDeletedIfNotGranted(
-            NfcTagVoter::NFC_TAG_READ,
-            $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll()
-        );
-
-        $this->_breadcrumbs->add('nfc_tag_choose', [
+        $routeArguments = [
             'objectId'    => $objectId,
             'objectClass' => $objectClass
-        ]);
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute('nfc_tag_choose', $routeArguments);
+        }
+
+        $nfcTags = $this->_entityResultsManager->findRecords(
+            $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')
+        );
+
+        if( $nfcTags === FALSE )
+            return $this->redirectToRoute('nfc_tag_choose', $routeArguments);
+
+        $nfcTags = $this->filterDeletedIfNotGranted(
+            NfcTagVoter::NFC_TAG_READ, $nfcTags
+        );
+
+        $this->_breadcrumbs->add('nfc_tag_choose', $routeArguments);
 
         return $this->render('AppBundle:Entity/NfcTag/Binding:choose.html.twig', [
             'path'    => $path,

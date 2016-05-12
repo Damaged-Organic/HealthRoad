@@ -22,7 +22,7 @@ class SettingDecimal
     use IdMapperTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Setting\Setting", inversedBy="SettingDecimal")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Setting\Setting", inversedBy="settingsDecimal")
      * @ORM\JoinColumn(name="setting_id", referencedColumnName="id")
      */
     protected $setting;

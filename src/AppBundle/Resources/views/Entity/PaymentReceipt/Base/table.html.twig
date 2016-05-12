@@ -1,6 +1,12 @@
 {# AppBundle/Resources/views/Entity/PaymentReceipt/Base/table.html.twig #}
 {% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/PaymentReceipt/Base:list.html.twig' %}
 
+{% block action_search %}
+    <div id="search-widget">
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}
+    </div>
+{% endblock %}
+
 {% block variable %}
     <div class="outer scrollable-holder">
         <div class="inner scrollable">
@@ -42,6 +48,6 @@
     <div class="bottom-info-panel">
         {% block action_button %}{% endblock %}
 
-        {% include 'AppBundle:Dashboard/Common:pagination.html.twig' only %}
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:pagination')) }}
     </div>
 {% endblock %}

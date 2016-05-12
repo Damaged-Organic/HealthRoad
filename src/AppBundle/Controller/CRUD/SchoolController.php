@@ -6,9 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
@@ -33,6 +37,15 @@ class SchoolController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.school_boundless_access") */
     private $_schoolBoundlessAccess;
 
@@ -48,9 +61,11 @@ class SchoolController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:School\School');
+
         if( $id )
         {
-            $school = $this->_manager->getRepository('AppBundle:School\School')->find($id);
+            $school = $repository->find($id);
 
             if( !$school )
                 throw $this->createNotFoundException("School identified by `id` {$id} not found");
@@ -63,14 +78,32 @@ class SchoolController extends Controller implements UserRoleListInterface
                 'data' => ['school' => $school]
             ];
 
-            $this->_breadcrumbs->add('school_read')->add('school_read', ['id' => $id], $this->_translator->trans('school_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('school_read')
+                ->add('school_read', ['id' => $id], $this->_translator->trans('school_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_schoolBoundlessAccess->isGranted(SchoolBoundlessAccess::SCHOOL_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('school_read');
+            }
+
+            $schools = $this->_entityResultsManager->findRecords($repository);
+
+            if( $schools === FALSE )
+                return $this->redirectToRoute('school_read');
+
             $schools = $this->filterDeletedIfNotGranted(
-                SchoolVoter::SCHOOL_READ,
-                $this->_manager->getRepository('AppBundle:School\School')->findAll()
+                SchoolVoter::SCHOOL_READ, $schools
             );
 
             $response = [
@@ -218,6 +251,6 @@ class SchoolController extends Controller implements UserRoleListInterface
             $this->_messages->markUnDeleteSuccess();
         }
 
-        return $this->redirectToRoute('school_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

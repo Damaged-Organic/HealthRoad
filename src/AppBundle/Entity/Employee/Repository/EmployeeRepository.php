@@ -13,6 +13,37 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
 class EmployeeRepository extends ExtendedEntityRepository implements UserProviderInterface
 {
+    // BEGIN: Extended find methods
+    public function findChained()
+    {
+        $this->chain = $this->createQueryBuilder('e')
+            ->select('e, eg')
+            ->leftJoin('e.employeeGroup', 'eg')
+        ;
+
+        return $this;
+    }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'e');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'e.username', 'e.name', 'e.surname', 'e.patronymic', 'e.email', 'e.phoneNumber',
+            'eg.name',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
+
     public function loadUserByUsername($username)
     {
         $query = $this

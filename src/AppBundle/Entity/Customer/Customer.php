@@ -154,6 +154,16 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
         $this->setCustomerNotificationSetting(new CustomerNotificationSetting);
     }
 
+    public function getSearchProperties()
+    {
+        return [
+            $this->getPhoneNumber(),
+            $this->getName(),
+            $this->getSurname(),
+            $this->getPatronymic(),
+        ];
+    }
+
     public function getUsername()
     {
         return $this->username;

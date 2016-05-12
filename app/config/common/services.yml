@@ -168,6 +168,24 @@ services:
         calls:
             - [setMailer, [ "@mailer" ]]
 
+    app.common.paginator:
+        class: AppBundle\Service\Common\Paginator
+        calls:
+            - [setRequestStack, [ "@request_stack" ]]
+
+    app.common.search:
+        class: AppBundle\Service\Common\Search
+        calls:
+            - [setRequestStack, [ "@request_stack" ]]
+
+    app.common.entity_results_manager:
+        class: AppBundle\Service\Common\EntityResultsManager
+        calls:
+            - [setRequestStack, [ "@request_stack" ]]
+            - [setRouter, [ "@router" ]]
+            - [setPaginator, [ "@app.common.paginator" ]]
+            - [setSearch, [ "@app.common.search" ]]
+
     # Validators
 
     app.validator.uploaded_product_image:

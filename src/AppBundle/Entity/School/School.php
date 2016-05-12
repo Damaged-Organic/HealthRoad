@@ -172,6 +172,24 @@ class School
         $this->students        = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getName(),
+            $this->getAddress(),
+        ];
+
+        if( $this->getSettlement() ) {
+            $searchProperties[] = $this->getSettlement()->getName();
+
+            if( $this->getSettlement()->getRegion() ) {
+                $searchProperties[] = $this->getSettlement()->getRegion()->getName();
+            }
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set name
      *
@@ -211,7 +229,7 @@ class School
     /**
      * Get address
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {
@@ -257,7 +275,7 @@ class School
     /**
      * Get phoneNumberSchool
      *
-     * @return string 
+     * @return string
      */
     public function getPhoneNumberSchool()
     {
@@ -280,7 +298,7 @@ class School
     /**
      * Get emailSchool
      *
-     * @return string 
+     * @return string
      */
     public function getEmailSchool()
     {
@@ -303,7 +321,7 @@ class School
     /**
      * Get nameHeadmaster
      *
-     * @return string 
+     * @return string
      */
     public function getNameHeadmaster()
     {
@@ -326,7 +344,7 @@ class School
     /**
      * Get phoneNumberHeadmaster
      *
-     * @return string 
+     * @return string
      */
     public function getPhoneNumberHeadmaster()
     {
@@ -349,7 +367,7 @@ class School
     /**
      * Get emailHeadmaster
      *
-     * @return string 
+     * @return string
      */
     public function getEmailHeadmaster()
     {
@@ -372,7 +390,7 @@ class School
     /**
      * Get nameContact
      *
-     * @return string 
+     * @return string
      */
     public function getNameContact()
     {
@@ -395,7 +413,7 @@ class School
     /**
      * Get phoneNumberContact
      *
-     * @return string 
+     * @return string
      */
     public function getPhoneNumberContact()
     {
@@ -418,7 +436,7 @@ class School
     /**
      * Get emailContact
      *
-     * @return string 
+     * @return string
      */
     public function getEmailContact()
     {
@@ -508,7 +526,7 @@ class School
     /**
      * Get vendingMachines
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getVendingMachines()
     {
@@ -542,7 +560,7 @@ class School
     /**
      * Get students
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStudents()
     {

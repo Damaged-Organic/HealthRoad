@@ -6,9 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
@@ -33,6 +37,15 @@ class NfcTagController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.nfc_tag_boundless_access") */
     private $_nfcTagBoundlessAccess;
 
@@ -48,9 +61,11 @@ class NfcTagController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag');
+
         if( $id )
         {
-            $nfcTag = $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->find($id);
+            $nfcTag = $repository->find($id);
 
             if( !$nfcTag )
                 throw $this->createNotFoundException("Nfc Tag identified by `id` {$id} not found");
@@ -63,14 +78,32 @@ class NfcTagController extends Controller implements UserRoleListInterface
                 'data' => ['nfcTag' => $nfcTag]
             ];
 
-            $this->_breadcrumbs->add('nfc_tag_read')->add('nfc_tag_read', ['id' => $id], $this->_translator->trans('nfc_tag_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('nfc_tag_read')
+                ->add('nfc_tag_read', ['id' => $id], $this->_translator->trans('nfc_tag_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_nfcTagBoundlessAccess->isGranted(NfcTagBoundlessAccess::NFC_TAG_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('nfc_tag_read');
+            }
+
+            $nfcTags = $this->_entityResultsManager->findRecords($repository);
+
+            if( $nfcTags === FALSE )
+                return $this->redirectToRoute('nfc_tag_read');
+
             $nfcTags = $this->filterDeletedIfNotGranted(
-                NfcTagVoter::NFC_TAG_READ,
-                $this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAll()
+                NfcTagVoter::NFC_TAG_READ, $nfcTags
             );
 
             $response = [
@@ -218,6 +251,6 @@ class NfcTagController extends Controller implements UserRoleListInterface
             $this->_messages->markUnDeleteSuccess();
         }
 
-        return $this->redirectToRoute('nfc_tag_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

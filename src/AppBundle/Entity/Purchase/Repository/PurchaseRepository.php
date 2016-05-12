@@ -3,26 +3,48 @@
 namespace AppBundle\Entity\Purchase\Repository;
 
 use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
-    AppBundle\Entity\Purchase\Purchase;
-
-use AppBundle\Entity\VendingMachine\VendingMachine;
+    AppBundle\Entity\Purchase\Purchase,
+    AppBundle\Entity\VendingMachine\VendingMachine;
 
 class PurchaseRepository extends ExtendedEntityRepository
 {
-    public function findAllDesc()
+    // BEGIN: Extended find methods
+    public function findChained()
     {
-        $query = $this->createQueryBuilder('p')
-            ->select('p, pr, nt, st')
+        $this->chain = $this->createQueryBuilder('p')
+            ->select('p, pr, nt, st, s, vm')
             ->leftJoin('p.product', 'pr')
-            ->leftJoin('p.student', 'st')
             ->leftJoin('p.nfcTag', 'nt')
+            ->leftJoin('p.student', 'st')
+            ->leftJoin('st.school', 's')
+            ->leftJoin('s.vendingMachines', 'vm')
             ->orderBy('p.syncPurchasedAt', 'DESC')
-            ->setMaxResults(5000)
-            ->getQuery()
         ;
 
-        return $query->getResult();
+        return $this;
     }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'p');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'pr.nameFull',
+            'vm.serial',
+            'nt.number',
+            'st.name', 'st.surname', 'st.patronymic',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
 
     public function findByDateGrouped($date)
     {

@@ -55,6 +55,13 @@ class ProductVendingGroup
         $this->products        = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        return [
+            $this->getName(),
+        ];
+    }
+
     /**
      * Set name
      *
@@ -71,7 +78,7 @@ class ProductVendingGroup
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -105,7 +112,7 @@ class ProductVendingGroup
     /**
      * Get vendingMachines
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getVendingMachines()
     {
@@ -139,7 +146,7 @@ class ProductVendingGroup
     /**
      * Get products
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getProducts()
     {

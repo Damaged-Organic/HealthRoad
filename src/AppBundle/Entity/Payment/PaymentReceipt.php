@@ -106,6 +106,21 @@ class PaymentReceipt implements PaymentReceiptFileInterface
 
     protected $status;
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getReceiptNumber(),
+            $this->getNfcTagNumber(),
+            $this->getPayerFullName(),
+        ];
+
+        if( $this->getReceiptDate() ) {
+            $searchProperties[] = $this->getReceiptDate()->format('Y-m-d');
+        }
+
+        return $searchProperties;
+    }
+
     public function constructFromPaymentReceiptFileEntry(array $entry)
     {
         $this

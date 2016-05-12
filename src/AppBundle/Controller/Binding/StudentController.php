@@ -12,9 +12,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 
 use JMS\DiExtraBundle\Annotation as DI;
 
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
+
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
+    AppBundle\Entity\Student\Student,
     AppBundle\Entity\Customer\Customer,
     AppBundle\Entity\School\School,
     AppBundle\Entity\NfcTag\NfcTag,
@@ -31,6 +35,9 @@ class StudentController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait, EntityFilter;
 
+    /** @DI\Inject("request_stack") */
+    private $_requestStack;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -42,6 +49,15 @@ class StudentController extends Controller implements UserRoleListInterface
 
     /** @DI\Inject("app.common.messages") */
     private $_messages;
+
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
 
     /** @DI\Inject("app.security.student_boundless_access") */
     private $_studentBoundlessAccess;
@@ -82,9 +98,32 @@ class StudentController extends Controller implements UserRoleListInterface
             break;
         }
 
+        $route          = $this->_requestStack->getMasterRequest()->get('_route');
+        $routeArguments = [
+            'objectId'    => $objectId,
+            'objectClass' => $this->getObjectClassNameLower(new Student)
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute($route, $routeArguments);
+        }
+
+        $students = $this->_entityResultsManager->findRecords($object->getStudents());
+
+        if( $students === FALSE )
+            return $this->redirectToRoute($route, $routeArguments);
+
         $students = $this->filterDeletedIfNotGranted(
-            StudentVoter::STUDENT_READ,
-            $object->getStudents()
+            StudentVoter::STUDENT_READ, $students
         );
 
         return $this->render('AppBundle:Entity/Student/Binding:show.html.twig', [
@@ -262,15 +301,36 @@ class StudentController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $students = $this->filterDeletedIfNotGranted(
-            StudentVoter::STUDENT_READ,
-            $this->_manager->getRepository('AppBundle:Student\Student')->findAll()
-        );
-
-        $this->_breadcrumbs->add('student_choose', [
+        $routeArguments = [
             'objectId'    => $objectId,
             'objectClass' => $objectClass
-        ]);
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute('student_choose', $routeArguments);
+        }
+
+        $students = $this->_entityResultsManager->findRecords(
+            $this->_manager->getRepository('AppBundle:Student\Student')
+        );
+
+        if( $students === FALSE )
+            return $this->redirectToRoute('student_choose', $routeArguments);
+
+        $students = $this->filterDeletedIfNotGranted(
+            StudentVoter::STUDENT_READ, $students
+        );
+
+        $this->_breadcrumbs->add('student_choose', $routeArguments);
 
         return $this->render('AppBundle:Entity/Student/Binding:choose.html.twig', [
             'path'     => $path,

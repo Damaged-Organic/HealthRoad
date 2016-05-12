@@ -6,9 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Settlement\Settlement,
@@ -30,6 +34,15 @@ class SettlementController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.settlement_boundless_access") */
     private $_settlementBoundlessAccess;
 
@@ -45,9 +58,11 @@ class SettlementController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Settlement\Settlement');
+
         if( $id )
         {
-            $settlement = $this->_manager->getRepository('AppBundle:Settlement\Settlement')->find($id);
+            $settlement = $repository->find($id);
 
             if( !$settlement )
                 throw $this->createNotFoundException("Settlement identified by `id` {$id} not found");
@@ -60,12 +75,29 @@ class SettlementController extends Controller implements UserRoleListInterface
                 'data' => ['settlement' => $settlement]
             ];
 
-            $this->_breadcrumbs->add('settlement_read')->add('settlement_read', ['id' => $id], $this->_translator->trans('settlement_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('settlement_read')
+                ->add('settlement_read', ['id' => $id], $this->_translator->trans('settlement_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $settlements = $this->_manager->getRepository('AppBundle:Settlement\Settlement')->findAll();
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('settlement_read');
+            }
+
+            $settlements = $this->_entityResultsManager->findRecords($repository);
+
+            if( $settlements === FALSE )
+                return $this->redirectToRoute('settlement_read');
 
             $response = [
                 'view' => 'AppBundle:Entity/Settlement/CRUD:readList.html.twig',
@@ -93,7 +125,9 @@ class SettlementController extends Controller implements UserRoleListInterface
         if( !$this->_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $settlementType = new SettlementType($this->_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_CREATE));
+        $settlementType = new SettlementType(
+            $this->_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_CREATE)
+        );
 
         $form = $this->createForm($settlementType, $settlement = new Settlement, [
             'action' => $this->generateUrl('settlement_create')
@@ -146,7 +180,9 @@ class SettlementController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $settlementType = new SettlementType($this->_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_CREATE));
+        $settlementType = new SettlementType(
+            $this->_settlementBoundlessAccess->isGranted(SettlementBoundlessAccess::SETTLEMENT_CREATE)
+        );
 
         $form = $this->createForm($settlementType, $settlement, [
             'action' => $this->generateUrl('settlement_update', ['id' => $id])
@@ -202,6 +238,6 @@ class SettlementController extends Controller implements UserRoleListInterface
 
         $this->_messages->markDeleteSuccess();
 
-        return $this->redirectToRoute('settlement_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

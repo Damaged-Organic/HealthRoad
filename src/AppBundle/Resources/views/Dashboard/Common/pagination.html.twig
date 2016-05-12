@@ -1,29 +1,68 @@
 {# AppBundle/Resources/views/Dashboard/Common/pagination.html.twig #}
 <div id="pagination-holder">
-    <ul>
-        <li class="active">
-            <a href="#">1</a>
-        </li>
-        <li class="dots">
-            <span></span>
-        </li>
-        <li>
-            <a href="#">2</a>
-        </li>
-        <li>
-            <a href="#">3</a>
-        </li>
-        <li>
-            <a href="#">4</a>
-        </li>
-        <li>
-            <a href="#">5</a>
-        </li>
-        <li class="dots">
-            <span></span>
-        </li>
-        <li>
-            <a href="#">21</a>
-        </li>
-    </ul>
+
+    {% if pages is defined and pages.last != pages.first %}
+        <ul>
+
+            {% if pages.last <= display.start * 2 - 1 %}
+
+                {% for page in range(pages.first, pages.last) %}
+                    <li {{ (page == pages.current) ? 'class="active"' }}>
+                        <a href="{{ _entityResultsManager.getLink(page) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+            {% elseif pages.current <= display.start %}
+
+                {% for page in range(pages.first, display.start) %}
+                    <li {{ (page == pages.current) ? 'class="active"' }}>
+                        <a href="{{ _entityResultsManager.getLink(page) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+                <li>
+                    <a href="{{ _entityResultsManager.getLink(display.start + 1) }}"> > </a>
+                </li>
+                <li>
+                    <a href="{{ _entityResultsManager.getLink(pages.last) }}">{{ pages.last }}</a>
+                </li>
+            {% elseif pages.current > display.end  %}
+                <li>
+                    <a href="{{ _entityResultsManager.getLink(pages.first) }}">{{ pages.first }}</a>
+                </li>
+                <li>
+                    <a href="{{ _entityResultsManager.getLink(display.end) }}"> < </a>
+                </li>
+
+                {% for page in range(display.end + 1, pages.last) %}
+                    <li {{ (page == pages.current) ? 'class="active"' }}>
+                        <a href="{{ _entityResultsManager.getLink(page) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+            {% else %}
+
+                <li>
+                    <a href="{{ _entityResultsManager.getLink(pages.first) }}">{{ pages.first }}</a>
+                </li>
+                <li>
+                    <a href="{{ _entityResultsManager.getLink(display.range|first - 1) }}"> < </a>
+                </li>
+
+                {% for page in display.range %}
+                    <li {{ (page == pages.current) ? 'class="active"' }}>
+                        <a href="{{ _entityResultsManager.getLink(page) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+                <li>
+                    <a href="{{ _entityResultsManager.getLink(display.range|last + 1) }}"> > </a>
+                </li>
+                <li>
+                    <a href="{{ _entityResultsManager.getLink(pages.last) }}">{{ pages.last }}</a>
+                </li>
+            {% endif %}
+
+        </ul>
+    {% endif %}
 </div>

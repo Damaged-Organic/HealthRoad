@@ -42,6 +42,29 @@ class PurchaseService
      */
     protected $purchasedAt;
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getItem(),
+        ];
+
+        if( $this->getPurchasedAt() ) {
+            $searchProperties[] = $this->getPurchasedAt()->format('Y-m-d, H:i:s');
+        }
+
+        if( $this->getNfcTag() ) {
+            $searchProperties[] = $this->getNfcTag()->getNumber();
+        }
+
+        if( $this->getStudent() ) {
+            $searchProperties[] = $this->getStudent()->getName();
+            $searchProperties[] = $this->getStudent()->getSurname();
+            $searchProperties[] = $this->getStudent()->getPatronymic();
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set item
      *

@@ -5,8 +5,8 @@ namespace AppBundle\Controller\Binding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use JMS\DiExtraBundle\Annotation as DI;
 

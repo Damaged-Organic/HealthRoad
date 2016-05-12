@@ -218,6 +218,25 @@ class Supplier
         $this->products       = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getName(),
+            $this->getPhoneNumberSupplier(),
+            $this->getEmailSupplier(),
+        ];
+
+        if( $this->getContractDateStart() ) {
+            $searchProperties[] = $this->getContractDateStart()->format('Y-m-d');
+        }
+
+        if( $this->getContractDateEnd() ) {
+            $searchProperties[] = $this->getContractDateEnd()->format('Y-m-d');
+        }
+
+        return $searchProperties;
+    }
+
     /* Vich Uploadable Methods */
 
     public function setLogoFile(File $logo = NULL)
@@ -251,7 +270,7 @@ class Supplier
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -274,7 +293,7 @@ class Supplier
     /**
      * Get nameLegal
      *
-     * @return string 
+     * @return string
      */
     public function getNameLegal()
     {
@@ -320,7 +339,7 @@ class Supplier
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -343,7 +362,7 @@ class Supplier
     /**
      * Get logoName
      *
-     * @return string 
+     * @return string
      */
     public function getLogoName()
     {
@@ -366,7 +385,7 @@ class Supplier
     /**
      * Get phoneNumberSupplier
      *
-     * @return string 
+     * @return string
      */
     public function getPhoneNumberSupplier()
     {
@@ -389,7 +408,7 @@ class Supplier
     /**
      * Get emailSupplier
      *
-     * @return string 
+     * @return string
      */
     public function getEmailSupplier()
     {
@@ -412,7 +431,7 @@ class Supplier
     /**
      * Get nameContact
      *
-     * @return string 
+     * @return string
      */
     public function getNameContact()
     {
@@ -435,7 +454,7 @@ class Supplier
     /**
      * Get phoneNumberContact
      *
-     * @return string 
+     * @return string
      */
     public function getPhoneNumberContact()
     {
@@ -458,7 +477,7 @@ class Supplier
     /**
      * Get emailContact
      *
-     * @return string 
+     * @return string
      */
     public function getEmailContact()
     {
@@ -481,7 +500,7 @@ class Supplier
     /**
      * Get contractNumber
      *
-     * @return string 
+     * @return string
      */
     public function getContractNumber()
     {
@@ -504,7 +523,7 @@ class Supplier
     /**
      * Get contractDateStart
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getContractDateStart()
     {
@@ -527,7 +546,7 @@ class Supplier
     /**
      * Get contractDateEnd
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getContractDateEnd()
     {
@@ -584,7 +603,7 @@ class Supplier
     /**
      * Get products
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getProducts()
     {

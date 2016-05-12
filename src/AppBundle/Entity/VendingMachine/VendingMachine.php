@@ -177,6 +177,37 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
         $this->vendingMachineLoad   = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getSerial(),
+            $this->getName(),
+        ];
+
+        if( $this->getVendingMachineSyncedAt() ) {
+            $searchProperties[] = $this->getVendingMachineSyncedAt()->format('Y-m-d');
+        }
+
+        if( $this->getProductVendingGroup() ) {
+            $searchProperties[] = $this->getProductVendingGroup()->getName();
+        }
+
+        if( $this->getSchool() ) {
+            $searchProperties[] = $this->getSchool()->getName();
+            $searchProperties[] = $this->getSchool()->getAddress();
+
+            if( $this->getSchool()->getSettlement() ) {
+                $searchProperties[] = $this->getSchool()->getSettlement()->getName();
+
+                if( $this->getSchool()->getSettlement()->getRegion() ) {
+                    $searchProperties[] = $this->getSchool()->getSettlement()->getRegion()->getName();
+                }
+            }
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set serial
      *

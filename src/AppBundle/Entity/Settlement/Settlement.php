@@ -52,6 +52,19 @@ class Settlement
         $this->schools = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getName(),
+        ];
+
+        if( $this->getRegion() ) {
+            $searchProperties[] = $this->getRegion()->getName();
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set name
      *
@@ -68,7 +81,7 @@ class Settlement
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -91,7 +104,7 @@ class Settlement
     /**
      * Get region
      *
-     * @return \AppBundle\Entity\Region\Region 
+     * @return \AppBundle\Entity\Region\Region
      */
     public function getRegion()
     {
@@ -125,7 +138,7 @@ class Settlement
     /**
      * Get schools
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSchools()
     {

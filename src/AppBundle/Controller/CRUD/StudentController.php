@@ -6,9 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
@@ -33,6 +37,15 @@ class StudentController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.student_boundless_access") */
     private $_studentBoundlessAccess;
 
@@ -46,11 +59,13 @@ class StudentController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function readAction($id = NULL)
+    public function readAction(Request $request, $id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Student\Student');
+
         if( $id )
         {
-            $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
+            $student = $repository->find($id);
 
             if( !$student )
                 throw $this->createNotFoundException("Student identified by `id` {$id} not found");
@@ -63,15 +78,29 @@ class StudentController extends Controller implements UserRoleListInterface
                 'data' => ['student' => $student]
             ];
 
-            $this->_breadcrumbs->add('student_read')->add('student_read', ['id' => $id], $this->_translator->trans('student_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('student_read')
+                ->add('student_read', ['id' => $id], $this->_translator->trans('student_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_studentBoundlessAccess->isGranted(StudentBoundlessAccess::STUDENT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $students = $this->filterDeletedIfNotGranted(
-                StudentVoter::STUDENT_READ,
-                $this->_manager->getRepository('AppBundle:Student\Student')->findAll()
-            );
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('student_read');
+            }
+
+            $students = $this->_entityResultsManager->findRecords($repository);
+
+            if( $students === FALSE )
+                return $this->redirectToRoute('student_read');
 
             $response = [
                 'view' => 'AppBundle:Entity/Student/CRUD:readList.html.twig',
@@ -202,7 +231,7 @@ class StudentController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         $student = $this->_manager->getRepository('AppBundle:Student\Student')->find($id);
 
@@ -227,6 +256,6 @@ class StudentController extends Controller implements UserRoleListInterface
             $this->_messages->markUnDeleteSuccess();
         }
 
-        return $this->redirectToRoute('student_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

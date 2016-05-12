@@ -74,6 +74,15 @@ class Region
         $this->settlements = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        return [
+            $this->getName(),
+            $this->getAdministrativeCenter(),
+            $this->getPhoneCode(),
+        ];
+    }
+
     /**
      * Set name
      *
@@ -90,7 +99,7 @@ class Region
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -147,7 +156,7 @@ class Region
     /**
      * Get settlements
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSettlements()
     {
@@ -170,7 +179,7 @@ class Region
     /**
      * Get administrativeCenter
      *
-     * @return string 
+     * @return string
      */
     public function getAdministrativeCenter()
     {
@@ -193,7 +202,7 @@ class Region
     /**
      * Get phoneCode
      *
-     * @return integer 
+     * @return integer
      */
     public function getPhoneCode()
     {

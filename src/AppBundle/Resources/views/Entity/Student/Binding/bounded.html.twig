@@ -31,6 +31,12 @@
     {% endif %}
 {% endblock %}
 
+{% block action_search %}
+    <div id="search-widget">
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}
+    </div>
+{% endblock %}
+
 {% block variable %}
 
     {{ bounded|raw }}

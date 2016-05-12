@@ -93,6 +93,27 @@ class NfcTag implements SyncNfcTagPropertiesInterface
         $this->purchases = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getNumber(),
+            $this->getCode(),
+        ];
+
+        if( $this->getStudent() ) {
+            $searchProperties[] = $this->getStudent()->getName();
+            $searchProperties[] = $this->getStudent()->getSurname();
+            $searchProperties[] = $this->getStudent()->getPatronymic();
+        }
+
+        if( $this->getSchool() ) {
+            $searchProperties[] = $this->getSchool()->getName();
+            $searchProperties[] = $this->getSchool()->getAddress();
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set number
      *

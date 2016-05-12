@@ -7,6 +7,36 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
 
 class VendingMachineLoadRepository extends ExtendedEntityRepository
 {
+    // BEGIN: Extended find methods
+    public function findChained()
+    {
+        $this->chain = $this->createQueryBuilder('vml')
+            ->select('vml, vm')
+            ->leftJoin('vml.vendingMachine', 'vm')
+        ;
+
+        return $this;
+    }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'vml');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'vm.serial',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
+
     public function rawDeleteVendingMachineLoad(VendingMachine $vendingMachine)
     {
         $builder = $this->_em->createQueryBuilder();

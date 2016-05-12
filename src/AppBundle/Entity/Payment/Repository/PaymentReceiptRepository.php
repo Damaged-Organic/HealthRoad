@@ -7,6 +7,37 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
 
 class PaymentReceiptRepository extends ExtendedEntityRepository
 {
+    // BEGIN: Extended find methods
+    public function findChained()
+    {
+        $this->chain = $this->createQueryBuilder('pr')
+            ->select('pr, nt')
+            ->leftJoin('pr.nfcTag', 'nt')
+            ->orderBy('pr.receiptDate', 'DESC')
+        ;
+
+        return $this;
+    }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'pr');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'pr.receiptNumber', 'pr.nfcTagNumber', 'pr.payerFullName',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
+
     public function findByChecksumHash(array $checksumHashes)
     {
         $query = $this->createQueryBuilder('pr')

@@ -299,6 +299,24 @@ class Product implements SyncProductPropertiesInterface
         $this->purchases            = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getNameFull(),
+            $this->getCode(),
+        ];
+
+        if( $this->getProductCategory() ) {
+            $searchProperties[] = $this->getProductCategory()->getName();
+        }
+
+        if( $this->getSupplier() ) {
+            $searchProperties[] = $this->getSupplier()->getName();
+        }
+
+        return $searchProperties;
+    }
+
     /* Vich Uploadable Methods */
 
     public function setImageCertificateFile(File $imageCertificate = NULL)

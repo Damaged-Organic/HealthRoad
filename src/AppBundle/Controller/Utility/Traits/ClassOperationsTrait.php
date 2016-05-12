@@ -14,6 +14,13 @@ trait ClassOperationsTrait
         return $objectClassName = (new ReflectionClass($object))->getShortName();
     }
 
+    public function getObjectClassNameLower($object)
+    {
+        return mb_strtolower(
+            $this->getObjectClassName($object), 'UTF-8'
+        );
+    }
+
     public function compareObjectClassNameToString($object, $string)
     {
         $objectClassName = $this->getObjectClassName($object);

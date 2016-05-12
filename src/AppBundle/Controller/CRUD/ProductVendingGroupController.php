@@ -6,9 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
@@ -33,6 +37,15 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.product_vending_group_boundless_access") */
     private $_productVendingGroupBoundlessAccess;
 
@@ -48,9 +61,11 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup');
+
         if( $id )
         {
-            $productVendingGroup = $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->find($id);
+            $productVendingGroup = $repository->find($id);
 
             if( !$productVendingGroup )
                 throw $this->createNotFoundException("Product Vending Group identified by `id` {$id} not found");
@@ -63,14 +78,32 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
                 'data' => ['productVendingGroup' => $productVendingGroup]
             ];
 
-            $this->_breadcrumbs->add('product_vending_group_read')->add('product_vending_group_read', ['id' => $id], $this->_translator->trans('product_vending_group_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('product_vending_group_read')
+                ->add('product_vending_group_read', ['id' => $id], $this->_translator->trans('product_vending_group_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('product_vending_group_read');
+            }
+
+            $productVendingGroups = $this->_entityResultsManager->findRecords($repository);
+
+            if( $productVendingGroups === FALSE )
+                return $this->redirectToRoute('product_vending_group_read');
+
             $productVendingGroups = $this->filterDeletedIfNotGranted(
-                ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_READ,
-                $this->_manager->getRepository('AppBundle:Product\ProductVendingGroup')->findAll()
+                ProductVendingGroupVoter::PRODUCT_VENDING_GROUP_READ, $productVendingGroups
             );
 
             $response = [
@@ -99,7 +132,9 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
         if( !$this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $productVendingGroupType = new ProductVendingGroupType($this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
+        $productVendingGroupType = new ProductVendingGroupType(
+            $this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE)
+        );
 
         $form = $this->createForm($productVendingGroupType, $productVendingGroup = new ProductVendingGroup, [
             'action' => $this->generateUrl('product_vending_group_create')
@@ -152,7 +187,9 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
             ]);
         }
 
-        $productVendingGroupType = new ProductVendingGroupType($this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE));
+        $productVendingGroupType = new ProductVendingGroupType(
+            $this->_productVendingGroupBoundlessAccess->isGranted(ProductVendingGroupBoundlessAccess::PRODUCT_VENDING_GROUP_CREATE)
+        );
 
         $form = $this->createForm($productVendingGroupType, $productVendingGroup, [
             'action' => $this->generateUrl('product_vending_group_update', ['id' => $id])
@@ -218,6 +255,6 @@ class ProductVendingGroupController extends Controller implements UserRoleListIn
             $this->_messages->markUnDeleteSuccess();
         }
 
-        return $this->redirectToRoute('product_vending_group_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

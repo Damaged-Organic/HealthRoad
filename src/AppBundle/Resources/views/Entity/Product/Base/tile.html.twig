@@ -1,6 +1,12 @@
 {# AppBundle/Resources/views/Entity/Product/Base/tile.html.twig #}
 {% extends 'AppBundle:Entity/Product/Base:list.html.twig' %}
 
+{% block action_search %}
+    <div id="search-widget">
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}
+    </div>
+{% endblock %}
+
 {% block variable %}
     <div class="outer scrollable-holder">
         <div class="inner scrollable">
@@ -93,6 +99,6 @@
     <div class="bottom-info-panel">
         {% block action_button %}{% endblock %}
 
-        {% include 'AppBundle:Dashboard/Common:pagination.html.twig' only %}
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:pagination')) }}
     </div>
 {% endblock %}

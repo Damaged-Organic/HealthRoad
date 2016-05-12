@@ -5,9 +5,13 @@ namespace AppBundle\Controller\CRUD;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Security\Authorization\Voter\PurchaseVoter,
@@ -24,6 +28,15 @@ class PurchaseController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.breadcrumbs") */
     private $_breadcrumbs;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.purchase_boundless_access") */
     private $_purchaseBoundlessAccess;
 
@@ -39,9 +52,11 @@ class PurchaseController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Purchase\Purchase');
+
         if( $id )
         {
-            $purchase = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->find($id);
+            $purchase = $repository->find($id);
 
             if( !$purchase )
                 throw $this->createNotFoundException("Purchase identified by `id` {$id} not found");
@@ -63,7 +78,21 @@ class PurchaseController extends Controller implements UserRoleListInterface
             if( !$this->_purchaseBoundlessAccess->isGranted(PurchaseBoundlessAccess::PURCHASE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $purchases = $this->_manager->getRepository('AppBundle:Purchase\Purchase')->findAllDesc();
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('purchase_read');
+            }
+
+            $purchases = $this->_entityResultsManager->findRecords($repository);
+
+            if( $purchases === FALSE )
+                return $this->redirectToRoute('purchase_read');
 
             $response = [
                 'view' => 'AppBundle:Entity/Purchase/CRUD:readList.html.twig',

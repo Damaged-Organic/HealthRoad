@@ -5,15 +5,19 @@ namespace AppBundle\Controller\Binding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\RedirectResponse,
-    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use JMS\DiExtraBundle\Annotation as DI;
 
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
+
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
+    AppBundle\Entity\Region\Region,
     AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\Settlement\Settlement,
     AppBundle\Security\Authorization\Voter\EmployeeVoter,
@@ -23,6 +27,9 @@ use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
 class RegionController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait;
+
+    /** @DI\Inject("request_stack") */
+    private $_requestStack;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -35,6 +42,15 @@ class RegionController extends Controller implements UserRoleListInterface
 
     /** @DI\Inject("app.common.messages") */
     private $_messages;
+
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
 
     /** @DI\Inject("app.security.region_boundless_access") */
     private $_regionBoundlessAccess;
@@ -52,7 +68,7 @@ class RegionController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $regions = $this->_manager->getRepository('AppBundle:Region\Region')->findBy(['employee' => $object]);
+                // $regions = $this->_manager->getRepository('AppBundle:Region\Region')->findBy(['employee' => $object]);
 
                 $action = [
                     'path'  => 'region_choose',
@@ -64,6 +80,33 @@ class RegionController extends Controller implements UserRoleListInterface
                 throw new NotAcceptableHttpException("Object not supported");
             break;
         }
+
+        $route          = $this->_requestStack->getMasterRequest()->get('_route');
+        $routeArguments = [
+            'objectId'    => $objectId,
+            'objectClass' => $this->getObjectClassNameLower(new Region)
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+                ->setFindArgument(['employee' => $object])
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute($route, $routeArguments);
+        }
+
+        $regions = $this->_entityResultsManager->findRecords(
+            $this->_manager->getRepository('AppBundle:Region\Region')
+        );
+
+        if( $regions === FALSE )
+            return $this->redirectToRoute($route, $routeArguments);
 
         return $this->render('AppBundle:Entity/Region/Binding:show.html.twig', [
             'standalone' => TRUE,
@@ -166,12 +209,32 @@ class RegionController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $regions = $this->_manager->getRepository('AppBundle:Region\Region')->findAll();
-
-        $this->_breadcrumbs->add('region_choose', [
+        $routeArguments = [
             'objectId'    => $objectId,
             'objectClass' => $objectClass
-        ]);
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute('region_choose', $routeArguments);
+        }
+
+        $regions = $this->_entityResultsManager->findRecords(
+            $this->_manager->getRepository('AppBundle:Region\Region')
+        );
+
+        if( $regions === FALSE )
+            return $this->redirectToRoute('region_choose', $routeArguments);
+
+        $this->_breadcrumbs->add('region_choose', $routeArguments);
 
         return $this->render('AppBundle:Entity/Region/Binding:choose.html.twig', [
             'path'    => $path,

@@ -156,6 +156,32 @@ class Student
         $this->products = new ArrayCollection;
     }
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [
+            $this->getName(),
+            $this->getSurname(),
+            $this->getPatronymic(),
+        ];
+
+        if( $this->getSchool() ) {
+            $searchProperties[] = $this->getSchool()->getName();
+            $searchProperties[] = $this->getSchool()->getAddress();
+        }
+
+        if( $this->getNfcTag() ) {
+            $searchProperties[] = $this->getNfcTag()->getNumber();
+        }
+
+        if( $this->getCustomer() ) {
+            $searchProperties[] = $this->getCustomer()->getName();
+            $searchProperties[] = $this->getCustomer()->getSurname();
+            $searchProperties[] = $this->getCustomer()->getPatronymic();
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set name
      *

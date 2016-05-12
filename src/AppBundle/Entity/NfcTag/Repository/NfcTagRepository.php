@@ -7,6 +7,39 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
 
 class NfcTagRepository extends ExtendedEntityRepository
 {
+    // BEGIN: Extended find methods
+    public function findChained()
+    {
+        $this->chain = $this->createQueryBuilder('nt')
+            ->select('nt, st, s')
+            ->leftJoin('nt.student', 'st')
+            ->leftJoin('st.school', 's')
+        ;
+
+        return $this;
+    }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'nt');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'nt.number', 'nt.code',
+            'st.name', 'st.surname', 'st.patronymic',
+            's.name', 's.address',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
+
     public function findAll()
     {
         $query = $this->createQueryBuilder('nt')

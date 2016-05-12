@@ -46,6 +46,21 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
      */
     protected $message;
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [];
+
+        if( $this->getVendingMachine() ) {
+            $searchProperties[] = $this->getVendingMachine()->getSerial();
+        }
+
+        if( $this->getOccurredAt() ) {
+            $searchProperties[] = $this->getOccurredAt()->format('Y-m-d H:i:s');
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set syncEventId
      *
@@ -62,7 +77,7 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
     /**
      * Get syncEventId
      *
-     * @return integer 
+     * @return integer
      */
     public function getSyncEventId()
     {
@@ -85,7 +100,7 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
     /**
      * Get occurredAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getOccurredAt()
     {
@@ -108,7 +123,7 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
     /**
      * Get type
      *
-     * @return string 
+     * @return string
      */
     public function getType()
     {
@@ -131,7 +146,7 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
     /**
      * Get code
      *
-     * @return integer 
+     * @return integer
      */
     public function getCode()
     {
@@ -154,7 +169,7 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
     /**
      * Get message
      *
-     * @return string 
+     * @return string
      */
     public function getMessage()
     {
@@ -177,7 +192,7 @@ class VendingMachineEvent implements SyncVendingMachineEventPropertiesInterface
     /**
      * Get vendingMachine
      *
-     * @return \AppBundle\Entity\VendingMachine\VendingMachine 
+     * @return \AppBundle\Entity\VendingMachine\VendingMachine
      */
     public function getVendingMachine()
     {

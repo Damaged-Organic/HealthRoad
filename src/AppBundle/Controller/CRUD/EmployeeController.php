@@ -6,9 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Employee\Employee,
@@ -30,6 +34,15 @@ class EmployeeController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.employee_boundless_access") */
     private $_employeeBoundlessAccess;
 
@@ -45,9 +58,11 @@ class EmployeeController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Employee\Employee');
+
         if( $id )
         {
-            $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($id);
+            $employee = $repository->find($id);
 
             if( !$employee )
                 throw $this->createNotFoundException("Employee identified by `id` {$id} not found");
@@ -60,12 +75,29 @@ class EmployeeController extends Controller implements UserRoleListInterface
                 'data' => ['employee' => $employee]
             ];
 
-            $this->_breadcrumbs->add('employee_read')->add('employee_read', ['id' => $id], $this->_translator->trans('employee_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('employee_read')
+                ->add('employee_read', ['id' => $id], $this->_translator->trans('employee_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_employeeBoundlessAccess->isGranted(EmployeeBoundlessAccess::EMPLOYEE_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $employees = $this->_manager->getRepository('AppBundle:Employee\Employee')->findAll();
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('employee_read');
+            }
+
+            $employees = $this->_entityResultsManager->findRecords($repository);
+
+            if( $employees === FALSE )
+                return $this->redirectToRoute('employee_read');
 
             $response = [
                 'view' => 'AppBundle:Entity/Employee/CRUD:readList.html.twig',
@@ -231,6 +263,6 @@ class EmployeeController extends Controller implements UserRoleListInterface
 
         $this->_messages->markDeleteSuccess();
 
-        return $this->redirectToRoute('employee_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

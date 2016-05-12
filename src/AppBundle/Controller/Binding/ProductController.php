@@ -5,28 +5,35 @@ namespace AppBundle\Controller\Binding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\RedirectResponse,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use JMS\DiExtraBundle\Annotation as DI;
 
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
+
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
-    AppBundle\Entity\Supplier\Supplier,
+    AppBundle\Entity\Product\Product,
     AppBundle\Entity\Product\ProductVendingGroup,
+    AppBundle\Entity\Supplier\Supplier,
     AppBundle\Entity\Student\Student,
-    AppBundle\Service\Security\ProductBoundlessAccess,
     AppBundle\Security\Authorization\Voter\ProductVoter,
     AppBundle\Security\Authorization\Voter\StudentVoter,
     AppBundle\Security\Authorization\Voter\ProductVendingGroupVoter,
-    AppBundle\Security\Authorization\Voter\SupplierVoter;
+    AppBundle\Security\Authorization\Voter\SupplierVoter,
+    AppBundle\Service\Security\ProductBoundlessAccess;
 
 class ProductController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait, EntityFilter;
+
+    /** @DI\Inject("request_stack") */
+    private $_requestStack;
 
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -39,6 +46,15 @@ class ProductController extends Controller implements UserRoleListInterface
 
     /** @DI\Inject("app.common.messages") */
     private $_messages;
+
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
 
     /** @DI\Inject("app.security.product_boundless_access") */
     private $_productBoundlessAccess;
@@ -91,9 +107,32 @@ class ProductController extends Controller implements UserRoleListInterface
             break;
         }
 
+        $route          = $this->_requestStack->getMasterRequest()->get('_route');
+        $routeArguments = [
+            'objectId'    => $objectId,
+            'objectClass' => $this->getObjectClassNameLower(new Product)
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute($route, $routeArguments);
+        }
+
+        $products = $this->_entityResultsManager->findRecords($object->getProducts());
+
+        if( $products === FALSE )
+            return $this->redirectToRoute($route, $routeArguments);
+
         $products = $this->filterDeletedIfNotGranted(
-            ProductVoter::PRODUCT_READ,
-            $object->getProducts()
+            ProductVoter::PRODUCT_READ, $products
         );
 
         return $this->render('AppBundle:Entity/Product/Binding:show.html.twig', [
@@ -119,6 +158,24 @@ class ProductController extends Controller implements UserRoleListInterface
         if( !$this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_BIND) )
             throw $this->createAccessDeniedException('Access denied');
 
+        $routeArguments = [
+            'objectId'    => $objectId,
+            'objectClass' => $objectClass
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute('product_choose', $routeArguments);
+        }
+
         switch(TRUE)
         {
             case $this->compareObjectClassNameToString(new ProductVendingGroup, $objectClass):
@@ -127,9 +184,8 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$productVendingGroup )
                     throw $this->createNotFoundException("Product Vending Group identified by `id` {$objectId} not found");
 
-                $products = $this->filterDeletedIfNotGranted(
-                    ProductVoter::PRODUCT_READ,
-                    $this->_manager->getRepository('AppBundle:Product\Product')->findAll()
+                $products = $this->_entityResultsManager->findRecords(
+                    $this->_manager->getRepository('AppBundle:Product\Product')
                 );
 
                 $path = 'product_vending_group_update_bounded';
@@ -149,9 +205,8 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$supplier )
                     throw $this->createNotFoundException("Supplier identified by `id` {$objectId} not found");
 
-                $products = $this->filterDeletedIfNotGranted(
-                    ProductVoter::PRODUCT_READ,
-                    $this->_manager->getRepository('AppBundle:Product\Product')->findAll()
+                $products = $this->_entityResultsManager->findRecords(
+                    $this->_manager->getRepository('AppBundle:Product\Product')
                 );
 
                 $path = 'supplier_update_bounded';
@@ -171,10 +226,8 @@ class ProductController extends Controller implements UserRoleListInterface
                 if( !$student )
                     throw $this->createNotFoundException("Student identified by `id` {$objectId} not found");
 
-                $products = $this->filterDeletedIfNotGranted(
-                    ProductVoter::PRODUCT_READ,
-                    $this->_manager->getRepository('AppBundle:Product\Product')->findAvailableByStudent($student)
-                );
+                // TODO: This result is not paginated and is not searchable
+                $products = $this->_manager->getRepository('AppBundle:Product\Product')->findAvailableByStudent($student);
 
                 $path = 'student_update_bounded';
 
@@ -192,10 +245,14 @@ class ProductController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $this->_breadcrumbs->add('product_choose', [
-            'objectId'    => $objectId,
-            'objectClass' => $objectClass,
-        ]);
+        if( $products === FALSE )
+            return $this->redirectToRoute('product_choose', $routeArguments);
+
+        $products = $this->filterDeletedIfNotGranted(
+            ProductVoter::PRODUCT_READ, $products
+        );
+
+        $this->_breadcrumbs->add('product_choose', $routeArguments);
 
         return $this->render('AppBundle:Entity/Product/Binding:choose.html.twig', [
             'path'     => $path,

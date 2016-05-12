@@ -41,7 +41,7 @@
     <div id="action-holder">
         <div id="action-holder" class="manage-holder">
             <div class="btn-connect">
-                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(settlements.0)|lower }) }}">Готово</a>
+                <a href="{{ path(path, { 'objectId': object.id, 'objectClass': class(settlements.getIterator.current)|lower }) }}">Готово</a>
             </div>
         </div>
     </div>

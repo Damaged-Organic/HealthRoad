@@ -6,9 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Region\Region,
@@ -30,6 +34,15 @@ class RegionController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.region_boundless_access") */
     private $_regionBoundlessAccess;
 
@@ -45,9 +58,11 @@ class RegionController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Region\Region');
+
         if( $id )
         {
-            $region = $this->_manager->getRepository('AppBundle:Region\Region')->find($id);
+            $region = $repository->find($id);
 
             if( !$region )
                 throw $this->createNotFoundException("Region identified by `id` {$id} not found");
@@ -60,12 +75,29 @@ class RegionController extends Controller implements UserRoleListInterface
                 'data' => ['region' => $region]
             ];
 
-            $this->_breadcrumbs->add('region_read')->add('region_read', ['id' => $id], $this->_translator->trans('region_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('region_read')
+                ->add('region_read', ['id' => $id], $this->_translator->trans('region_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_regionBoundlessAccess->isGranted(RegionBoundlessAccess::REGION_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $regions = $this->_manager->getRepository('AppBundle:Region\Region')->findAll();
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('region_read');
+            }
+
+            $regions = $this->_entityResultsManager->findRecords($repository);
+
+            if( $regions === FALSE )
+                return $this->redirectToRoute('region_read');
 
             $response = [
                 'view' => 'AppBundle:Entity/Region/CRUD:readList.html.twig',
@@ -202,6 +234,6 @@ class RegionController extends Controller implements UserRoleListInterface
 
         $this->_messages->markDeleteSuccess();
 
-        return $this->redirectToRoute('region_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

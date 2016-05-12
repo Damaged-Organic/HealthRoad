@@ -6,6 +6,36 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
 class VendingMachineEventRepository extends ExtendedEntityRepository
 {
+    // BEGIN: Extended find methods
+    public function findChained()
+    {
+        $this->chain = $this->createQueryBuilder('vme')
+            ->select('vme, vm')
+            ->leftJoin('vme.vendingMachine', 'vm')
+        ;
+
+        return $this;
+    }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'vme');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'vm.serial',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
+
     public function rawInsertVendingMachineEvents(array $eventsArray)
     {
         $queryString = '';

@@ -7,6 +7,38 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
 
 class ProductRepository extends ExtendedEntityRepository
 {
+    // BEGIN: Extended find methods
+    public function findChained()
+    {
+        $this->chain = $this->createQueryBuilder('p')
+            ->select('p, pc, pi, sp')
+            ->leftJoin('p.productCategory', 'pc')
+            ->leftJoin('p.productImages', 'pi')
+            ->leftJoin('p.supplier', 'sp')
+        ;
+
+        return $this;
+    }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'p');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'p.nameFull', 'p.code', 'pc.name', 'sp.name',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
+
     public function findAvailableByStudent(Student $student)
     {
         $query = $this->_em->createQueryBuilder()

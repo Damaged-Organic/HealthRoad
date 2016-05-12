@@ -7,10 +7,14 @@ use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Entity\Supplier\Supplier,
@@ -33,6 +37,15 @@ class SupplierController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.supplier_boundless_access") */
     private $_supplierBoundlessAccess;
 
@@ -51,9 +64,11 @@ class SupplierController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Supplier\Supplier');
+
         if( $id )
         {
-            $supplier = $this->_manager->getRepository('AppBundle:Supplier\Supplier')->find($id);
+            $supplier = $repository->find($id);
 
             if( !$supplier )
                 throw $this->createNotFoundException("Supplier identified by `id` {$id} not found");
@@ -71,7 +86,21 @@ class SupplierController extends Controller implements UserRoleListInterface
             if( !$this->_supplierBoundlessAccess->isGranted(SupplierBoundlessAccess::SUPPLIER_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $suppliers = $this->_manager->getRepository('AppBundle:Supplier\Supplier')->findAll();
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('supplier_read');
+            }
+
+            $suppliers = $this->_entityResultsManager->findRecords($repository);
+
+            if( $suppliers === FALSE )
+                return $this->redirectToRoute('supplier_read');
 
             $response = [
                 'view' => 'AppBundle:Entity/Supplier/CRUD:readList.html.twig',
@@ -253,6 +282,6 @@ class SupplierController extends Controller implements UserRoleListInterface
 
         $this->_messages->markDeleteSuccess();
 
-        return $this->redirectToRoute('supplier_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

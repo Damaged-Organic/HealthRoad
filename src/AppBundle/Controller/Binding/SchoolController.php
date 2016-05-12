@@ -5,16 +5,20 @@ namespace AppBundle\Controller\Binding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\RedirectResponse,
-    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
     AppBundle\Controller\Utility\Traits\ClassOperationsTrait,
+    AppBundle\Entity\School\School,
     AppBundle\Entity\Employee\Employee,
     AppBundle\Entity\Settlement\Settlement,
     AppBundle\Entity\Student\Student,
@@ -28,6 +32,9 @@ class SchoolController extends Controller implements UserRoleListInterface
 {
     use ClassOperationsTrait, EntityFilter;
 
+    /** @DI\Inject("request_stack") */
+    private $_requestStack;
+
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
 
@@ -39,6 +46,15 @@ class SchoolController extends Controller implements UserRoleListInterface
 
     /** @DI\Inject("app.common.messages") */
     private $_messages;
+
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
 
     /** @DI\Inject("app.security.school_boundless_access") */
     private $_schoolBoundlessAccess;
@@ -56,11 +72,6 @@ class SchoolController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Employee identified by `id` {$objectId} not found");
 
-                $schools = $this->filterDeletedIfNotGranted(
-                    SchoolVoter::SCHOOL_READ,
-                    $object->getSchools()
-                );
-
                 $action = [
                     'path'  => 'school_choose',
                     'voter' => EmployeeVoter::EMPLOYEE_BIND_SCHOOL
@@ -73,11 +84,6 @@ class SchoolController extends Controller implements UserRoleListInterface
                 if( !$object )
                     throw $this->createNotFoundException("Settlement identified by `id` {$objectId} not found");
 
-                $schools = $this->filterDeletedIfNotGranted(
-                    SchoolVoter::SCHOOL_READ,
-                    $this->_manager->getRepository('AppBundle:School\School')->findBy(['settlement' => $object])
-                );
-
                 $action = [
                     'path'  => 'school_choose',
                     'voter' => SettlementVoter::SETTLEMENT_BIND
@@ -88,6 +94,34 @@ class SchoolController extends Controller implements UserRoleListInterface
                 throw new NotAcceptableHttpException("Object not supported");
             break;
         }
+
+        $route          = $this->_requestStack->getMasterRequest()->get('_route');
+        $routeArguments = [
+            'objectId'    => $objectId,
+            'objectClass' => $this->getObjectClassNameLower(new School)
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute($route, $routeArguments);
+        }
+
+        $schools = $this->_entityResultsManager->findRecords($object->getSchools());
+
+        if( $schools === FALSE )
+            return $this->redirectToRoute($route, $routeArguments);
+
+        $schools = $this->filterDeletedIfNotGranted(
+            SchoolVoter::SCHOOL_READ, $schools
+        );
 
         return $this->render('AppBundle:Entity/School/Binding:show.html.twig', [
             'standalone' => TRUE,
@@ -222,15 +256,36 @@ class SchoolController extends Controller implements UserRoleListInterface
             break;
         }
 
-        $schools = $this->filterDeletedIfNotGranted(
-            SchoolVoter::SCHOOL_READ,
-            $this->_manager->getRepository('AppBundle:School\School')->findAll()
+        $routeArguments = [
+            'objectId'    => $objectId,
+            'objectClass' => $objectClass
+        ];
+
+        try {
+            $this->_entityResultsManager
+                ->setPageArgument($this->_paginator->getPageArgument())
+                ->setSearchArgument($this->_search->getSearchArgument())
+            ;
+
+            $this->_entityResultsManager->setRouteArguments($routeArguments);
+        } catch(PaginatorException $ex) {
+            throw $this->createNotFoundException('Invalid page argument');
+        } catch(SearchException $ex) {
+            return $this->redirectToRoute('school_choose', $routeArguments);
+        }
+
+        $schools = $this->_entityResultsManager->findRecords(
+            $this->_manager->getRepository('AppBundle:School\School')
         );
 
-        $this->_breadcrumbs->add('school_choose', [
-            'objectId'    => $objectId,
-            'objectClass' => $objectClass,
-        ]);
+        if( $schools === FALSE )
+            return $this->redirectToRoute('school_choose', $routeArguments);
+
+        $schools = $this->filterDeletedIfNotGranted(
+            SchoolVoter::SCHOOL_READ, $schools
+        );
+
+        $this->_breadcrumbs->add('school_choose', $routeArguments);
 
         return $this->render('AppBundle:Entity/School/Binding:choose.html.twig', [
             'path'    => $path,

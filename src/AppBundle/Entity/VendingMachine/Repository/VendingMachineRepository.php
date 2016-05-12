@@ -6,11 +6,54 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
 
 class VendingMachineRepository extends ExtendedEntityRepository
 {
+    // BEGIN: Extended find methods
+    public function findChained()
+    {
+        $this->chain = $this->createQueryBuilder('vm')
+            ->select('vm, vmg, s, sm, r, st, nt, p')
+            ->leftJoin('vm.productVendingGroup', 'vmg')
+            ->leftJoin('vm.school', 's')
+            ->leftJoin('s.settlement', 'sm')
+            ->leftJoin('sm.region', 'r')
+            ->leftJoin('s.students', 'st')
+            ->leftJoin('st.nfcTag', 'nt')
+            ->leftJoin('st.products', 'p')
+        ;
+
+        return $this;
+    }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'vm');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'vm.serial', 'vm.name',
+            'vmg.name',
+            's.name', 's.address',
+            'sm.name',
+            'r.name',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
+
     public function findOneBySerialPrefetchRelated($serial)
     {
         $query = $this->createQueryBuilder('vm')
-            ->select('vm, s, st, nt, p')
+            ->select('vm, vmg, s, sm, r, st, nt, p')
+            ->leftJoin('vm.productVendingGroup', 'vmg')
             ->leftJoin('vm.school', 's')
+            ->leftJoin('s.settlement', 'sm')
+            ->leftJoin('sm.region', 'r')
             ->leftJoin('s.students', 'st')
             ->leftJoin('st.nfcTag', 'nt')
             ->leftJoin('st.products', 'p')

@@ -41,6 +41,21 @@ class VendingMachineLoad implements SyncVendingMachineLoadPropertiesInterface
      */
     protected $loadedAt;
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [];
+
+        if( $this->getVendingMachine() ) {
+            $searchProperties[] = $this->getVendingMachine()->getSerial();
+        }
+
+        if( $this->getLoadedAt() ) {
+            $searchProperties[] = $this->getLoadedAt()->format('Y-m-d H:i:s');
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set productId
      *

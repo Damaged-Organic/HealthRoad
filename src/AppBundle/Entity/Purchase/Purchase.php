@@ -76,6 +76,35 @@ class Purchase implements SyncPurchasePropertiesInterface
      */
     protected $vendingMachineSyncId;
 
+    public function getSearchProperties()
+    {
+        $searchProperties = [];
+
+        if( $this->getSyncPurchasedAt() ) {
+            $searchProperties[] = $this->getSyncPurchasedAt()->format('Y-m-d H:i:s');
+        }
+
+        if( $this->getProduct() ) {
+            $searchProperties[] = $this->getProduct()->getNameFull();
+        }
+
+        if( $this->getVendingMachine() ) {
+            $searchProperties[] = $this->getVendingMachine()->getSerial();
+        }
+
+        if( $this->getNfcTag() ) {
+            $searchProperties[] = $this->getNfcTag()->getNumber();
+        }
+
+        if( $this->getStudent() ) {
+            $searchProperties[] = $this->getStudent()->getName();
+            $searchProperties[] = $this->getStudent()->getSurname();
+            $searchProperties[] = $this->getStudent()->getPatronymic();
+        }
+
+        return $searchProperties;
+    }
+
     /**
      * Set syncPurchaseId
      *

@@ -7,10 +7,14 @@ use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse;
 
 use JMS\DiExtraBundle\Annotation as DI;
+
+use AppBundle\Service\Common\Utility\Exceptions\SearchException,
+    AppBundle\Service\Common\Utility\Exceptions\PaginatorException;
 
 use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Service\Security\Utility\Interfaces\UserRoleListInterface,
@@ -36,6 +40,15 @@ class ProductController extends Controller implements UserRoleListInterface
     /** @DI\Inject("app.common.messages") */
     private $_messages;
 
+    /** @DI\Inject("app.common.paginator") */
+    private $_paginator;
+
+    /** @DI\Inject("app.common.search") */
+    private $_search;
+
+    /** @DI\Inject("app.common.entity_results_manager") */
+    private $_entityResultsManager;
+
     /** @DI\Inject("app.security.product_boundless_access") */
     private $_productBoundlessAccess;
 
@@ -54,9 +67,11 @@ class ProductController extends Controller implements UserRoleListInterface
      */
     public function readAction($id = NULL)
     {
+        $repository = $this->_manager->getRepository('AppBundle:Product\Product');
+
         if( $id )
         {
-            $product = $this->_manager->getRepository('AppBundle:Product\Product')->find($id);
+            $product = $repository->find($id);
 
             if( !$product )
                 throw $this->createNotFoundException("Product identified by `id` {$id} not found");
@@ -69,19 +84,37 @@ class ProductController extends Controller implements UserRoleListInterface
                 'data' => ['product' => $product]
             ];
 
-            $this->_breadcrumbs->add('product_read')->add('product_read', ['id' => $id], $this->_translator->trans('product_view', [], 'routes'));
+            $this->_breadcrumbs
+                ->add('product_read')
+                ->add('product_read', ['id' => $id], $this->_translator->trans('product_view', [], 'routes'))
+            ;
         } else {
             if( !$this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
-            $product = $this->filterDeletedIfNotGranted(
-                ProductVoter::PRODUCT_READ,
-                $this->_manager->getRepository('AppBundle:Product\Product')->findAll()
+            try {
+                $this->_entityResultsManager
+                    ->setPageArgument($this->_paginator->getPageArgument())
+                    ->setSearchArgument($this->_search->getSearchArgument())
+                ;
+            } catch(PaginatorException $ex) {
+                throw $this->createNotFoundException('Invalid page argument');
+            } catch(SearchException $ex) {
+                return $this->redirectToRoute('product_read');
+            }
+
+            $products = $this->_entityResultsManager->findRecords($repository);
+
+            if( $products === FALSE )
+                return $this->redirectToRoute('product_read');
+
+            $products = $this->filterDeletedIfNotGranted(
+                ProductVoter::PRODUCT_READ, $products
             );
 
             $response = [
                 'view' => 'AppBundle:Entity/Product/CRUD:readList.html.twig',
-                'data' => ['products' => $product]
+                'data' => ['products' => $products]
             ];
 
             $this->_breadcrumbs->add('product_read');
@@ -105,7 +138,10 @@ class ProductController extends Controller implements UserRoleListInterface
         if( !$this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE) )
             throw $this->createAccessDeniedException('Access denied');
 
-        $productType = new ProductType($this->_translator, $this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
+        $productType = new ProductType(
+            $this->_translator,
+            $this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE)
+        );
 
         $form = $this->createForm($productType, $product = new Product, [
             'action' => $this->generateUrl('product_create')
@@ -176,7 +212,10 @@ class ProductController extends Controller implements UserRoleListInterface
             ]);
         }
 
-        $productType = new ProductType($this->_translator, $this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE));
+        $productType = new ProductType(
+            $this->_translator,
+            $this->_productBoundlessAccess->isGranted(ProductBoundlessAccess::PRODUCT_CREATE)
+        );
 
         $form = $this->createForm($productType, $product, [
             'action' => $this->generateUrl('product_update', ['id' => $id])
@@ -267,6 +306,6 @@ class ProductController extends Controller implements UserRoleListInterface
             $this->_messages->markUnDeleteSuccess();
         }
 
-        return $this->redirectToRoute('product_read');
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

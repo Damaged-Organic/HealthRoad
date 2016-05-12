@@ -16,6 +16,35 @@ use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
 
 class CustomerRepository extends ExtendedEntityRepository implements UserProviderInterface
 {
+    // BEGIN: Extended find methods
+    public function findChained()
+    {
+        $this->chain = $this->createQueryBuilder('c')
+            ->select('c')
+        ;
+
+        return $this;
+    }
+
+    public function chainFindBy(array $findBy)
+    {
+        $this->baseChainFindBy($findBy, 'c');
+
+        return $this;
+    }
+
+    public function chainSearchBy($searchBy)
+    {
+        $entityFields = [
+            'c.phoneNumber', 'c.name', 'c.surname', 'c.patronymic',
+        ];
+
+        $this->baseChainSearchBy($searchBy, $entityFields);
+
+        return $this;
+    }
+    // END: Extended find methods
+
     public function loadUserByUsername($phoneNumber)
     {
         $query = $this
