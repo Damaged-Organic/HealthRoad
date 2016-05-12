@@ -94,7 +94,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
      *      maxMessage="common.human_name.length.max"
      * )
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-]+$/u",
+     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
      *     message="common.human_name.regex"
      * )
      */
@@ -110,7 +110,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
      *      maxMessage="common.human_name.length.max"
      * )
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-]+$/u",
+     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
      *     message="common.human_name.regex"
      * )
      */
@@ -126,7 +126,7 @@ class Customer implements AdvancedUserInterface, UserRoleListInterface, Serializ
      *      maxMessage="common.human_name.length.max"
      * )
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-]+$/u",
+     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
      *     message="common.human_name.regex"
      * )
      */

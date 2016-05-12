@@ -101,7 +101,7 @@ class Employee implements AdvancedUserInterface, Serializable
      *      maxMessage="common.human_name.length.max"
      * )
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-]+$/u",
+     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
      *     message="common.human_name.regex"
      * )
      */
@@ -117,7 +117,7 @@ class Employee implements AdvancedUserInterface, Serializable
      *      maxMessage="common.human_name.length.max"
      * )
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-]+$/u",
+     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
      *     message="common.human_name.regex"
      * )
      */
@@ -133,7 +133,7 @@ class Employee implements AdvancedUserInterface, Serializable
      *      maxMessage="common.human_name.length.max"
      * )
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z\p{L}-]+$/u",
+     *     pattern="/^[a-zA-Z\p{L}-’`]+$/u",
      *     message="common.human_name.regex"
      * )
      */
