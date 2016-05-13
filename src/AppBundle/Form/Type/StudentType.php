@@ -32,14 +32,16 @@ class StudentType extends AbstractType
                 ]
             ])
             ->add('surname', 'text', [
-                'label' => 'student.surname.label',
-                'attr'  => [
+                'required' => FALSE,
+                'label'    => 'student.surname.label',
+                'attr'     => [
                     'placeholder' => 'student.surname.placeholder'
                 ]
             ])
             ->add('patronymic', 'text', [
-                'label' => 'student.patronymic.label',
-                'attr'  => [
+                'required' => FALSE,
+                'label'    => 'student.patronymic.label',
+                'attr'     => [
                     'placeholder' => 'student.patronymic.placeholder'
                 ]
             ])
