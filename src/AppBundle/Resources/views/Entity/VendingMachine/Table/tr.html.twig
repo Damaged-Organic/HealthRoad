@@ -11,8 +11,21 @@
     </span>
 </td>
 <td>
-    <span>
-        {{ ( vendingMachine.vendingMachineSyncedAt ) ? vendingMachine.vendingMachineSyncedAt|date('Y-m-d H:i:s') : '-' }}
+
+    {% if vendingMachine.vendingMachineSyncedAt %}
+
+        {% set statusClass = ( date(vendingMachine.vendingMachineSyncedAt) < date('-1days') ) ? 'declined' : 'ready' %}
+        {% set syncedAt = vendingMachine.vendingMachineSyncedAt|date('Y-m-d H:i:s') %}
+
+    {% else %}
+
+        {% set statusClass = 'pending' %}
+        {% set syncedAt = '-' %}
+
+    {% endif %}
+
+    <span class="status {{ statusClass }}">
+        {{ syncedAt }}
     </span>
 </td>
 <td>
