@@ -263,13 +263,17 @@ class WebsiteController extends Controller
         } else {
             if( $request->query->has('product_category') ) {
                 $products = $this->filterDeleted(
-                    $this->_manager->getRepository('AppBundle:Product\Product')->findBy([
-                        'productCategory' => $request->query->get('product_category')
-                    ])
+                    $this->_manager->getRepository('AppBundle:Product\Product')->findBy(
+                        ['productCategory' => $request->query->get('product_category')],
+                        ['displayOrder' => 'ASC']
+                    )
                 );
             } else {
                 $products = $this->filterDeleted(
-                    $this->_manager->getRepository('AppBundle:Product\Product')->findAll()
+                    $this->_manager->getRepository('AppBundle:Product\Product')->findBy(
+                        [],
+                        ['displayOrder' => 'ASC']
+                    )
                 );
             }
 

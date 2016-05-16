@@ -46,6 +46,7 @@ class Student
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product\Product", inversedBy="students")
      * @ORM\JoinTable(name="students_products")
+     * @ORM\OrderBy({"displayOrder" = "ASC"})
      */
     protected $products;
 

@@ -29,6 +29,7 @@ class ProductVendingGroup
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product\Product", inversedBy="productVendingGroups", indexBy="id")
      * @ORM\JoinTable(name="products_product_vending_groups")
+     * @ORM\OrderBy({"displayOrder" = "ASC"})
      */
     protected $products;
 

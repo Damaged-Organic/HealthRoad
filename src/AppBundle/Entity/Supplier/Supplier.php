@@ -35,6 +35,7 @@ class Supplier
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product\Product", mappedBy="supplier")
+     * @ORM\OrderBy({"displayOrder" = "ASC"})
      */
     protected $products;
 

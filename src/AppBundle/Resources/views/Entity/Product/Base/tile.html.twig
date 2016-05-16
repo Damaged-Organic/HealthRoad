@@ -21,7 +21,7 @@
                         {% endif %}
 
                         <article class="col product-holder">
-                            <span class="unique-id">{{ product.id }}</span>
+                            <span class="unique-id">{{ product.displayOrder }}</span>
                             <figure>
 
                                 {% set path = ( is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\ProductVoter::PRODUCT_UPDATE'), product) )

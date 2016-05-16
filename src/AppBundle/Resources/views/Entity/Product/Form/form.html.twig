@@ -8,6 +8,20 @@
     </div>
 
     <div class="field-holder">
+        {{ form_widget(form.displayOrder, {
+            'id': "product-display-order",
+            'attr': {
+                'data-rule-required': "true", 'data-msg-required': 'product.display_order.not_blank'|trans({}, "validators"),
+                'data-rule-min': 1, 'data-msg-min': 'product.display_order.range.min'|trans({}, "validators"),
+            }
+        }) }}
+
+        {{ form_label(form.displayOrder) }}
+
+        {{ form_errors(form.displayOrder) }}
+    </div>
+
+    <div class="field-holder">
         {{ form_widget(form.nameFull, {
             'id': "product-name-full",
             'attr': {

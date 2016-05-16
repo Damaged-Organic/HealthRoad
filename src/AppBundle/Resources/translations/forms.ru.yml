@@ -287,6 +287,10 @@ supplier:
         placeholder: Введите дату окончания контракта
 
 product:
+    display_order:
+        label:       Порядок отображения
+        placeholder: Введите порядковый номер отображения продукта
+
     name_full:
         label:       Полное наименование
         placeholder: Введите полное наименование продукта

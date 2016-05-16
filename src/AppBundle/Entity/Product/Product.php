@@ -295,6 +295,17 @@ class Product implements SyncProductPropertiesInterface
     protected $updatedAt;
 
     /**
+     * @ORM\Column(type="integer")
+     *
+     * @Assert\NotBlank(message="product.display_order.not_blank")
+     * @Assert\Range(
+     *      min=1,
+     *      minMessage="product.display_order.range.min",
+     * )
+     */
+    protected $displayOrder;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -339,6 +350,29 @@ class Product implements SyncProductPropertiesInterface
     }
 
     /* End \ Vich Uploadable Methods */
+
+    /**
+     * Set displayOrder
+     *
+     * @param integer $displayOrder
+     * @return Product
+     */
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get displayOrder
+     *
+     * @return integer
+     */
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
+    }
 
     /**
      * Set nameFull

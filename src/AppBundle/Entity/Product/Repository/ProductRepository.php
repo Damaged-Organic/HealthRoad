@@ -15,6 +15,7 @@ class ProductRepository extends ExtendedEntityRepository
             ->leftJoin('p.productCategory', 'pc')
             ->leftJoin('p.productImages', 'pi')
             ->leftJoin('p.supplier', 'sp')
+            ->orderBy('p.displayOrder', 'ASC')
         ;
 
         return $this;
@@ -48,6 +49,7 @@ class ProductRepository extends ExtendedEntityRepository
             ->leftJoin('pvg.vendingMachines', 'vm')
             ->where('vm.school = :school')
             ->setParameter('school', $student->getSchool())
+            ->orderBy('p.displayOrder', 'ASC')
             ->getQuery()
         ;
 
@@ -81,6 +83,7 @@ class ProductRepository extends ExtendedEntityRepository
 
         $query = $query
             ->setParameter('school', $student->getSchool())
+            ->orderBy('p.displayOrder', 'ASC')
             ->getQuery()
         ;
 
