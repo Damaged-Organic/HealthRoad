@@ -35,7 +35,7 @@
         {{ form_widget(form.phoneCode, {
             'id': "region-phone-code",
             'attr': {
-                'data-mask': "99",
+                'data-mask': "99999",
                 'value': ( region is defined ) ? region.phoneCode
             }
         }) }}

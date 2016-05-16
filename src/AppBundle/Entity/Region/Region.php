@@ -57,10 +57,10 @@ class Region
     protected $administrativeCenter;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true)
+     * @ORM\Column(type="string", length=5, nullable=true)
      *
      * @Assert\Regex(
-     *     pattern="/^[0-9]{2}$/",
+     *     pattern="/^[0-9]{5}$/",
      *     message="region.phone_code.regex"
      * )
      */
