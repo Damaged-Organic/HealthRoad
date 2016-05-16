@@ -89,6 +89,35 @@
                         <span>Термін зберігання:</span>
                         {{ product.shelfLife }}
                     </p>
+
+                    {% if product.protein %}
+                        <p>
+                            <span>Білки:</span>
+                            {{ product.protein }}
+                        </p>
+                    {% endif %}
+
+                    {% if product.fat %}
+                        <p>
+                            <span>Жири:</span>
+                            {{ product.fat }}
+                        </p>
+                    {% endif %}
+
+                    {% if product.carbohydrate %}
+                        <p>
+                            <span>Вуглеводи:</span>
+                            {{ product.carbohydrate }}
+                        </p>
+                    {% endif %}
+
+                    {% if product.calories %}
+                        <p>
+                            <span>Калорії:</span>
+                            {{ product.calories }}
+                        </p>
+                    {% endif %}
+
                     <p class="price">
                         <span>Ціна:</span>
                         {{ product.price|number_format(2, ',') }} ₴

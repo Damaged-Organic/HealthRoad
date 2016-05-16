@@ -199,7 +199,7 @@ class Product implements SyncProductPropertiesInterface
      */
     protected $carbohydrate;
 
-    /**
+    /*
      * @ORM\Column(type="integer", nullable=true)
      *
      * @Assert\Range(
@@ -209,6 +209,12 @@ class Product implements SyncProductPropertiesInterface
      *      maxMessage="product.calories.range.max"
      * )
      */
+
+    /**
+    * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+    *
+    * @CustomAssert\IsDecimalConstraint
+    */
     protected $calories;
 
     /**

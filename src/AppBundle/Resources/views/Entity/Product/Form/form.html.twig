@@ -302,8 +302,8 @@
         {{ form_widget(form.calories, {
             'id': "product-calories",
             'attr': {
-                'data-rule-min': 1, 'data-msg-min': 'product.calories.range.min'|trans({}, "validators"),
-                'data-rule-max': 1000, 'data-msg-max': 'product.calories.range.max'|trans({}, "validators")
+                'data-mask': "#0,00",
+                'data-mask-reverse': "true"
             }
         }) }}
 
@@ -311,6 +311,11 @@
 
         {{ form_errors(form.calories) }}
     </div>
+
+    {#
+    'data-rule-min': 1, 'data-msg-min': 'product.calories.range.min'|trans({}, "validators"),
+    'data-rule-max': 1000, 'data-msg-max': 'product.calories.range.max'|trans({}, "validators")
+    #}
 
     <div class="separator-holder">
         <h2>Логистические данные</h2>
