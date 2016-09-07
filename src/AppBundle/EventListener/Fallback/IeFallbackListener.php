@@ -17,7 +17,7 @@ class IeFallbackListener
 
     public function onKernelRequest($event)
     {
-        if( preg_match('/(?i)msie [5-8]/',$_SERVER['HTTP_USER_AGENT']) )
+        if( isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(?i)msie [5-8]/', $_SERVER['HTTP_USER_AGENT']) )
             $event->setResponse($this->_ieFallbackController->ieFallbackAction());
     }
 }

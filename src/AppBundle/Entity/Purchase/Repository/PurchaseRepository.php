@@ -18,7 +18,7 @@ class PurchaseRepository extends ExtendedEntityRepository
             ->leftJoin('p.student', 'st')
             ->leftJoin('st.school', 's')
             ->leftJoin('s.vendingMachines', 'vm')
-            ->orderBy('p.syncPurchasedAt', 'DESC')
+            ->orderBy('p.id', 'DESC')
         ;
 
         return $this;

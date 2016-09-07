@@ -18,7 +18,7 @@ export default class ProjectMovie{
 		if(this.isStarted) return;
 
 		var self = this;
-		this.el.find(".inner").html('<iframe src="https://www.youtube.com/embed/AbQTnpRNxKQ?autoplay=1" width="100%" height="100%" allowfullscreen="1" frameborder="0"></iframe>');
+		this.el.find(".inner").html('<iframe src="https://www.youtube.com/embed/LVGzGHlwen4?autoplay=1" width="100%" height="100%" allowfullscreen="1" frameborder="0"></iframe>');
 
 		window.setTimeout(function(){
 			self.isStarted = true;

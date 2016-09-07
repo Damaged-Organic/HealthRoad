@@ -4,7 +4,7 @@ namespace AppBundle\Service\Common\Utility\Interfaces;
 
 interface PaginatorInterface
 {
-    const RECORD_LIMIT = 100;
+    const RECORD_LIMIT = 200;
 
     const PAGE_FIRST    = 1;
     const PAGE_ARGUMENT = 'page';
