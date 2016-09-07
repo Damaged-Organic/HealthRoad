@@ -80,7 +80,8 @@ class SyncController extends Controller implements
         if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
             throw new BadCredentialsException('Sync response array is missing required data');
 
-        return new JsonResponse($syncResponse, 200);
+        //return new JsonResponse($syncResponse, 200);
+        return new Response(json_encode($syncResponse, JSON_UNESCAPED_UNICODE), 200);
     }
 
     /**
@@ -111,7 +112,8 @@ class SyncController extends Controller implements
         if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
             throw new BadCredentialsException('Sync response array is missing required data');
 
-        return new JsonResponse($syncResponse);
+        //return new JsonResponse($syncResponse);
+        return new Response(json_encode($syncResponse, JSON_UNESCAPED_UNICODE), 200);
     }
 
     /**
@@ -142,7 +144,8 @@ class SyncController extends Controller implements
         if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $syncResponse, $recordMethod) )
             throw new BadCredentialsException('Sync response array is missing required data');
 
-        return new JsonResponse($syncResponse, 200);
+        // return new JsonResponse($syncResponse, 200);
+        return new Response(json_encode($syncResponse, JSON_UNESCAPED_UNICODE), 200);
     }
 
     /**
@@ -179,7 +182,8 @@ class SyncController extends Controller implements
             $_manager->flush();
         });
 
-        return new JsonResponse(NULL, 200);
+        // return new JsonResponse(NULL, 200);
+        return new Response(json_encode(NULL, JSON_UNESCAPED_UNICODE), 200);
     }
 
     /**
@@ -231,7 +235,8 @@ class SyncController extends Controller implements
         $postVendingMachinesPurchasesEvent = new PostVendingMachinesPurchasesEvent($vendingMachine, $vendingMachineSyncId);
         $this->_dispatcher->dispatch('app.event.post_vending_machines_purchases.after', $postVendingMachinesPurchasesEvent);
 
-        return new JsonResponse(NULL, 200);
+        // return new JsonResponse(NULL, 200);
+        return new Response(json_encode(NULL, JSON_UNESCAPED_UNICODE), 200);
     }
 
     /**
@@ -268,6 +273,7 @@ class SyncController extends Controller implements
             $_manager->flush();
         });
 
-        return new JsonResponse(NULL, 200);
+        // return new JsonResponse(NULL, 200);
+        return new Response(json_encode(NULL, JSON_UNESCAPED_UNICODE), 200);
     }
 }

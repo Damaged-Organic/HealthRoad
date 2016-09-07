@@ -6,7 +6,7 @@ class Checksum
 {
     public function getDataChecksum($data)
     {
-        return hash('sha256', json_encode($data));
+        return hash('sha256', json_encode($data, JSON_UNESCAPED_UNICODE));
     }
 
     public function verifyDataChecksum($checksum, $data)
