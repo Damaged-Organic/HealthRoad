@@ -1,11 +1,7 @@
 {# src/AppBundle/Resources/views/Entity/PurchaseService/Base/table.html.twig #}
 {% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/PurchaseService/Base:list.html.twig' %}
 
-{% block action_search %}
-    <div id="search-widget">
-        {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}
-    </div>
-{% endblock %}
+{% block action_search %}{% endblock %}
 
 {% block variable %}
     <div class="outer scrollable-holder">

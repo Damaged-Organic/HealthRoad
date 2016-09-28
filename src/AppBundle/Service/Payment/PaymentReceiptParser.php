@@ -49,7 +49,7 @@ class PaymentReceiptParser implements PaymentReceiptFileInterface
      * Standardizing includes trimming, whitespace removal, uppercase convertion
      * and replacing cyrillic characters with latin ones.
      */
-    private function standardizeNfcTagNumber($nfcTagNumber)
+    public function standardizeNfcTagNumber($nfcTagNumber)
     {
         return preg_replace('/\s+/', '', trim(strtr(mb_strtoupper($nfcTagNumber, 'UTF-8'), $this->getCharactersMap())));
     }

@@ -117,6 +117,11 @@ class Student
     protected $patronymic;
 
     /**
+     * Unmapped property
+     */
+    protected $fullName;
+
+    /**
      * @ORM\Column(type="string", length=6)
      *
      * @Assert\Choice(
@@ -593,8 +598,18 @@ class Student
         return NULL;
     }
 
+    public function setFullName($fullName)
+    {
+        $this->fullName = $fullName;
+
+        return $this;
+    }
+
     public function getFullName()
     {
+        if( $this->fullName != NULL )
+            return $this->fullName;
+
         if( !$this->patronymic && !$this->name && !$this->surname )
             return NULL;
 

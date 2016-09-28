@@ -185,4 +185,20 @@ class Messages implements MessagesInterface
             self::MESSAGES_ERRORS => $errors
         ]);
     }
+
+    // Office
+
+    public function markPaymentLiqPayAnonymousReplenishSuccess()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_SUCCESS => [$this->_translator->trans('office.liq_pay.anonymous_replenish.success', [], 'responses')]
+        ]);
+    }
+
+    public function markPaymentLiqPayAnonymousReplenishError()
+    {
+        $this->_session->getFlashBag()->add(self::MESSAGES_ROOT, [
+            self::MESSAGES_ERRORS => [$this->_translator->trans('office.liq_pay.anonymous_replenish.error', [], 'responses')]
+        ]);
+    }
 }

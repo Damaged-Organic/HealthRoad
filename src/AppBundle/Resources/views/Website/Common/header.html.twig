@@ -11,11 +11,15 @@
                 <li class="active"><a href="#">ua</a></li>
                 <li><a href="#">ru</a></li>
             </ul>
-            <div class="btn-large">
-                <a href="{{ path('customer_office') }}">
-                    {{ ( app.user ) ? "Приватний кабінет" : "Вхід для батьків" }}
-                </a>
+            <div class="enterance-holder">
+                <div class="btn-large">
+                    <a href="{{ path('customer_office') }}">
+                        {{ ( app.user ) ? "Приватний кабінет" : "Вхід для батьків" }}
+                    </a>
+                </div>
+                <a href="{{ path('customer_office_replenish') }}">поповнити рахунок</a>
             </div>
+
             <span class="sprtr-v"></span>
 
             <ul class="phones-holder">

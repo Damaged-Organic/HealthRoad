@@ -1,0 +1,58 @@
+{# src/AppBundle/Resources/views/Office/Payment/Replenish/form.html.twig #}
+<form action="{{ path('customer_office_replenish_check') }}" method="POST" id="replenish-form">
+
+    {% if messages.errors is defined %}
+
+        {% for error in messages.errors %}
+            <p class="error">
+                {{ error }}
+            </p>
+        {% endfor %}
+
+    {% elseif messages.success is defined %}
+        <p class="success">
+            {{ messages.success.0 }}
+        </p>
+    {% endif %}
+
+    <div class="field-area">
+        <input type="tel" name="user_phone_number" id="user-phone-number"
+               placeholder="Номер телефону платника"
+               data-rule-required="true" data-msg-required="{{ 'customer.replenish.user_phone_number.not_blank'|trans({}, 'validators') }}"
+               data-mask="+38 (099) 999-99-99"
+               {{ ( app.user ) ? 'disabled' }}>
+        <label for="user-phone-number"><span class="hr-phone"></span></label>
+    </div>
+
+    <div class="field-area">
+        <input type="text" name="student_full_name" id="student-full-name"
+               placeholder="ПІБ дитини (власника картки)"
+               data-rule-required="true" data-msg-required="{{ 'customer.replenish.student_full_name.not_blank'|trans({}, 'validators') }}">
+        <label for="student-full-name"><span class="hr-male"></span></label>
+    </div>
+
+    <div class="field-area">
+        <input type="text" name="student_nfc_tag_number" id="student-nfc-tag-number"
+               placeholder="Номер картки дитини"
+               data-rule-required="true" data-msg-required="{{ 'customer.replenish.student_nfc_tag_number.not_blank'|trans({}, 'validators') }}">
+        <label for="student-nfc-tag-number"><span class="hr-cards"></span></label>
+    </div>
+
+    <div class="field-area">
+        <input type="text" name="replenish_amount" id="replenish-amount"
+               placeholder="Сумма поповнення"
+               data-rule-required="true" data-msg-required="{{ 'customer.replenish.replenish_amount.not_blank'|trans({}, 'validators') }}"
+               data-mask="#.##0,00" data-mask-reverse="true">
+        <label for="replenish-amount"><span class="hr-coin"></span></label>
+    </div>
+
+    <div class="tip-holder">
+        <p><span>Увага!</span> Якщо рахунок поповнюється без реєстрації, адміністрація компанії не несе відповідальності за коректність введених користувачем особистих даних</p>
+    </div>
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('replenish') }}">
+
+    <button type="submit">
+        <span>Поповнити</span>
+    </button>
+</form>

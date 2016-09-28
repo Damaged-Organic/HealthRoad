@@ -1,4 +1,4 @@
-{# AppBundle/Resources/views/Public/Security/login.html.twig #}
+{# src/AppBundle/Resources/views/Office/Payment/replenish.html.twig #}
 {% extends 'AppBundle:Office:layout.html.twig' %}
 
 {% set metadata = getMetadata() %}
@@ -13,26 +13,26 @@
 {% endblock %}
 
 {% block locale %}
-    <link rel="canonical" href="{{ url('customer_office_login') }}">
+    <link rel="canonical" href="{{ url('customer_office_replenish') }}">
 {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/auth.bundle.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/app/website/css/replenish.bundle.min.css') }}">
 {% endblock %}
 
 {% block content %}
     <main id="content">
-        <section class="outer auth-holder">
-            <h1>Вхід до приватного кабінету</h1>
+        <section class="outer replenish-holder">
+            <h1>Поповнення рахунку без реєстрації</h1>
             <h2>для клієнтів компанії</h2>
             <span class="sprtr-h"></span>
 
-            {% include 'AppBundle:Office/Security/Login:form.html.twig' with { 'lastUsername': lastUsername, 'error': error } only %}
+            {% include 'AppBundle:Office/Payment/Replenish:form.html.twig' %}
 
         </section>
     </main>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('bundles/app/website/js/auth.bundle.min.js') }}"></script>
+    <script src="{{ asset('bundles/app/website/js/replenish.bundle.min.js') }}"></script>
 {% endblock %}

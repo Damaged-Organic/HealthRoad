@@ -141,6 +141,13 @@ services:
             - [setLiqPay, ["@app.payment.liq_pay"]]
             - [setLiqPayKeys, ["%liq_pay.key.public%", "%liq_pay.key.private%"]]
 
+    app.payment.liq_pay.anonymous_manager:
+        class: AppBundle\Service\Payment\PaymentLiqPayAnonymousManager
+        calls:
+            - [setRouter, ["@router"]]
+            - [setLiqPay, ["@app.payment.liq_pay"]]
+            - [setLiqPayKeys, ["%liq_pay.key.public%", "%liq_pay.key.private%"]]
+
     # Purchase
 
     app.purchase_service.manager:

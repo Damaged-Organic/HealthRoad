@@ -15,10 +15,10 @@ class PaymentLiqPayManager
     const LIQ_PAY_VERSION = 3;
     const LIQ_PAY_SANDBOX = 0;
 
-    private $_router;
+    protected $_router;
 
-    private $_liqPay;
-    private $liqPayKeys;
+    protected $_liqPay;
+    protected $liqPayKeys;
 
     public function setRouter(Router $router)
     {

@@ -146,6 +146,14 @@ class LoadWebsiteMetadata extends AbstractFixture implements OrderedFixtureInter
 
         $manager->persist(
             $officeMetadata_2 = (new Metadata)
+                ->setRoute("customer_office_replenish")
+                ->setTitle("Поповнення рахунку без реєстрації")
+                ->setDescription(NULL)
+                ->setRobots("noindex, nofollow, noarchive")
+        );
+
+        $manager->persist(
+            $officeMetadata_3 = (new Metadata)
                 ->setRoute("customer_office")
                 ->setTitle("Персональні дані")
                 ->setDescription(NULL)
@@ -153,7 +161,7 @@ class LoadWebsiteMetadata extends AbstractFixture implements OrderedFixtureInter
         );
 
         $manager->persist(
-            $officeMetadata_3 = (new Metadata)
+            $officeMetadata_4 = (new Metadata)
                 ->setRoute("customer_office_students")
                 ->setTitle("Мої діти")
                 ->setDescription(NULL)
@@ -161,7 +169,7 @@ class LoadWebsiteMetadata extends AbstractFixture implements OrderedFixtureInter
         );
 
         $manager->persist(
-            $officeMetadata_3_1 = (new Metadata)
+            $officeMetadata_4_1 = (new Metadata)
                 ->setRoute("customer_office_students_purchases")
                 ->setTitle("Статистика покупок")
                 ->setDescription(NULL)
@@ -169,7 +177,7 @@ class LoadWebsiteMetadata extends AbstractFixture implements OrderedFixtureInter
         );
 
         $manager->persist(
-            $officeMetadata_3_2 = (new Metadata)
+            $officeMetadata_4_2 = (new Metadata)
                 ->setRoute("customer_office_students_products")
                 ->setTitle("Список продуктів")
                 ->setDescription(NULL)
@@ -177,7 +185,7 @@ class LoadWebsiteMetadata extends AbstractFixture implements OrderedFixtureInter
         );
 
         $manager->persist(
-            $officeMetadata_4 = (new Metadata)
+            $officeMetadata_5 = (new Metadata)
                 ->setRoute("customer_office_purchases")
                 ->setTitle("Покупки")
                 ->setDescription(NULL)

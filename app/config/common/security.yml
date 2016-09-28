@@ -94,5 +94,9 @@ security:
             roles: IS_AUTHENTICATED_ANONYMOUSLY
         -
             host:  "%domain_website%"
+            path:  ^/customer_office/replenish
+            roles: IS_AUTHENTICATED_ANONYMOUSLY
+        -
+            host:  "%domain_website%"
             path:  ^/customer_office
             roles: ROLE_CUSTOMER

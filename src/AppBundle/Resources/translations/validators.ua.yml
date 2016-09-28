@@ -11,6 +11,19 @@ customer:
         password:
             not_blank: Будь ласка, введіть ваш пароль
 
+    replenish:
+        user_phone_number:
+            not_blank: Будь ласка, введіть ваш номер телефону
+
+        student_full_name:
+            not_blank: Будь ласка, введіть ПІБ дитини
+
+        student_nfc_tag_number:
+            not_blank: Будь ласка, введіть номер картки дитини
+
+        replenish_amount:
+            not_blank: Будь ласка, введіть суму поповнення
+
 website:
     feedback:
         name:

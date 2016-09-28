@@ -27,6 +27,7 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
             ->setWeight(100)
             ->setMeasurementUnit("bottle")
             ->setAmountInBox(100)
+            ->setDisplayOrder(1)
         ;
         $manager->persist($product_0);
 
@@ -45,6 +46,7 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
             ->setWeight(250)
             ->setMeasurementUnit("box")
             ->setAmountInBox(50)
+            ->setDisplayOrder(2)
         ;
         $manager->persist($product_1);
 

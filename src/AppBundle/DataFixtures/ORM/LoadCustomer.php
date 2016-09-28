@@ -15,7 +15,7 @@ class LoadCustomer extends AbstractFixture implements OrderedFixtureInterface
         $customer_1 = (new Customer)
             ->setEmployee($this->getReference('registronymous'))
             ->setPhoneNumber("+38 (000) 000-00-00")
-            ->setPassword('$2y$12$KKKdwzMFY9KnRif79Eb.DeZPyPYJCjsFteSCawG3C32k6l6hMNuIe')
+            ->setPassword('$2a$12$5rUCmVBFXCyuEbMnJBA4n.HHaexRvFXMKXuqD/hIUeQXWQd7jZvY.')
             ->setName("Name")
             ->setSurname("Surname")
             ->setPatronymic("Patronymic")

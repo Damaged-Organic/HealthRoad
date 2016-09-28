@@ -65,7 +65,9 @@
             <span class="sprtr-h"></span>
 
             {% include 'AppBundle:Office/Security/Login:form.html.twig' with { 'lastUsername': null, 'error': null } only %}
-
+            <a href="{{ path('customer_office_replenish') }}" class="replenish">
+                поповнити рахунок
+            </a>
         </div>
     </div>
 </section>
