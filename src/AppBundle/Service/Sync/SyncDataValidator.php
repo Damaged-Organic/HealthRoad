@@ -157,6 +157,7 @@ class SyncDataValidator implements
 
             if( empty($value[Purchase::PURCHASE_SYNC_PRODUCT_PRICE]) )
                 return FALSE;
+
             $isPriceErrors = count($this->_validator->validate($value[Purchase::PURCHASE_SYNC_PRODUCT_PRICE], $assertIsPrice));
             if( $isPriceErrors !== 0 )
                 return FALSE;

@@ -9,7 +9,7 @@ class IsNfcTagNumberConstraintValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if( $value && !preg_match('/^[A-Z]{2}[0-9]{6}$/', $value, $matches) ) {
+        if( $value && !preg_match('/^([A-Z]{2})?[0-9]{6}$/', $value, $matches) ) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }

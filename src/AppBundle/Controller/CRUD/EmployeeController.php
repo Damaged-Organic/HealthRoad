@@ -248,7 +248,7 @@ class EmployeeController extends Controller implements UserRoleListInterface
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
      * )
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         $employee = $this->_manager->getRepository('AppBundle:Employee\Employee')->find($id);
 
