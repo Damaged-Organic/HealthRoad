@@ -69,6 +69,12 @@ class Student
     protected $paymentsReceipts;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction\Transaction", mappedBy="student")
+     * @ORM\OrderBy({"syncTransactionAt"="DESC"})
+     */
+    protected $transactions;
+
+    /**
      * @ORM\Column(type="string", length=100)
      *
      * @Assert\Length(
@@ -575,6 +581,40 @@ class Student
     public function getPaymentsReceipts()
     {
         return $this->paymentsReceipts;
+    }
+
+    /**
+     * Add transactions
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transactions
+     * @return Student
+     */
+    public function addTransaction(\AppBundle\Entity\Transaction\Transaction $transactions)
+    {
+        $transactions->setStudent($this);
+        $this->transactions[] = $transactions;
+
+        return $this;
+    }
+
+    /**
+     * Remove transactions
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transactions
+     */
+    public function removeTransaction(\AppBundle\Entity\Transaction\Transaction $transactions)
+    {
+        $this->transactions->removeElement($transactions);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 
     /**

@@ -65,6 +65,12 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
     protected $purchases;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction\Transaction", mappedBy="vendingMachine")
+     * @ORM\OrderBy({"syncTransactionAt"="DESC"})
+     */
+    protected $transactions;
+
+    /**
      * @ORM\Column(type="string", length=16, unique=true)
      *
      * @Assert\NotBlank(message="vending_machine.serial.not_blank")
@@ -645,6 +651,40 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
         return $this->vendingMachineLoad;
     }
 
+    /**
+     * Add transactions
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transactions
+     * @return VendingMachine
+     */
+    public function addTransaction(\AppBundle\Entity\Transaction\Transaction $transactions)
+    {
+        $transactions->setVendingMachine($this);
+        $this->transactions[] = $transactions;
+
+        return $this;
+    }
+
+    /**
+     * Remove transactions
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transactions
+     */
+    public function removeTransaction(\AppBundle\Entity\Transaction\Transaction $transactions)
+    {
+        $this->transactions->removeElement($transactions);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
     public function getChoiceLabel()
     {
         return "{$this->serial}" . (( $this->name ) ? " ({$this->name})" : NULL);
@@ -677,5 +717,28 @@ class VendingMachine implements SyncVendingMachinePropertiesInterface
         return ( $this->getSchool() )
             ? $this->getSchool()->getStudents()
             : [];
+    }
+
+    /**
+     * Set pseudoDeleteAt
+     *
+     * @param \DateTime $pseudoDeleteAt
+     * @return VendingMachine
+     */
+    public function setPseudoDeleteAt($pseudoDeleteAt)
+    {
+        $this->pseudoDeleteAt = $pseudoDeleteAt;
+
+        return $this;
+    }
+
+    /**
+     * Get pseudoDeleteAt
+     *
+     * @return \DateTime
+     */
+    public function getPseudoDeleteAt()
+    {
+        return $this->pseudoDeleteAt;
     }
 }

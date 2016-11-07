@@ -81,6 +81,12 @@
                 <span class="text">{{ 'payment_receipt_read'|trans({}, 'routes') }}</span>
             </a>
         </li>
+        <li {{ ( 'TransactionController' in controller ) ? 'class="active"' : null }} title="{{ 'transaction_read'|trans({}, 'routes') }}">
+            <a href="{{ path('transaction_read') }}" data-count="{{ quantities.transactions }}">
+                <span class="icon hrd-registry"></span>
+                <span class="text">{{ 'transaction_read'|trans({}, 'routes') }}</span>
+            </a>
+        </li>
         <li class="sprtr-h"></li>
         <li {{ ( 'ProductVendingGroupController' in controller ) ? 'class="active"' : null }} title="{{ 'product_vending_group_read'|trans({}, 'routes') }}">
             <a href="{{ path('product_vending_group_read') }}" data-count="{{ quantities.productsVendingGroups }}">

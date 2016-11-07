@@ -1,0 +1,123 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/CRUD/readItem.html.twig #}
+{% extends 'AppBundle:Entity/Transaction/Base:item.html.twig' %}
+
+{% block active_transaction_update %}{{ 'class="active"' }}{% endblock %}
+
+{% block data %}
+    <div id="read-data-holder">
+        <ul>
+
+            <div class="separator-holder">
+                <h2>Данные, зафиксированные в системе на момент синхронизации</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'transaction.sync.transaction_at.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ transaction.syncTransactionAt|date('Y-m-d H:i:s') }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'transaction.vending_machine_choice_label.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if transaction.vendingMachine %}
+                        <p>{{ transaction.vendingMachine.choiceLabel }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_READ'), transaction.vendingMachine) %}
+                            <div class="btn-view">
+                                <a href="{{ path('vending_machine_update', { 'id': transaction.vendingMachine.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'transaction.nfc_tag_number.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if transaction.nfcTag %}
+                        <p>{{ transaction.nfcTag.number }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_READ'), transaction.nfcTag) %}
+                            <div class="btn-view">
+                                <a href="{{ path('nfc_tag_update', { 'id': transaction.nfcTag.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'transaction.nfc_tag_code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( transaction.nfcTag ) ? transaction.nfcTag.code : '-' }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'transaction.student.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if transaction.student %}
+                        <p>{{ transaction.student.fullName }}</p>
+
+                        {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_READ'), transaction.student) %}
+                            <div class="btn-view">
+                                <a href="{{ path('student_update', { 'id': transaction.student.id }) }}" class="icon hrd-view"></a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'transaction.customer.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value btn-holder">
+                    {% if transaction.student and transaction.student.customer %}
+                        <p>{{ transaction.student.customer.fullName }}</p>
+                        <div class="btn-view">
+                            <a href="{{ path('customer_update', { 'id': transaction.student.customer.id }) }}" class="icon hrd-view"></a>
+                        </div>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                </div>
+            </li>
+
+            <div class="separator-holder">
+                <h2>Данные, полученные от торгового автомата</h2>
+            </div>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'transaction.sync.nfc_tag_code.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ transaction.syncNfcTagCode }}</p>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+{% endblock %}

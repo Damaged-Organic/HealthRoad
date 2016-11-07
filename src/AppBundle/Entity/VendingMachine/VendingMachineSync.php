@@ -48,6 +48,11 @@ class VendingMachineSync implements SyncVendingMachineSyncPropertiesInterface
     protected $data;
 
     /**
+     * @ORM\Column(type="string", length=1023, nullable=true)
+     */
+    protected $state;
+
+    /**
      * Set vendingMachineSyncId
      *
      * @param string $vendingMachineSyncId
@@ -63,7 +68,7 @@ class VendingMachineSync implements SyncVendingMachineSyncPropertiesInterface
     /**
      * Get vendingMachineSyncId
      *
-     * @return string 
+     * @return string
      */
     public function getVendingMachineSyncId()
     {
@@ -109,7 +114,7 @@ class VendingMachineSync implements SyncVendingMachineSyncPropertiesInterface
     /**
      * Get syncedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getSyncedAt()
     {
@@ -132,7 +137,7 @@ class VendingMachineSync implements SyncVendingMachineSyncPropertiesInterface
     /**
      * Get checksum
      *
-     * @return string 
+     * @return string
      */
     public function getChecksum()
     {
@@ -155,11 +160,34 @@ class VendingMachineSync implements SyncVendingMachineSyncPropertiesInterface
     /**
      * Get data
      *
-     * @return string 
+     * @return string
      */
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $state
+     * @return string
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
     }
 
     /**
@@ -178,7 +206,7 @@ class VendingMachineSync implements SyncVendingMachineSyncPropertiesInterface
     /**
      * Get vendingMachine
      *
-     * @return \AppBundle\Entity\VendingMachine\VendingMachine 
+     * @return \AppBundle\Entity\VendingMachine\VendingMachine
      */
     public function getVendingMachine()
     {

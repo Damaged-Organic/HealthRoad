@@ -1,0 +1,45 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/Base/table.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/Transaction/Base:list.html.twig' %}
+
+{% block action_search %}{% endblock %}
+
+{% block variable %}
+    <div class="outer scrollable-holder">
+        <div class="inner scrollable">
+
+            {% if transactions|length %}
+                <table>
+                    <tr>
+
+                        {% include 'AppBundle:Entity/Transaction/Table:th.html.twig' %}
+
+                        {% block action_items_th %}{% endblock %}
+
+                    </tr>
+
+                    {% for transaction in transactions %}
+                        <tr>
+
+                            {% include 'AppBundle:Entity/Transaction/Table:tr.html.twig' with { 'transaction': transaction } only %}
+
+                            {% block action_items_tr %}{% endblock %}
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                <div class="empty-holder">
+                    <h2>{{ 'dashboard.table.empty.title'|trans }}</h2>
+                    <p>{{ 'dashboard.table.empty.text_sync'|trans }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="bottom-info-panel">
+        {% block action_button %}{% endblock %}
+
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:pagination')) }}
+    </div>
+{% endblock %}

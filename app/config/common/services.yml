@@ -332,6 +332,14 @@ services:
         tags:
             - { name: security.voter }
 
+    app.voter_transaction:
+        class:  AppBundle\Security\Authorization\Voter\TransactionVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
     # Security services
 
     app.security.setting_boundless_access:
@@ -416,6 +424,11 @@ services:
 
     app.security.payment_receipt_boundless_access:
         class: AppBundle\Service\Security\PaymentReceiptBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.transaction_boundless_access:
+        class: AppBundle\Service\Security\TransactionBoundlessAccess
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 

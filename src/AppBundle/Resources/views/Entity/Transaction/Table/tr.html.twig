@@ -1,0 +1,27 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ transaction.id }}</span></td>
+<td>
+    <span>
+        {{ transaction.syncTransactionAt|date('Y-m-d H:i:s') }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( transaction.vendingMachine ) ? transaction.vendingMachine.choiceLabel : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( transaction.nfcTag ) ? transaction.nfcTag.number : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( transaction.student ) ? transaction.student.fullName : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        ?
+    </span>
+</td>

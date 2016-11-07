@@ -54,6 +54,11 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     protected $paymentsReceipts;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction\Transaction", mappedBy="nfcTag")
+     */
+    protected $transactions;
+
+    /**
      * @ORM\Column(type="string", length=8, unique=true)
      *
      * @Assert\NotBlank(message="nfc_tag.number.not_blank")
@@ -352,6 +357,40 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     public function getPaymentsReceipts()
     {
         return $this->paymentsReceipts;
+    }
+
+    /**
+     * Add transactions
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transactions
+     * @return NfcTag
+     */
+    public function addTransaction(\AppBundle\Entity\Transaction\Transaction $transactions)
+    {
+        $transactions->setNfcTag($this);
+        $this->transactions[] = $transactions;
+
+        return $this;
+    }
+
+    /**
+     * Remove transactions
+     *
+     * @param \AppBundle\Entity\Transaction\Transaction $transactions
+     */
+    public function removeTransaction(\AppBundle\Entity\Transaction\Transaction $transactions)
+    {
+        $this->transactions->removeElement($transactions);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 
     /**

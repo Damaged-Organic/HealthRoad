@@ -20,3 +20,4 @@ twig:
         purchase_boundless_access:              "@app.security.purchase_boundless_access"
         purchase_service_boundless_access:      "@app.security.purchase_service_boundless_access"
         payment_receipt_boundless_access:       "@app.security.payment_receipt_boundless_access"
+        transaction_boundless_access:           "@app.security.transaction_boundless_access"

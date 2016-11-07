@@ -1,0 +1,12 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/Base/item.html.twig #}
+{% extends 'AppBundle:Entity/Transaction:layout.html.twig' %}
+
+{% block action_top %}
+    <div class="inner categories-list-holder">
+        <ul>
+            <li {% block active_transaction_update %}{% endblock %}>
+                <a href="{{ path('transaction_read', { 'id': transaction.id }) }}">Данные</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
