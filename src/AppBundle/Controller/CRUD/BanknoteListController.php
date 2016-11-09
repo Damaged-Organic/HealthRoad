@@ -1,5 +1,5 @@
 <?php
-// src/AppBundle/Controller/CRUD/TransactionController.php
+// src/AppBundle/Controller/CRUD/BanknoteListController.php
 namespace AppBundle\Controller\CRUD;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
@@ -16,11 +16,11 @@ use AppBundle\Service\Common\Utility\Exceptions\SearchException,
 
 use AppBundle\Controller\Utility\Traits\EntityFilter;
 
-use AppBundle\Entity\Transaction\Transaction,
-    AppBundle\Security\Authorization\Voter\TransactionVoter,
-    AppBundle\Service\Security\TransactionBoundlessAccess;
+use AppBundle\Entity\Banknote\BanknoteList,
+    AppBundle\Security\Authorization\Voter\BanknoteListVoter,
+    AppBundle\Service\Security\BanknoteListBoundlessAccess;
 
-class TransactionController extends Controller
+class BanknoteListController extends Controller
 {
     /** @DI\Inject("doctrine.orm.entity_manager") */
     private $_manager;
@@ -43,14 +43,14 @@ class TransactionController extends Controller
     /** @DI\Inject("app.common.entity_results_manager") */
     private $_entityResultsManager;
 
-    /** @DI\Inject("app.security.transaction_boundless_access") */
-    private $_transactionBoundlessAccess;
+    /** @DI\Inject("app.security.banknote_list_boundless_access") */
+    private $_banknoteListBoundlessAccess;
 
     /**
      * @Method({"GET"})
      * @Route(
-     *      "/transaction/{id}",
-     *      name="transaction_read",
+     *      "/banknote_list/{id}",
+     *      name="banknote_list_read",
      *      host="{domain_dashboard}",
      *      defaults={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = null},
      *      requirements={"_locale" = "%locale%", "domain_dashboard" = "%domain_dashboard%", "id" = "\d+"}
@@ -58,26 +58,26 @@ class TransactionController extends Controller
      */
     public function readAction($id = NULL)
     {
-        $repository = $this->_manager->getRepository('AppBundle:Transaction\Transaction');
+        $repository = $this->_manager->getRepository('AppBundle:Banknote\BanknoteList');
 
         if( $id )
         {
-            $transaction = $repository->find($id);
+            $banknoteList = $repository->find($id);
 
-            if( !$transaction )
-                throw $this->createNotFoundException("Transaction identified by `id` {$id} not found");
+            if( !$banknoteList )
+                throw $this->createNotFoundException("Banknote List identified by `id` {$id} not found");
 
-            if( !$this->isGranted(TransactionVoter::TRANSACTION_READ, $transaction) )
+            if( !$this->isGranted(BanknoteListVoter::BANKNOTE_LIST_READ, $banknoteList) )
                 throw $this->createAccessDeniedException('Access denied');
 
             $response = [
-                'view' => 'AppBundle:Entity/Transaction/CRUD:readItem.html.twig',
+                'view' => 'AppBundle:Entity/BanknoteList/CRUD:readItem.html.twig',
                 'data' => ['transaction' => $transaction]
             ];
 
-            $this->_breadcrumbs->add('transaction_read')->add('transaction_read', ['id' => $id], $this->_translator->trans('transaction_view', [], 'routes'));
+            $this->_breadcrumbs->add('banknote_list_read')->add('banknote_list_read', ['id' => $id], $this->_translator->trans('banknote_list_view', [], 'routes'));
         } else {
-            if( !$this->_transactionBoundlessAccess->isGranted(TransactionBoundlessAccess::TRANSACTION_READ) )
+            if( !$this->_banknoteListBoundlessAccess->isGranted(BanknoteListBoundlessAccess::BANKNOTE_LIST_READ) )
                 throw $this->createAccessDeniedException('Access denied');
 
             try {
@@ -88,20 +88,20 @@ class TransactionController extends Controller
             } catch(PaginatorException $ex) {
                 throw $this->createNotFoundException('Invalid page argument');
             } catch(SearchException $ex) {
-                return $this->redirectToRoute('transaction_read');
+                return $this->redirectToRoute('banknote_list_read');
             }
 
-            $transactions = $this->_entityResultsManager->findRecords($repository);
+            $banknoteLists = $this->_entityResultsManager->findRecords($repository);
 
-            if( $transactions === FALSE )
-                return $this->redirectToRoute('transaction_read');
+            if( $banknoteLists === FALSE )
+                return $this->redirectToRoute('banknote_list_read');
 
             $response = [
-                'view' => 'AppBundle:Entity/Transaction/CRUD:readList.html.twig',
-                'data' => ['transactions' => $transactions]
+                'view' => 'AppBundle:Entity/BanknoteList/CRUD:readList.html.twig',
+                'data' => ['banknoteLists' => $banknoteLists]
             ];
 
-            $this->_breadcrumbs->add('transaction_read');
+            $this->_breadcrumbs->add('banknote_list_read');
         }
 
         return $this->render($response['view'], $response['data']);

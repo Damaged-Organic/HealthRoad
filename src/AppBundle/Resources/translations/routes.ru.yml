@@ -38,6 +38,10 @@ vending_machine_read:    Торговые автоматы
 vending_machine_view:    Просмотр торгового автомата
 vending_machine_choose:  Привязать торговый автомат
 
+vending_machine_event_read: События
+
+vending_machine_load_read: Загрузка
+
 nfc_tag_create:  Добавить NFC-метку
 nfc_tag_update:  Редактировать NFC-метку
 nfc_tag_bounded: Связи NFC-метки
@@ -96,6 +100,7 @@ payment_receipt_read:            Оплаты по реестру
 payment_receipt_view:            Просмотр оплаты по реестру
 payment_receipt_replenish_check: Проверка оплат по реестру
 
-vending_machine_event_read: События
+transaction_read: Пополнения
+transaction_view: Просмотр пополнения
 
-vending_machine_load_read: Загрузка
+banknote_list_read: Банкноты

@@ -1,0 +1,18 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/Binding/show.html.twig #}
+{% extends 'AppBundle:Entity/Transaction/Base:table.html.twig' %}
+
+{% block action_items_th %}
+    <th class="double-small-fixed">
+        <span>управление</span>
+    </th>
+{% endblock %}
+
+{% block action_items_tr %}
+
+    <td class="double-small-fixed view-holder">
+        <div class="btn-view">
+            <a href="{{ path('transaction_read', { 'id': transaction.id }) }}" class="icon hrd-view"></a>
+        </div>
+    </td>
+
+{% endblock %}

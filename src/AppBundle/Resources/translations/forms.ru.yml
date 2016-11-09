@@ -527,3 +527,29 @@ payment_receipt:
         mismatch: NFC-метка не существует
         unbinded: NFC-метка не привязана
         invalid:  Невалиден
+
+transaction:
+    vending_machine_choice_label:
+        label: Торговый автомат
+
+    nfc_tag_number:
+        label: Номер NFC-метки
+
+    nfc_tag_code:
+        label: Код NFC-метки
+
+    student:
+        label: Ученик
+
+    customer:
+        label: Клиент
+
+    sync:
+        transaction_at:
+            label: Дата и время продажи
+
+        nfc_tag_code:
+            label: Код NFC-метки
+
+        total_amount:
+            label: Сумма пополнения

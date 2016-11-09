@@ -22,6 +22,7 @@ use AppBundle\Controller\Utility\Traits\EntityFilter,
     AppBundle\Entity\School\School,
     AppBundle\Entity\NfcTag\NfcTag,
     AppBundle\Entity\Purchase\Purchase,
+    AppBundle\Entity\Transaction\Transaction,
     AppBundle\Entity\VendingMachine\VendingMachineEvent,
     AppBundle\Entity\VendingMachine\VendingMachineLoad,
     AppBundle\Entity\Product\ProductVendingGroup,
@@ -191,6 +192,21 @@ class VendingMachineController extends Controller implements UserRoleListInterfa
                         'objectClass' => $objectClass
                     ],
                     $this->_translator->trans('purchase_read', [], 'routes')
+                );
+            break;
+
+            case $this->compareObjectClassNameToString(new Transaction, $objectClass):
+                $bounded = $this->forward('AppBundle:Binding\Transaction:show', [
+                    'objectClass' => $this->getObjectClassName($vendingMachine),
+                    'objectId'    => $objectId
+                ]);
+
+                $this->_breadcrumbs->add('vending_machine_update_bounded',
+                    [
+                        'objectId'    => $objectId,
+                        'objectClass' => $objectClass
+                    ],
+                    $this->_translator->trans('transaction_read', [], 'routes')
                 );
             break;
 

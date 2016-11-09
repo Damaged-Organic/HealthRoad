@@ -1,5 +1,5 @@
-{# src/AppBundle/Resources/views/Entity/Transaction/Base/table.html.twig #}
-{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/Transaction/Base:list.html.twig' %}
+{# src/AppBundle/Resources/views/Entity/BanknoteList/Base/table.html.twig #}
+{% extends ( standalone is defined ) ? '::void.html.twig' : 'AppBundle:Entity/BanknoteList/Base:list.html.twig' %}
 
 {% block action_search %}
     <div id="search-widget">
@@ -11,20 +11,20 @@
     <div class="outer scrollable-holder">
         <div class="inner scrollable">
 
-            {% if transactions|length %}
+            {% if banknoteLists|length %}
                 <table>
                     <tr>
 
-                        {% include 'AppBundle:Entity/Transaction/Table:th.html.twig' %}
+                        {% include 'AppBundle:Entity/BanknoteList/Table:th.html.twig' %}
 
                         {% block action_items_th %}{% endblock %}
 
                     </tr>
 
-                    {% for transaction in transactions %}
+                    {% for banknoteList in banknoteLists %}
                         <tr>
 
-                            {% include 'AppBundle:Entity/Transaction/Table:tr.html.twig' with { 'transaction': transaction } only %}
+                            {% include 'AppBundle:Entity/BanknoteList/Table:tr.html.twig' with { 'banknoteList': banknoteList } only %}
 
                             {% block action_items_tr %}{% endblock %}
 

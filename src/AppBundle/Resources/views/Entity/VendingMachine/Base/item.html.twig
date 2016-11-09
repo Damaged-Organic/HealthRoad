@@ -7,11 +7,6 @@
             <li {% block active_vending_machine_update %}{% endblock %}>
                 <a href="{{ path('vending_machine_update', { 'id': vendingMachine.id }) }}">Данные</a>
             </li>
-            <li {% block active_vending_machine_update_bounded_purchase %}{% endblock %}>
-                <a href="{{ path('vending_machine_update_bounded', { 'objectId': vendingMachine.id, 'objectClass': 'purchase' }) }}">
-                    {{ 'purchase_read'|trans({}, 'routes') }}
-                </a>
-            </li>
             <li {% block active_vending_machine_update_bounded_vending_machine_event %}{% endblock %}>
                 <a href="{{ path('vending_machine_update_bounded', { 'objectId': vendingMachine.id, 'objectClass': 'vendingmachineevent' }) }}">
                     {{ 'vending_machine_event_read'|trans({}, 'routes') }}
@@ -20,6 +15,16 @@
             <li {% block active_vending_machine_update_bounded_vending_machine_load %}{% endblock %}>
                 <a href="{{ path('vending_machine_update_bounded', { 'objectId': vendingMachine.id, 'objectClass': 'vendingmachineload' }) }}">
                     {{ 'vending_machine_load_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+            <li {% block active_vending_machine_update_bounded_purchase %}{% endblock %}>
+                <a href="{{ path('vending_machine_update_bounded', { 'objectId': vendingMachine.id, 'objectClass': 'purchase' }) }}">
+                    {{ 'purchase_read'|trans({}, 'routes') }}
+                </a>
+            </li>
+            <li {% block active_vending_machine_update_bounded_transaction %}{% endblock %}>
+                <a href="{{ path('vending_machine_update_bounded', { 'objectId': vendingMachine.id, 'objectClass': 'transaction' }) }}">
+                    {{ 'transaction_read'|trans({}, 'routes') }}
                 </a>
             </li>
             {#

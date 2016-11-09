@@ -29,7 +29,7 @@
                         <p>{{ transaction.vendingMachine.choiceLabel }}</p>
 
                         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\VendingMachineVoter::VENDING_MACHINE_READ'), transaction.vendingMachine) %}
-                            <div class="btn-view">
+                            <div class="btn-view padded">
                                 <a href="{{ path('vending_machine_update', { 'id': transaction.vendingMachine.id }) }}" class="icon hrd-view"></a>
                             </div>
                         {% endif %}
@@ -49,7 +49,7 @@
                         <p>{{ transaction.nfcTag.number }}</p>
 
                         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\NfcTagVoter::NFC_TAG_READ'), transaction.nfcTag) %}
-                            <div class="btn-view">
+                            <div class="btn-view padded">
                                 <a href="{{ path('nfc_tag_update', { 'id': transaction.nfcTag.id }) }}" class="icon hrd-view"></a>
                             </div>
                         {% endif %}
@@ -78,7 +78,7 @@
                         <p>{{ transaction.student.fullName }}</p>
 
                         {% if is_granted(constant('AppBundle\\Security\\Authorization\\Voter\\StudentVoter::STUDENT_READ'), transaction.student) %}
-                            <div class="btn-view">
+                            <div class="btn-view padded">
                                 <a href="{{ path('student_update', { 'id': transaction.student.id }) }}" class="icon hrd-view"></a>
                             </div>
                         {% endif %}
@@ -96,7 +96,7 @@
                 <div class="item value btn-holder">
                     {% if transaction.student and transaction.student.customer %}
                         <p>{{ transaction.student.customer.fullName }}</p>
-                        <div class="btn-view">
+                        <div class="btn-view padded">
                             <a href="{{ path('customer_update', { 'id': transaction.student.customer.id }) }}" class="icon hrd-view"></a>
                         </div>
                     {% else %}
@@ -115,6 +115,15 @@
                 </div>
                 <div class="item value">
                     <p>{{ transaction.syncNfcTagCode }}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="item key">
+                    <span>{{ 'transaction.sync.total_amount.label'|trans({}, 'forms') }}</span>
+                </div>
+                <div class="item value">
+                    <p>{{ ( transaction.totalAmount ) ?: '-' }} ₴</p>
                 </div>
             </li>
 

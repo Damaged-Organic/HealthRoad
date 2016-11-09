@@ -1,0 +1,20 @@
+{# src/AppBundle/Resources/views/Entity/Transaction/Binding/bounded.html.twig #}
+{% extends 'AppBundle:Entity/Transaction/Base:item.html.twig' %}
+
+{% block active_transaction_update_bounded_banknote_list %}
+    {% if objectClass is same as('banknotelist') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
+{% block action_search %}
+    <div id="search-widget">
+        {{ render(controller('AppBundle:Dashboard/CommonDashboard:search')) }}
+    </div>
+{% endblock %}
+
+{% block variable %}
+
+    {{ bounded|raw }}
+
+{% endblock %}

@@ -25,6 +25,12 @@
     {% endif %}
 {% endblock %}
 
+{% block active_student_update_bounded_transaction %}
+    {% if objectClass is same as('transaction') %}
+        {{ 'class="active"' }}
+    {% endif %}
+{% endblock %}
+
 {% block active_student_update_bounded_payment_receipt %}
     {% if objectClass is same as('paymentreceipt') %}
         {{ 'class="active"' }}

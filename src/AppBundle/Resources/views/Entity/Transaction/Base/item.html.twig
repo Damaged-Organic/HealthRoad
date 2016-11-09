@@ -7,6 +7,11 @@
             <li {% block active_transaction_update %}{% endblock %}>
                 <a href="{{ path('transaction_read', { 'id': transaction.id }) }}">Данные</a>
             </li>
+            <li {% block active_transaction_update_bounded_banknote_list %}{% endblock %}>
+                <a href="{{ path('transaction_update_bounded', { 'objectId': transaction.id, 'objectClass': 'banknotelist' }) }}">
+                    {{ 'banknote_list_read'|trans({}, 'routes') }}
+                </a>
+            </li>
         </ul>
     </div>
 {% endblock %}

@@ -2,8 +2,7 @@
 // src/AppBundle/Entity/Transaction/Transaction.php
 namespace AppBundle\Entity\Transaction;
 
-use Symfony\Component\Validator\Constraints as Assert,
-    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
@@ -15,15 +14,12 @@ use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
 /**
  * @ORM\Table(name="transactions")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Transaction\Repository\TransactionRepository")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discriminator", type="string")
- * @ORM\DiscriminatorMap({"transaction" = "Transaction", "replenishment" = "Replenishment"})
- *
- * @UniqueEntity(fields="transactionId", message="transaction.transaction_id.unique")
  */
 class Transaction implements SyncTransactionPropertiesInterface
 {
     use IdMapperTrait;
+
+    // TODO: This joined entities will show fuck all if deleted. Need to find the way to preserve info in case of deletion
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\VendingMachine\VendingMachine", inversedBy="transactions")
@@ -326,6 +322,41 @@ class Transaction implements SyncTransactionPropertiesInterface
     {
         return $this->banknoteLists;
     }
+
+    /*-------------------------------------------------------------------------
+    | CUSTOM GETTERS
+    |------------------------------------------------------------------------*/
+
+    private function getTotalAmountGenerator($banknoteLists)
+    {
+        foreach($banknoteLists as $banknoteList)
+        {
+            if( !$banknoteList->getQuantity() || !$banknoteList->getBanknote() )
+                return FALSE;
+
+            yield bcmul(
+                $banknoteList->getQuantity(), $banknoteList->getBanknote()->getNominal(), 2
+            );
+        }
+    }
+
+    public function getTotalAmount()
+    {
+        if( !$this->getBanknoteLists() )
+            return FALSE;
+
+        $totalAmount = 0;
+        foreach( $this->getTotalAmountGenerator($this->getBanknoteLists()) as $value )
+        {
+            $totalAmount = bcadd($totalAmount, $value, 2);
+        }
+
+        return $totalAmount;
+    }
+
+    /*-------------------------------------------------------------------------
+    | SYNCHRONIZATION
+    |------------------------------------------------------------------------*/
 
     static public function getSyncArrayName()
     {

@@ -340,6 +340,14 @@ services:
         tags:
             - { name: security.voter }
 
+    app.voter_banknote_list:
+        class:  AppBundle\Security\Authorization\Voter\BanknoteListVoter
+        public: false
+        calls:
+            - [setRoleHierarchy, [ "@app.security.role_hierarchy" ]]
+        tags:
+            - { name: security.voter }
+
     # Security services
 
     app.security.setting_boundless_access:
@@ -429,6 +437,11 @@ services:
 
     app.security.transaction_boundless_access:
         class: AppBundle\Service\Security\TransactionBoundlessAccess
+        calls:
+            - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
+
+    app.security.banknote_list_boundless_access:
+        class: AppBundle\Service\Security\BanknoteListBoundlessAccess
         calls:
             - [setAuthorizationChecker, [ "@security.authorization_checker" ]]
 

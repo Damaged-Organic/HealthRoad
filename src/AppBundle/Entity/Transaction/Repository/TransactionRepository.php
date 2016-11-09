@@ -10,7 +10,12 @@ class TransactionRepository extends ExtendedEntityRepository
     public function findChained()
     {
         $this->chain = $this->createQueryBuilder('ta')
-            ->select('ta')
+            ->select('ta, nt, st, s, vm')
+            ->leftJoin('ta.vendingMachine', 'vm')
+            ->leftJoin('ta.nfcTag', 'nt')
+            ->leftJoin('ta.student', 'st')
+            ->leftJoin('st.school', 's')
+            ->orderBy('ta.id', 'DESC')
         ;
 
         return $this;
@@ -26,7 +31,10 @@ class TransactionRepository extends ExtendedEntityRepository
     public function chainSearchBy($searchBy)
     {
         $entityFields = [
-            'ta.transactionId',
+            'ta.syncTransactionId',
+            'vm.serial',
+            'nt.number',
+            'st.name', 'st.surname', 'st.patronymic',
         ];
 
         $this->baseChainSearchBy($searchBy, $entityFields);

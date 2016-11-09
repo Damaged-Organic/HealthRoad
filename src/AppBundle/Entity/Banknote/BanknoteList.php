@@ -119,4 +119,21 @@ class BanknoteList
     {
         return $this->banknote;
     }
+
+    /*-------------------------------------------------------------------------
+    | CUSTOM GETTERS
+    |------------------------------------------------------------------------*/
+
+    public function getTotalAmount()
+    {
+        if( !$this->getQuantity() )
+            return FALSE;
+
+        if( !$this->getBanknote() || !$this->getBanknote()->getNominal() )
+            return FALSE;
+
+        return bcmul(
+            $this->getQuantity(), $this->getBanknote()->getNominal(), 2
+        );
+    }
 }

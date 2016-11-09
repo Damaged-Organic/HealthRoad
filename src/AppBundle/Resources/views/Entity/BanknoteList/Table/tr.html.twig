@@ -1,0 +1,22 @@
+{# src/AppBundle/Resources/views/Entity/BanknoteList/Table/tr.html.twig #}
+<td class="small-fixed"><span>{{ banknoteList.id }}</span></td>
+<td>
+    <span>
+        {{ ( banknoteList.banknote ) ? banknoteList.banknote.currency : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( banknoteList.banknote ) ? banknoteList.banknote.nominal : '-' }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ banknoteList.quantity }}
+    </span>
+</td>
+<td>
+    <span>
+        {{ ( banknoteList.totalAmount ) ?: '-' }}
+    </span>
+</td>
