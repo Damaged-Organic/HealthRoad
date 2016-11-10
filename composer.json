@@ -28,7 +28,8 @@
         "stof/doctrine-extensions-bundle": "^1.2",
         "snc/redis-bundle": "^1.1",
         "predis/predis": "^1.0",
-        "liqpay/liqpay": "dev-master"
+        "liqpay/liqpay": "dev-master",
+        "fabpot/goutte": "^3.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
@@ -64,7 +65,7 @@
         "symfony-web-dir": "www",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "app/config/common/parameters.yml.dist"
+            "file": "app/config/parameters.yml"
         }
     }
 }

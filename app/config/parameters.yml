@@ -1,0 +1,19 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: null
+    database_port: null
+    database_name: null
+    database_user: null
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: null
+    mailer_user: null
+    mailer_password: null
+    emails:
+        no_reply: no-reply@boilerplate.dev
+    domain_website: boilerplate.dev
+    domain_dashboard: dashboard.boilerplate.dev
+    domain_sync_v1: sync-v1.boilerplate.dev
+    developers_agency: 'CHEERS! Unlimited'
+    developers_link: 'http://cheersunlimited.com.ua'
+    secret: 123

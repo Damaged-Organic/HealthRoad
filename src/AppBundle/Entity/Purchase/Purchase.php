@@ -358,6 +358,10 @@ class Purchase implements SyncPurchasePropertiesInterface
         return $this->student;
     }
 
+    /*-------------------------------------------------------------------------
+    | SYNCHRONIZATION
+    |------------------------------------------------------------------------*/
+
     static public function getSyncArrayName()
     {
         return self::PURCHASE_ARRAY;

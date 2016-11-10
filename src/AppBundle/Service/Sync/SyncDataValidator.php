@@ -13,6 +13,8 @@ use AppBundle\Service\Sync\Utility\Interfaces\SyncDataInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineSyncPropertiesInterface,
     AppBundle\Entity\VendingMachine\Utility\Interfaces\SyncVendingMachineLoadPropertiesInterface,
     AppBundle\Entity\Purchase\Purchase,
+    AppBundle\Entity\Transaction\Transaction,
+    AppBundle\Entity\Banknote\Banknote,
     AppBundle\Entity\VendingMachine\VendingMachine,
     AppBundle\Entity\VendingMachine\VendingMachineEvent,
     AppBundle\Entity\VendingMachine\VendingMachineSync,
@@ -157,13 +159,72 @@ class SyncDataValidator implements
 
             if( empty($value[Purchase::PURCHASE_SYNC_PRODUCT_PRICE]) )
                 return FALSE;
-
             $isPriceErrors = count($this->_validator->validate($value[Purchase::PURCHASE_SYNC_PRODUCT_PRICE], $assertIsPrice));
             if( $isPriceErrors !== 0 )
                 return FALSE;
 
             if( empty($value[Purchase::PURCHASE_NFC_CODE]) )
                 return FALSE;
+        }
+
+        return $requestContent;
+    }
+
+    public function validateTransactionData(Request $request)
+    {
+        $requestContent = json_decode($request->getContent(), TRUE);
+
+        if( empty($requestContent[self::SYNC_CHECKSUM]) || empty($requestContent[self::SYNC_DATA]) )
+            return FALSE;
+
+        if( !$this->_checksum->verifyDataChecksum($requestContent[self::SYNC_CHECKSUM], $requestContent[self::SYNC_DATA]) )
+            return FALSE;
+
+        foreach( $requestContent[self::SYNC_DATA][VendingMachineSync::getSyncArrayName()] as $value ) {
+            if( !$value[self::VENDING_MACHINE_SYNC_ID] )
+                return FALSE;
+        }
+
+        // specific validation
+
+        if( empty($requestContent[self::SYNC_DATA][Transaction::getSyncArrayName()]) ||
+            !is_array($requestContent[self::SYNC_DATA][Transaction::getSyncArrayName()]) )
+            return FALSE;
+
+        $assertDateTime = new Assert\DateTime;
+        $assertIsPrice  = new CustomAssert\IsPriceConstraint;
+
+        foreach( $requestContent[self::SYNC_DATA][Transaction::getSyncArrayName()] as $value )
+        {
+            if( empty($value[Transaction::TRANSACTION_SYNC_ID]) )
+                return FALSE;
+
+            if( empty($value[Transaction::TRANSACTION_TRANSACTION_AT]) )
+                return FALSE;
+            $datetimeErrors = count($this->_validator->validate($value[Transaction::TRANSACTION_TRANSACTION_AT], $assertDateTime));
+            if( $datetimeErrors !== 0 )
+                return FALSE;
+
+            if( empty($value[Transaction::TRANSACTION_NFC_CODE]) )
+                return FALSE;
+
+            if( empty($value[Banknote::getSyncArrayName()]) || !is_array($value[Banknote::getSyncArrayName()]) )
+                return FALSE;
+
+            foreach( $value[Banknote::getSyncArrayName()] as $nestedValue )
+            {
+                if( empty($nestedValue[Banknote::BANKNOTE_CURRENCY]) )
+                    return FALSE;
+
+                if( empty($nestedValue[Banknote::BANKNOTE_NOMINAL]) )
+                    return FALSE;
+                $isPriceErrors = count($this->_validator->validate($nestedValue[Banknote::BANKNOTE_NOMINAL], $assertIsPrice));
+                if( $isPriceErrors !== 0 )
+                    return FALSE;
+
+                if( empty($nestedValue[Banknote::BANKNOTE_LIST_QUANTITY]) )
+                    return FALSE;
+            }
         }
 
         return $requestContent;

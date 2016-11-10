@@ -10,13 +10,14 @@ use Doctrine\ORM\Mapping as ORM,
 use AppBundle\Entity\Utility\Traits\DoctrineMapping\IdMapperTrait,
     AppBundle\Validator\Constraints as CustomAssert;
 
-use AppBundle\Entity\Banknote\Utility\Interfaces\BanknoteCurrencyListInterface;
+use AppBundle\Entity\Banknote\Utility\Interfaces\BanknoteCurrencyListInterface,
+    AppBundle\Entity\Banknote\Utility\Interfaces\SyncBanknotePropertiesInterface;
 
 /**
  * @ORM\Table(name="banknotes")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Banknote\Repository\BanknoteRepository")
  */
-class Banknote implements BanknoteCurrencyListInterface
+class Banknote implements BanknoteCurrencyListInterface, SyncBanknotePropertiesInterface
 {
     use IdMapperTrait;
 
@@ -134,5 +135,14 @@ class Banknote implements BanknoteCurrencyListInterface
     static public function getBanknoteCurrencyList()
     {
         return [self::BANKNOTE_CURRENCY_UAH];
+    }
+
+    /*-------------------------------------------------------------------------
+    | SYNCHRONIZATION
+    |------------------------------------------------------------------------*/
+
+    static public function getSyncArrayName()
+    {
+        return self::BANKNOTE_ARRAY;
     }
 }

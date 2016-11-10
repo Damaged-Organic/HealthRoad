@@ -55,7 +55,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/sync",
      *      name = "sync_get_vending_machines_sync",
      *      host = "{domain_sync_v1}",
-     *      schemes = {"https"},
+     *      schemes = {"http"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -90,7 +90,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/products",
      *      name = "sync_get_vending_machines_products",
      *      host = "{domain_sync_v1}",
-     *      schemes = {"https"},
+     *      schemes = {"http"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -122,7 +122,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/nfc_tags",
      *      name = "sync_get_vending_machines_nfc_tags",
      *      host = "{domain_sync_v1}",
-     *      schemes = {"https"},
+     *      schemes = {"http"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -154,7 +154,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}",
      *      name = "sync_put_vending_machines",
      *      host = "{domain_sync_v1}",
-     *      schemes = {"https"},
+     *      schemes = {"http"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -192,7 +192,7 @@ class SyncController extends Controller implements
      *      "/vending_machines/{serial}/purchases",
      *      name = "sync_post_vending_machines_purchases",
      *      host = "{domain_sync_v1}",
-     *      schemes = {"https"},
+     *      schemes = {"http"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
@@ -242,10 +242,35 @@ class SyncController extends Controller implements
     /**
      * @Method({"POST"})
      * @Route(
+     *      "/vending_machines/{serial}/transactions",
+     *      name = "sync_post_vending_machines_transactions",
+     *      host = "{domain_sync_v1}",
+     *      schemes = {"http"},
+     *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
+     *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
+     * )
+     */
+    public function postVendingMachinesTransactions(Request $request, $serial)
+    {
+        $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
+            ->findOneBySerialPrefetchRelated($serial);
+
+        if( !($validSyncData = $this->_syncDataValidator->validateTransactionData($request)) )
+            throw new BadRequestHttpException('Request contains invalid data');
+
+        if( $this->_syncDataValidator->validateSyncSequence($vendingMachine, self::VENDING_MACHINE_SYNC_TYPE_TRANSACTIONS, $validSyncData) )
+            return new Response('Already in sync', 200);
+
+        return new Response(json_encode('Hola mallorca!', JSON_UNESCAPED_UNICODE), 200);
+    }
+
+    /**
+     * @Method({"POST"})
+     * @Route(
      *      "/vending_machines/{serial}/events",
      *      name = "sync_post_vending_machines_events",
      *      host = "{domain_sync_v1}",
-     *      schemes = {"https"},
+     *      schemes = {"http"},
      *      defaults = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" },
      *      requirements = { "_locale" = "%locale%", "domain_sync_v1" = "%domain_sync_v1%" }
      * )
