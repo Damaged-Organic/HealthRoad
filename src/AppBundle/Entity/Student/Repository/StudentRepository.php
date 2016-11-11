@@ -2,7 +2,8 @@
 // AppBundle/Entity/Student/Repository/StudentRepository.php
 namespace AppBundle\Entity\Student\Repository;
 
-use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository;
+use AppBundle\Entity\Utility\Extended\ExtendedEntityRepository,
+    AppBundle\Entity\VendingMachine\VendingMachine;
 
 class StudentRepository extends ExtendedEntityRepository
 {

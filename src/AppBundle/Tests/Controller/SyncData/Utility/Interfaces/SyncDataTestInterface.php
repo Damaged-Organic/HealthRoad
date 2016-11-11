@@ -4,7 +4,7 @@ namespace AppBundle\Tests\Controller\SyncData\Utility\Interfaces;
 
 interface SyncDataTestInterface
 {
-    const SYNC_ID = 14;
+    const SYNC_ID = 3;
 
     static public function getData();
 

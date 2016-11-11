@@ -34,8 +34,8 @@ class Transaction implements SyncDataTestInterface
         			[
         				'id'                   => 1,
         				'transaction-datetime' => (new DateTime)->format('Y-m-d H:i:s'),
-        				'nfc-code'             => 1,
-        				'student-id'           => "04c0188a584980",
+        				'nfc-code'             => "04c0188a584980",
+        				'student-id'           => 1,
         				'banknotes'            => [
         					[
         						'currency' => 'UAH',

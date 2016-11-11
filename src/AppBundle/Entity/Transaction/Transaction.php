@@ -55,9 +55,14 @@ class Transaction implements SyncTransactionPropertiesInterface
     protected $syncTransactionAt;
 
     /**
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="string", length=32, nullable=true)
      */
     protected $syncNfcTagCode;
+
+    /**
+     * @ORM\Column(type="bigint", nullable=true)
+     */
+    protected $syncStudentId;
 
     /**
      * @ORM\Column(type="string", length=16)
@@ -68,6 +73,11 @@ class Transaction implements SyncTransactionPropertiesInterface
      * @ORM\Column(type="string", length=64)
      */
     protected $vendingMachineSyncId;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $totalAmount;
 
     public function __construct()
     {
@@ -102,6 +112,19 @@ class Transaction implements SyncTransactionPropertiesInterface
         }
 
         return $searchProperties;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return Transaction
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -171,6 +194,29 @@ class Transaction implements SyncTransactionPropertiesInterface
     public function getSyncNfcTagCode()
     {
         return $this->syncNfcTagCode;
+    }
+
+    /**
+     * Set syncStudentId
+     *
+     * @param integer $syncStudentId
+     * @return Transaction
+     */
+    public function setSyncStudentId($syncStudentId)
+    {
+        $this->syncStudentId = $syncStudentId;
+
+        return $this;
+    }
+
+    /**
+     * Get syncStudentId
+     *
+     * @return integer
+     */
+    public function getSyncStudentId()
+    {
+        return $this->syncStudentId;
     }
 
     /**
@@ -340,7 +386,7 @@ class Transaction implements SyncTransactionPropertiesInterface
         }
     }
 
-    public function getTotalAmount()
+    public function setTotalAmount()
     {
         if( !$this->getBanknoteLists() )
             return FALSE;
@@ -351,7 +397,14 @@ class Transaction implements SyncTransactionPropertiesInterface
             $totalAmount = bcadd($totalAmount, $value, 2);
         }
 
-        return $totalAmount;
+        $this->totalAmount = $totalAmount;
+
+        return $this;
+    }
+
+    public function getTotalAmount()
+    {
+        return $this->totalAmount;
     }
 
     /*-------------------------------------------------------------------------

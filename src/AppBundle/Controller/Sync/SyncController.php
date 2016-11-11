@@ -261,7 +261,27 @@ class SyncController extends Controller implements
         if( $this->_syncDataValidator->validateSyncSequence($vendingMachine, self::VENDING_MACHINE_SYNC_TYPE_TRANSACTIONS, $validSyncData) )
             return new Response('Already in sync', 200);
 
-        return new Response(json_encode('Hola mallorca!', JSON_UNESCAPED_UNICODE), 200);
+        $this->_manager->getConnection()->beginTransaction();
+
+        try{
+            $vendingMachineSyncId = $this->_syncDataHandler->handleTransactionData($vendingMachine, $validSyncData);
+
+            // $recordMethod = [$this->_syncDataRecorder, 'recordTransactionData'];
+            //
+            // if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
+            //     throw new BadCredentialsException('Sync response array is missing required data');
+
+            $this->_manager->flush();
+            $this->_manager->clear();
+
+            $this->_manager->getConnection()->commit();
+        }catch( Exception $e ){
+            $this->_manager->getConnection()->rollback();
+
+            throw new FatalErrorException('Database Error: ' . $e->getMessage());
+        }
+
+        return new Response(json_encode(NULL, JSON_UNESCAPED_UNICODE), 200);
     }
 
     /**

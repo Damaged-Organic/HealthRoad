@@ -109,9 +109,7 @@ class PurchaseRepository extends ExtendedEntityRepository
         {
             if( $purchase instanceof Purchase )
             {
-                $queryString .= "(" . substr(str_repeat("?,", 11), 0, -1) . "),";
-
-                $queryArgs = array_merge($queryArgs, [
+                $boundTokens = [
                     $purchase->getVendingMachine()->getId(),
                     $purchase->getProduct()->getId(),
                     $purchase->getNfcTag()->getId(),
@@ -123,7 +121,11 @@ class PurchaseRepository extends ExtendedEntityRepository
                     $purchase->getSyncPurchasedAt()->format('Y-m-d H:i:s'),
                     $purchase->getVendingMachineSerial(),
                     $purchase->getVendingMachineSyncId()
-                ]);
+                ];
+                $boundTokensNumber = count($boundTokens);
+
+                $queryString .= "(" . substr(str_repeat("?,", $boundTokensNumber), 0, -1) . "),";
+                $queryArgs    = array_merge($queryArgs, $boundTokens);
             }
         }
 

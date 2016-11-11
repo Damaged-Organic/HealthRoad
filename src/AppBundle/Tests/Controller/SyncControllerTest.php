@@ -15,8 +15,6 @@ class SyncControllerTest extends WebTestCase
 {
     const SYNC_URL_VENDING_MACHINES = 'http://sync-v1.boilerplate.dev/app_dev.php/vending_machines';
 
-
-
     const SYNC_METHOD_VENDING_MACHINE_LOADS = 'PUT';
 
     private $vendingMachineCredentials = [
@@ -55,6 +53,9 @@ class SyncControllerTest extends WebTestCase
         return self::SYNC_URL_VENDING_MACHINES . '/' . $vendingMachineConnectionPath;
     }
 
+    /**
+     * @group purchases
+     */
     public function testSyncPurchases()
     {
         $vendingMachineConnectionPath = sprintf(
@@ -86,6 +87,9 @@ class SyncControllerTest extends WebTestCase
         $this->assertEquals('Already in sync', $client->getResponse()->getContent());
     }
 
+    /**
+     * @group transactions
+     */
     public function testSyncTransactions()
     {
         $vendingMachineConnectionPath = sprintf(
