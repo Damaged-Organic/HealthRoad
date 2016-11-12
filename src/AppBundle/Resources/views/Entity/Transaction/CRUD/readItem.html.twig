@@ -123,7 +123,7 @@
                     <span>{{ 'transaction.sync.total_amount.label'|trans({}, 'forms') }}</span>
                 </div>
                 <div class="item value">
-                    <p>{{ ( transaction.totalAmount ) ?: '-' }} ₴</p>
+                    <p>{{ ( transaction.totalAmount ) ? transaction.totalAmount|number_format(2, ',') ~ ' ₴' : '-' }}</p>
                 </div>
             </li>
 

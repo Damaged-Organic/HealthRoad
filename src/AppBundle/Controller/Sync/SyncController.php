@@ -62,9 +62,6 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesSync(Request $request, $serial)
     {
-        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-        //     'serial' => $serial
-        // ]);
         $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
@@ -97,9 +94,6 @@ class SyncController extends Controller implements
      */
     public function getProductsAction($serial)
     {
-        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-        //     'serial' => $serial
-        // ]);
         $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
@@ -129,9 +123,6 @@ class SyncController extends Controller implements
      */
     public function getVendingMachinesNfcTagsAction($serial)
     {
-        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-        //     'serial' => $serial
-        // ]);
         $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
@@ -161,9 +152,6 @@ class SyncController extends Controller implements
      */
     public function putVendingMachines(Request $request, $serial)
     {
-        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-        //     'serial' => $serial
-        // ]);
         $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
@@ -199,9 +187,6 @@ class SyncController extends Controller implements
      */
     public function postVendingMachinesPurchasesAction(Request $request, $serial)
     {
-        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-        //     'serial' => $serial
-        // ]);
         $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 
@@ -266,10 +251,10 @@ class SyncController extends Controller implements
         try{
             $vendingMachineSyncId = $this->_syncDataHandler->handleTransactionData($vendingMachine, $validSyncData);
 
-            // $recordMethod = [$this->_syncDataRecorder, 'recordTransactionData'];
-            //
-            // if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
-            //     throw new BadCredentialsException('Sync response array is missing required data');
+            $recordMethod = [$this->_syncDataRecorder, 'recordTransactionData'];
+
+            if( !$this->_syncDataRecorder->recordDataIfValid($vendingMachine, $validSyncData, $recordMethod) )
+                 throw new BadCredentialsException('Sync response array is missing required data');
 
             $this->_manager->flush();
             $this->_manager->clear();
@@ -297,9 +282,6 @@ class SyncController extends Controller implements
      */
     public function postVendingMachinesEvents(Request $request, $serial)
     {
-        // $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')->findOneBy([
-        //     'serial' => $serial
-        // ]);
         $vendingMachine = $this->_manager->getRepository('AppBundle:VendingMachine\VendingMachine')
             ->findOneBySerialPrefetchRelated($serial);
 

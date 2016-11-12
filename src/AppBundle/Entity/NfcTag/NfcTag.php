@@ -430,6 +430,7 @@ class NfcTag implements SyncNfcTagPropertiesInterface
     {
         return [
             self::NFC_TAG_CODE        => $this->getCode(),
+            self::NFC_TAG_STUDENT_ID  => $this->getStudent()->getId(),
             self::NFC_TAG_DAILY_LIMIT => $this->getStudent()->getDailyLimit(),
             self::NFC_TAG_TOTAL_LIMIT => $this->getStudent()->getTotalLimit()
         ];

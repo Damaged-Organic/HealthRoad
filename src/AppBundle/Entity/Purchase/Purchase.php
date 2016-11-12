@@ -52,6 +52,11 @@ class Purchase implements SyncPurchasePropertiesInterface
     protected $syncNfcTagCode;
 
     /**
+     * @ORM\Column(type="bigint", nullable=true)
+     */
+    protected $syncStudentId;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $syncProductId;
@@ -149,6 +154,29 @@ class Purchase implements SyncPurchasePropertiesInterface
     public function getSyncNfcTagCode()
     {
         return $this->syncNfcTagCode;
+    }
+
+    /**
+     * Set syncStudentId
+     *
+     * @param integer $syncStudentId
+     * @return Purchase
+     */
+    public function setSyncStudentId($syncStudentId)
+    {
+        $this->syncStudentId = $syncStudentId;
+
+        return $this;
+    }
+
+    /**
+     * Get syncStudentId
+     *
+     * @return integer
+     */
+    public function getSyncStudentId()
+    {
+        return $this->syncStudentId;
     }
 
     /**

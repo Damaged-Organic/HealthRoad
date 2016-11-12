@@ -86,9 +86,15 @@ class SyncDataHandler implements
             $products = new ArrayCollection($this->_manager->getRepository('AppBundle:Product\Product')->findAll());
         }
 
-        if( !($nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAvailableByVendingMachine($vendingMachine))) ) {
+        $nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAvailableByVendingMachine($vendingMachine));
+        if( $nfcTags->isEmpty() ) {
             // Fallback to all available NFC tags, could signal problem
             $nfcTags = new ArrayCollection($this->_manager->getRepository('AppBundle:NfcTag\NfcTag')->findAllIndexedByCode());
+        }
+
+        if( !($students = $vendingMachine->getStudents()) ) {
+            // Fallback to all available students, could signal problem
+            $students = new ArrayCollection($this->_manager->getRepository('AppBundle:Student\Student')->findAll());
         }
 
         $purchasesArray = [];
@@ -121,14 +127,27 @@ class SyncDataHandler implements
                 ;
 
                 // TRICKY: Setting NFC Tag and Student separately, to preserve purchase history
-                // in case if persisted NFC Tag is [unbinded from / binded to other] Student
-                $purchase
-                    ->setStudent(
-                        ( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]) )
-                            ? ( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE])->getStudent() ?: NULL )
-                            : NULL
-                    )
-                ;
+                // in case if persisted NFC Tag is [unbinded from / binded to other] Student.
+                // This is an emerged fallback mechanism, so in early versions of API value
+                // could be empty - in that case getting Student from NFC Tag as usual
+                if( !empty($value[Purchase::PURCHASE_STUDENT_ID]) && $students->get($value[Purchase::PURCHASE_STUDENT_ID]) )
+                {
+                    $purchase
+                        ->setSyncStudentId($value[Purchase::PURCHASE_STUDENT_ID])
+                        ->setStudent(
+                            $students->get($value[Purchase::PURCHASE_STUDENT_ID])
+                        )
+                    ;
+                } else {
+                    $purchase
+                        ->setSyncStudentId(NULL)
+                        ->setStudent(
+                            ( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE]) )
+                                ? ( $nfcTags->get($value[Purchase::PURCHASE_NFC_CODE])->getStudent() ?: NULL )
+                                : NULL
+                        )
+                    ;
+                }
 
                 $purchase
                     ->setSyncProductId($value[Purchase::PURCHASE_PRODUCT_ID])
@@ -228,7 +247,7 @@ class SyncDataHandler implements
                 // in case if persisted NFC Tag is [unbinded from / binded to other] Student.
                 // This is an emerged fallback mechanism, so in early versions of API value
                 // could be empty - in that case getting Student from NFC Tag as usual
-                if( $value[Transaction::TRANSACTION_STUDENT_ID] && $students->get($value[Transaction::TRANSACTION_STUDENT_ID]) )
+                if( !empty($value[Transaction::TRANSACTION_STUDENT_ID]) && $students->get($value[Transaction::TRANSACTION_STUDENT_ID]) )
                 {
                     $transaction
                         ->setSyncStudentId($value[Transaction::TRANSACTION_STUDENT_ID])
@@ -306,7 +325,7 @@ class SyncDataHandler implements
 
             foreach( $transactionsArray as $transaction )
             {
-                // TODO: Some strange stuff in purchases there - checking for contradictionary NFC Tag.
+                // TODO: Some strange stuff in purchases there - checking for contradictionary NFC Tag
 
                 $totalLimit = $transaction->getStudent()->getTotalLimit();
 

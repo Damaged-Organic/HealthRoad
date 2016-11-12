@@ -7,6 +7,7 @@ interface SyncNfcTagPropertiesInterface
     const NFC_TAG_ARRAY = 'nfc-tags';
 
     const NFC_TAG_CODE                = 'code';
+    const NFC_TAG_STUDENT_ID          = 'student-id';
     const NFC_TAG_DAILY_LIMIT         = 'daily-limit';
     const NFC_TAG_TOTAL_LIMIT         = 'total-limit';
     const NFC_TAG_RESTRICTED_PRODUCTS = 'restricted-products';

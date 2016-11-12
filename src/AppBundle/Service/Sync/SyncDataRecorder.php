@@ -111,4 +111,14 @@ class SyncDataRecorder implements SyncDataInterface, SyncVendingMachineSyncPrope
 
         return $vendingMachineSync;
     }
+
+    protected function recordTransactionData(VendingMachineSync $vendingMachineSync, $syncData)
+    {
+        $vendingMachineSync
+            ->setVendingMachineSyncId($syncData[self::SYNC_DATA][self::VENDING_MACHINE_SYNC_ARRAY][0][self::VENDING_MACHINE_SYNC_ID])
+            ->setSyncedType(self::VENDING_MACHINE_SYNC_TYPE_TRANSACTIONS)
+        ;
+
+        return $vendingMachineSync;
+    }
 }

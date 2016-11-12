@@ -34,16 +34,18 @@ class Purchase implements SyncDataTestInterface
                     [
                         'id'                => 1,
                         'purchase-datetime' => (new DateTime)->format('Y-m-d H:i:s'),
+                        'student-id'        => 3,
+                        'nfc-code'          => "5826fcb36bb8a",
                         'product-id'        => 1,
                         'product-price'     => '42.00',
-                        'nfc-code'          => "04c0188a584980"
                     ],
         			[
                         'id'                => 1,
                         'purchase-datetime' => (new DateTime)->format('Y-m-d H:i:s'),
+                        'student-id'        => 3,
+                        'nfc-code'          => "5826fcb36bb8a",
                         'product-id'        => 2,
                         'product-price'     => '42.00',
-                        'nfc-code'          => "04c0188a584980"
                     ]
                 ]
             ]

@@ -13,7 +13,7 @@ use AppBundle\Tests\Controller\SyncData\Transaction,
 
 class SyncControllerTest extends WebTestCase
 {
-    const SYNC_URL_VENDING_MACHINES = 'http://sync-v1.boilerplate.dev/app_dev.php/vending_machines';
+    const SYNC_URL_VENDING_MACHINES = 'http://sync-v1.cheers-development.in.ua/vending_machines';
 
     const SYNC_METHOD_VENDING_MACHINE_LOADS = 'PUT';
 

@@ -22,6 +22,6 @@
 </td>
 <td>
     <span>
-        {{ ( transaction.totalAmount ) ?: '-' }} ₴
+        {{ ( transaction.totalAmount ) ? transaction.totalAmount|number_format(2, ',') ~ ' ₴' : '-' }}
     </span>
 </td>

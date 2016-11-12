@@ -377,12 +377,12 @@ class Transaction implements SyncTransactionPropertiesInterface
     {
         foreach($banknoteLists as $banknoteList)
         {
-            if( !$banknoteList->getQuantity() || !$banknoteList->getBanknote() )
-                return FALSE;
-
-            yield bcmul(
-                $banknoteList->getQuantity(), $banknoteList->getBanknote()->getNominal(), 2
-            );
+            if( $banknoteList->getQuantity() && $banknoteList->getBanknote() )
+            {
+                yield bcmul(
+                    $banknoteList->getQuantity(), $banknoteList->getBanknote()->getNominal(), 2
+                );
+            }
         }
     }
 

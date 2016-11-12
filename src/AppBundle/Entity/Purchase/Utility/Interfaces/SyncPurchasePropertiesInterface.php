@@ -10,5 +10,6 @@ interface SyncPurchasePropertiesInterface
     const PURCHASE_SYNC_PRODUCT_PRICE = 'product-price';
     const PURCHASE_PRODUCT_ID         = 'product-id';
     const PURCHASE_PURCHASED_AT       = 'purchase-datetime';
+    const PURCHASE_STUDENT_ID         = 'student-id';
     const PURCHASE_NFC_CODE           = 'nfc-code';
 }

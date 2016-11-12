@@ -37,7 +37,7 @@ class School
     protected $vendingMachines;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Student\Student", mappedBy="school")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Student\Student", mappedBy="school", indexBy="id")
      */
     protected $students;
 
